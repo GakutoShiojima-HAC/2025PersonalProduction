@@ -40,4 +40,14 @@
 // lib
 #include "Lib/json.hpp"
 
+// my program
+#include "Engine/Core/Scene/SceneManager.h"
+#include "Engine/Core/Scene/IScene.h"
+#include "Engine/Core/Scene/NullScene.h"
+#include "Engine/Core/StateMachine/StateMachine.h"
+#include "Engine/Core/StateMachine/IState.h"
+#include "Engine/Core/StateMachine/NullState.h"
+#include "Engine/Graphics/AnimatedMesh/AnimatedMesh.h"
+#include "Engine/Utils/ObjectPool.h"
+
 #endif
