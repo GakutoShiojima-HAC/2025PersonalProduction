@@ -16,7 +16,6 @@
 #include <gslib.h>
 #include <vector>
 #include <functional>
-#include <vector>
 #include <memory>
 
 using namespace std;
