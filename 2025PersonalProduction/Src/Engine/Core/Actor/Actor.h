@@ -20,6 +20,9 @@ using namespace std;
 
 class IWorld;
 
+// FPS
+const float cFPS{ 60.0f };
+
 class Actor {
 public:
 	Actor() = default;
