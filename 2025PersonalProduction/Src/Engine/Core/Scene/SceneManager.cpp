@@ -21,6 +21,10 @@ void SceneManager::init() {
 
 void SceneManager::update(float delta_time) {
 	current_scene_->update(delta_time);
+
+	if (current_scene_->is_end()) {
+		change(current_scene_->next_scene_tag());
+	}
 }
 
 void SceneManager::draw() {

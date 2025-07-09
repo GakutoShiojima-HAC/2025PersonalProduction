@@ -13,8 +13,9 @@
 
 enum class SceneTag {
 	Null,
-	Title,
-	Game,
+	Title,	// ゲームタイトル
+	Menu,	// ゲームメニュー
+	Game,	// ゲームプレイ
 
 	END_DONT_USE	// 要素数管理用
 };

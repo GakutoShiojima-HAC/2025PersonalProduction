@@ -145,9 +145,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Src\Engine\Core\Scene\SceneManager.cpp" />
+    <ClCompile Include="Src\Engine\Core\Screen\Screen.cpp" />
     <ClCompile Include="Src\Engine\Core\StateMachine\StateMachine.cpp" />
     <ClCompile Include="Src\Engine\Graphics\AnimatedMesh\AnimatedMesh.cpp" />
+    <ClCompile Include="Src\Engine\Graphics\Canvas\Canvas.cpp" />
     <ClCompile Include="Src\main.cpp" />
+    <ClCompile Include="Src\Scene\GameScene.cpp" />
+    <ClCompile Include="Src\Scene\MenuScene.cpp" />
+    <ClCompile Include="Src\Scene\TitleScene.cpp" />
     <ClCompile Include="Src\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -157,14 +162,19 @@
     <ClInclude Include="Src\Engine\Core\Scene\IScene.h" />
     <ClInclude Include="Src\Engine\Core\Scene\NullScene.h" />
     <ClInclude Include="Src\Engine\Core\Scene\SceneManager.h" />
+    <ClInclude Include="Src\Engine\Core\Screen\Screen.h" />
     <ClInclude Include="Src\Engine\Core\StateMachine\IState.h" />
     <ClInclude Include="Src\Engine\Core\StateMachine\NullState.h" />
     <ClInclude Include="Src\Engine\Core\StateMachine\StateMachine.h" />
     <ClInclude Include="Src\Engine\Graphics\AnimatedMesh\AnimatedMesh.h" />
+    <ClInclude Include="Src\Engine\Graphics\Canvas\Canvas.h" />
     <ClInclude Include="Src\Engine\Utils\ObjectPool.h" />
     <ClInclude Include="Src\Engine\Utils\OpenBrowser.h" />
     <ClInclude Include="Src\Lib\json.hpp" />
+    <ClInclude Include="Src\Scene\GameScene.h" />
+    <ClInclude Include="Src\Scene\MenuScene.h" />
     <ClInclude Include="Src\Scene\SceneTag.h" />
+    <ClInclude Include="Src\Scene\TitleScene.h" />
     <ClInclude Include="Src\stdafx.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
