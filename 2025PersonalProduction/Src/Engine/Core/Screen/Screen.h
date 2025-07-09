@@ -11,6 +11,8 @@
 #ifndef SCREEN_H_
 #define SCREEN_H_
 
+#include <windows.h>
+
 /// <summary>
 /// スクリーンデータ構造体
 /// </summary>
@@ -26,7 +28,7 @@ struct ScreenData {
 };
 
 class Screen {
-public:
+private:
     // コンストラクタ（外部からのインスタンスを禁止）
     Screen() = default;
 
@@ -51,6 +53,11 @@ public:
     void set_initialize_data(int width_px, int height_px, bool full_screen, float refresh_rate);
 
     /// <summary>
+    /// スクリーン情報を更新
+    /// </summary>
+    void update();
+
+    /// <summary>
     /// アプリケーション起動時のスクリーンデータを取得する
     /// </summary>
     /// <returns>スクリーンデータ</returns>
@@ -60,13 +67,20 @@ public:
     /// 現在のスクリーンデータを取得する
     /// </summary>
     /// <returns>スクリーンデータ</returns>
-    const ScreenData& get_current_data() const;
+    ScreenData& get_current_data();
 
 private:
     // 起動時のスクリーンデータ
     ScreenData initialize_data_;
     // 現在のスクリーンデータ
     ScreenData current_data_;
+
+    // ウィンドウハンドラ
+    HWND hDWnd{};
+    // 現在の画面サイズ
+    RECT rect_{};
+    // 現在の画面座標
+    RECT screen_pos_{};
 
 public:
     // コピー禁止
