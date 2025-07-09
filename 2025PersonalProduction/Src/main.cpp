@@ -12,6 +12,7 @@
 #include <GSeffect.h>
 #include <GSmovie.h>
 #include "Engine/Core/Scene/SceneManager.h"
+#include "Engine/Utils/OpenBrowser.h"
 
 class MyGame : public gslib::Game {
 public:
@@ -46,6 +47,11 @@ private:
         ClipCursor(NULL);
         // カーソルを表示
         gsShowMouseCursor();
+
+        // アンケートフォームを開く
+#ifndef _DEBUG
+        MyLib::open_browser_by_url("https://forms.gle/RvXri1WB3r3DGJQm7");
+#endif
     }
 
     /// <summary>
@@ -73,5 +79,4 @@ int main() {
 #else
     return MyGame(1920, 1080, true, 60.0f).run();
 #endif
-
 }
