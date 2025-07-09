@@ -162,6 +162,7 @@
     <ClInclude Include="Src\Engine\Core\StateMachine\StateMachine.h" />
     <ClInclude Include="Src\Engine\Graphics\AnimatedMesh\AnimatedMesh.h" />
     <ClInclude Include="Src\Engine\Utils\ObjectPool.h" />
+    <ClInclude Include="Src\Engine\Utils\OpenBrowser.h" />
     <ClInclude Include="Src\Lib\json.hpp" />
     <ClInclude Include="Src\Scene\SceneTag.h" />
     <ClInclude Include="Src\stdafx.h" />
