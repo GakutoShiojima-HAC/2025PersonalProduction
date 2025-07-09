@@ -17,6 +17,7 @@
 #include "Scene/GameScene.h"
 #include "Engine/Utils/OpenBrowser.h"
 #include "Engine/Core/Screen/Screen.h"
+#include "Engine/Graphics/Canvas/Canvas.h"
 
 class MyGame : public gslib::Game {
 public:
@@ -28,10 +29,12 @@ public:
     /// <param name="full_screen">= フルスクリーンにするなら真</param>
     /// <param name="refresh_rate">= アプリケーションのリフレッシュレート</param>
     MyGame(int width_px, int height_px, bool full_screen, float refresh_rate) : gslib::Game{ width_px, height_px, full_screen, refresh_rate } {
-        scene_manager_.init();
-
         // スクリーンデータをセット
-        Screen::get_instance().set_initialize_data(width_px, height_px, full_screen, refresh_rate);
+        screen_.set_initialize_data(width_px, height_px, full_screen, refresh_rate);
+
+        // 初期化
+        scene_manager_.init();
+        Canvas::init();
     }
 
 private:
@@ -46,6 +49,8 @@ private:
     }
 
     void update(float delta_time) override {
+        screen_.update();
+
         scene_manager_.update(delta_time);
     }
 
@@ -83,6 +88,8 @@ private:
 private:
     // シーンマネージャー
     SceneManager& scene_manager_ = SceneManager::get_instance();
+    // スクリーン
+    Screen& screen_ = Screen::get_instance();
 
 };
 
