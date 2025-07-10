@@ -15,13 +15,11 @@
 #include <string>
 #include "Actor/ActorTag.h"
 #include "Engine/Core/Collision/BoundingSphere.h"
+#include "GameConfig.h"
 
 using namespace std;
 
 class IWorld;
-
-// FPS
-const float cFPS{ 60.0f };
 
 class Actor {
 public:
@@ -56,7 +54,7 @@ public:
 	virtual void draw_gui() const;
 
 	/// <summary>
-	/// メモリ解放の対象とする
+	/// アクターの寿命を終わらせる
 	/// </summary>
 	virtual void die();
 
@@ -73,9 +71,15 @@ public:
 	void collide(Actor& other);
 
 	/// <summary>
-	/// メモリ解放の対象かどうかを返却
+	/// アクターの寿命が尽きたかどうか
 	/// </summary>
 	bool is_dead() const;
+
+	/// <summary>
+	/// アクターの寿命が0だった場合メモリ解放処理まで行うかどうか
+	/// </summary>
+	/// <returns></returns>
+	bool is_clear() const;
 
 	/// <summary>
 	/// 衝突しているかどうかを返却
@@ -133,8 +137,13 @@ protected:
 protected:
 	// ワールド
 	IWorld* world_{ nullptr };
-	// メモリ解放の対象かどうか
+	
+	// 寿命
 	bool is_dead_{ false };
+	// 寿命が尽きたときメモリ解放まで行うか
+	// ***危険*** オブジェクトプールでのみ使用すること
+	bool is_clear_{ true };	
+
 	// 名前
 	string name_{ "Actor" };
 	// タグ

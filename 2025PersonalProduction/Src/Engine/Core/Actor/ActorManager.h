@@ -24,7 +24,7 @@ class ActorManager {
 public:
 	ActorManager() = default;
 
-	~ActorManager();
+	virtual ~ActorManager();
 
 public:
     /// <summary>
@@ -64,7 +64,7 @@ public:
     void collide();
 
     /// <summary>
-    /// メモリ解放対象の削除
+    /// 寿命が尽きたアクターの削除
     /// </summary>
     void remove();
 

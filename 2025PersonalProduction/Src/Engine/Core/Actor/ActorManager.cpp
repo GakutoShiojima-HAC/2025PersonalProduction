@@ -40,6 +40,7 @@ void ActorManager::draw_gui() const {
 }
 
 void ActorManager::collide() {
+	// そんなアクター追加する予定ないのでシンプルに総当たり
 	for (auto i = actors_.begin(); i != actors_.end(); ++i) {
 		for (auto j = std::next(i); j != actors_.end(); ++j) {
 			(*i)->collide(**j);
@@ -50,7 +51,7 @@ void ActorManager::collide() {
 void ActorManager::remove() {
 	for (auto i = actors_.begin(); i != actors_.end(); ) {
 		if ((*i)->is_dead()) {
-			delete* i;
+			if ((*i)->is_clear()) delete* i;
 			i = actors_.erase(i);
 		}
 		else {
@@ -94,8 +95,8 @@ int ActorManager::count_with_tag(const ActorTag tag) const {
 }
 
 void ActorManager::clear() {
-	for (const auto& actor : actors_) {
-		delete actor;
+	for (auto actor : actors_) {
+		if (actor->is_clear()) delete actor;
 	}
 	actors_.clear();
 }

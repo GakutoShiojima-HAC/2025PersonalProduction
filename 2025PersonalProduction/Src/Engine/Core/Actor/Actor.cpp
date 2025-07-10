@@ -45,6 +45,10 @@ bool Actor::is_dead() const {
 	return is_dead_;
 }
 
+bool Actor::is_clear() const {
+	return is_clear_;
+}
+
 bool Actor::is_collide(const Actor& other) const {
 	return collider().intersects(other.collider());
 }
