@@ -144,9 +144,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Camera\FixedCamera.cpp" />
+    <ClCompile Include="Src\Engine\Core\Actor\Actor.cpp" />
+    <ClCompile Include="Src\Engine\Core\Actor\ActorManager.cpp" />
+    <ClCompile Include="Src\Engine\Core\Actor\FieldActor\FieldActor.cpp" />
+    <ClCompile Include="Src\Engine\Core\Actor\FieldActor\FieldActorManager.cpp" />
+    <ClCompile Include="Src\Engine\Core\Camera\Camera.cpp" />
+    <ClCompile Include="Src\Engine\Core\Camera\CameraManager.cpp" />
+    <ClCompile Include="Src\Engine\Core\Collision\BoundingSphere.cpp" />
+    <ClCompile Include="Src\Engine\Core\Field\Field.cpp" />
+    <ClCompile Include="Src\Pawn\Character\Character.cpp" />
+    <ClCompile Include="Src\Pawn\Pawn.cpp" />
     <ClCompile Include="Src\Engine\Core\Scene\SceneManager.cpp" />
     <ClCompile Include="Src\Engine\Core\Screen\Screen.cpp" />
     <ClCompile Include="Src\Engine\Core\StateMachine\StateMachine.cpp" />
+    <ClCompile Include="Src\Engine\Core\World\Light.cpp" />
+    <ClCompile Include="Src\Engine\Core\World\World.cpp" />
     <ClCompile Include="Src\Engine\Graphics\AnimatedMesh\AnimatedMesh.cpp" />
     <ClCompile Include="Src\Engine\Graphics\Canvas\Canvas.cpp" />
     <ClCompile Include="Src\main.cpp" />
@@ -159,6 +172,20 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Actor\ActorTag.h" />
+    <ClInclude Include="Src\Camera\CameraTag.h" />
+    <ClInclude Include="Src\Camera\FixedCamera.h" />
+    <ClInclude Include="Src\GameConfig.h" />
+    <ClInclude Include="Src\Engine\Core\Actor\Actor.h" />
+    <ClInclude Include="Src\Engine\Core\Actor\ActorManager.h" />
+    <ClInclude Include="Src\Engine\Core\Actor\FieldActor\FieldActor.h" />
+    <ClInclude Include="Src\Engine\Core\Actor\FieldActor\FieldActorManager.h" />
+    <ClInclude Include="Src\Engine\Core\Camera\Camera.h" />
+    <ClInclude Include="Src\Engine\Core\Camera\CameraManager.h" />
+    <ClInclude Include="Src\Engine\Core\Collision\BoundingSphere.h" />
+    <ClInclude Include="Src\Engine\Core\Field\Field.h" />
+    <ClInclude Include="Src\Pawn\Character\Character.h" />
+    <ClInclude Include="Src\Pawn\Pawn.h" />
     <ClInclude Include="Src\Engine\Core\Scene\IScene.h" />
     <ClInclude Include="Src\Engine\Core\Scene\NullScene.h" />
     <ClInclude Include="Src\Engine\Core\Scene\SceneManager.h" />
@@ -166,10 +193,15 @@
     <ClInclude Include="Src\Engine\Core\StateMachine\IState.h" />
     <ClInclude Include="Src\Engine\Core\StateMachine\NullState.h" />
     <ClInclude Include="Src\Engine\Core\StateMachine\StateMachine.h" />
+    <ClInclude Include="Src\Engine\Core\World\IWorld.h" />
+    <ClInclude Include="Src\Engine\Core\World\Light.h" />
+    <ClInclude Include="Src\Engine\Core\World\World.h" />
     <ClInclude Include="Src\Engine\Graphics\AnimatedMesh\AnimatedMesh.h" />
     <ClInclude Include="Src\Engine\Graphics\Canvas\Canvas.h" />
+    <ClInclude Include="Src\Engine\Utils\Line.h" />
     <ClInclude Include="Src\Engine\Utils\ObjectPool.h" />
     <ClInclude Include="Src\Engine\Utils\OpenBrowser.h" />
+    <ClInclude Include="Src\Engine\Utils\Ray.h" />
     <ClInclude Include="Src\Lib\json.hpp" />
     <ClInclude Include="Src\Scene\GameScene.h" />
     <ClInclude Include="Src\Scene\MenuScene.h" />
