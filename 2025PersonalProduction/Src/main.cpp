@@ -11,6 +11,7 @@
 #include <GSgame.h>
 #include <GSeffect.h>
 #include <GSmovie.h>
+#include "GameConfig.h"
 #include "Engine/Core/Scene/SceneManager.h"
 #include "Scene/TitleScene.h"
 #include "Scene/MenuScene.h"
@@ -95,8 +96,8 @@ private:
 
 int main() {
 #ifdef _DEBUG
-    return MyGame(1920, 1080, false, 60.0f).run();
+    return MyGame(1920, 1080, false, cFPS).run();
 #else
-    return MyGame(1920, 1080, true, 60.0f).run();
+    return MyGame(1920, 1080, true, cFPS).run();
 #endif
 }
