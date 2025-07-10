@@ -76,7 +76,7 @@ LoadedAssets* AssetsManager::load_assets(LoadAssets* data) {
 	}
 	// ロードが終了したので数をリセット
 	loaded_assets_count_ -= loaded_assets_num;
-
+	delete data;
 	assets_.push_back(result);
 	return result;
 }
