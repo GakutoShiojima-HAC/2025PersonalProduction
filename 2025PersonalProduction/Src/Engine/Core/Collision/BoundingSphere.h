@@ -21,7 +21,7 @@ public:
 
 public:
     /// <summary>
-    /// // 平行移動
+    /// 平行移動
     /// </summary>
     BoundingSphere translate(const GSvector3& position) const;
     
@@ -33,7 +33,7 @@ public:
     /// <summary>
     /// 球と球が重なっているかを返却
     /// </summary>
-    /// <param name="other">= 重なっていれば真</param>
+    /// <param name="other">= 重なっていたら真</param>
     bool intersects(const BoundingSphere& other) const;
 
     /// <summary>
