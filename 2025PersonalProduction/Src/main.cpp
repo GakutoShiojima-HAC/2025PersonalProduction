@@ -12,13 +12,14 @@
 #include <GSeffect.h>
 #include <GSmovie.h>
 #include "GameConfig.h"
+#include "Engine/Core/Assets/AssetsManager.h"
+#include "Engine/Utils/OpenBrowser.h"
+#include "Engine/Core/Screen/Screen.h"
+#include "Engine/Graphics/Canvas/Canvas.h"
 #include "Engine/Core/Scene/SceneManager.h"
 #include "Scene/TitleScene.h"
 #include "Scene/MenuScene.h"
 #include "Scene/GameScene.h"
-#include "Engine/Utils/OpenBrowser.h"
-#include "Engine/Core/Screen/Screen.h"
-#include "Engine/Graphics/Canvas/Canvas.h"
 
 class MyGame : public gslib::Game {
 public:
@@ -62,7 +63,8 @@ private:
 
     void end() override {
         scene_manager_.clear();
-
+        // アセットの破棄
+        AssetsManager::get_instance().clear();
         // エフェクトの終了
         gsFinishEffect();
         // カーソルの移動制限を解除
