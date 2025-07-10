@@ -1,5 +1,6 @@
 #include "Scene/GameScene.h"
 #include <GSeffect.h>
+#include "Engine/Core/Assets/AssetsManager.h"
 #include "Engine/Core/Field/Field.h"
 #include "Engine/Core/World/Light.h"
 #include <gslib.h>	// tmp
@@ -29,9 +30,13 @@ void GameScene::start() {
 	gsSetShadowMapPolygonOffset(2.5f, 1.0f);
 
 	// tmp
-	gsLoadOctree(0, "Resource/Assets/Octree/Octree.oct");
-	gsLoadOctree(1, "Resource/Assets/Octree/Collider.oct");
-	gsLoadTexture(0, "Resource/Assets/Skybox/default_skybox.dds");
+	LoadAssets* asset = new LoadAssets{};
+	asset->name = "Game";
+	asset->octree.push_back({ 0, "Resource/Assets/Octree/Octree.oct" });
+	asset->octree.push_back({ 1, "Resource/Assets/Octree/Collider.oct" });
+	asset->texture.push_back({ 0, "Resource/Assets/Skybox/default_skybox.dds" });
+	AssetsManager::get_instance().load_assets(asset);
+
 	world_.add_field(new Field{ 0, 1, 0 });
 	world_.add_light(new Light{});
 	world_.add_camera(new FixedCamera{ &world_, GSvector3{ 0.0f, 3.0f, -10.0f }, GSvector3{ 0.0f, 2.0f, 0.0f } });
@@ -60,9 +65,7 @@ void GameScene::end() {
 	gsStopAllEffects();
 
 	// tmp
-	gsDeleteOctree(0);
-	gsDeleteOctree(1);
-	gsDeleteTexture(0);
+	AssetsManager::get_instance().delete_assets("Game");
 }
 
 bool GameScene::is_end() const {
