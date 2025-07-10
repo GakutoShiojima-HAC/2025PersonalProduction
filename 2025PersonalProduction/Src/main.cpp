@@ -34,6 +34,7 @@ public:
         screen_.set_initialize_data(width_px, height_px, full_screen, refresh_rate);
 
         // 初期化
+        gsInitEffect();
         scene_manager_.init();
         Canvas::init();
     }
@@ -62,6 +63,8 @@ private:
     void end() override {
         scene_manager_.clear();
 
+        // エフェクトの終了
+        gsFinishEffect();
         // カーソルの移動制限を解除
         ClipCursor(NULL);
         // カーソルを表示

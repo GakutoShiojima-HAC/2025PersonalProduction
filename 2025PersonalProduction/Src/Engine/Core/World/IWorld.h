@@ -26,6 +26,8 @@ class Actor;
 
 class IWorld {
 public:
+    IWorld() = default;
+
 	virtual ~IWorld() = default;
 
 public:

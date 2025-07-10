@@ -85,6 +85,7 @@ protected:
 	ActorManager actor_;
 	// カメラマネージャー
 	CameraManager camera_;
+
 };
 
 #endif

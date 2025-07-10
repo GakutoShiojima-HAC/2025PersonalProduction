@@ -5,6 +5,10 @@
 #include "Engine/Core/Collision/BoundingSphere.h"
 #include <limits> // numeric_limitsを使うのに必要
 
+FieldActorManager::~FieldActorManager() {
+    clear();
+}
+
 FieldActor* FieldActorManager::collide(const Ray& ray, float max_distance, GSvector3* intersect, GSplane* plane) const {
     // レイを線分に変換する
     Line line;
