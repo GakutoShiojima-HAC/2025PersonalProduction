@@ -15,7 +15,7 @@ enum class CameraTag {
 	None,
 	Fixed,
 
-	SIZE	// —v‘f”
+	MAX_SIZE	// —v‘f”
 };
 
 #endif

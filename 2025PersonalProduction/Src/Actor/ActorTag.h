@@ -14,7 +14,7 @@
 enum class ActorTag {
 	None,
 
-	SIZE	// óvëfêî
+	MAX_SIZE	// óvëfêî
 };
 
 #endif

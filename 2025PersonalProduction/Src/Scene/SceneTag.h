@@ -17,7 +17,7 @@ enum class SceneTag {
 	Menu,	// ゲームメニュー
 	Game,	// ゲームプレイ
 
-	END_DONT_USE	// 要素数管理用
+	MAX_SIZE	// 要素数
 };
 
 #endif
