@@ -149,6 +149,7 @@
     <ClCompile Include="Src\Engine\Core\Actor\ActorManager.cpp" />
     <ClCompile Include="Src\Engine\Core\Actor\FieldActor\FieldActor.cpp" />
     <ClCompile Include="Src\Engine\Core\Actor\FieldActor\FieldActorManager.cpp" />
+    <ClCompile Include="Src\Engine\Core\Assets\AssetsManager.cpp" />
     <ClCompile Include="Src\Engine\Core\Camera\Camera.cpp" />
     <ClCompile Include="Src\Engine\Core\Camera\CameraManager.cpp" />
     <ClCompile Include="Src\Engine\Core\Collision\BoundingSphere.cpp" />
@@ -173,8 +174,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Actor\ActorTag.h" />
+    <ClInclude Include="Src\Assets.h" />
     <ClInclude Include="Src\Camera\CameraTag.h" />
     <ClInclude Include="Src\Camera\FixedCamera.h" />
+    <ClInclude Include="Src\Engine\Core\Assets\AssetsManager.h" />
     <ClInclude Include="Src\GameConfig.h" />
     <ClInclude Include="Src\Engine\Core\Actor\Actor.h" />
     <ClInclude Include="Src\Engine\Core\Actor\ActorManager.h" />
