@@ -1,21 +1,22 @@
 // -----------------------------------------------------------------------------------------
-//  File          : CameraTag.h
+//  File          : FixedCamera.h
 //  Author        : Shiojima Gakuto
 //  Created       : 2025/07/10
 //  Updated       : 2025/07/10
-//  Description   : カメラタグ定義クラス
+//  Description   : 固定カメラ 位置変更はトランスフォームから行うこと
 //
 //  注意：本ソースコードの無断転載・コードのコピー・貼り付けによる流用・再配布を禁止します。
 // -----------------------------------------------------------------------------------------
 
-#ifndef CAMERA_TAG_H_
-#define CAMERA_TAG_H_
+#ifndef FIXED_CAMERA_H_
+#define FIXED_CAMERA_H_
 
-enum class CameraTag {
-	None,
-	Fixed,
+#include "Engine/Core/Camera/Camera.h"
 
-	SIZE	// 要素数
+class FixedCamera : public Camera {
+public:
+	FixedCamera(IWorld* world, const GSvector3& position, const GSvector3& at);
+
 };
 
 #endif
