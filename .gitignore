@@ -4,7 +4,7 @@
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
 # Assets files
-Assets/
+/2025PersonalProduction/Resource/Assets/
 
 # VC++ Project files
 *.vcxproj.filters
