@@ -65,7 +65,7 @@ void AnimatedMesh::set_layer_indices(GSuint layer_index, const GSuint layer_bone
 void AnimatedMesh::transform(const GSmatrix4& matrix) {
     // 座標変換行列を更新
     transform_ = matrix;
-    // 各レイヤーのからローカル変換行列を取得
+    // 各レイヤーからローカル変換行列を取得
     for (GSuint i = 0; i < gsGetSkeletonNumBones(skeleton_); ++i) {
         local_bone_matrices_[i] = animation_layers_[animation_layer_indices_[i]].local_bone_matrix(i);
     }

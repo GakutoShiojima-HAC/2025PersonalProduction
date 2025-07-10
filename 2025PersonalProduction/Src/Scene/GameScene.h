@@ -12,6 +12,7 @@
 #define GAME_SCENE_H_
 
 #include "Engine/Core/Scene/IScene.h"
+#include "Engine/Core/World/World.h"
 
 class GameScene : public IScene {
 public:
@@ -39,11 +40,10 @@ public:
 	void reception_message(const std::string& message, void* param) override;
 
 private:
-
-
-private:
 	bool is_end_{ false };
 
+	// ƒ[ƒ‹ƒh
+	World world_;
 };
 
 #endif

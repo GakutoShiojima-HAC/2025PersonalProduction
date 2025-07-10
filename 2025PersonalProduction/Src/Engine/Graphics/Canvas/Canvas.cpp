@@ -5,7 +5,7 @@
 ScreenData* Canvas::screen_data_{ nullptr };
 
 void Canvas::init() {
-	screen_data_ = &Screen::get_instance().get_current_data();;
+	screen_data_ = &Screen::get_instance().get_current_data();
 }
 
 void Canvas::draw_texture(

@@ -11,6 +11,7 @@
 #include <GSgame.h>
 #include <GSeffect.h>
 #include <GSmovie.h>
+#include "GameConfig.h"
 #include "Engine/Core/Scene/SceneManager.h"
 #include "Scene/TitleScene.h"
 #include "Scene/MenuScene.h"
@@ -33,6 +34,7 @@ public:
         screen_.set_initialize_data(width_px, height_px, full_screen, refresh_rate);
 
         // 初期化
+        gsInitEffect();
         scene_manager_.init();
         Canvas::init();
     }
@@ -61,6 +63,8 @@ private:
     void end() override {
         scene_manager_.clear();
 
+        // エフェクトの終了
+        gsFinishEffect();
         // カーソルの移動制限を解除
         ClipCursor(NULL);
         // カーソルを表示
@@ -95,8 +99,8 @@ private:
 
 int main() {
 #ifdef _DEBUG
-    return MyGame(1920, 1080, false, 60.0f).run();
+    return MyGame(1920, 1080, false, cFPS).run();
 #else
-    return MyGame(1920, 1080, true, 60.0f).run();
+    return MyGame(1920, 1080, true, cFPS).run();
 #endif
 }
