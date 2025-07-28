@@ -145,6 +145,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Src\Camera\FixedCamera.cpp" />
+    <ClCompile Include="Src\Camera\TimelineCamera.cpp" />
     <ClCompile Include="Src\Engine\Core\Actor\Actor.cpp" />
     <ClCompile Include="Src\Engine\Core\Actor\ActorManager.cpp" />
     <ClCompile Include="Src\Engine\Core\Actor\FieldActor\FieldActor.cpp" />
@@ -154,6 +155,8 @@
     <ClCompile Include="Src\Engine\Core\Camera\CameraManager.cpp" />
     <ClCompile Include="Src\Engine\Core\Collision\BoundingSphere.cpp" />
     <ClCompile Include="Src\Engine\Core\Field\Field.cpp" />
+    <ClCompile Include="Src\Engine\Core\Timeline\Parameters\CameraTimeline.cpp" />
+    <ClCompile Include="Src\Engine\Core\Timeline\TimelineManager.cpp" />
     <ClCompile Include="Src\Pawn\Character\Character.cpp" />
     <ClCompile Include="Src\Pawn\Pawn.cpp" />
     <ClCompile Include="Src\Engine\Core\Scene\SceneManager.cpp" />
@@ -177,7 +180,11 @@
     <ClInclude Include="Src\Assets.h" />
     <ClInclude Include="Src\Camera\CameraTag.h" />
     <ClInclude Include="Src\Camera\FixedCamera.h" />
+    <ClInclude Include="Src\Camera\TimelineCamera.h" />
     <ClInclude Include="Src\Engine\Core\Assets\AssetsManager.h" />
+    <ClInclude Include="Src\Engine\Core\Timeline\ITimeline.h" />
+    <ClInclude Include="Src\Engine\Core\Timeline\Parameters\CameraTimeline.h" />
+    <ClInclude Include="Src\Engine\Core\Timeline\TimelineManager.h" />
     <ClInclude Include="Src\GameConfig.h" />
     <ClInclude Include="Src\Engine\Core\Actor\Actor.h" />
     <ClInclude Include="Src\Engine\Core\Actor\ActorManager.h" />
