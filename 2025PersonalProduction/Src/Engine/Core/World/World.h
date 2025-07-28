@@ -14,6 +14,7 @@
 #include <gslib.h>
 #include "Engine/Core/Actor/ActorManager.h"
 #include "Engine/Core/Camera/CameraManager.h"
+#include "Engine/Core/Timeline/TimelineManager.h"
 
 class World : public IWorld {
 public:
@@ -53,6 +54,12 @@ public:
 	/// <param name="actor">アクター</param>
 	void add_actor(Actor* actor);
 
+	/// <summary>
+	/// タイムラインマネージャーを取得
+	/// </summary>
+	/// <returns>タイムラインマネージャー</returns>
+	TimelineManager& timeline();
+
 public:
 	Field* get_field() override;
 
@@ -85,6 +92,8 @@ protected:
 	ActorManager actor_;
 	// カメラマネージャー
 	CameraManager camera_;
+	// タイムラインマネージャー
+	TimelineManager timeline_;
 
 };
 
