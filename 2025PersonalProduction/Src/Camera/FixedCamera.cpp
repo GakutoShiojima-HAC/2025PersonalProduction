@@ -7,3 +7,7 @@ FixedCamera::FixedCamera(IWorld* world, const GSvector3& position, const GSvecto
 	transform_.position(position);
 	transform_.lookAt(at);
 }
+
+void FixedCamera::die() {
+	// ŠO•”‚©‚çŽ€–S”»’è‚É‚Å‚«‚È‚¢‚æ‚¤‚É‚·‚é
+}

@@ -17,6 +17,9 @@ class FixedCamera : public Camera {
 public:
 	FixedCamera(IWorld* world, const GSvector3& position, const GSvector3& at);
 
+public:
+	void die() override;
+
 };
 
 #endif
