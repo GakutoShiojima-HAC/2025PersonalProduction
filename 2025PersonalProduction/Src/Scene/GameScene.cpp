@@ -3,8 +3,11 @@
 #include "Engine/Core/Assets/AssetsManager.h"
 #include "Engine/Core/Field/Field.h"
 #include "Engine/Core/World/Light.h"
+
 #include <gslib.h>	// tmp
 #include "Camera/FixedCamera.h"	// tmp
+#include "Engine/Core/Timeline/Parameters/CameraTimeline.h"	// tmp
+#include "Camera/TimelineCamera.h"	// tmp
 
 #define GS_ENABLE_MESH_SHADOW			// メッシュに影を付ける
 //#define GS_ENABLE_SKIN_MESH_SHADOW	// スキニングメッシュに影を付ける
@@ -39,7 +42,13 @@ void GameScene::start() {
 
 	world_.add_field(new Field{ 0, 1, 0 });
 	world_.add_light(new Light{});
+	
+	// tmp
 	world_.add_camera(new FixedCamera{ &world_, GSvector3{ 0.0f, 3.0f, -10.0f }, GSvector3{ 0.0f, 2.0f, 0.0f } });
+	world_.add_camera(new TimelineCamera{ &world_ });
+
+	// tmp
+	world_.timeline().add(new CameraTimeline{ &world_, "Resource/Private/Timeline/Camera/List/world1.json" });
 
 	// 同期
 	world_.update(0.0f);
@@ -48,6 +57,9 @@ void GameScene::start() {
 void GameScene::update(float delta_time) {
 	// tmp scene end
 	if (gsGetKeyTrigger(GKEY_L)) is_end_ = true;
+
+	// tmp timeline play
+	if (gsGetKeyTrigger(GKEY_T)) world_.timeline().camera_timeline()->play("test");
 
 	world_.update(delta_time);
 }
