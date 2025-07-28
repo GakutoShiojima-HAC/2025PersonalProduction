@@ -39,7 +39,7 @@ public:
     void update(float delta_time);
 
     /// <summary>
-    /// アクターの更新 updateの後に呼ばれる
+    /// アクターの更新 updateとcollideの後に呼ばれる
     /// </summary>
     void late_update(float delta_time);
 

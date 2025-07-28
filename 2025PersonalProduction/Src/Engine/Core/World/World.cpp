@@ -12,6 +12,7 @@ void World::update(float delta_time) {
 	actor_.update(delta_time);
 	actor_.collide();
 	actor_.late_update(delta_time);
+	timeline_.update(delta_time);
 	camera_.update(delta_time);
 	gsUpdateEffect(delta_time);
 	actor_.remove();
@@ -36,6 +37,7 @@ void World::clear() {
 	light_ = nullptr;
 	actor_.clear();
 	camera_.clear();
+	timeline_.clear();
 }
 
 void World::shadow_map_callback(void* param, const GSmatrix4* view, const GSmatrix4* projection) {
@@ -60,6 +62,10 @@ void World::add_light(Light* light) {
 
 void World::add_actor(Actor* actor) {
 	actor_.add(actor);
+}
+
+TimelineManager& World::timeline() {
+	return timeline_;
 }
 
 Field* World::get_field() {

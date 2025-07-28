@@ -13,8 +13,8 @@ void CameraManager::update(float delta_time) {
 	}
 
 	// 遷移タイマーを更新
-	if (prev_ != nullptr && transition_timer_ < transition_time_) {
-		transition_time_ += delta_time / cFPS;
+	if (prev_ != nullptr && transition_timer_ <= transition_time_) {
+		transition_timer_ += delta_time / cFPS;
 		// 遷移が終了したら
 		if (transition_timer_ >= transition_time_) prev_ = nullptr;
 	}
@@ -48,12 +48,14 @@ void CameraManager::add(Camera* camera) {
 
 	// 既に存在する場合
 	if (cameras_.find(key) != cameras_.end()) {
+		if (current_ == camera) current_ = nullptr;
 		delete cameras_[key];	// 既存のを消去
 		cameras_[key] = camera;
 	}
 	else {
 		cameras_[key] = camera;
 	}
+
 	if (current_ == nullptr) {
 		current_ = camera;
 		current_->enter();
@@ -125,15 +127,14 @@ void CameraManager::camera_lookat(GSvector3& pos, GSvector3& at, GSvector3& up) 
 	// トランジションしていない
 	if (prev_ == nullptr) {
 		pos = current_->transform().position();
-		at = current_->transform().forward();
+		at = pos + current_->transform().forward();
 		up = current_->transform().up();
 		return;
 	}
-	
 	// 進捗率
 	const float progress = transition_timer_ / transition_time_;
 	// 線形補間する
 	pos = GSvector3::lerp(prev_->transform().position(), current_->transform().position(), progress);
-	at = GSvector3::lerp(prev_->transform().forward(), current_->transform().forward(), progress);
+	at = pos + GSvector3::lerp(prev_->transform().forward(), current_->transform().forward(), progress);
 	up = GSvector3::lerp(prev_->transform().up(), current_->transform().up(), progress);
 }
