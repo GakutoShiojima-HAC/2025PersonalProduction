@@ -34,7 +34,7 @@ public:
 	virtual void update(float delta_time);
 
 	/// <summary>
-	/// 更新 updateの後に呼ばれる
+	/// 更新 updateとcollideの後に呼ばれる
 	/// </summary>
 	virtual void late_update(float delta_time);
 
