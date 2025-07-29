@@ -50,26 +50,6 @@ protected:
 	/// </summary>
 	virtual void end() = 0;
 
-	/// <summary>
-	/// タイムラインデータを読み込む
-	/// </summary>
-	/// <param name="name">= 管理名</param>
-	/// <param name="data_json_path">= データのパス</param>
-	virtual void load(const string& name, const string& data_json_path) = 0;
-
-	/// <summary>
-	/// indexがvectorの中に存在するかどうか
-	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	/// <param name="vec"></param>
-	/// <param name="index"></param>
-	/// <returns>存在するなら真</returns>
-	template <typename T>
-	inline T* is_valid_index(const vector<T*>& vec, GSint index) {
-		if (vec.empty()) return nullptr;
-		return index >= 0 && (size_t)index < vec.size() ? vec[index] : nullptr;
-	}
-
 protected:
 	// ワールド
 	World* world_{ nullptr };

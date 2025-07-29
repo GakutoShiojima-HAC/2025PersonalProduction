@@ -3,6 +3,7 @@
 #include "Engine/Core/Actor/Actor.h"
 #include "Lib/json.hpp"
 #include "Engine/Core/Camera/Camera.h"
+#include "Engine/Utils/Check.h"
 
 using json = nlohmann::json;
 
@@ -16,7 +17,7 @@ CameraTimeline::CameraTimeline(World* world, const string& list_json) {
 
 	// 識別名とタイムラインデータファイルパスを渡して読み込む
 	for (auto it = j.begin(); it != j.end(); ++it) {
-		load(it.key(), it.value());
+		add(it.key(), load(it.value()));
 	}
 }
 
@@ -30,8 +31,10 @@ void CameraTimeline::update(float delta_time) {
 	}
 
 	// playの後にupdateが呼ばれる都合上先に処理
-	CameraKeyFrame* current = is_valid_index(current_->get(), play_frame_);
-	CameraKeyFrame* next = is_valid_index(current_->get(), play_frame_ + 1);
+	CameraKeyFrame* current{ nullptr };
+	MyLib::is_valid_index(current_->get(), play_frame_, &current);
+	CameraKeyFrame* next{ nullptr };
+	MyLib::is_valid_index(current_->get(), play_frame_ + 1, &next);
 
 	// 次のキーフレームがなくなったら終了
 	if (current == nullptr || next == nullptr) {
@@ -125,7 +128,7 @@ void CameraTimeline::end() {
 	prev_camera_ = nullptr;
 }
 
-void CameraTimeline::load(const string& name, const string& load_json_path) {
+CameraTimeline::CameraTimelineData* CameraTimeline::load(const string& load_json_path) {
 	ifstream file(load_json_path);
 	if (!file.is_open()) return;
 	json j;
@@ -155,8 +158,7 @@ void CameraTimeline::load(const string& name, const string& load_json_path) {
 		}
 	}
 
-	// 管理下に追加
-	add(name, new CameraTimelineData{ data, start, end });
+	return new CameraTimelineData{ data, start, end };
 }
 
 void CameraTimeline::add(const string& name, CameraTimelineData* data) {

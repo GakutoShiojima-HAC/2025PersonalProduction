@@ -34,9 +34,7 @@ public:
 private:
 	void end() override;
 
-	void load(const string& name, const string& load_json_path) override;
-
-private:
+public:
 	// キーフレーム
 	struct CameraKeyFrame {
 		CameraKeyFrame(
@@ -97,6 +95,13 @@ private:
 	};
 
 private:
+	/// <summary>
+	/// jsonを読み込みタイムラインデータで返却
+	/// </summary>
+	/// <param name="load_json_path">= json</param>
+	/// <returns>= データ</returns>
+	CameraTimelineData* load(const string& load_json_path);
+
 	/// <summary>
 	/// タイムラインデータを管理下に追加
 	/// </summary>
