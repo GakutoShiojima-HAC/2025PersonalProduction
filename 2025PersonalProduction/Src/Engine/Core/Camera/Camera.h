@@ -31,6 +31,11 @@ public:
 	virtual void enter();
 
 	/// <summary>
+	/// •Ê‚ÌƒJƒƒ‰‚ÉØ‚è‘Ö‚í‚Á‚½‚Ìˆ—
+	/// </summary>
+	virtual void exit();
+
+	/// <summary>
 	/// ƒJƒƒ‰‚Ìõ–½‚ğI‚í‚ç‚¹‚é
 	/// </summary>
 	virtual void die();

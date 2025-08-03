@@ -8,6 +8,10 @@ void Camera::enter() {
 
 }
 
+void Camera::exit() {
+
+}
+
 void Camera::die() {
 	is_dead_ = true;
 }
