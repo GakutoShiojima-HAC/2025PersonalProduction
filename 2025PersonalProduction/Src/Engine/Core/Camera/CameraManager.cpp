@@ -97,12 +97,12 @@ void CameraManager::transition(Camera* from, Camera* to, float time) {
 	prev_ = from;
 	current_ = to;
 	if (prev_ != nullptr) {
-		prev_->exit();
 		prev_->is_using() = false;
+		prev_->exit();
 	}
 	if (current_ != nullptr) {
-		current_->enter();
 		current_->is_using() = true;
+		current_->enter();
 	}
 	transition_timer_ = 0.0f;
 	transition_time_ = time;
