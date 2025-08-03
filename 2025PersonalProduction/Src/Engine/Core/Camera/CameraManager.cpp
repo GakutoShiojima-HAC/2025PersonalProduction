@@ -56,9 +56,11 @@ void CameraManager::add(Camera* camera) {
 		cameras_[key] = camera;
 	}
 
+	// ƒJƒƒ‰‚ª‘¶Ý‚µ‚È‚¢ê‡
 	if (current_ == nullptr) {
 		current_ = camera;
 		current_->enter();
+		current_->is_using() = true;
 	}
 }
 
@@ -94,7 +96,14 @@ void CameraManager::transition(Camera* to, float time) {
 void CameraManager::transition(Camera* from, Camera* to, float time) {
 	prev_ = from;
 	current_ = to;
-	current_->enter();
+	if (prev_ != nullptr) {
+		prev_->is_using() = false;
+		prev_->exit();
+	}
+	if (current_ != nullptr) {
+		current_->is_using() = true;
+		current_->enter();
+	}
 	transition_timer_ = 0.0f;
 	transition_time_ = time;
 }

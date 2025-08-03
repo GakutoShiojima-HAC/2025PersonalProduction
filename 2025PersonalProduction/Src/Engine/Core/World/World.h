@@ -54,12 +54,6 @@ public:
 	/// <param name="actor">アクター</param>
 	void add_actor(Actor* actor);
 
-	/// <summary>
-	/// タイムラインマネージャーを取得
-	/// </summary>
-	/// <returns>タイムラインマネージャー</returns>
-	TimelineManager& timeline();
-
 public:
 	Field* get_field() override;
 
@@ -82,6 +76,8 @@ public:
 	int count_actor() const override;
 
 	int count_actor_with_tag(const ActorTag tag) const override;
+
+	TimelineManager& timeline() override;
 
 protected:
 	// フィールド

@@ -3,6 +3,7 @@
 #include "Engine/Core/Actor/Actor.h"
 #include "Lib/json.hpp"
 #include "Engine/Core/Camera/Camera.h"
+#include "Engine/Utils/Check.h"
 
 using json = nlohmann::json;
 
@@ -16,7 +17,7 @@ CameraTimeline::CameraTimeline(World* world, const string& list_json) {
 
 	// 識別名とタイムラインデータファイルパスを渡して読み込む
 	for (auto it = j.begin(); it != j.end(); ++it) {
-		load(it.key(), it.value());
+		add(it.key(), load(it.value()));
 	}
 }
 
@@ -30,8 +31,10 @@ void CameraTimeline::update(float delta_time) {
 	}
 
 	// playの後にupdateが呼ばれる都合上先に処理
-	CameraKeyFrame* current = is_valid_index(current_->get(), play_frame_);
-	CameraKeyFrame* next = is_valid_index(current_->get(), play_frame_ + 1);
+	CameraKeyFrame* current{ nullptr };
+	MyLib::is_valid_index(current_->get(), play_frame_, &current);
+	CameraKeyFrame* next{ nullptr };
+	MyLib::is_valid_index(current_->get(), play_frame_ + 1, &next);
 
 	// 次のキーフレームがなくなったら終了
 	if (current == nullptr || next == nullptr) {
@@ -125,9 +128,9 @@ void CameraTimeline::end() {
 	prev_camera_ = nullptr;
 }
 
-void CameraTimeline::load(const string& name, const string& load_json_path) {
+CameraTimeline::CameraTimelineData* CameraTimeline::load(const string& load_json_path) {
 	ifstream file(load_json_path);
-	if (!file.is_open()) return;
+	if (!file.is_open()) return nullptr;
 	json j;
 	file >> j;
 
@@ -155,8 +158,23 @@ void CameraTimeline::load(const string& name, const string& load_json_path) {
 		}
 	}
 
-	// 管理下に追加
-	add(name, new CameraTimelineData{ data, start, end });
+	return new CameraTimelineData{ data, start, end };
+}
+
+void CameraTimeline::play_data(CameraTimelineData* data) {
+	if (data == nullptr) return;
+
+	// 再生中なら一度終了
+	if (is_playing_) end();
+	// 再生するタイムラインデータを取得
+	current_ = data;
+
+	// 初期化
+	is_playing_ = true;
+	play_frame_ = 0;
+	timer_ = 0.0f;
+	prev_camera_ = world_->get_camera();
+	camera_ = world_->find_camera(CameraTag::Timeline);
 }
 
 void CameraTimeline::add(const string& name, CameraTimelineData* data) {
@@ -203,14 +221,14 @@ void CameraTimeline::CameraTimelineData::clear() {
 	timeline_.clear();
 }
 
-const vector<CameraTimeline::CameraKeyFrame*>& CameraTimeline::CameraTimelineData::get() {
+vector<CameraTimeline::CameraKeyFrame*>& CameraTimeline::CameraTimelineData::get() {
 	return timeline_;
 }
 
-float CameraTimeline::CameraTimelineData::start_transition_time() const {
+float& CameraTimeline::CameraTimelineData::start_transition_time() {
 	return start_transition_time_;
 }
 
-float CameraTimeline::CameraTimelineData::end_transition_time() const {
+float& CameraTimeline::CameraTimelineData::end_transition_time() {
 	return end_transition_time_;
 }

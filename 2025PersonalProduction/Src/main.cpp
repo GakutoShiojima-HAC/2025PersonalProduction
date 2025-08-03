@@ -21,6 +21,9 @@
 #include "Scene/MenuScene.h"
 #include "Scene/GameScene.h"
 
+// tmp
+#include "Scene/TimelineEditorScene.h"
+
 class MyGame : public gslib::Game {
 public:
     /// <summary>
@@ -47,8 +50,11 @@ private:
         scene_manager_.add(new MenuScene{});
         scene_manager_.add(new GameScene{});
 
+        // tmp
+        scene_manager_.add(new TimelineEditorScene{});
+
         // タイトルシーンから始める
-        scene_manager_.change(SceneTag::Title);
+        scene_manager_.change(SceneTag::TimelineEditor);
     }
 
     void update(float delta_time) override {

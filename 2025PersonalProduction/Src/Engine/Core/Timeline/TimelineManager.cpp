@@ -13,10 +13,10 @@ void TimelineManager::update(float delta_time) {
 }
 
 void TimelineManager::clear() {
-	for (auto timeline : timelines_) {
-		timeline->clear();
-		delete timeline;
-		timeline = nullptr;
+	for (auto it : timelines_) {
+		it->clear();
+		delete it;
+		it = nullptr;
 	}
 	timelines_.clear();
 	camera_timeline_ = nullptr;
