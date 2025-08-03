@@ -15,6 +15,7 @@
 #include <GSstandard_shader.h>
 
 #include "Engine/Core/Timeline/Editor/CameraTimelineEditor.h"
+#include "Camera/EditorCamera.h"
 
 void TimelineEditorScene::start() {
 	is_end_ = false;
@@ -46,25 +47,21 @@ void TimelineEditorScene::start() {
 	world_.add_light(new Light{});
 
 	// tmp
-	world_.add_camera(new FixedCamera{ &world_, GSvector3{ 0.0f, 3.0f, -10.0f }, GSvector3{ 0.0f, 2.0f, 0.0f } });
-	world_.add_camera(new TimelineCamera{ &world_ });
-
-	// tmp
 	world_.timeline().add(new CameraTimeline{ &world_, "Resource/Private/Timeline/Camera/List/world1.json" });
 
 	// tmp
-	editor_.add(new CameraTimelineEditor{ &world_ });
+	world_.add_camera(new FixedCamera{ &world_, GSvector3{ 0.0f, 3.0f, -10.0f }, GSvector3{ 0.0f, 2.0f, 0.0f } });
+	world_.add_camera(new TimelineCamera{ &world_ });
 
-	// “¯Šú
-	world_.update(0.0f);
+	world_.add_camera(new EditorCamera{ &world_ });
+
+	// tmp
+	editor_.add(new CameraTimelineEditor{ &world_ });
 }
 
 void TimelineEditorScene::update(float delta_time) {
 	// tmp scene end
 	if (gsGetKeyTrigger(GKEY_L)) is_end_ = true;
-
-	// tmp timeline play
-	if (gsGetKeyTrigger(GKEY_T)) world_.timeline().camera_timeline()->play("test");
 
 	world_.update(delta_time);
 	editor_.update(delta_time);
