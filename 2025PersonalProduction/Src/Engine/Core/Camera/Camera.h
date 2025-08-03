@@ -62,16 +62,20 @@ public:
 	/// </summary>
 	bool is_dead() const;
 
+	/// <summary>
+	/// カメラが使われているかどうか
+	/// </summary>
+	bool& is_using();
+
 protected:
 	// ワールド
 	IWorld* world_{ nullptr };
-
 	// 寿命
 	bool is_dead_{ false };
-
+	// 使用中かどうか
+	bool is_using_{ false };
 	// カメラタグ
 	CameraTag tag_{ CameraTag::None };
-	
 	// トランスフォーム
 	GStransform transform_;
 

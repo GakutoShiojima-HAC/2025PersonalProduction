@@ -31,3 +31,7 @@ GStransform& Camera::transform() {
 bool Camera::is_dead() const {
 	return is_dead_;
 }
+
+bool& Camera::is_using() {
+	return is_using_;
+}
