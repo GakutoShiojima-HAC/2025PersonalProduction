@@ -44,6 +44,12 @@ public:
 	/// </summary>
 	virtual void stop() = 0;
 
+	/// <summary>
+	/// タイムラインを再生しているかどうかを返却
+	/// </summary>
+	/// <returns>再生中なら真を返却</returns>
+	virtual bool is_playing() const { return is_playing_; }
+
 protected:
 	/// <summary>
 	/// タイムライン再生を終了

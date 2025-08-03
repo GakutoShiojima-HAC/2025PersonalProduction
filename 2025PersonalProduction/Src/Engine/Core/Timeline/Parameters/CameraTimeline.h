@@ -31,7 +31,6 @@ public:
 
 	void stop() override;
 
-private:
 	void end() override;
 
 public:
@@ -72,18 +71,18 @@ public:
 		/// <summary>
 		/// タイムラインデータ
 		/// </summary>
-		const vector<CameraKeyFrame*>& get();
+		vector<CameraKeyFrame*>& get();
 
 	public:
 		/// <summary>
 		/// タイムライン用カメラに遷移するまでの時間
 		/// </summary>
-		float start_transition_time() const;
+		float& start_transition_time();
 
 		/// <summary>
 		/// 元のカメラに遷移するまでの時間
 		/// </summary>
-		float end_transition_time() const;
+		float& end_transition_time();
 
 	private:
 		// タイムラインデータ
@@ -94,7 +93,7 @@ public:
 		float end_transition_time_{ 0.0f };
 	};
 
-private:
+public:
 	/// <summary>
 	/// jsonを読み込みタイムラインデータで返却
 	/// </summary>
@@ -102,6 +101,13 @@ private:
 	/// <returns>= データ</returns>
 	CameraTimelineData* load(const string& load_json_path);
 
+	/// <summary>
+	/// タイムラインデータを一度だけ再生 メモリ管理はしていません
+	/// </summary>
+	/// <param name="data">= データ</param>
+	void play_data(CameraTimelineData* data);
+
+private:
 	/// <summary>
 	/// タイムラインデータを管理下に追加
 	/// </summary>
