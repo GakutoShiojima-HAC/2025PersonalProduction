@@ -64,10 +64,6 @@ void World::add_actor(Actor* actor) {
 	actor_.add(actor);
 }
 
-TimelineManager& World::timeline() {
-	return timeline_;
-}
-
 Field* World::get_field() {
 	return field_;
 }
@@ -110,4 +106,8 @@ int World::count_actor() const {
 
 int World::count_actor_with_tag(const ActorTag tag) const {
 	return actor_.count_with_tag(tag);
+}
+
+TimelineManager& World::timeline() {
+	return timeline_;
 }

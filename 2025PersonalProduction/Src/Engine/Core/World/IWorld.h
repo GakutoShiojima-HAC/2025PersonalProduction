@@ -23,6 +23,7 @@ class FieldActor;
 class Light;
 class Camera;
 class Actor;
+class TimelineManager;
 
 class IWorld {
 public:
@@ -103,6 +104,12 @@ public:
     /// <param name="tag">= タグ</param>
     /// <returns>数</returns>
     virtual int count_actor_with_tag(const ActorTag tag) const = 0;
+
+    /// <summary>
+    /// タイムラインマネージャーを取得
+    /// </summary>
+    /// <returns>タイムラインマネージャー</returns>
+    virtual TimelineManager& timeline() = 0;
 
 public:
 	// コピー禁止
