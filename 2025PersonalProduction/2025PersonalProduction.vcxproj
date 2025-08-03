@@ -144,6 +144,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Camera\EditorCamera.cpp" />
     <ClCompile Include="Src\Camera\FixedCamera.cpp" />
     <ClCompile Include="Src\Camera\TimelineCamera.cpp" />
     <ClCompile Include="Src\Engine\Core\Actor\Actor.cpp" />
@@ -155,8 +156,12 @@
     <ClCompile Include="Src\Engine\Core\Camera\CameraManager.cpp" />
     <ClCompile Include="Src\Engine\Core\Collision\BoundingSphere.cpp" />
     <ClCompile Include="Src\Engine\Core\Field\Field.cpp" />
+    <ClCompile Include="Src\Engine\Core\Timeline\Editor\CameraTimelineEditor.cpp" />
+    <ClCompile Include="Src\Engine\Core\Timeline\Editor\TimelineEditor.cpp" />
     <ClCompile Include="Src\Engine\Core\Timeline\Parameters\CameraTimeline.cpp" />
+    <ClCompile Include="Src\Engine\Core\Timeline\TimelineEditorManager.cpp" />
     <ClCompile Include="Src\Engine\Core\Timeline\TimelineManager.cpp" />
+    <ClCompile Include="Src\Lib\imgui_stdlib.cpp" />
     <ClCompile Include="Src\Pawn\Character\Character.cpp" />
     <ClCompile Include="Src\Pawn\Pawn.cpp" />
     <ClCompile Include="Src\Engine\Core\Scene\SceneManager.cpp" />
@@ -169,6 +174,7 @@
     <ClCompile Include="Src\main.cpp" />
     <ClCompile Include="Src\Scene\GameScene.cpp" />
     <ClCompile Include="Src\Scene\MenuScene.cpp" />
+    <ClCompile Include="Src\Scene\TimelineEditorScene.cpp" />
     <ClCompile Include="Src\Scene\TitleScene.cpp" />
     <ClCompile Include="Src\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -179,12 +185,18 @@
     <ClInclude Include="Src\Actor\ActorTag.h" />
     <ClInclude Include="Src\Assets.h" />
     <ClInclude Include="Src\Camera\CameraTag.h" />
+    <ClInclude Include="Src\Camera\EditorCamera.h" />
     <ClInclude Include="Src\Camera\FixedCamera.h" />
     <ClInclude Include="Src\Camera\TimelineCamera.h" />
     <ClInclude Include="Src\Engine\Core\Assets\AssetsManager.h" />
+    <ClInclude Include="Src\Engine\Core\Timeline\Editor\CameraTimelineEditor.h" />
     <ClInclude Include="Src\Engine\Core\Timeline\ITimeline.h" />
+    <ClInclude Include="Src\Engine\Core\Timeline\Editor\TimelineEditor.h" />
     <ClInclude Include="Src\Engine\Core\Timeline\Parameters\CameraTimeline.h" />
+    <ClInclude Include="Src\Engine\Core\Timeline\TimelineEditorManager.h" />
     <ClInclude Include="Src\Engine\Core\Timeline\TimelineManager.h" />
+    <ClInclude Include="Src\Engine\Utils\Check.h" />
+    <ClInclude Include="Src\Engine\Utils\Folder.h" />
     <ClInclude Include="Src\GameConfig.h" />
     <ClInclude Include="Src\Engine\Core\Actor\Actor.h" />
     <ClInclude Include="Src\Engine\Core\Actor\ActorManager.h" />
@@ -194,6 +206,7 @@
     <ClInclude Include="Src\Engine\Core\Camera\CameraManager.h" />
     <ClInclude Include="Src\Engine\Core\Collision\BoundingSphere.h" />
     <ClInclude Include="Src\Engine\Core\Field\Field.h" />
+    <ClInclude Include="Src\Lib\imgui_stdlib.h" />
     <ClInclude Include="Src\Pawn\Character\Character.h" />
     <ClInclude Include="Src\Pawn\Pawn.h" />
     <ClInclude Include="Src\Engine\Core\Scene\IScene.h" />
@@ -216,6 +229,7 @@
     <ClInclude Include="Src\Scene\GameScene.h" />
     <ClInclude Include="Src\Scene\MenuScene.h" />
     <ClInclude Include="Src\Scene\SceneTag.h" />
+    <ClInclude Include="Src\Scene\TimelineEditorScene.h" />
     <ClInclude Include="Src\Scene\TitleScene.h" />
     <ClInclude Include="Src\stdafx.h" />
   </ItemGroup>
