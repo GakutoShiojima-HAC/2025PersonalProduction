@@ -73,6 +73,10 @@ GSvector3 Actor::velocity() const {
 	return velocity_;
 }
 
+GSvector3& Actor::velocity() {
+	return velocity_;
+}
+
 BoundingSphere Actor::collider() const {
 	return collider_;
 }
