@@ -24,6 +24,7 @@ class Light;
 class Camera;
 class Actor;
 class TimelineManager;
+class NavMeshSurface;
 
 class IWorld {
 public:
@@ -77,6 +78,12 @@ public:
     /// <param name="to">= 遷移先</param>
     /// <param name="time">= 遷移にかかる時間</param>
     virtual void camera_transition(Camera* from, Camera* to, float time = 0) = 0;
+
+    /// <summary>
+    /// ナビメッシュを取得
+    /// </summary>
+    /// <returns>ナビメッシュ</returns>
+    virtual NavMeshSurface* navmesh() = 0;
 
     /// <summary>
     /// 指定した名前を持つアクターを検索

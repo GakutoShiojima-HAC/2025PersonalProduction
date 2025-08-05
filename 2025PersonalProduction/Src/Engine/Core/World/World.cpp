@@ -9,6 +9,7 @@ World::~World() {
 
 void World::update(float delta_time) {
 	field_->update(delta_time);
+	navmesh_->update(delta_time);
 	actor_.update(delta_time);
 	actor_.collide();
 	actor_.late_update(delta_time);
@@ -24,6 +25,7 @@ void World::draw() const {
 	light_->draw();
 	gsDrawShadowMap(World::shadow_map_callback, (void*)this);
 	field_->draw();
+	navmesh_->draw();
 	actor_.draw();
 	actor_.draw_tranparent();
 	gsDrawEffect();
@@ -35,6 +37,8 @@ void World::clear() {
 	field_ = nullptr;
 	delete light_;
 	light_ = nullptr;
+	delete navmesh_;
+	navmesh_ = nullptr;
 	actor_.clear();
 	camera_.clear();
 	timeline_.clear();
@@ -58,6 +62,11 @@ void World::add_field(Field* field) {
 void World::add_light(Light* light) {
 	delete light_;
 	light_ = light;
+}
+
+void World::add_navmesh(NavMeshSurface* navmesh) {
+	delete navmesh_;
+	navmesh_ = navmesh;
 }
 
 void World::add_actor(Actor* actor) {
@@ -90,6 +99,10 @@ void World::camera_transition(Camera* to, float time) {
 
 void World::camera_transition(Camera* from, Camera* to, float time) {
 	camera_.transition(from, to, time);
+}
+
+NavMeshSurface* World::navmesh() {
+	return navmesh_;
 }
 
 Actor* World::find_actor(const string& name) const {
