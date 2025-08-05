@@ -17,6 +17,8 @@
 #include "Engine/Core/Timeline/Editor/CameraTimelineEditor.h"
 #include "Camera/EditorCamera.h"
 
+#include "Engine/Core/NavMesh/NavMeshDebugger.h"
+
 void TimelineEditorScene::start() {
 	is_end_ = false;
 
@@ -43,6 +45,8 @@ void TimelineEditorScene::start() {
 	asset->texture.push_back({ 0, "Resource/Assets/Skybox/default_skybox.dds" });
 	AssetsManager::get_instance().load_assets(asset);
 
+	world_.add_navmesh(new NavMeshSurface{ "Resource/Assets/Octree/navmesh_export.txt" });
+
 	world_.add_field(new Field{ 0, 1, 0 });
 	world_.add_light(new Light{});
 
@@ -54,6 +58,9 @@ void TimelineEditorScene::start() {
 	world_.add_camera(new TimelineCamera{ &world_ });
 
 	world_.add_camera(new EditorCamera{ &world_ });
+
+	// tmp
+	world_.add_actor(new NavMeshDebugger{ &world_ });
 
 	// tmp
 	editor_.add(new CameraTimelineEditor{ &world_ });
