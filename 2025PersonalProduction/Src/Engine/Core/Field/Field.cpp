@@ -4,6 +4,10 @@
 #include "Engine/Utils/Ray.h"
 #include "Engine/Core/Collision/BoundingSphere.h"
 
+#ifdef _DEBUG
+#include <imgui/imgui.h>
+#endif
+
 Field::Field(GSuint octree, GSuint collider, GSuint skybox) {
 	octree_ = octree;
 	collider_ = collider;
@@ -17,12 +21,27 @@ Field::~Field() {
 void Field::update(float delta_time) {
 	actors_.update(delta_time);
 	actors_.remove();
+
+#ifdef _DEBUG
+    ImGui::Begin("Field Window");
+
+    if (ImGui::Button("Toggle Draw Octree")) draw_octree_ = !draw_octree_;
+
+    if (ImGui::Button("Toggle Draw Skybox")) draw_skybox_ = !draw_skybox_;
+
+    ImGui::End();
+#endif
 }
 
 void Field::draw() const {
-	gsDrawSkyboxCubemap(skybox_);
-	gsDrawOctree(octree_);
-	
+#ifdef _DEBUG
+    if (draw_skybox_) gsDrawSkyboxCubemap(skybox_);
+    if (draw_octree_) gsDrawOctree(octree_);
+#else
+    gsDrawSkyboxCubemap(skybox_);
+    gsDrawOctree(octree_);
+#endif
+
 	draw_field_actor();
 }
 
