@@ -156,6 +156,9 @@
     <ClCompile Include="Src\Engine\Core\Camera\CameraManager.cpp" />
     <ClCompile Include="Src\Engine\Core\Collision\BoundingSphere.cpp" />
     <ClCompile Include="Src\Engine\Core\Field\Field.cpp" />
+    <ClCompile Include="Src\Engine\Core\NavMesh\NavMeshAgent.cpp" />
+    <ClCompile Include="Src\Engine\Core\NavMesh\NavMeshDebugger.cpp" />
+    <ClCompile Include="Src\Engine\Core\NavMesh\NavMeshSurface.cpp" />
     <ClCompile Include="Src\Engine\Core\Timeline\Editor\CameraTimelineEditor.cpp" />
     <ClCompile Include="Src\Engine\Core\Timeline\Editor\TimelineEditor.cpp" />
     <ClCompile Include="Src\Engine\Core\Timeline\Parameters\CameraTimeline.cpp" />
@@ -189,6 +192,9 @@
     <ClInclude Include="Src\Camera\FixedCamera.h" />
     <ClInclude Include="Src\Camera\TimelineCamera.h" />
     <ClInclude Include="Src\Engine\Core\Assets\AssetsManager.h" />
+    <ClInclude Include="Src\Engine\Core\NavMesh\NavMeshAgent.h" />
+    <ClInclude Include="Src\Engine\Core\NavMesh\NavMeshDebugger.h" />
+    <ClInclude Include="Src\Engine\Core\NavMesh\NavMeshSurface.h" />
     <ClInclude Include="Src\Engine\Core\Timeline\Editor\CameraTimelineEditor.h" />
     <ClInclude Include="Src\Engine\Core\Timeline\ITimeline.h" />
     <ClInclude Include="Src\Engine\Core\Timeline\Editor\TimelineEditor.h" />
@@ -196,6 +202,7 @@
     <ClInclude Include="Src\Engine\Core\Timeline\TimelineEditorManager.h" />
     <ClInclude Include="Src\Engine\Core\Timeline\TimelineManager.h" />
     <ClInclude Include="Src\Engine\Utils\Check.h" />
+    <ClInclude Include="Src\Engine\Utils\DebugMarker.h" />
     <ClInclude Include="Src\Engine\Utils\Folder.h" />
     <ClInclude Include="Src\GameConfig.h" />
     <ClInclude Include="Src\Engine\Core\Actor\Actor.h" />
