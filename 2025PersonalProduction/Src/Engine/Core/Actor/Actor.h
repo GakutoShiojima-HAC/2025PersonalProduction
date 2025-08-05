@@ -107,9 +107,14 @@ public:
 	GStransform& transform();
 
 	/// <summary>
-	/// ˆÚ“®—Ê‚ğ•Ô‹p
+	/// ˆÚ“®—Ê‚ğ•Ô‹p(const)
 	/// </summary>
 	GSvector3 velocity() const;
+
+	/// <summary>
+	/// ˆÚ“®—Ê‚ğ•Ô‹p
+	/// </summary>
+	GSvector3& velocity();
 
 	/// <summary>
 	/// Õ“Ë”»’èƒf[ƒ^‚ğæ“¾

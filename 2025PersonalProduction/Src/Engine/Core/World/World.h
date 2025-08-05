@@ -15,6 +15,7 @@
 #include "Engine/Core/Actor/ActorManager.h"
 #include "Engine/Core/Camera/CameraManager.h"
 #include "Engine/Core/Timeline/TimelineManager.h"
+#include "Engine/Core/NavMesh/NavMeshSurface.h"
 
 class World : public IWorld {
 public:
@@ -49,6 +50,12 @@ public:
 	void add_light(Light* light);
 
 	/// <summary>
+	/// ナビメッシュの追加
+	/// </summary>
+	/// <param name="navmesh">= ナビメッシュ</param>
+	void add_navmesh(NavMeshSurface* navmesh);
+
+	/// <summary>
 	/// アクターの追加
 	/// </summary>
 	/// <param name="actor">アクター</param>
@@ -69,6 +76,8 @@ public:
 
 	void camera_transition(Camera* from, Camera* to, float time = 0) override;
 
+	NavMeshSurface* navmesh() override;
+
 	Actor* find_actor(const string& name) const override;
 
 	vector<Actor*> find_actor_with_tag(const ActorTag tag) const override;
@@ -84,13 +93,15 @@ protected:
 	Field* field_{ nullptr };
 	// ライト
 	Light* light_{ nullptr };
+	// ナビメッシュ
+	NavMeshSurface* navmesh_{ nullptr };
 	// アクターマネージャー
 	ActorManager actor_;
 	// カメラマネージャー
 	CameraManager camera_;
 	// タイムラインマネージャー
 	TimelineManager timeline_;
-
+	
 };
 
 #endif

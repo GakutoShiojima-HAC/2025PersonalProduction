@@ -106,6 +106,13 @@ private:
 	// フィールドアクター
 	FieldActorManager actors_;
 
+#ifdef _DEBUG
+	// オクツリーを描画するかどうか
+	bool draw_octree_{ true };
+	// スカイボックスを描画するかどうか
+	bool draw_skybox_{ true };
+#endif
+
 public:
 	// コピー禁止
 	Field(const Field& other) = delete;
