@@ -2,6 +2,8 @@
 #include <GSeffect.h>
 #include "Engine/Core/Field/Field.h"
 #include "Engine/Core/World/Light.h"
+#include "Engine/Core/Actor/Pawn/Pawn.h"
+#include "Engine/Core/Actor/Pawn/Character/Character.h"
 
 World::~World() {
 	clear();
@@ -9,13 +11,15 @@ World::~World() {
 
 void World::update(float delta_time) {
 	field_->update(delta_time);
-	navmesh_->update(delta_time);
+	if (navmesh_ != nullptr) navmesh_->update(delta_time);
 	actor_.update(delta_time);
 	actor_.collide();
 	actor_.late_update(delta_time);
 	timeline_.update(delta_time);
 	camera_.update(delta_time);
 	gsUpdateEffect(delta_time);
+	character_.remove();
+	pawn_.remove();
 	actor_.remove();
 }
 
@@ -25,7 +29,7 @@ void World::draw() const {
 	light_->draw();
 	gsDrawShadowMap(World::shadow_map_callback, (void*)this);
 	field_->draw();
-	navmesh_->draw();
+	if (navmesh_ != nullptr) navmesh_->draw();
 	actor_.draw();
 	actor_.draw_tranparent();
 	gsDrawEffect();
@@ -39,6 +43,8 @@ void World::clear() {
 	light_ = nullptr;
 	delete navmesh_;
 	navmesh_ = nullptr;
+	character_.clear();
+	pawn_.clear();
 	actor_.clear();
 	camera_.clear();
 	timeline_.clear();
@@ -71,6 +77,16 @@ void World::add_navmesh(NavMeshSurface* navmesh) {
 
 void World::add_actor(Actor* actor) {
 	actor_.add(actor);
+}
+
+void World::add_pawn(Pawn* pawn) {
+	pawn_.add(pawn);
+	actor_.add(pawn);
+}
+
+void World::add_character(Character* character) {
+	character_.add(character);
+	add_pawn(character);
 }
 
 Field* World::get_field() {
@@ -119,6 +135,22 @@ int World::count_actor() const {
 
 int World::count_actor_with_tag(const ActorTag tag) const {
 	return actor_.count_with_tag(tag);
+}
+
+Pawn* World::find_pawn(const string& name) const {
+	return pawn_.find(name);
+}
+
+vector<Pawn*> World::find_pawn_with_tag(const ActorTag tag) const {
+	return pawn_.find_with_tag(tag);
+}
+
+Character* World::find_character(const string& name) const {
+	return character_.find(name);
+}
+
+vector<Character*> World::find_character_with_tag(const ActorTag tag) const {
+	return character_.find_with_tag(tag);
 }
 
 TimelineManager& World::timeline() {

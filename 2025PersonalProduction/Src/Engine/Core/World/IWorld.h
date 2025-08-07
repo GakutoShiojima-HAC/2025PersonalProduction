@@ -23,6 +23,8 @@ class FieldActor;
 class Light;
 class Camera;
 class Actor;
+class Pawn;
+class Character;
 class TimelineManager;
 class NavMeshSurface;
 
@@ -111,6 +113,34 @@ public:
     /// <param name="tag">= タグ</param>
     /// <returns>数</returns>
     virtual int count_actor_with_tag(const ActorTag tag) const = 0;
+
+    /// <summary>
+    /// 指定した名前を持つポーンを検索
+    /// </summary>
+    /// <param name="name">= 名前</param>
+    /// <returns>見つかればポーンを、見つからなければnullptr</returns>
+    virtual Pawn* find_pawn(const string& name) const = 0;
+
+    /// <summary>
+    /// 指定したタグを持つポーンを全て検索
+    /// </summary>
+    /// <param name="tag">= タグ</param>
+    /// <returns>ポーン</returns>
+    virtual vector<Pawn*> find_pawn_with_tag(const ActorTag tag) const = 0;
+
+    /// <summary>
+    /// 指定した名前を持つキャラクターを検索
+    /// </summary>
+    /// <param name="name">= 名前</param>
+    /// <returns>見つかればキャラクターを、見つからなければnullptr</returns>
+    virtual Character* find_character(const string& name) const = 0;
+
+    /// <summary>
+    /// 指定したタグを持つキャラクターを全て検索
+    /// </summary>
+    /// <param name="tag">= タグ</param>
+    /// <returns>キャラクター</returns>
+    virtual vector<Character*> find_character_with_tag(const ActorTag tag) const = 0;
 
     /// <summary>
     /// タイムラインマネージャーを取得

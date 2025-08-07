@@ -13,6 +13,8 @@
 #include "Engine/Core/World/IWorld.h"
 #include <gslib.h>
 #include "Engine/Core/Actor/ActorManager.h"
+#include "Engine/Core/Actor/Pawn/PawnManager.h"
+#include "Engine/Core/Actor/Pawn/Character/CharacterManager.h"
 #include "Engine/Core/Camera/CameraManager.h"
 #include "Engine/Core/Timeline/TimelineManager.h"
 #include "Engine/Core/NavMesh/NavMeshSurface.h"
@@ -58,8 +60,20 @@ public:
 	/// <summary>
 	/// アクターの追加
 	/// </summary>
-	/// <param name="actor">アクター</param>
+	/// <param name="actor">= アクター</param>
 	void add_actor(Actor* actor);
+
+	/// <summary>
+	/// ポーンの追加
+	/// </summary>
+	/// <param name="pawn">= ポーン</param>
+	void add_pawn(Pawn* pawn);
+
+	/// <summary>
+	/// キャラクターの追加
+	/// </summary>
+	/// <param name="character">= キャラクター</param>
+	void add_character(Character* character);
 
 public:
 	Field* get_field() override;
@@ -86,6 +100,14 @@ public:
 
 	int count_actor_with_tag(const ActorTag tag) const override;
 
+	Pawn* find_pawn(const string& name) const override;
+
+	vector<Pawn*> find_pawn_with_tag(const ActorTag tag) const override;
+
+	Character* find_character(const string& name) const override;
+
+	vector<Character*> find_character_with_tag(const ActorTag tag) const override;
+
 	TimelineManager& timeline() override;
 
 protected:
@@ -97,6 +119,10 @@ protected:
 	NavMeshSurface* navmesh_{ nullptr };
 	// アクターマネージャー
 	ActorManager actor_;
+	// ポーンマネージャー
+	PawnManager pawn_;
+	// キャラクターマネージャー
+	CharacterManager character_;
 	// カメラマネージャー
 	CameraManager camera_;
 	// タイムラインマネージャー
