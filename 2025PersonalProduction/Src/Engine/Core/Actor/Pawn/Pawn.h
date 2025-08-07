@@ -64,7 +64,12 @@ protected:
 	/// <summary>
 	/// 地形との衝突判定
 	/// </summary>
-	void collide_field();
+	virtual void collide_field();
+
+	/// <summary>
+	/// アクターとの衝突判定
+	/// </summary>
+	virtual void collide_actor(Actor& other);
 
 protected:
 	// アニメーションメッシュ

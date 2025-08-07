@@ -43,3 +43,7 @@ void Pawn::update_mesh(float delta_time) {
 void Pawn::collide_field() {
 	// TODO 
 }
+
+void Pawn::collide_actor(Actor& other) {
+	// TODO
+}
