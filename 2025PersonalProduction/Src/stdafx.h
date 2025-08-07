@@ -39,15 +39,53 @@
 
 // lib
 #include "Lib/json.hpp"
+#include "Lib/imgui_stdlib.h"
 
 // my program
-#include "Engine/Core/Scene/SceneManager.h"
+#include "Engine/Core/Actor/Actor.h"
+#include "Engine/Core/Actor/ActorManager.h"
+#include "Engine/Core/Actor/FieldActor/FieldActor.h"
+#include "Engine/Core/Actor/FieldActor/FieldActorManager.h"
+//#include "Engine/Core/Actor/Pawn/Pawn.h"
+//#include "Engine/Core/Actor/Pawn/PawnManager.h"
+//#include "Engine/Core/Actor/Pawn/Character/Character.h"
+//#include "Engine/Core/Actor/Pawn/Character/CharacterManager.h"
+
+#include "Engine/Core/Camera/Camera.h"
+#include "Engine/Core/Camera/CameraManager.h"
+
+#include "Engine/Core/Collision/BoundingSphere.h"
+
+#include "Engine/Core/Field/Field.h"
+
+#include "Engine/Core/NavMesh/NavMeshAgent.h"
+//#include "Engine/Core/NavMesh/NavMeshSurface.h"
+
 #include "Engine/Core/Scene/IScene.h"
 #include "Engine/Core/Scene/NullScene.h"
-#include "Engine/Core/StateMachine/StateMachine.h"
+#include "Engine/Core/Scene/SceneManager.h"
+
+#include "Engine/Core/Screen/Screen.h"
+
 #include "Engine/Core/StateMachine/IState.h"
 #include "Engine/Core/StateMachine/NullState.h"
+#include "Engine/Core/StateMachine/StateMachine.h"
+
+#include "Engine/Core/Timeline/ITimeline.h"
+#include "Engine/Core/Timeline/TimelineManager.h"
+#include "Engine/Core/Timeline/TimelineEditorManager.h"
+#include "Engine/Core/Timeline/Editor/TimelineEditor.h"
+
+
 #include "Engine/Graphics/AnimatedMesh/AnimatedMesh.h"
+#include "Engine/Graphics/Canvas/Canvas.h"
+
+#include "Engine/Utils/Check.h"
+#include "Engine/Utils/DebugMarker.h"
+#include "Engine/Utils/Folder.h"
+#include "Engine/Utils/Line.h"
 #include "Engine/Utils/ObjectPool.h"
+#include "Engine/Utils/OpenBrowser.h"
+#include "Engine/Utils/Ray.h"
 
 #endif
