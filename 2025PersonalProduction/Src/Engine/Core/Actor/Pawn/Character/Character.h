@@ -11,7 +11,7 @@
 #ifndef CHARACTER_H_
 #define CHARACTER_H_
 
-#include "Pawn/Pawn.h"
+#include "Engine/Core/Actor/Pawn/Pawn.h"
 
 class Character : public Pawn {
 public:
@@ -25,6 +25,12 @@ public:
 	/// </summary>
 	/// <param name="state_num">= ステート番号</param>
 	virtual void change_state_request(const GSuint state_num);
+
+protected:
+	/// <summary>
+	/// ステートの追加
+	/// </summary>
+	virtual void add_state() = 0;
 
 protected:
 	/// <summary>
