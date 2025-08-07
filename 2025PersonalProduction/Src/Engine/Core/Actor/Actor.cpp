@@ -93,3 +93,11 @@ GSuint Actor::play_effect(GSuint effect_id, const GSvector3& position, const GSv
 	const GSmatrix4 mat = local_to_world(position, rotate, scale);
 	return gsPlayEffectEx(effect_id, &mat);
 }
+
+void Actor::draw_collider() const {
+	glPushMatrix();
+	glMultMatrixf(transform_.localToWorldMatrix());
+	glTranslatef(collider_.center.x, collider_.center.y, collider_.center.z);
+	glutWireSphere(collider_.radius, 16, 16);
+	glPopMatrix();
+}

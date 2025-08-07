@@ -139,6 +139,11 @@ protected:
 	/// <param name="scale">= ローカル拡縮量</param>
 	GSuint play_effect(GSuint effect_id, const GSvector3& position, const GSvector3& rotate = GSvector3{ 0.0f, 0.0f, 0.0f }, const GSvector3& scale = GSvector3{ 1.0f, 1.0f, 1.0f }) const;
 
+	/// <summary>
+	/// コライダーを描画
+	/// </summary>
+	void draw_collider() const;
+
 protected:
 	// ワールド
 	IWorld* world_{ nullptr };

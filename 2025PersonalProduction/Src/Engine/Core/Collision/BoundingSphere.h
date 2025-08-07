@@ -36,11 +36,6 @@ public:
     /// <param name="other">= 重なっていたら真</param>
     bool intersects(const BoundingSphere& other) const;
 
-    /// <summary>
-    /// デバッグ表示
-    /// </summary>
-    void draw() const;
-
 public:
     // 半径
     float radius{ 0.0f };
