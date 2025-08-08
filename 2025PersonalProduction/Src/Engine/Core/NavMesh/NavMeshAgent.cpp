@@ -32,8 +32,6 @@ void NavMeshAgent::update_move(float delta_time, float move_speed, float rotate_
 
 	// ˆÚ“®‚µ‚Ä‚¢‚½‚çŒü‚«‚Ì•âŠÔ‚ð‚·‚é
 	if (direction.magnitude() > 0.01f) {
-		float angle_ = atan2(direction.x, direction.z);
-
 		// Œü‚«‚Ì•âŠÔ
 		GSquaternion rotation =
 			GSquaternion::rotateTowards(
