@@ -1,6 +1,5 @@
 ﻿#include "Camera/EditorCamera.h"
 #include <imgui/imgui.h>
-#include <gslib.h>
 #include "Engine/Core/World/IWorld.h"
 #include "Engine/Core/Timeline/TimelineManager.h"
 #include "Engine/Core/Timeline/Parameters/CameraTimeline.h"
@@ -27,6 +26,7 @@ EditorCamera::EditorCamera(IWorld* world) {
 void EditorCamera::update(float delta_time) {
 	if (is_play_timeline()) return;
 
+#ifdef _DEBUG
 	ImGui::Begin("EditorCamera Window");
 	string button_text = is_active_ ? "to InActive" : "to Active";
 	if (ImGui::Button(button_text.c_str())) toggle_camera();
@@ -51,7 +51,7 @@ void EditorCamera::update(float delta_time) {
 	ImGui::End();
 
 	// 右クリック時だけ操作を受け付ける
-	if(gsGetMouseButtonState(GMOUSE_BUTTON_2)) {
+	if(input_.action(InputAction::DEBUG_CameraActive)) {
 		// カメラ基準の前方向を取得
 		GSvector3 forward = transform_.forward();
 		forward.y = 0.0f;
@@ -61,18 +61,18 @@ void EditorCamera::update(float delta_time) {
 
 		// 入力から移動ベクトルを算出
 		GSvector3 velocity{ 0.0f, 0.0f, 0.0f };
-		velocity += right * (gsGetKeyState(GKEY_D) ? 1.0f : gsGetKeyState(GKEY_A) ? -1.0f : 0.0f);
-		velocity += forward * (gsGetKeyState(GKEY_W) ? 1.0f : gsGetKeyState(GKEY_S) ? -1.0f : 0.0f);
-		velocity.y += (gsGetKeyState(GKEY_SPACE) ? 1.0f : gsGetKeyState(GKEY_LSHIFT) ? -1.0f : 0.0f);
+		GSvector2 input = input_.left_axis();
+		velocity += right * input.x;
+		velocity += forward * input.y;
+		velocity.y += (input_.action(InputAction::DEBUG_Up) ? 1.0f : input_.action(InputAction::DEBUG_Down) ? -1.0f : 0.0f);
 		velocity = velocity.normalized() * MOVE_SPEED * delta_time;
 		// 移動
 		transform_.translate(velocity, GStransform::Space::World);
 
 		// 視点移動
-		int mx, my;
-		gsGetMouseVelocity(&mx, &my, nullptr);
-		yaw_ -= mx * SENSITIVITY;
-		pitch_ += my * SENSITIVITY;
+		input = input_.right_axis();
+		yaw_ -= input.x * SENSITIVITY;
+		pitch_ += input.y * SENSITIVITY;
 		pitch_ = CLAMP(pitch_, -89.0f, 89.0f);
 	}
 	// 方向
@@ -80,6 +80,7 @@ void EditorCamera::update(float delta_time) {
 	transform_.rotation(rotation);
 	// 傾き
 	transform_.rotation(transform_.rotation() * GSquaternion::angleAxis(angle_, GSvector3::forward()));
+#endif
 }
 
 void EditorCamera::exit() {
