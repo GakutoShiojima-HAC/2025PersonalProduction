@@ -21,6 +21,17 @@ public:
 
 	virtual ~Pawn() = default;
 
+private:
+	/// <summary>
+	/// 落下開始
+	/// </summary>
+	virtual void on_fall() = 0;
+
+	/// <summary>
+	/// 着地開始
+	/// </summary>
+	virtual void on_land() = 0;
+
 public:
 	/// <summary>
 	/// ダメージ処理
@@ -85,6 +96,16 @@ protected:
 	float gravity_{ 0 };
 	// 無敵時間タイマー
 	float invincible_timer_{ 0 };
+
+	// 身長
+	float height_{ 2.0f };
+	// 頭のオフセット
+	float head_offset_{ 0.05f };
+	// 足元のオフセット
+	float foot_offset_{ 0.05f };
+	
+	// 地面についているか
+	bool is_ground_{ false };
 
 };
 
