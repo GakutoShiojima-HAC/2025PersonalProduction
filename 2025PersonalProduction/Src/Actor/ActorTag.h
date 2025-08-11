@@ -13,6 +13,8 @@
 
 enum class ActorTag {
 	None,
+	Player,
+	Enemy,
 
 	MAX_SIZE	// óvëfêî
 };
