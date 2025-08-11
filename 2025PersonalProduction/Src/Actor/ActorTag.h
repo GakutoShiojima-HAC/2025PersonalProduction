@@ -15,6 +15,7 @@ enum class ActorTag {
 	None,
 	Player,
 	Enemy,
+	Collider,
 
 	MAX_SIZE	// óvëfêî
 };
