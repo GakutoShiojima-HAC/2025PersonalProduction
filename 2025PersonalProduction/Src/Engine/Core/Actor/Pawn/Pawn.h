@@ -114,7 +114,7 @@ protected:
 	float gravity_{ 9.8f };
 	// ジャンプ力
 	float jump_power_{ 2.0f };
-	// 無敵時間タイマー
+	// 無敵時間タイマー(秒)
 	float invincible_timer_{ 0.0f };
 
 	// 身長
