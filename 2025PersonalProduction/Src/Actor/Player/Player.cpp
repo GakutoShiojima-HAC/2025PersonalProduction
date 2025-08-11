@@ -52,7 +52,7 @@ Player::Player(IWorld* world, const GSvector3& position, const GSvector3& lookat
 	change_state((GSuint)PlayerStateType::Move, Motion::Idle, true);
 	
 	// Õ“Ë”»’è‹…‚ğ¶¬
-	collider_ = BoundingSphere{ RADIUS, GSvector3{ 0.0f, 1.0f, 0.0f } };
+	collider_ = BoundingSphere{ RADIUS, GSvector3{ 0.0f, height_ / 2.0f, 0.0f } };
 
 	transform_.position(position);
 	transform_.lookAt(lookat);
