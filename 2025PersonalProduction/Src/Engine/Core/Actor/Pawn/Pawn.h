@@ -98,7 +98,7 @@ protected:
 	// HP
 	int hp_{ 1 };
 	// 重力値
-	float gravity_{ 0.0163f };
+	float gravity_{ 9.8f };
 	// ジャンプ力
 	float jump_power_{ 2.0f };
 	// 無敵時間タイマー

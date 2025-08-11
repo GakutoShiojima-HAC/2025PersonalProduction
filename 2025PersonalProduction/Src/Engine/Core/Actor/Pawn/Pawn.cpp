@@ -2,13 +2,14 @@
 #include "Engine/Core/World/IWorld.h"
 #include "Engine/Core/Field/Field.h"
 #include "Engine/Utils/Line.h"
+#include "GameConfig.h"
 
 void Pawn::take_damage(Actor& other, const int damage) {
 	hp_ = CLAMP(hp_ - damage, 0, INT_MAX);
 }
 
 void Pawn::on_jump() {
-	velocity_.y = jump_power_ * 0.1f + gravity_;	// d—Í‚ğ‰ÁZ‚·‚é‚±‚Æ‚Å‰‘¬‚ğˆÛ
+	velocity_.y = jump_power_ * 0.1f + gravity_ * 0.1f / cFPS;	// d—Í‚ğ‰ÁZ‚·‚é‚±‚Æ‚Å‰‘¬‚ğˆÛ
 }
 
 int& Pawn::hp() {
@@ -25,7 +26,7 @@ float& Pawn::invincible_timer() {
 
 void Pawn::update_gravity(float delta_time) {
 	// d—Í‚ğ‰Á‚¦‚é
-	velocity_.y -= gravity_ * delta_time;
+	velocity_.y -= gravity_ * 0.1f / cFPS * delta_time;
 	// d—Í‚ğ”½‰f
 	transform_.translate(0.0f, velocity_.y, 0.0f);
 }
