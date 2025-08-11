@@ -1,9 +1,5 @@
 #include "Engine/Core/Actor/Pawn/Character/Character.h"
 
-void Character::change_state_request(const GSuint state_num) {
-
-}
-
 void Character::update_state(float delta_time) {
 	// ó‘Ô‚ÌXV
 	state_.update(delta_time);
