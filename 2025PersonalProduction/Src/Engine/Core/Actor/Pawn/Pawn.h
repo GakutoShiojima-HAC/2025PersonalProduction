@@ -61,6 +61,12 @@ public:
 	/// </summary>
 	float& invincible_timer();
 
+	/// <summary>
+	/// モーションが終了したかどうか
+	/// </summary>
+	/// <returns>モーションが終了していたら真を返却</returns>
+	bool is_motion_end() const;
+
 protected:
 	/// <summary>
 	/// 重力の更新
@@ -77,15 +83,16 @@ protected:
 	/// </summary>
 	void update_mesh(float delta_time);
 
+protected:
 	/// <summary>
 	/// 地形との衝突判定
 	/// </summary>
-	virtual void collide_field();
+	virtual void collide_field() override;
 
 	/// <summary>
 	/// アクターとの衝突判定
 	/// </summary>
-	virtual void collide_actor(Actor& other);
+	virtual void collide_actor(Actor& other) override;
 
 protected:
 	// アニメーションメッシュ
@@ -111,7 +118,7 @@ protected:
 	// 足元のオフセット
 	float foot_offset_{ 0.05f };
 	
-	// 地面についているか
+	// 接地しているか
 	bool is_ground_{ false };
 
 };

@@ -131,6 +131,26 @@ public:
 
 protected:
 	/// <summary>
+	/// 地形との衝突判定
+	/// </summary>
+	virtual void collide_field();
+
+	/// <summary>
+	/// アクターとの衝突判定
+	/// </summary>
+	virtual void collide_actor(Actor& other);
+
+
+	/// <summary>
+	/// 地形を貫通しない移動
+	/// </summary>
+	/// <param name="velocity">= 移動量</param>
+	/// <param name="foward">= 移動時に向く方向 指定無しで処理を行わない</param>
+	/// <param name="trun_angle">= 移動時に向く方向への補間値</param>
+	virtual void non_penetrating_move(const GSvector3& velocity, GSvector3* foward = nullptr, float trun_angle = 1.0f);
+
+protected:
+	/// <summary>
 	/// エフェクシアのエフェクトを再生
 	/// </summary>
 	/// <param name="effect_id">= エフェクトハンドル</param>

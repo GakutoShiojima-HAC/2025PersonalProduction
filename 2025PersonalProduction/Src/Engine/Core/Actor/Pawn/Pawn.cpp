@@ -24,11 +24,17 @@ float& Pawn::invincible_timer() {
 	return invincible_timer_;
 }
 
+bool Pawn::is_motion_end() const {
+	return mesh_.is_motion_end();
+}
+
 void Pawn::update_gravity(float delta_time) {
 	// d—Í‚ğ‰Á‚¦‚é
 	velocity_.y -= gravity_ * 0.1f / cFPS * delta_time;
 	// d—Í‚ğ”½‰f
 	transform_.translate(0.0f, velocity_.y, 0.0f);
+	// Õ“Ë”»’è
+	collide_field();
 }
 
 void Pawn::update_invincible(float delta_time) {
