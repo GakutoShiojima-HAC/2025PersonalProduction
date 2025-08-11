@@ -44,6 +44,8 @@ private:
 private:
 	bool is_end_{ false };
 
+	SceneTag next_scene_tag_{ SceneTag::Game };
+
 };
 
 #endif
