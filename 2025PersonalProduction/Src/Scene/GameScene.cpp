@@ -8,6 +8,9 @@
 #include "Camera/FixedCamera.h"	// tmp
 #include "Engine/Core/Timeline/Parameters/CameraTimeline.h"	// tmp
 #include "Camera/TimelineCamera.h"	// tmp
+#include "Camera/PlayerCamera.h"	// tmp
+#include "Actor/Player/Player.h"	// tmp
+#include "Camera/EditorCamera.h"	// tmp
 
 #define GS_ENABLE_MESH_SHADOW			// メッシュに影を付ける
 //#define GS_ENABLE_SKIN_MESH_SHADOW	// スキニングメッシュに影を付ける
@@ -35,8 +38,8 @@ void GameScene::start() {
 	// tmp
 	LoadAssets* asset = new LoadAssets{};
 	asset->name = "Game";
-	asset->octree.push_back({ 0, "Resource/Assets/Octree/Octree.oct" });
-	asset->octree.push_back({ 1, "Resource/Assets/Octree/Collider.oct" });
+	asset->octree.push_back({ 0, "Resource/Assets/Octree/stage.oct" });
+	asset->octree.push_back({ 1, "Resource/Assets/Octree/stage_collider.oct" });
 	asset->texture.push_back({ 0, "Resource/Assets/Skybox/default_skybox.dds" });
 	AssetsManager::get_instance().load_assets(asset);
 
@@ -46,9 +49,16 @@ void GameScene::start() {
 	// tmp
 	world_.add_camera(new FixedCamera{ &world_, GSvector3{ 0.0f, 3.0f, -10.0f }, GSvector3{ 0.0f, 2.0f, 0.0f } });
 	world_.add_camera(new TimelineCamera{ &world_ });
+	world_.add_camera(new EditorCamera{ &world_ });
 
 	// tmp
 	world_.timeline().add(new CameraTimeline{ &world_, "Resource/Private/Timeline/Camera/List/world1.json" });
+
+	// tmp
+	PlayerCamera* player_camera = new PlayerCamera{ &world_ };
+	world_.add_camera(player_camera);
+	world_.add_character(new Player{ &world_, GSvector3{ 0.0f, 0.0f, 0.0f }, GSvector3{ 0.0f, 1.0f, 0.0f }, player_camera });
+	world_.camera_transition(player_camera);
 
 	// 同期
 	world_.update(0.0f);

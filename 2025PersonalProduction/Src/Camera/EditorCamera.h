@@ -14,6 +14,7 @@
 #define EDITOR_CAMERA_H_
 
 #include "Engine/Core/Camera/Camera.h"
+#include "Engine/Core/Input/Input.h"
 
 class ITimeline;
 
@@ -41,6 +42,8 @@ private:
 	void toggle_camera();
 
 private:
+	Input& input_ = Input::get_instance();
+
 	// 元のカメラ
 	Camera* prev_{ nullptr };
 	// カメラタイムライン

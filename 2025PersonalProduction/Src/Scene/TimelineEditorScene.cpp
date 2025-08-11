@@ -100,7 +100,7 @@ SceneTag TimelineEditorScene::scene_tag() const {
 }
 
 SceneTag TimelineEditorScene::next_scene_tag() const {
-	return SceneTag::TimelineEditor;
+	return SceneTag::Menu;
 }
 
 bool TimelineEditorScene::is_application_end() const {

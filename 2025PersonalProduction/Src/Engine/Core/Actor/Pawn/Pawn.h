@@ -21,6 +21,17 @@ public:
 
 	virtual ~Pawn() = default;
 
+private:
+	/// <summary>
+	/// 空中
+	/// </summary>
+	virtual void on_air() = 0;
+
+	/// <summary>
+	/// 接地
+	/// </summary>
+	virtual void on_ground() = 0;
+
 public:
 	/// <summary>
 	/// ダメージ処理
@@ -28,6 +39,17 @@ public:
 	/// <param name="other">= 与える側のポーン</param>
 	/// <param name="damage">= ダメージ値</param>
 	virtual void take_damage(Actor& other, const int damage);
+
+	/// <summary>
+	/// ジャンプ処理
+	/// </summary>
+	virtual void on_jump();
+
+	/// <summary>
+	/// 死亡状態かどうか
+	/// </summary>
+	/// <returns>死亡状態なら真を返却</returns>
+	virtual bool is_dead_state() const;
 
 public:
 	/// <summary>
@@ -45,6 +67,12 @@ public:
 	/// </summary>
 	float& invincible_timer();
 
+	/// <summary>
+	/// モーションが終了したかどうか
+	/// </summary>
+	/// <returns>モーションが終了していたら真を返却</returns>
+	bool is_motion_end() const;
+
 protected:
 	/// <summary>
 	/// 重力の更新
@@ -61,10 +89,16 @@ protected:
 	/// </summary>
 	void update_mesh(float delta_time);
 
+protected:
 	/// <summary>
 	/// 地形との衝突判定
 	/// </summary>
-	void collide_field();
+	virtual void collide_field() override;
+
+	/// <summary>
+	/// アクターとの衝突判定
+	/// </summary>
+	virtual void collide_actor(Actor& other) override;
 
 protected:
 	// アニメーションメッシュ
@@ -77,9 +111,21 @@ protected:
 	// HP
 	int hp_{ 1 };
 	// 重力値
-	float gravity_{ 0 };
-	// 無敵時間タイマー
-	float invincible_timer_{ 0 };
+	float gravity_{ 9.8f };
+	// ジャンプ力
+	float jump_power_{ 2.0f };
+	// 無敵時間タイマー(秒)
+	float invincible_timer_{ 0.0f };
+
+	// 身長
+	float height_{ 2.0f };
+	// 頭のオフセット
+	float head_offset_{ 0.05f };
+	// 足元のオフセット
+	float foot_offset_{ 0.05f };
+	
+	// 接地しているか
+	bool is_ground_{ false };
 
 };
 

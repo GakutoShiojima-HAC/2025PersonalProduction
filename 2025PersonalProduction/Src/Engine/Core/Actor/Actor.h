@@ -131,6 +131,26 @@ public:
 
 protected:
 	/// <summary>
+	/// 地形との衝突判定
+	/// </summary>
+	virtual void collide_field();
+
+	/// <summary>
+	/// アクターとの衝突判定
+	/// </summary>
+	virtual void collide_actor(Actor& other);
+
+
+	/// <summary>
+	/// 地形を貫通しない移動
+	/// </summary>
+	/// <param name="velocity">= 移動量</param>
+	/// <param name="foward">= 移動時に向く方向 指定無しで処理を行わない</param>
+	/// <param name="trun_angle">= 移動時に向く方向への補間値</param>
+	virtual void non_penetrating_move(const GSvector3& velocity, GSvector3* foward = nullptr, float trun_angle = 1.0f);
+
+protected:
+	/// <summary>
 	/// エフェクシアのエフェクトを再生
 	/// </summary>
 	/// <param name="effect_id">= エフェクトハンドル</param>
@@ -138,6 +158,11 @@ protected:
 	/// <param name="rotation">= ローカル回転量</param>
 	/// <param name="scale">= ローカル拡縮量</param>
 	GSuint play_effect(GSuint effect_id, const GSvector3& position, const GSvector3& rotate = GSvector3{ 0.0f, 0.0f, 0.0f }, const GSvector3& scale = GSvector3{ 1.0f, 1.0f, 1.0f }) const;
+
+	/// <summary>
+	/// コライダーを描画
+	/// </summary>
+	void draw_collider() const;
 
 protected:
 	// ワールド

@@ -16,10 +16,3 @@ bool BoundingSphere::intersects(const BoundingSphere& other) const {
     return gsCollisionSphereAndSphere(
         &center, radius, &other.center, other.radius) == GS_TRUE;
 }
-
-void BoundingSphere::draw() const {
-    glPushMatrix();
-    glTranslatef(center.x, center.y, center.z);
-    glutWireSphere(radius, 16, 16);
-    glPopMatrix();
-}

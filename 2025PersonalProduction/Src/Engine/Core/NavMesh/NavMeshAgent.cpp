@@ -32,8 +32,6 @@ void NavMeshAgent::update_move(float delta_time, float move_speed, float rotate_
 
 	// ˆÚ“®‚µ‚Ä‚¢‚½‚çŒü‚«‚Ì•âŠÔ‚ð‚·‚é
 	if (direction.magnitude() > 0.01f) {
-		float angle_ = atan2(direction.x, direction.z);
-
 		// Œü‚«‚Ì•âŠÔ
 		GSquaternion rotation =
 			GSquaternion::rotateTowards(
@@ -67,12 +65,12 @@ void NavMeshAgent::update_move(float delta_time, float move_speed, float rotate_
 void NavMeshAgent::draw_path() const {
 	if (!found_path()) return;
 
-	for (int i = 0; i < path_.size(); ++i) {
+	for (int i = 0; i < (int)path_.size(); ++i) {
 		const GSvector3& pos = path_[i];
 		float radius = i == path_index_ ? 0.075 : 0.05;
 		MyLib::draw_sphere(pos, radius, GScolor{ 1.0f, 1.0f, 1.0f, 1.0f });
 
-		if (i >= path_.size() - 1) continue;
+		if (i >= (int)path_.size() - 1) continue;
 		const GSvector3& end = path_[i + 1];
 		MyLib::draw_line(pos, end, GScolor{ 1.0f, 1.0f, 1.0f, 1.0f });
 	}
@@ -82,12 +80,12 @@ void NavMeshAgent::draw_line_path() const {
 #ifdef _DEBUG
 	if (navmesh_ == nullptr || line_path_.empty()) return;
 
-	for (int i = 0; i < line_path_.size(); ++i) {
+	for (int i = 0; i < (int)line_path_.size(); ++i) {
 		const GSvector3& pos = line_path_[i];
 		float radius = i == path_index_ + 1 ? 0.075 : 0.05;
 		MyLib::draw_sphere(pos, radius, GScolor{ 1.0f, 1.0f, 1.0f, 1.0f });
 
-		if (i >= line_path_.size() - 1) continue;
+		if (i >= (int)line_path_.size() - 1) continue;
 		const GSvector3& end = line_path_[i + 1];
 		MyLib::draw_line(pos, end, GScolor{ 1.0f, 1.0f, 1.0f, 1.0f });
 	}

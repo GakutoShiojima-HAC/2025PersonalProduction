@@ -258,7 +258,7 @@ float& CameraTimelineEditor::get_time(int index) {
     float tmp{ 0.0f };
     if (timeline_ == nullptr) return tmp;
     vector<CameraKeyFrame*>& timeline = timeline_->get();
-    if (timeline.empty() || index >= timeline.size()) return tmp;
+    if (timeline.empty() || index >= (int)timeline.size()) return tmp;
 
     return timeline[index]->time;
 }

@@ -16,6 +16,7 @@ enum class CameraTag {
 	Editor,
 	Timeline,
 	Fixed,
+	Player,
 
 	MAX_SIZE	// óvëfêî
 };
