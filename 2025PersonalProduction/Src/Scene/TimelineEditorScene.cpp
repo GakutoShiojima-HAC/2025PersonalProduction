@@ -3,6 +3,7 @@
 #include "Engine/Core/Assets/AssetsManager.h"
 #include "Engine/Core/Field/Field.h"
 #include "Engine/Core/World/Light.h"
+#include "Engine/Core/Collision/AttackColliderPool.h"
 
 #include <gslib.h>	// tmp
 #include "Camera/FixedCamera.h"	// tmp
@@ -49,6 +50,7 @@ void TimelineEditorScene::start() {
 
 	world_.add_field(new Field{ 0, 1, 0 });
 	world_.add_light(new Light{});
+	world_.add_attack_collider_pool(new AttackColliderPool{ &world_ });
 
 	// tmp
 	world_.timeline().add(new CameraTimeline{ &world_, "Resource/Private/Timeline/Camera/List/world1.json" });

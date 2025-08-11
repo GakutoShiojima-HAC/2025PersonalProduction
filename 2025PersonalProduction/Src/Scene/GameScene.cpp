@@ -3,6 +3,7 @@
 #include "Engine/Core/Assets/AssetsManager.h"
 #include "Engine/Core/Field/Field.h"
 #include "Engine/Core/World/Light.h"
+#include "Engine/Core/Collision/AttackColliderPool.h"
 
 #include <gslib.h>	// tmp
 #include "Camera/FixedCamera.h"	// tmp
@@ -11,6 +12,7 @@
 #include "Camera/PlayerCamera.h"	// tmp
 #include "Actor/Player/Player.h"	// tmp
 #include "Camera/EditorCamera.h"	// tmp
+#include "Actor/Enemy/DummyEnemy.h"	// tmp
 
 #define GS_ENABLE_MESH_SHADOW			// メッシュに影を付ける
 //#define GS_ENABLE_SKIN_MESH_SHADOW	// スキニングメッシュに影を付ける
@@ -45,6 +47,7 @@ void GameScene::start() {
 
 	world_.add_field(new Field{ 0, 1, 0 });
 	world_.add_light(new Light{});
+	world_.add_attack_collider_pool(new AttackColliderPool{ &world_ });
 	
 	// tmp
 	world_.add_camera(new FixedCamera{ &world_, GSvector3{ 0.0f, 3.0f, -10.0f }, GSvector3{ 0.0f, 2.0f, 0.0f } });
@@ -59,6 +62,9 @@ void GameScene::start() {
 	world_.add_camera(player_camera);
 	world_.add_character(new Player{ &world_, GSvector3{ 0.0f, 0.0f, 0.0f }, GSvector3{ 0.0f, 1.0f, 0.0f }, player_camera });
 	world_.camera_transition(player_camera);
+
+	// tmp
+	world_.add_pawn(new DummyEnemy{ &world_, GSvector3{ 0.0f, 0.0f, 2.0f } });
 
 	// 同期
 	world_.update(0.0f);

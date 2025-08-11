@@ -4,6 +4,8 @@
 #include "Engine/Core/World/Light.h"
 #include "Engine/Core/Actor/Pawn/Pawn.h"
 #include "Engine/Core/Actor/Pawn/Character/Character.h"
+#include "Engine/Core/Collision/AttackColliderPool.h"
+#include "Engine/Core/Collision/AttackCollider.h"
 
 World::~World() {
 	clear();
@@ -18,6 +20,8 @@ void World::update(float delta_time) {
 	timeline_.update(delta_time);
 	camera_.update(delta_time);
 	gsUpdateEffect(delta_time);
+
+	if (attack_collider_pool_ != nullptr) attack_collider_pool_->remove();
 	character_.remove();
 	pawn_.remove();
 	actor_.remove();
@@ -43,6 +47,8 @@ void World::clear() {
 	light_ = nullptr;
 	delete navmesh_;
 	navmesh_ = nullptr;
+	delete attack_collider_pool_;
+	attack_collider_pool_ = nullptr;
 	character_.clear();
 	pawn_.clear();
 	actor_.clear();
@@ -87,6 +93,11 @@ void World::add_pawn(Pawn* pawn) {
 void World::add_character(Character* character) {
 	character_.add(character);
 	add_pawn(character);
+}
+
+void World::add_attack_collider_pool(AttackColliderPool* pool) {
+	delete attack_collider_pool_;
+	attack_collider_pool_ = pool;
 }
 
 Field* World::get_field() {
@@ -155,4 +166,10 @@ vector<Character*> World::find_character_with_tag(const ActorTag tag) const {
 
 TimelineManager& World::timeline() {
 	return timeline_;
+}
+
+void World::generate_attack_collider(float radius, const GSvector3& center, Actor* owner, int damage, float lifespan, float delay) {
+	// オブジェクトプールがあるならプール管理する
+	if (attack_collider_pool_ != nullptr) attack_collider_pool_->generate(radius, center, owner, damage, lifespan, delay);
+	else add_actor(new AttackCollider{ radius, center, owner, damage, lifespan, delay });
 }
