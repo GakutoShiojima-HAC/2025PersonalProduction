@@ -42,7 +42,7 @@ void PlayerCamera::update(float delta_time) {
 		GSvector2 input = input_.right_axis();
 		yaw_ -= input.x * SENSITIVITY;
 		pitch_ += input.y * SENSITIVITY;
-		pitch_ = CLAMP(pitch_, -89.0f, 89.0f);
+		pitch_ = CLAMP(pitch_, -80.0f, 55.0f);
 
 		// ’Ž‹“_‚ÌÀ•W‚ð‹‚ß‚é
 		at = owner_->transform().position() + LOOKAT_ORIGIN_TO_OFFSET;

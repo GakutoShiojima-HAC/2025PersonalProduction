@@ -16,6 +16,7 @@
 #include "Engine/Utils/OpenBrowser.h"
 #include "Engine/Core/Screen/Screen.h"
 #include "Engine/Graphics/Canvas/Canvas.h"
+#include "Engine/Core/Input/Input.h"
 #include "Engine/Core/Scene/SceneManager.h"
 #include "Scene/TitleScene.h"
 #include "Scene/MenuScene.h"
@@ -54,11 +55,12 @@ private:
         scene_manager_.add(new TimelineEditorScene{});
 
         // タイトルシーンから始める
-        scene_manager_.change(SceneTag::TimelineEditor);
+        scene_manager_.change(SceneTag::Title);
     }
 
     void update(float delta_time) override {
         screen_.update();
+        input_.update(delta_time);
 
         scene_manager_.update(delta_time);
     }
@@ -89,7 +91,8 @@ private:
     /// </summary>
     /// <returns>実行を継続するなら真</returns>
     bool is_running() override {
-        // TODO 強制終了条件
+        // 強制終了
+        if (input_.action(InputAction::APP_ForceEnd)) return false;
         
         // シーンからの終了リクエスト
         if (scene_manager_.is_application_end()) return false;
@@ -102,6 +105,8 @@ private:
     SceneManager& scene_manager_ = SceneManager::get_instance();
     // スクリーン
     Screen& screen_ = Screen::get_instance();
+    // インプット
+    Input& input_ = Input::get_instance();
 
 };
 
