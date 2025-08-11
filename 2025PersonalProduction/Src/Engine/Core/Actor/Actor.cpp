@@ -78,7 +78,7 @@ GSvector3& Actor::velocity() {
 }
 
 BoundingSphere Actor::collider() const {
-	return collider_;
+	return collider_.transform(transform_.localToWorldMatrix());
 }
 
 GSmatrix4 Actor::local_to_world(const GSvector3& position, const GSvector3& rotate, const GSvector3& scale) const {
