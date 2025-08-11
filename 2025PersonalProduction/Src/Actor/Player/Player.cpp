@@ -232,7 +232,7 @@ void Player::update_move_air(float delta_time) {
 	GSvector3 rotate_velocity{ 0.0f, 0.0f, 0.0f };
 	GSvector2 input = input_.left_axis();
 	rotate_velocity += right * input.x;
-	rotate_velocity += forward * input.y;
+	rotate_velocity += forward * input.y; 
 
 	// ‘O‚ÌˆÚ“®—Ê‚ðŽæ“¾
 	GSvector3 prev_velocity = velocity_;
