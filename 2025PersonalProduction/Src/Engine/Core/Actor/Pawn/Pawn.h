@@ -23,14 +23,14 @@ public:
 
 private:
 	/// <summary>
-	/// 落下開始
+	/// 空中
 	/// </summary>
-	virtual void on_fall() = 0;
+	virtual void on_air() = 0;
 
 	/// <summary>
-	/// 着地開始
+	/// 接地
 	/// </summary>
-	virtual void on_land() = 0;
+	virtual void on_ground() = 0;
 
 public:
 	/// <summary>
@@ -39,6 +39,11 @@ public:
 	/// <param name="other">= 与える側のポーン</param>
 	/// <param name="damage">= ダメージ値</param>
 	virtual void take_damage(Actor& other, const int damage);
+
+	/// <summary>
+	/// ジャンプ処理
+	/// </summary>
+	virtual void on_jump();
 
 public:
 	/// <summary>
@@ -94,6 +99,8 @@ protected:
 	int hp_{ 1 };
 	// 重力値
 	float gravity_{ 0.0163f };
+	// ジャンプ力
+	float jump_power_{ 2.0f };
 	// 無敵時間タイマー
 	float invincible_timer_{ 0.0f };
 

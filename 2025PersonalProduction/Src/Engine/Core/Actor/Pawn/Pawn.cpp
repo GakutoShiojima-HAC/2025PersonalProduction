@@ -7,6 +7,10 @@ void Pawn::take_damage(Actor& other, const int damage) {
 	hp_ = CLAMP(hp_ - damage, 0, INT_MAX);
 }
 
+void Pawn::on_jump() {
+	velocity_.y = jump_power_ * 0.1f + gravity_;	// 重力を加算することで初速を維持
+}
+
 int& Pawn::hp() {
 	return hp_;
 }
@@ -97,18 +101,14 @@ void Pawn::collide_field() {
 			// 衝突したフィールド用のアクターを親のトランスフォームクラスとして設定
 			transform_.parent(&field_actor->transform());
 		}
-		// 空中状態の更新
-		if (!is_ground_) {
-			on_land();
-			is_ground_ = true;
-		}
+		// 着地状態の更新
+		on_ground();
+		is_ground_ = true;
 	}
 	else {
-		// 着地状態の更新
-		if (is_ground_) {
-			is_ground_ = false;
-			on_fall();
-		}
+		// 空中状態の更新
+		on_air();
+		is_ground_ = false;
 	}
 }
 
