@@ -45,6 +45,12 @@ public:
 	/// </summary>
 	virtual void on_jump();
 
+	/// <summary>
+	/// €–Só‘Ô‚©‚Ç‚¤‚©
+	/// </summary>
+	/// <returns>€–Só‘Ô‚È‚ç^‚ğ•Ô‹p</returns>
+	virtual bool is_dead_state() const;
+
 public:
 	/// <summary>
 	/// HP‚ğæ“¾

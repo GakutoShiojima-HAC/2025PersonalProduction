@@ -12,6 +12,10 @@ void Pawn::on_jump() {
 	velocity_.y = jump_power_ * 0.1f + gravity_ * 0.1f / cFPS;	// d—Í‚ğ‰ÁZ‚·‚é‚±‚Æ‚Å‰‘¬‚ğˆÛ
 }
 
+bool Pawn::is_dead_state() const {
+	return false;
+}
+
 int& Pawn::hp() {
 	return hp_;
 }
@@ -38,13 +42,11 @@ void Pawn::update_gravity(float delta_time) {
 }
 
 void Pawn::update_invincible(float delta_time) {
-	// Õ“Ë”»’è‚ª—LŒø‚Å–³“GŠÔ‚ª–³‚¯‚ê‚ÎI—¹
-	if (enable_collider_ && invincible_timer_ <= 0.0f) return;
+	// –³“GŠÔ‚ª–³‚¯‚ê‚ÎI—¹
+	if (invincible_timer_ <= 0.0f) return;
 
 	// –³“GŠÔ‚ğŒ¸‚ç‚·
 	invincible_timer_ = CLAMP(invincible_timer_ - delta_time / cFPS, 0.0f, FLT_MAX);
-	// –³“GŠÔ‚ª–³‚­‚È‚Á‚½‚çÕ“Ë”»’è‚ğ•œŠˆ
-	if (invincible_timer_ <= 0.0f && !enable_collider_) enable_collider_ = true;
 }
 
 void Pawn::update_mesh(float delta_time) {
