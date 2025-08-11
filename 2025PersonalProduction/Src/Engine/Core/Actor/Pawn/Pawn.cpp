@@ -48,15 +48,14 @@ void Pawn::collide_field() {
 	transform_.rotation(GSquaternion(0.0f, transform_.rotation().y, 0.0f, transform_.rotation().w));
 
 	/* 壁との衝突判定（球体との判定） */
-	// 衝突後の球体の中心座標
-	GSvector3 center;
+	GSvector3 center; // 押し戻し後の球体の中心座標
 	if (world_->get_field()->collide(collider(), &center)) {
 		// y座標は変更しない
 		center.y = transform_.position().y;
 		// 補正後の座標に変更する
 		transform_.position(center);
 	}
-
+	
 	/* 地面との衝突判定（線分との交差判定）*/
 	// 地面との交点
 	GSvector3 intersect;
@@ -100,15 +99,15 @@ void Pawn::collide_field() {
 		}
 		// 空中状態の更新
 		if (!is_ground_) {
+			on_land();
 			is_ground_ = true;
-			on_fall();
 		}
 	}
 	else {
 		// 着地状態の更新
 		if (is_ground_) {
 			is_ground_ = false;
-			on_land();
+			on_fall();
 		}
 	}
 }

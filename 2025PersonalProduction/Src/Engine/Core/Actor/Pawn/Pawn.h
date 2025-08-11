@@ -93,9 +93,9 @@ protected:
 	// HP
 	int hp_{ 1 };
 	// 重力値
-	float gravity_{ 0 };
+	float gravity_{ 0.0163f };
 	// 無敵時間タイマー
-	float invincible_timer_{ 0 };
+	float invincible_timer_{ 0.0f };
 
 	// 身長
 	float height_{ 2.0f };
