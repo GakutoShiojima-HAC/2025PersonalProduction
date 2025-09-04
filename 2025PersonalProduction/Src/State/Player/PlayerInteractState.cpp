@@ -38,11 +38,12 @@ void PlayerInteractState::update(float delta_time) {
 		return;
 	}
 
-	if (owner_.is_interact()) {
-		owner_.change_state((GSuint)PlayerStateType::Interact, (GSuint)PlayerMotion::Interact, false);
+	// TODO インタラクトできるならインタラクトすること
+	/*if (owner_.is_interact()) {
+		owner_.change_state((GSuint)PlayerStateType::Interact, owner_.get_current_motion(), false);
 		owner_.on_interact();
 		return;
-	}
+	}*/
 
 	if (owner_.is_motion_end()) {
 		owner_.to_move_state();
