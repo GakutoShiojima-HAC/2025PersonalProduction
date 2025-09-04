@@ -39,7 +39,7 @@ void AttackCollider::react(Actor& other) {
 	if (other.tag() == tag() || other.tag() == owner_->tag()) return;
 	// ƒ_ƒ[ƒW‚ğ—^‚¦‚é
 	Pawn* target = dynamic_cast<Pawn*>(&other);
-	if (target != nullptr) target->take_damage(other, damage_);
+	if (target != nullptr) target->take_damage(*this, damage_);
 	// Õ“Ë‚µ‚½‚çíœ
 	die();
 }
