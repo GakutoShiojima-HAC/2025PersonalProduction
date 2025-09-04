@@ -22,9 +22,9 @@ PlayerCamera::PlayerCamera(IWorld* world) {
 }
 
 void PlayerCamera::update(float delta_time) {
-	// ‘ÎÛ‚ªŽ€–S‚µ‚½‚ç‘ÎÛ‚©‚çŠO‚·
-	auto exclusion = [](Pawn* pawn) {
-		if (pawn != nullptr && (pawn->is_dead_state() || pawn->is_dead())) pawn = nullptr;
+	auto exclusion = [](Pawn*& pawn) {
+		if (pawn == nullptr) return;
+		if (pawn->is_dead_state() || pawn->is_dead()) pawn = nullptr;
 	};
 	exclusion(owner_);
 	exclusion(lockon_target_);

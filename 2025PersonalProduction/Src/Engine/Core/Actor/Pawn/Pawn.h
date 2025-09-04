@@ -25,12 +25,12 @@ private:
 	/// <summary>
 	/// ‹ó’†
 	/// </summary>
-	virtual void on_air() = 0;
+	virtual void on_air();
 
 	/// <summary>
 	/// Ú’n
 	/// </summary>
-	virtual void on_ground() = 0;
+	virtual void on_ground();
 
 public:
 	/// <summary>

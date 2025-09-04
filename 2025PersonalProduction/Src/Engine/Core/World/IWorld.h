@@ -148,6 +148,17 @@ public:
     /// <returns>タイムラインマネージャー</returns>
     virtual TimelineManager& timeline() = 0;
 
+    /// <summary>
+    /// 攻撃判定を生成
+    /// </summary>
+    /// <param name="radius">= 判定の半径</param>
+    /// <param name="center">= 生成判定球の中心</param>
+    /// <param name="owner">= 生成主</param>
+    /// <param name="damage">= ダメージ値</param>
+    /// <param name="lifespan">= 判定の寿命</param>
+    /// <param name="delay">= 判定が有効になるまでの遅延</param>
+    virtual void generate_attack_collider(float radius, const GSvector3& center, Actor* owner, int damage, float lifespan = 1.0f, float delay = 0.0f) = 0;
+
 public:
 	// コピー禁止
 	IWorld(const IWorld& other) = delete;

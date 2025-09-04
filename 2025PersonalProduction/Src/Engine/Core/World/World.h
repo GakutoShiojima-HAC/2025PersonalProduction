@@ -19,6 +19,8 @@
 #include "Engine/Core/Timeline/TimelineManager.h"
 #include "Engine/Core/NavMesh/NavMeshSurface.h"
 
+class AttackColliderPool;
+
 class World : public IWorld {
 public:
 	World() = default;
@@ -75,6 +77,12 @@ public:
 	/// <param name="character">= キャラクター</param>
 	void add_character(Character* character);
 
+	/// <summary>
+	/// 攻撃判定プールの追加
+	/// </summary>
+	/// <param name="pool">= 攻撃判定プール</param>
+	void add_attack_collider_pool(AttackColliderPool* pool);
+
 public:
 	Field* get_field() override;
 
@@ -110,6 +118,8 @@ public:
 
 	TimelineManager& timeline() override;
 
+	void generate_attack_collider(float radius, const GSvector3& center, Actor* owner, int damage, float lifespan = 1.0f, float delay = 0.0f) override;
+
 protected:
 	// フィールド
 	Field* field_{ nullptr };
@@ -127,7 +137,9 @@ protected:
 	CameraManager camera_;
 	// タイムラインマネージャー
 	TimelineManager timeline_;
-	
+	// 攻撃判定プール
+	AttackColliderPool* attack_collider_pool_{ nullptr };
+
 };
 
 #endif
