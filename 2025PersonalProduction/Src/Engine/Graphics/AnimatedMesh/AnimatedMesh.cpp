@@ -45,7 +45,10 @@ void AnimatedMesh::draw() const {
 void AnimatedMesh::change_motion(GSuint motion, bool loop) {
     for (auto& layer : animation_layers_) {
         layer.change_motion(motion, loop);
-        layer.current_motion_time(0.0f);    // 再生時間を一律にする(レイヤー機能で既に再生中の場合があるため)
+
+        // 再生時間を一律にする(レイヤー機能で既に再生中の場合があるため)
+        if (layer.motion_num() == motion) return;
+        layer.current_motion_time(0.0f);    
     }
 }
 
