@@ -38,7 +38,7 @@ void Input::update(float delta_time) {
 		int x, y;
 		gsGetMouseVelocity(&x, &y, nullptr);
 		right_axis_.x = x;
-		right_axis_.y = y;
+		right_axis_.y = -y;
 
 		// カーソル座標
 		if (!is_update_cursor_position_) return;
@@ -72,6 +72,10 @@ float& Input::pad_cursor_speed() {
 	return pad_cursor_speed_;
 }
 
+bool Input::is_pad() const {
+	return is_pad_;
+}
+
 bool Input::action(InputAction action) const {
 	switch (action) {
 	case InputAction::APP_Pause:
@@ -89,15 +93,15 @@ bool Input::action(InputAction action) const {
 	case InputAction::MENU_RIGHT:
 		break;
 	case InputAction::GAME_Attack:
-		break;
+		return is_pad_ ? gsXBoxPadButtonTrigger(USE_PAD_NUM, GS_XBOX_PAD_B) : gsGetMouseButtonTrigger(GMOUSE_BUTTON_1);
 	case InputAction::GAME_Jump:
-		return gsGetKeyTrigger(GKEY_SPACE);
+		return is_pad_ ? gsXBoxPadButtonTrigger(USE_PAD_NUM, GS_XBOX_PAD_A) : gsGetKeyTrigger(GKEY_SPACE);
 	case InputAction::GAME_Avoid:
-		break;
+		return is_pad_ ? gsXBoxPadButtonTrigger(USE_PAD_NUM, GS_XBOX_PAD_LEFT_SHOULDER) : gsGetKeyTrigger(GKEY_LCONTROL);
 	case InputAction::GAME_Skill:
 		break;
 	case InputAction::GAME_Lockon:
-		break;
+		return is_pad_ ? gsXBoxPadButtonTrigger(USE_PAD_NUM, GS_XBOX_PAD_RIGHT_SHOULDER) : gsGetKeyTrigger(GKEY_R);
 	case InputAction::GAME_Sprint:
 		break;
 	case InputAction::GAME_Interact:
