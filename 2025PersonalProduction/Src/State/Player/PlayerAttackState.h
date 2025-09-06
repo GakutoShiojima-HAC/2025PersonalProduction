@@ -28,6 +28,12 @@ private:
 
 	void exit() override;
 
+private:
+	// 次の段への入力があったかどうか
+	bool next_attack_input_{ false };
+	// 次の段への遷移タイマー
+	float enter_next_attack_timer_{ 0.0f };
+
 };
 
 #endif

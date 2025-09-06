@@ -5,6 +5,8 @@
 #include "Engine/Core/Camera/Camera.h"
 #include "Camera/PlayerCamera.h"
 #include "Engine/Utils/Check.h"
+#include "Engine/Utils/Calc.h"
+#include "Engine/Core/Tween/Tween.h"
 
 #include "State/Player/PlayerAttackState.h"
 #include "State/Player/PlayerAvoidState.h"
@@ -23,7 +25,7 @@
 #endif
 
 // 衝突判定用の半径
-const float RADIUS{ 0.5f };
+const float RADIUS{ 0.4f };
 // 移動時のカメラ向きへの回転角度
 const float TURN_SPEED{ 11.5f };
 // 通常移動速度
@@ -34,6 +36,8 @@ const float SPRINT_SPEED{ 0.15f };
 const float DECELERATION_SPEED{ 0.75f };
 // 無敵時間(秒)
 const float INVINCIBLE_TIME{ 0.5f };
+// 回避移動速度
+const float AVOID_SPEED{ 12.0f };
 
 Player::Player(IWorld* world, const GSvector3& position, const GSvector3& lookat, PlayerCamera* camera) {
 	world_ = world;
@@ -43,8 +47,8 @@ Player::Player(IWorld* world, const GSvector3& position, const GSvector3& lookat
 	camera_ = camera;
 	camera_->set_owner(this);
 
-	height_ = 2.0f;
-	head_offset_ = 2.0f;
+	height_ = 1.6f;
+	head_offset_ = height_;
 	foot_offset_ = 0.05f;
 
 	mesh_ = { (GSuint)MeshID::Player, (GSuint)MeshID::Player, (GSuint)MeshID::Player };
@@ -58,6 +62,9 @@ Player::Player(IWorld* world, const GSvector3& position, const GSvector3& lookat
 	transform_.lookAt(lookat);
 	collide_field();
 	mesh_.transform(transform_.localToWorldMatrix());
+
+	// 攻撃アニメーションイベント
+	add_attack_animation_event();
 }
 
 void Player::update(float delta_time) {
@@ -99,7 +106,7 @@ void Player::update(float delta_time) {
 
 	ImGui::Text("current position is X:%.3f Y:%.3f Z:%.3f", transform_.position().x, transform_.position().y, transform_.position().z);
 	ImGui::Text("current state is %s.", state_string(PlayerStateType(state_.get_current_state())));
-
+	ImGui::Text("current motion is %d.", (int)motion_);
 	ImGui::End();
 #endif
 }
@@ -136,9 +143,25 @@ void Player::take_damage(Actor& other, const int damage) {
 
 	hp_ = CLAMP(hp_ - damage, 0, INT_MAX);
 
-	if (hp_ <= 0) change_state((GSuint)PlayerStateType::Dead, Motion::Dead, false);
-	else change_state((GSuint)PlayerStateType::Hurt, Motion::Hurt, false);
-	
+	if (hp_ <= 0) {
+		change_state((GSuint)PlayerStateType::Dead, Motion::Dead, false);
+	}
+	else {
+		// コライダーの位置から負傷モーションを取得
+		const GSvector3 other_dir = other.transform().position() - transform().position();
+		const int dir = MyLib::get_direction(GSvector2{ other_dir.x, other_dir.z }, GSvector2{ transform().forward().x, transform().forward().z}, 4);
+		GSuint motion = Motion::HurtF;
+		switch (dir) {
+		case 0: motion = Motion::HurtF; break;
+		case 1: motion = Motion::HurtR; break;
+		case 2: motion = Motion::HurtB; break;
+		case 3: motion = Motion::HurtL; break;
+		default: break;
+		}
+
+		change_state((GSuint)PlayerStateType::Hurt, motion, false);
+	}
+
 	invincible_timer_ = INVINCIBLE_TIME;
 }
 
@@ -165,23 +188,28 @@ void Player::add_state() {
 }
 
 void Player::update_move(float delta_time) {
+	// カメラ基準の方向を取得
 	Camera* camera = world_->get_camera();
-	// カメラ基準の前方向を取得
 	GSvector3 forward = camera != nullptr ? camera->transform().forward() : GSvector3{ 0.0f, 0.0f, 1.0f };
 	forward.y = 0.0f;
-	// カメラ基準の右方向を取得
 	GSvector3 right = camera != nullptr ? camera->transform().right() : GSvector3{ -1.0f, 0.0f, 0.0f };
 	right.y = 0.0f;
 
 	// 入力から移動ベクトルを算出
 	GSvector3 velocity{ 0.0f, 0.0f, 0.0f };
-	GSvector2 input = input_.left_axis();
+	const GSvector2 input = input_.left_axis();
 	velocity += right * input.x;
 	velocity += forward * input.y;
+	
+	// 歩行か疾走かを取得
+	const bool is_walk = input_.action(InputAction::GAME_Sprint);
+
+	// ロックオン中かどうかを取得
+	const bool is_lockon = camera_->is_lockon();
 
 	// 移動していたら移動量を、移動していなかったら減速するように移動量を計算
 	if (velocity.magnitude() > 0.01f) {
-		move_speed_ = input_.action(InputAction::GAME_Sprint) ? SPRINT_SPEED : MOVE_SPEED;
+		move_speed_ = is_walk ? SPRINT_SPEED : MOVE_SPEED;
 		velocity = velocity.normalized() * move_speed_ * delta_time;
 	}
 	else {
@@ -197,34 +225,42 @@ void Player::update_move(float delta_time) {
 	velocity_.z = velocity.z;
 
 	// 非貫通移動
-	non_penetrating_move(velocity, camera_->is_lockon() ? nullptr : &velocity, TURN_SPEED * delta_time);
+	non_penetrating_move(velocity, is_lockon ? &forward : &velocity, TURN_SPEED * delta_time);
 
-	// TODO モーションを設定
 	// 移動状態でなければ終了
 	if (!(state_.get_current_state() == (GSuint)PlayerStateType::Move)) return;
-	// 入力があれば移動モーションを適用する
-	if (input.magnitude() > 0.0f) {
+	// モーションを設定
+	GSuint motion = Motion::Idle;
+	if (input.magnitude() > 0.01f) {
 		// ロックオン中なら8方向モーションを適用する
-		if (camera_->is_lockon()) {
-
+		if (is_lockon) {
+			const int dir = MyLib::get_direction(GSvector2{ velocity.x, velocity.z }, GSvector2{ forward.x, forward.z }, 8);
+			switch (dir) {
+			case 0: motion = is_walk ? Motion::WalkF : Motion::SprintF; break;
+			case 1: motion = is_walk ? Motion::WalkFL : Motion::SprintFL; break;
+			case 2: motion = is_walk ? Motion::WalkL : Motion::SprintL; break;
+			case 3: motion = is_walk ? Motion::WalkBL : Motion::SprintBL; break;
+			case 4: motion = is_walk ? Motion::WalkB : Motion::SprintB; break;
+			case 5: motion = is_walk ? Motion::WalkBR : Motion::SprintBR; break;
+			case 6: motion = is_walk ? Motion::WalkR : Motion::SprintR; break;
+			case 7: motion = is_walk ? Motion::WalkFR : Motion::SprintFR; break;
+			default: break;
+			}
 		}
 		// ロックオン中でなければ1方向モーションを適用する
 		else {
-
+			motion = is_walk ? Motion::WalkF : Motion::SprintF;
 		}
 	}
-	// 入力がなければ待機モーションを適用する
-	else {
-
-	}
+	// モーションを適用
+	mesh_.change_motion(motion, true);
 }
 
 void Player::update_move_air(float delta_time) {
+	// カメラ基準の方向を取得
 	Camera* camera = world_->get_camera();
-	// カメラ基準の前方向を取得
 	GSvector3 forward = camera != nullptr ? camera->transform().forward() : GSvector3{ 0.0f, 0.0f, 1.0f };
 	forward.y = 0.0f;
-	// カメラ基準の右方向を取得
 	GSvector3 right = camera != nullptr ? camera->transform().right() : GSvector3{ -1.0f, 0.0f, 0.0f };
 	right.y = 0.0f;
 
@@ -280,21 +316,74 @@ void Player::update_lockon_camera() {
 }
 
 void Player::on_attack() {
-	// TODO
+	// 攻撃段数を一段階目にセット
+	attack_count_ = 1;
 }
 
 void Player::on_avoid() {
+	// 一定時間無敵にする
 	invincible_timer_ = INVINCIBLE_TIME;
 
-	// TODO
-	// ロックオン中なら4方向モーションを適用する
-	if (camera_->is_lockon()) {
+	// カメラ基準の方向を取得
+	Camera* camera = world_->get_camera();
+	GSvector3 forward = camera != nullptr ? camera->transform().forward() : GSvector3{ 0.0f, 0.0f, 1.0f };
+	forward.y = 0.0f;
+	GSvector3 right = camera != nullptr ? camera->transform().right() : GSvector3{ -1.0f, 0.0f, 0.0f };
+	right.y = 0.0f;
 
+	// ロックオン中かどうかを取得
+	const bool is_lockon =camera_->is_lockon();
+
+	// 入力から回避ベクトルを算出
+	GSvector3 avoid_velocity{ 0.0f, 0.0f, 0.0f };
+	const GSvector2 input = input_.left_axis();
+	// ロックオン中なら四方向に回避する
+	if (is_lockon) {
+		// 左右を優先する
+		avoid_velocity += right * input.x;
+		// 左右入力が無ければ前後に回避する
+		if (avoid_velocity.magnitude() < 0.01f) avoid_velocity += forward * input.y;
+	}
+	// 非ロックオンなら自由に回避する
+	else {
+		avoid_velocity += right * input.x;
+		avoid_velocity += forward * input.y;
+	}
+	// 入力が無ければ後退とする
+	if (avoid_velocity.magnitude() < 0.01f) avoid_velocity += forward * -1.0f;
+
+	// モーションを設定
+	GSuint motion = Motion::AvoidB;
+	// ロックオン中なら4方向モーションを適用する
+	if (is_lockon) {
+		const int dir = MyLib::get_direction(GSvector2{ avoid_velocity.x, avoid_velocity.z }, GSvector2{ forward.x, forward.z }, 4);
+		switch (dir) {
+		case 0: motion = Motion::AvoidF; break;
+		case 3: motion = Motion::AvoidR; break;
+		case 2: motion = Motion::AvoidB; break;
+		case 1: motion = Motion::AvoidL; break;
+		default: break;
+		}
 	}
 	// ロックオン中でなければ1方向モーションを適用する
 	else {
-
+		motion = Motion::AvoidF;
 	}
+
+	// 移動先を決定
+	avoid_velocity = avoid_velocity.normalized() * AVOID_SPEED * 0.016f;
+	// モーションを適用
+	change_state((GSuint)PlayerStateType::Avoid, motion, false);
+
+	// 移動
+	float move_time = mesh_.motion_end_time();
+	Tween::vector3(avoid_velocity, GSvector3::zero(), move_time, [&](GSvector3 pos) {
+		non_penetrating_move(pos); }).ease(EaseType::EaseOutCubic);
+	// 強制回転
+	transform_.lookAt(transform_.position() + (is_lockon ? forward : avoid_velocity));
+
+	velocity_.x = 0.0f;
+	velocity_.z = 0.0f;
 }
 
 void Player::on_skill() {
@@ -305,36 +394,92 @@ void Player::on_interact() {
 	// TODO
 }
 
-bool Player::is_attack() const {
-	return input_.action(InputAction::GAME_Attack);
+int& Player::attack_count() {
+	return attack_count_;
+}
+
+float Player::get_enter_next_attack_animation_time() {
+	return weapon_manager_.get_enter_next_animation_time(weapon_type_, attack_count_);
+}
+
+bool Player::is_attack() {
+	return attack_count_ < weapon_manager_.get_max_attack_count(weapon_type_) && input_.action(InputAction::GAME_Attack);
 }
 
 bool Player::is_jump() const {
-	return input_.action(InputAction::GAME_Jump);
+	return state_.get_current_state() != (GSuint)PlayerStateType::Jump && input_.action(InputAction::GAME_Jump);
 }
 
 bool Player::is_avoid() const {
-	return input_.action(InputAction::GAME_Avoid);
+	return state_.get_current_state() != (GSuint)PlayerStateType::Avoid && input_.action(InputAction::GAME_Avoid);
 }
 
 bool Player::is_skill() const {
-	return input_.action(InputAction::GAME_Skill);
+	return state_.get_current_state() != (GSuint)PlayerStateType::Skill && input_.action(InputAction::GAME_Skill);
 }
 
 bool Player::is_interact() const {
 	return input_.action(InputAction::GAME_Interact);
 }
 
-GSuint Player::get_attack_motion() const {
-	return (GSuint)Motion::Attack;
-}
-
-GSuint Player::get_avoid_motion() const {
-	return (GSuint)Motion::Avoid;
+GSuint Player::get_attack_motion() {
+	int motion = weapon_manager_.get_animation_num(weapon_type_, attack_count_);
+	return motion < 0 ? 99999 : motion;
 }
 
 GSuint Player::get_skill_motion() const {
 	return (GSuint)Motion::Skill;
+	// TODO weapon num
+}
+
+GSuint Player::get_current_motion() const {
+	return motion_;
+}
+
+void Player::generate_attack_collider() {
+	GSvector3 local_pos = weapon_manager_.get_collider_offset(weapon_type_, attack_count_);
+	GSmatrix4 m = local_to_world(local_pos, GSvector3::zero(), GSvector3::one());
+
+	world_->generate_attack_collider(0.3f, m.position(), this, 1, 0.1f, 0.0f);
+}
+
+void Player::add_attack_animation_event() {
+	// TODO 外部ファイル読み込みにする player_weapon_data.json ?
+
+	// mabye key = weapon type
+	// value = [
+	//	   {	"animation num": 0,
+	//			"key_frame": 20,
+	//			"offset": [0.0, 0.0, 1.0]
+	//     }
+	// ]
+
+	auto add_event = [this](int num, float time) {
+		mesh_.add_animation_event(num, time, [=] {generate_attack_collider(); });
+	};
+
+	// for1 start
+	WeaponType type = WeaponType::PlayerSword;
+	std::vector<WeaponManager::WeaponAnimationData*> data;
+	
+	// for2 start // TODO ***仮でそのまま記述***
+	// 1段目
+	data.push_back(new WeaponManager::WeaponAnimationData(0, 20, GSvector3{ 0.0f, 1.0f, 1.0f }, 30.0f));
+	add_event(0, 20);
+	// 2段目
+	data.push_back(new WeaponManager::WeaponAnimationData(1, 15, GSvector3{ 0.0f, 1.0f, 1.0f }, 30.0f));
+	add_event(1, 15);
+	// 3段目
+	data.push_back(new WeaponManager::WeaponAnimationData(2, 15, GSvector3{ 0.0f, 1.0f, 1.0f }, 30.0f));
+	add_event(2, 15);
+	// 4段目
+	data.push_back(new WeaponManager::WeaponAnimationData(3, 15, GSvector3{ 0.0f, 1.0f, 1.0f }, 20.0f));
+	add_event(3, 15);
+	// for2 end
+
+	// 追加
+	weapon_manager_.add_weapon_parameter(type, data);
+	// for1 end
 }
 
 void Player::on_air() {

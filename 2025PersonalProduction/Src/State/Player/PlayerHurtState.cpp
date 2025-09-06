@@ -12,8 +12,8 @@ void PlayerHurtState::enter() {
 
 void PlayerHurtState::update(float delta_time) {
 	if (owner_.is_avoid()) {
-		owner_.change_state((GSuint)PlayerStateType::Avoid, owner_.get_avoid_motion(), false);
 		owner_.on_avoid();
+		owner_.change_state((GSuint)PlayerStateType::Avoid);
 		return;
 	}
 
