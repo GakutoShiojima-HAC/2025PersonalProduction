@@ -73,12 +73,6 @@ public:
 	/// <returns>モーションが終了していたら真を返却</returns>
 	bool is_motion_end() const;
 
-	/// <summary>
-	/// 現在のモーションの総再生時間を取得
-	/// </summary>
-	/// <returns></returns>
-	float current_motion_end_time() const;
-
 protected:
 	/// <summary>
 	/// 重力の更新
@@ -94,6 +88,12 @@ protected:
 	/// メッシュの更新
 	/// </summary>
 	void update_mesh(float delta_time);
+
+	/// <summary>
+	/// 現在のモーションの総再生時間を取得
+	/// </summary>
+	/// <returns></returns>
+	float current_motion_end_time() const;
 
 protected:
 	/// <summary>
