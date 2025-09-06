@@ -88,6 +88,12 @@ public:
     /// <returns>移動速度</returns>
     float& pad_cursor_speed();
 
+    /// <summary>
+    /// パッドが接続中かを取得
+    /// </summary>
+    /// <returns>接続しているなら真を返却</returns>
+    bool is_pad() const;
+
 public:
     /// <summary>
     /// 指定したアクションを行っているかどうか

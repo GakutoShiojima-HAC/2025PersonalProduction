@@ -17,6 +17,7 @@
 #include "Engine/Core/Screen/Screen.h"
 #include "Engine/Graphics/Canvas/Canvas.h"
 #include "Engine/Core/Input/Input.h"
+#include "Engine/Core/Tween/Tween.h"
 #include "Engine/Core/Scene/SceneManager.h"
 #include "Scene/TitleScene.h"
 #include "Scene/MenuScene.h"
@@ -46,6 +47,14 @@ public:
 
 private:
     void start() override {
+        // 初期音量調整
+        float master = 0.75;
+        float se = 0.8;
+        float bgm = 0.8;
+        gsSetPrimaryVolume(master);
+        gsSetVolumeBGM(bgm);
+        gsSetMasterVolumeSE(se);
+
         // シーンを追加
         scene_manager_.add(new TitleScene{});
         scene_manager_.add(new MenuScene{});
@@ -61,7 +70,7 @@ private:
     void update(float delta_time) override {
         screen_.update();
         input_.update(delta_time);
-
+        Tween::update(delta_time);
         scene_manager_.update(delta_time);
     }
 
@@ -71,6 +80,8 @@ private:
 
     void end() override {
         scene_manager_.clear();
+        // Tweenの破棄
+        Tween::clear();
         // アセットの破棄
         AssetsManager::get_instance().clear();
         // エフェクトの終了

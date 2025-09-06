@@ -9,7 +9,8 @@ const GSvector3 LOOKAT_ORIGIN_TO_OFFSET{ 0.0f, 1.75f, 0.0f };
 // 注視点からの位置
 const GSvector3 CAMERA_OFFSET{ 0.0f, 3.0f, -7.0f };
 // 視点移動速度
-const float SENSITIVITY{ 0.075f };
+const float SENSITIVITY_X{ 0.095f };
+const float SENSITIVITY_Y{ 0.075f };
 
 // スムースダンプ補間時間
 const float SMOOTH_TIME{ 2.0f };
@@ -40,8 +41,9 @@ void PlayerCamera::update(float delta_time) {
 	else {
 		// 視点移動
 		GSvector2 input = input_.right_axis();
-		yaw_ -= input.x * SENSITIVITY;
-		pitch_ += input.y * SENSITIVITY;
+		if (input_.is_pad()) input *= 15.0f;
+		yaw_ -= input.x * SENSITIVITY_X;
+		pitch_ -= input.y * SENSITIVITY_Y;
 		pitch_ = CLAMP(pitch_, -80.0f, 55.0f);
 
 		// 注視点の座標を求める

@@ -40,6 +40,10 @@ bool Pawn::is_motion_end() const {
 	return mesh_.is_motion_end();
 }
 
+float Pawn::current_motion_end_time() const {
+	return mesh_.motion_end_time();
+}
+
 void Pawn::update_gravity(float delta_time) {
 	// èdóÕÇâ¡Ç¶ÇÈ
 	velocity_.y -= gravity_ * 0.1f / cFPS * delta_time;

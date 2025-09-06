@@ -89,6 +89,12 @@ protected:
 	/// </summary>
 	void update_mesh(float delta_time);
 
+	/// <summary>
+	/// 現在のモーションの総再生時間を取得
+	/// </summary>
+	/// <returns></returns>
+	float current_motion_end_time() const;
+
 protected:
 	/// <summary>
 	/// 地形との衝突判定

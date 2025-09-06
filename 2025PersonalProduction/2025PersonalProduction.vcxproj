@@ -170,6 +170,12 @@
     <ClCompile Include="Src\Engine\Core\Timeline\Parameters\CameraTimeline.cpp" />
     <ClCompile Include="Src\Engine\Core\Timeline\TimelineEditorManager.cpp" />
     <ClCompile Include="Src\Engine\Core\Timeline\TimelineManager.cpp" />
+    <ClCompile Include="Src\Engine\Core\Tween\ColorUnit.cpp" />
+    <ClCompile Include="Src\Engine\Core\Tween\Tween.cpp" />
+    <ClCompile Include="Src\Engine\Core\Tween\TweenUnit.cpp" />
+    <ClCompile Include="Src\Engine\Core\Tween\ValueUnit.cpp" />
+    <ClCompile Include="Src\Engine\Core\Tween\Vector2Unit.cpp" />
+    <ClCompile Include="Src\Engine\Core\Tween\Vector3Unit.cpp" />
     <ClCompile Include="Src\Lib\imgui_stdlib.cpp" />
     <ClCompile Include="Src\Engine\Core\Actor\Pawn\Character\Character.cpp" />
     <ClCompile Include="Src\Engine\Core\Actor\Pawn\Character\CharacterManager.cpp" />
@@ -202,6 +208,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Src\Weapon\WeaponManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Actor\ActorTag.h" />
@@ -226,6 +233,13 @@
     <ClInclude Include="Src\Engine\Core\Timeline\Parameters\CameraTimeline.h" />
     <ClInclude Include="Src\Engine\Core\Timeline\TimelineEditorManager.h" />
     <ClInclude Include="Src\Engine\Core\Timeline\TimelineManager.h" />
+    <ClInclude Include="Src\Engine\Core\Tween\ColorUnit.h" />
+    <ClInclude Include="Src\Engine\Core\Tween\Tween.h" />
+    <ClInclude Include="Src\Engine\Core\Tween\TweenUnit.h" />
+    <ClInclude Include="Src\Engine\Core\Tween\ValueUnit.h" />
+    <ClInclude Include="Src\Engine\Core\Tween\Vector2Unit.h" />
+    <ClInclude Include="Src\Engine\Core\Tween\Vector3Unit.h" />
+    <ClInclude Include="Src\Engine\Utils\Calc.h" />
     <ClInclude Include="Src\Engine\Utils\Check.h" />
     <ClInclude Include="Src\Engine\Utils\DebugMarker.h" />
     <ClInclude Include="Src\Engine\Utils\Folder.h" />
@@ -278,6 +292,8 @@
     <ClInclude Include="Src\State\Player\PlayerSkillState.h" />
     <ClInclude Include="Src\State\Player\PlayerState.h" />
     <ClInclude Include="Src\stdafx.h" />
+    <ClInclude Include="Src\Weapon\WeaponManager.h" />
+    <ClInclude Include="Src\Weapon\WeaponType.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

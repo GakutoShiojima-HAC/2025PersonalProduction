@@ -4,6 +4,7 @@
 #include "Engine/Core/Field/Field.h"
 #include "Engine/Core/World/Light.h"
 #include "Engine/Core/Collision/AttackColliderPool.h"
+#include "Engine/Core/Tween/Tween.h"
 
 #include <gslib.h>	// tmp
 #include "Camera/FixedCamera.h"	// tmp
@@ -13,6 +14,7 @@
 #include "Actor/Player/Player.h"	// tmp
 #include "Camera/EditorCamera.h"	// tmp
 #include "Actor/Enemy/DummyEnemy.h"	// tmp
+#include "Assets.h"	// tmp
 
 #define GS_ENABLE_MESH_SHADOW			// メッシュに影を付ける
 //#define GS_ENABLE_SKIN_MESH_SHADOW	// スキニングメッシュに影を付ける
@@ -22,6 +24,7 @@
 void GameScene::start() {
 	is_end_ = false;
 
+	gsInitDefaultShader();
 	// 視錐台カリングを有効にする
 	gsEnable(GS_FRUSTUM_CULLING);
 	// シャドウマップの作成（２枚のカスケードシャドウマップ）
@@ -40,14 +43,16 @@ void GameScene::start() {
 	// tmp
 	LoadAssets* asset = new LoadAssets{};
 	asset->name = "Game";
-	asset->octree.push_back({ 0, "Resource/Assets/Octree/stage.oct" });
-	asset->octree.push_back({ 1, "Resource/Assets/Octree/stage_collider.oct" });
-	asset->texture.push_back({ 0, "Resource/Assets/Skybox/default_skybox.dds" });
+	asset->octree.push_back({ (GSuint)OctreeID::Mesh, "Resource/Assets/Octree/stage.oct" });
+	asset->octree.push_back({ (GSuint)OctreeID::Collider, "Resource/Assets/Octree/stage_collider.oct"});
+	asset->texture.push_back({ (GSuint)TextureID::Skybox, "Resource/Assets/Skybox/default_skybox.dds"});
+	asset->skinmesh.push_back({ (GSuint)MeshID::Player, "Resource/Assets/Skinmesh/Player1/Player.mshb" });
 	AssetsManager::get_instance().load_assets(asset);
 
-	world_.add_field(new Field{ 0, 1, 0 });
+	world_.add_field(new Field{ (GSuint)OctreeID::Mesh, (GSuint)OctreeID::Collider, (GSuint)TextureID::Skybox });
 	world_.add_light(new Light{});
 	world_.add_attack_collider_pool(new AttackColliderPool{ &world_ });
+	world_.add_navmesh(new NavMeshSurface{ "Resource/Assets/Octree/navmesh_export.txt" });	// tmp
 	
 	// tmp
 	world_.add_camera(new FixedCamera{ &world_, GSvector3{ 0.0f, 3.0f, -10.0f }, GSvector3{ 0.0f, 2.0f, 0.0f } });
@@ -88,7 +93,8 @@ void GameScene::draw() const {
 
 void GameScene::end() {
 	world_.clear();
-
+	// Tweenの終了
+	Tween::clear();
 	// 全てのエフェクトを停止する
 	gsStopAllEffects();
 

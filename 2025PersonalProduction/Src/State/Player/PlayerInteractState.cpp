@@ -15,34 +15,35 @@ void PlayerInteractState::update(float delta_time) {
 	owner_.update_move(delta_time);
 
 	if (owner_.is_avoid()) {
-		owner_.change_state((GSuint)PlayerStateType::Avoid, owner_.get_avoid_motion(), false);
 		owner_.on_avoid();
+		owner_.change_state((GSuint)PlayerStateType::Avoid);
 		return;
 	}
 
 	if (owner_.is_skill()) {
-		owner_.change_state((GSuint)PlayerStateType::Skill, owner_.get_skill_motion(), false);
 		owner_.on_skill();
+		owner_.change_state((GSuint)PlayerStateType::Skill, owner_.get_skill_motion(), false);
 		return;
 	}
 
 	if (owner_.is_attack()) {
-		owner_.change_state((GSuint)PlayerStateType::Attack, owner_.get_attack_motion(), false);
 		owner_.on_attack();
+		owner_.change_state((GSuint)PlayerStateType::Attack, owner_.get_attack_motion(), false);
 		return;
 	}
 
 	if (owner_.is_jump()) {
-		owner_.change_state((GSuint)PlayerStateType::Jump, (GSuint)PlayerMotion::Jump, false);
 		owner_.on_jump();
+		owner_.change_state((GSuint)PlayerStateType::Jump, (GSuint)PlayerMotion::Jump, false);
 		return;
 	}
 
-	if (owner_.is_interact()) {
-		owner_.change_state((GSuint)PlayerStateType::Interact, (GSuint)PlayerMotion::Interact, false);
+	// TODO インタラクトできるならインタラクトすること
+	/*if (owner_.is_interact()) {
+		owner_.change_state((GSuint)PlayerStateType::Interact, owner_.get_current_motion(), false);
 		owner_.on_interact();
 		return;
-	}
+	}*/
 
 	if (owner_.is_motion_end()) {
 		owner_.to_move_state();

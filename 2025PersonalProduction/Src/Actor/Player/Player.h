@@ -13,6 +13,7 @@
 
 #include "Engine/Core/Actor/Pawn/Character/Character.h"
 #include "Engine/Core/Input/Input.h"
+#include "Weapon/WeaponManager.h"
 
 class PlayerCamera;
 
@@ -22,19 +23,46 @@ public:
 
 public:
 	enum Motion {
-		Idle = 0,       // 待機
-		Fall,           // 空中
-		Land,           // 着地
+		Idle = 14,			// 待機
+		Jump = 17,          // ジャンプ
+		Fall = 16,          // 空中
+		Land = 15,			// 着地
+		Dead = 9,           // 死亡
 
-		Move,           // 移動
-		Interact,       // インタラクト
-		Attack,         // 攻撃
-		Skill,          // スキル
-		Jump,           // ジャンプ
-		Avoid,          // 回避
+		HurtF = 5,
+		HurtL = 6,
+		HurtR = 7,
+		HurtB = 4,
 
-		Hurt,           // 負傷
-		Dead,           // 死亡
+		AvoidF = 11,
+		AvoidL = 12,
+		AvoidR = 13,
+		AvoidB = 10,
+
+		WalkF = 31,
+		WalkFL = 32,
+		WalkFR = 33,
+		WalkL = 34,
+		WalkR = 35,
+		WalkB = 28,
+		WalkBL = 29,
+		WalkBR = 30,
+
+		SprintF = 21,
+		SprintFL = 22,
+		SprintFR = 23,
+		SprintL = 24,
+		SprintR = 25,
+		SprintB = 18,
+		SprintBL = 19,
+		SprintBR = 20,
+
+		Attack1 = 0,
+		Attack2 = 1,
+		Attack3 = 2,
+		Attack4 = 3,
+
+		Skill = 101,          // TODO スキル
 	};
 
 public:
@@ -101,9 +129,21 @@ public:
 	/// </summary>
 	void on_interact();
 
+	/// <summary>
+	/// 攻撃段数
+	/// </summary>
+	/// <returns>参照</returns>
+	int& attack_count();
+
+	/// <summary>
+	/// 攻撃から次の攻撃に入るまでの最短時間を取得
+	/// </summary>
+	/// <returns>時間</returns>
+	float get_enter_next_attack_animation_time();
+
 	/* アクションによって状態が変わるアクションの入力検知 */
 public:
-	bool is_attack() const;
+	bool is_attack();
 	
 	bool is_jump() const;
 
@@ -113,13 +153,25 @@ public:
 
 	bool is_interact() const;
 
-	/* アクションのモーション */
+	/* アクションのモーション番号を返却 */
 public:
-	GSuint get_attack_motion() const;
-
-	GSuint get_avoid_motion() const;
+	GSuint get_attack_motion();
 
 	GSuint get_skill_motion() const;
+
+	GSuint get_current_motion() const;
+
+private:
+	/// <summary>
+	/// 攻撃判定を生成
+	/// </summary>
+	void generate_attack_collider();
+
+private:
+	/// <summary>
+	/// 攻撃アニメーションイベントを追加
+	/// </summary>
+	void add_attack_animation_event();
 
 private:
 	// プレイヤーカメラ
@@ -131,6 +183,12 @@ private:
 private:
 	Input& input_ = Input::get_instance();
 
+	// 武器管理
+	WeaponManager weapon_manager_;
+	// 攻撃段数
+	int attack_count_{ 0 };
+	// 現在の武器 // TODO itemクラスにしたい
+	WeaponType weapon_type_{ WeaponType::PlayerSword };
 };
 
 using PlayerMotion = Player::Motion;

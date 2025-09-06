@@ -4,6 +4,7 @@
 #include "Engine/Core/Field/Field.h"
 #include "Engine/Core/World/Light.h"
 #include "Engine/Core/Collision/AttackColliderPool.h"
+#include "Engine/Core/Tween/Tween.h"
 
 #include <gslib.h>	// tmp
 #include "Camera/FixedCamera.h"	// tmp
@@ -85,6 +86,8 @@ void TimelineEditorScene::draw() const {
 void TimelineEditorScene::end() {
 	world_.clear();
 	editor_.clear();
+	// Tweenの終了
+	Tween::clear();
 
 	// 全てのエフェクトを停止する
 	gsStopAllEffects();
