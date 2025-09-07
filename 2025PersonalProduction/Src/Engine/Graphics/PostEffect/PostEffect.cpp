@@ -46,6 +46,10 @@ void PostEffect::init() {
     is_avoid_effect_ = false;
 }
 
+void PostEffect::clear() {
+
+}
+
 void PostEffect::start() const {
     gsBeginRenderTarget(Rt_Base);
 
@@ -87,6 +91,8 @@ void PostEffect::draw() const {
     gsBindRenderTargetTextureEx(current, 0, 0);
     // レンダーターゲットを描画
     gsDrawRenderTarget(current);
+    // テクスチャのバインド解除
+    gsUnbindRenderTargetTextureEx(current, 0, 0);
 }
 
 void PostEffect::start_avoid_effect() const {

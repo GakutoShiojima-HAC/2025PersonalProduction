@@ -53,6 +53,8 @@ public:
 
 public:
 	void init();
+
+	void clear();
 	
 public:
 	/// <summary>
