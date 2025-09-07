@@ -146,10 +146,6 @@ void Player::draw() const {
 	mesh_.draw();
 
 	// state_.draw();
-
-#ifdef _DEBUG
-	draw_collider();
-#endif
 }
 
 void Player::draw_gui() const {
