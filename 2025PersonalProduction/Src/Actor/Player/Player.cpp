@@ -22,8 +22,9 @@
 
 #ifdef _DEBUG
 #include <imgui/imgui.h>
-#include "Engine/Core/Setting/Setting.h"
 #endif
+
+#include "Engine/Graphics/Canvas/Canvas.h"	// tmp
 
 // Õ“Ë”»’è—p‚Ì”¼Œa
 const float RADIUS{ 0.4f };
@@ -121,16 +122,6 @@ void Player::update(float delta_time) {
 	ImGui::Text("current state is %s.", state_string(PlayerStateType(state_.get_current_state())));
 	ImGui::Text("current motion is %d.", (int)motion_);
 	ImGui::End();
-
-	ImGui::Begin("Setting Window");
-	Setting& setting = Setting::get_instance();
-	std::string text1 = "draw posteffect current: "; text1 += setting.is_draw_posteffect() ? "on" : "off";
-	if (ImGui::Button(text1.c_str())) setting.enable_draw_posteffect() = !setting.is_draw_posteffect();
-	std::string text2 = "draw fxaa current: "; text2 += setting.is_draw_fxaa() ? "on" : "off";
-	if (ImGui::Button(text2.c_str())) setting.enable_draw_fxaa() = !setting.is_draw_fxaa();
-	std::string text3 = "draw avoid effect current: "; text3 += world_->enable_avoid_posteffct() ? "on" : "off";
-	if (ImGui::Button(text3.c_str())) world_->enable_avoid_posteffct() = !world_->enable_avoid_posteffct();
-	ImGui::End();
 #endif
 }
 
@@ -152,6 +143,11 @@ void Player::draw() const {
 void Player::draw_gui() const {
 	// TODO GUI
 
+	{
+		const GSrect rect{ 0.0f, 0.0f, 77.0f, 80.0f };
+		Canvas::draw_texture((GSuint)TextureID::TmpUI, GSvector2{ 20.0f, 20.0f }, rect, GSvector2::zero(), GSvector2::one(), GScolor{ 1.0f, 1.0f, 1.0f, 1.0f }, 0.0f, Anchor::TopLeft);
+	}
+
 	// state_.draw_gui();
 }
 
@@ -164,7 +160,7 @@ void Player::take_damage(Actor& other, const int damage) {
 	)) return;
 	if (invincible_timer() > 0.0f) {
 		// ‰ñ”ð‰‰o
-		if (state_.get_current_state(), (GSuint)PlayerStateType::Avoid) {
+		if (state_.get_current_state() == (GSuint)PlayerStateType::Avoid) {
 			world_->enable_avoid_posteffct() = true;
 			world_->set_avoid_effect_color(AVOID_EFFECT_COLOR);
 			avoid_effect_timer_ = AVOID_EFFECT_TIME;
