@@ -18,6 +18,7 @@
 #include "Engine/Graphics/Canvas/Canvas.h"
 #include "Engine/Core/Input/Input.h"
 #include "Engine/Core/Tween/Tween.h"
+#include "Engine/Core/Setting/Setting.h"
 #include "Engine/Core/Scene/SceneManager.h"
 #include "Scene/TitleScene.h"
 #include "Scene/MenuScene.h"
@@ -43,6 +44,7 @@ public:
         gsInitEffect();
         scene_manager_.init();
         Canvas::init();
+        Setting::get_instance().load("tmp");
     }
 
 private:
