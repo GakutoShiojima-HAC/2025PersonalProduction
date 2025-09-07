@@ -71,6 +71,7 @@ void World::clear() {
 	actor_.clear();
 	camera_.clear();
 	timeline_.clear();
+	posteffect_.clear();
 }
 
 void World::shadow_map_callback(void* param, const GSmatrix4* view, const GSmatrix4* projection) {
