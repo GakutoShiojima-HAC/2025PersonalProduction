@@ -3,11 +3,11 @@ layout(location = 0) out vec4 out_FragColor;
 // テクスチャ座標
 in vec2 v_TexCoord;
 
-uniform sampler2D u_SceneTexture; // ユニット0 (シーンHDR画像)
-uniform sampler2D u_MaskTexture;  // ユニット1 (白黒マスク画像)
+uniform sampler2D u_SceneTexture; // シーンHDR画像
+uniform sampler2D u_MaskTexture;  // 白黒マスク画像
+uniform vec3 u_Color;   // 背景を染める色
 
 const vec3 LUMA_VEC = vec3(0.299, 0.587, 0.114);
-const vec3 PURPLE_TINT_COLOR = vec3(0.6, 0.3, 1.0); // 色
 const float DESATURATION_FACTOR = 0.9;
 
 void main() {
@@ -23,7 +23,7 @@ void main() {
         float luma = dot(sceneColor, LUMA_VEC);
         vec3 grayscale = vec3(luma);
         vec3 desaturated = mix(sceneColor, grayscale, DESATURATION_FACTOR);
-        vec3 finalColor = desaturated * PURPLE_TINT_COLOR;
+        vec3 finalColor = desaturated * u_Color;
         out_FragColor = vec4(finalColor, 1.0);
     }
     // 0.5以上 = 白
