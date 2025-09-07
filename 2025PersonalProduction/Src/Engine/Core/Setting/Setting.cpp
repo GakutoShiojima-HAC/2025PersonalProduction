@@ -15,7 +15,7 @@ void Setting::load(const std::string& setting_path) {
 void Setting::reset() {
 	// ƒV[ƒ“•`‰æŠÖŒW
 	enable_draw_posteffect_ = true;
-	enable_draw_fxaa_ = false;
+	enable_draw_fxaa_ = true;
 }
 
 void Setting::save() {
