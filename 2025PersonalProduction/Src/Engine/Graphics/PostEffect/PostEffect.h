@@ -20,6 +20,8 @@ enum {
 	Rt_AvoidMask,			// 回避演出用のマスク用
 	Rt_AvoidEffect,			// 回避演出のポストエフェクト用
 
+	Rt_Fog,					// フォグ用
+
 	Rt_BloomExtract,		// 高輝度テクセル抽出
 
 	Rt_GaussianBlurH1,		// 水平方向ブラー(1/4縮小バッファ)
@@ -39,6 +41,7 @@ enum {
 // シェーダー
 enum {
 	Shader_AvoidEffect,		// 回避演出
+	Shader_Fog,
 	Shader_BloomExtract,    // 高輝度ピクセル抽出
 	Shader_GaussianBlur,    // ガウシアンブラー
 	Shader_BloomCombine,    // ブルームエフェクト合成
@@ -101,6 +104,18 @@ public:
 	/// <param name="color">RGB</param>
 	void set_avoid_color(const GSvector3& color);
 
+	/// <summary>
+	/// フォグの近クリップと遠クリップ
+	/// </summary>
+	/// <returns>参照</returns>
+	GSvector2& fog_start_end();
+
+	/// <summary>
+	/// フォグのカラー
+	/// </summary>
+	/// <returns>参照</returns>
+	GScolor& fog_color();
+
 private:
 	/// <summary>
 	/// 回避エフェクト
@@ -133,6 +148,20 @@ private:
 	/// </summary>
 	GSuint apply_fxaa(GSuint source) const;
 
+	/// <summary>
+	/// フォグ
+	/// </summary>
+	GSuint apply_fog(GSuint source) const;
+
+private:
+	/// <summary>
+	/// zバッファパラメータの作成
+	/// </summary>
+	/// <param name="near">= 近クリップ</param>
+	/// <param name="far">= 遠クリップ</param>
+	/// <returns>zバッファパラメータ</returns>
+	GSvector4 zbuffer_params(float near, float far) const;
+
 private:
 	GLint width_{ 0 };
 	GLint height_{ 0 };
@@ -143,6 +172,11 @@ private:
 	bool is_avoid_effect_{ false };
 	// 回避演出に使う色
 	GSvector3 avoid_color_{ 0.2f, 0.4f, 1.0f };
+
+	// フォグの近クリップと遠クリップ
+	GSvector2 fog_start_end_{ 20.0f,1000.0f };
+	// フォグのカラー
+	GScolor fog_color_{ 1.0f, 1.0f, 1.0f, 1.0f };
 
 public:
 	// コピー禁止

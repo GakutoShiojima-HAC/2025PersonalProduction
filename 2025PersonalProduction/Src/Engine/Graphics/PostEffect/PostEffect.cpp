@@ -1,4 +1,5 @@
 #include "Engine/Graphics/PostEffect/PostEffect.h"
+#include "GameConfig.h"
 #include <gslib.h>
 
 // ブルームエフェクトの対象にするテクセルの輝度のしきい値
@@ -19,6 +20,8 @@ void PostEffect::init() {
     // 回避演出用のレンダーターゲットの作成
     gsCreateRenderTarget(Rt_AvoidMask, width_, height_, GS_TRUE, GS_TRUE, GS_TRUE);
     gsCreateRenderTarget(Rt_AvoidEffect, width_, height_, GS_TRUE, GS_FALSE, GS_TRUE);
+    // フォグ用
+    gsCreateRenderTarget(Rt_Fog, width_, height_, GS_TRUE, GS_FALSE, GS_TRUE);
     // 高輝度抽出シェーダー用のレンダーターゲットの作成(1/4サイズ)
     gsCreateRenderTarget(Rt_BloomExtract, width_ / 4, height_ / 4, GS_TRUE, GS_FALSE, GS_TRUE);
     // ガウシアンブラー用の縮小バッファを作成
@@ -37,6 +40,7 @@ void PostEffect::init() {
 
     // シェーダーの読み込み
     gsLoadShader(Shader_AvoidEffect, "Resource/Private/Shader/RenderTexture.vert", "Resource/Private/Shader/AvoidEffect.frag");
+    gsLoadShader(Shader_Fog, "Resource/Private/Shader/RenderTexture.vert", "Resource/Private/Shader/Fog.frag");
     gsLoadShader(Shader_BloomExtract, "Resource/Private/Shader/RenderTexture.vert", "Resource/Private/Shader/BloomExtract.frag");
     gsLoadShader(Shader_GaussianBlur, "Resource/Private/Shader/RenderTexture.vert", "Resource/Private/Shader/GaussianBlur.frag");
     gsLoadShader(Shader_BloomCombine, "Resource/Private/Shader/RenderTexture.vert", "Resource/Private/Shader/BloomCombine.frag");
@@ -69,6 +73,9 @@ void PostEffect::draw() const {
 
     // 回避演出をかける
     if (is_avoid_effect_) current = apply_avoid_effect(current, Rt_AvoidMask);
+
+    // フォグをかける
+    //current = apply_fog(current);
 
     // ポストエフェクトをかける
     if (setting_.is_draw_posteffect()) {
@@ -141,6 +148,14 @@ bool PostEffect::is_draw_avoid_effect() const {
 
 void PostEffect::set_avoid_color(const GSvector3& color) {
     avoid_color_ = color;
+}
+
+GSvector2& PostEffect::fog_start_end() {
+    return fog_start_end_;
+}
+
+GScolor& PostEffect::fog_color() {
+    return fog_color_;
 }
 
 GSuint PostEffect::apply_avoid_effect(GSuint source, GSuint mask) const {
@@ -287,4 +302,45 @@ GSuint PostEffect::apply_fxaa(GSuint source) const {
     // シェーダーを無効にする
     gsEndShader();
     return Rt_FXAA;
+}
+
+GSuint PostEffect::apply_fog(GSuint source) const {
+    // フォグ用シェーダーを有効にする
+    gsBeginShader(Shader_Fog);
+    // 元画像テクスチャの設定
+    gsSetShaderParamTexture("u_RenderTexture", 0);
+    gsBindRenderTargetTextureEx(source, 0, 0);
+    // デプスバッファテクスチャの設定
+    gsSetShaderParamTexture("u_DepthTexture", 1);
+    gsBindRenderTargetDepthEx(source, 1);
+    // zバッファパラメータの設定
+    GSvector4 zparams = zbuffer_params(cNEAR, cFAR);
+    gsSetShaderParam4f("u_ZBufferParams", &zparams);
+    // フォグのカラーの設定
+    gsSetShaderParam4f("u_FogColor", &fog_color_);
+    // フォグの開始位置の設定
+    gsSetShaderParam1f("u_FogStart", fog_start_end_.x);
+    // フォグの終了位置の設定
+    gsSetShaderParam1f("u_FogEnd", fog_start_end_.y);
+    // フォグ用レンダーターゲットを描画先にする
+    gsBeginRenderTarget(Rt_Fog);
+    // レンダーターゲットを描画
+    gsDrawRenderTargetEx(Rt_Fog);
+    // テクスチャのバインド解除
+    gsUnbindRenderTargetTextureEx(source, 0, 0);
+    gsUnbindRenderTargetDepthEx(source, 1);
+    // レンダーターゲットの解除　
+    gsEndRenderTarget();
+    // シェーダーを無効にする
+    gsEndShader();
+
+    return Rt_Fog;
+}
+
+GSvector4 PostEffect::zbuffer_params(float near, float far) const {
+    float x = 1.0f - (far / near);
+    float y = (far / near);
+    float z = x / far;
+    float w = y / far;
+    return GSvector4{ x, y, z, w };;
 }
