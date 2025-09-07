@@ -88,6 +88,10 @@ GSmatrix4 Actor::local_to_world(const GSvector3& position, const GSvector3& rota
 	return local_matrix * transform_.localToWorldMatrix();
 }
 
+bool Actor::is_collision() const {
+	return enable_collider_;
+}
+
 void Actor::collide_field() {
 
 }

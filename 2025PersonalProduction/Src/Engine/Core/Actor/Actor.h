@@ -129,6 +129,17 @@ public:
 	/// <param name="scale">= 拡縮量</param>
 	GSmatrix4 local_to_world(const GSvector3& position, const GSvector3& rotate, const GSvector3& scale) const;
 
+	/// <summary>
+	/// 衝突判定を行うかどうか
+	/// </summary>
+	/// <returns>行うなら真を返却</returns>
+	bool is_collision() const;
+
+	/// <summary>
+	/// コライダーを描画
+	/// </summary>
+	void draw_collider() const;
+
 protected:
 	/// <summary>
 	/// 地形との衝突判定
@@ -158,11 +169,6 @@ protected:
 	/// <param name="rotation">= ローカル回転量</param>
 	/// <param name="scale">= ローカル拡縮量</param>
 	GSuint play_effect(GSuint effect_id, const GSvector3& position, const GSvector3& rotate = GSvector3{ 0.0f, 0.0f, 0.0f }, const GSvector3& scale = GSvector3{ 1.0f, 1.0f, 1.0f }) const;
-
-	/// <summary>
-	/// コライダーを描画
-	/// </summary>
-	void draw_collider() const;
 
 protected:
 	// ワールド
