@@ -165,6 +165,12 @@ public:
     /// <returns>参照</returns>
     virtual bool& enable_avoid_posteffct() = 0;
 
+    /// <summary>
+    /// 回避演出用ポストエフェクトの色を設定
+    /// </summary>
+    /// <param name="color">RGB</param>
+    virtual void set_avoid_effect_color(const GSvector3& color) = 0;
+
 public:
 	// コピー禁止
 	IWorld(const IWorld& other) = delete;

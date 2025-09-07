@@ -198,3 +198,7 @@ void World::generate_attack_collider(float radius, const GSvector3& center, Acto
 bool& World::enable_avoid_posteffct() {
 	return posteffect_.enable_avoid_effect();
 }
+
+void World::set_avoid_effect_color(const GSvector3& color) {
+	posteffect_.set_avoid_color(color);
+}

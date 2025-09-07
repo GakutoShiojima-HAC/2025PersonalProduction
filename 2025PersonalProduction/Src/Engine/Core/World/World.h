@@ -129,6 +129,8 @@ public:
 
 	bool& enable_avoid_posteffct() override;
 
+	void set_avoid_effect_color(const GSvector3& color) override;
+
 protected:
 	// フィールド
 	Field* field_{ nullptr };
