@@ -18,6 +18,7 @@
 #include "Engine/Core/Camera/CameraManager.h"
 #include "Engine/Core/Timeline/TimelineManager.h"
 #include "Engine/Core/NavMesh/NavMeshSurface.h"
+#include "Engine/Graphics/PostEffect/PostEffect.h"
 
 class AttackColliderPool;
 
@@ -83,6 +84,12 @@ public:
 	/// <param name="pool">= 攻撃判定プール</param>
 	void add_attack_collider_pool(AttackColliderPool* pool);
 
+	/// <summary>
+	/// ポストエフェクトへのアクセス
+	/// </summary>
+	/// <returns>参照</returns>
+	PostEffect& posteffect();
+
 public:
 	Field* get_field() override;
 
@@ -120,6 +127,10 @@ public:
 
 	void generate_attack_collider(float radius, const GSvector3& center, Actor* owner, int damage, float lifespan = 1.0f, float delay = 0.0f) override;
 
+	bool& enable_avoid_posteffct() override;
+
+	void set_avoid_effect_color(const GSvector3& color) override;
+
 protected:
 	// フィールド
 	Field* field_{ nullptr };
@@ -139,6 +150,8 @@ protected:
 	TimelineManager timeline_;
 	// 攻撃判定プール
 	AttackColliderPool* attack_collider_pool_{ nullptr };
+	// ポストエフェクト
+	PostEffect posteffect_;
 
 };
 

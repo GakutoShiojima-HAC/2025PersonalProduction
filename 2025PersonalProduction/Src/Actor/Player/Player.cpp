@@ -22,6 +22,7 @@
 
 #ifdef _DEBUG
 #include <imgui/imgui.h>
+#include "Engine/Core/Setting/Setting.h"
 #endif
 
 // 衝突判定用の半径
@@ -38,6 +39,11 @@ const float DECELERATION_SPEED{ 0.75f };
 const float INVINCIBLE_TIME{ 0.5f };
 // 回避移動速度
 const float AVOID_SPEED{ 12.0f };
+
+// 回避演出の時間
+const float AVOID_EFFECT_TIME{ 3.0f };
+// 回避演出の色
+const GSvector3 AVOID_EFFECT_COLOR{ 0.592f, 0.627f, 1.0f };
 
 Player::Player(IWorld* world, const GSvector3& position, const GSvector3& lookat, PlayerCamera* camera) {
 	world_ = world;
@@ -73,6 +79,14 @@ void Player::update(float delta_time) {
 	update_gravity(delta_time);
 	update_mesh(delta_time);
 
+	// 回避演出タイマーの更新
+	if (avoid_effect_timer_ > 0.0f) {
+		avoid_effect_timer_ -= delta_time / 60.0f;
+		if (avoid_effect_timer_ <= 0.0f) Tween::vector3(AVOID_EFFECT_COLOR, GSvector3::one(), 30.0f, [=](GSvector3 color) {
+				world_->set_avoid_effect_color(color);
+			}).on_complete([=] { world_->enable_avoid_posteffct() = false; });
+	}
+
 #ifdef _DEBUG
 	auto state_string = [](PlayerStateType s) {
 		switch (s) {
@@ -103,10 +117,19 @@ void Player::update(float delta_time) {
 		}
 	};
 	ImGui::Begin("Player Window");
-
 	ImGui::Text("current position is X:%.3f Y:%.3f Z:%.3f", transform_.position().x, transform_.position().y, transform_.position().z);
 	ImGui::Text("current state is %s.", state_string(PlayerStateType(state_.get_current_state())));
 	ImGui::Text("current motion is %d.", (int)motion_);
+	ImGui::End();
+
+	ImGui::Begin("Setting Window");
+	Setting& setting = Setting::get_instance();
+	std::string text1 = "draw posteffect current: "; text1 += setting.is_draw_posteffect() ? "on" : "off";
+	if (ImGui::Button(text1.c_str())) setting.enable_draw_posteffect() = !setting.is_draw_posteffect();
+	std::string text2 = "draw fxaa current: "; text2 += setting.is_draw_fxaa() ? "on" : "off";
+	if (ImGui::Button(text2.c_str())) setting.enable_draw_fxaa() = !setting.is_draw_fxaa();
+	std::string text3 = "draw avoid effect current: "; text3 += world_->enable_avoid_posteffct() ? "on" : "off";
+	if (ImGui::Button(text3.c_str())) world_->enable_avoid_posteffct() = !world_->enable_avoid_posteffct();
 	ImGui::End();
 #endif
 }
@@ -139,9 +162,17 @@ void Player::take_damage(Actor& other, const int damage) {
 		(GSuint)PlayerStateType::Dead,
 		(GSuint)PlayerStateType::Skill	// スキル中も無敵
 	)) return;
-	if (invincible_timer() > 0.0f) return;
+	if (invincible_timer() > 0.0f) {
+		// 回避演出
+		if (state_.get_current_state(), (GSuint)PlayerStateType::Avoid) {
+			world_->enable_avoid_posteffct() = true;
+			world_->set_avoid_effect_color(AVOID_EFFECT_COLOR);
+			avoid_effect_timer_ = AVOID_EFFECT_TIME;
+		}
+		return;
+	}
 
-	hp_ = CLAMP(hp_ - damage, 0, INT_MAX);
+	//hp_ = CLAMP(hp_ - damage, 0, INT_MAX);
 
 	if (hp_ <= 0) {
 		change_state((GSuint)PlayerStateType::Dead, Motion::Dead, false);
@@ -440,6 +471,7 @@ void Player::generate_attack_collider() {
 	GSvector3 local_pos = weapon_manager_.get_collider_offset(weapon_type_, attack_count_);
 	GSmatrix4 m = local_to_world(local_pos, GSvector3::zero(), GSvector3::one());
 
+	// TODO damage
 	world_->generate_attack_collider(0.3f, m.position(), this, 1, 0.1f, 0.0f);
 }
 

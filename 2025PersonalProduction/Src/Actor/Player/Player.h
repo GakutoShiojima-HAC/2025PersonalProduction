@@ -189,6 +189,9 @@ private:
 	int attack_count_{ 0 };
 	// 現在の武器 // TODO itemクラスにしたい
 	WeaponType weapon_type_{ WeaponType::PlayerSword };
+
+	// 回避演出のタイマー
+	float avoid_effect_timer_{ 0.0f };
 };
 
 using PlayerMotion = Player::Motion;

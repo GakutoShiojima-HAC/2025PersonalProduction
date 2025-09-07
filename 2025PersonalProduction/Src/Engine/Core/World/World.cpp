@@ -28,15 +28,32 @@ void World::update(float delta_time) {
 }
 
 void World::draw() const {
+	posteffect_.start();
+
 	camera_.draw();
 	gsSetEffectCamera();
 	light_->draw();
 	gsDrawShadowMap(World::shadow_map_callback, (void*)this);
 	field_->draw();
 	if (navmesh_ != nullptr) navmesh_->draw();
+
 	actor_.draw();
 	actor_.draw_tranparent();
 	gsDrawEffect();
+
+	posteffect_.end();
+
+	// 回避演出
+	if (posteffect_.is_draw_avoid_effect()) {
+		posteffect_.start_avoid_effect();
+		actor_.draw();
+		actor_.draw_tranparent();
+		gsDrawEffect();
+		posteffect_.end_avoid_effect();
+	}
+
+	posteffect_.draw();
+
 	actor_.draw_gui();
 }
 
@@ -98,6 +115,10 @@ void World::add_character(Character* character) {
 void World::add_attack_collider_pool(AttackColliderPool* pool) {
 	delete attack_collider_pool_;
 	attack_collider_pool_ = pool;
+}
+
+PostEffect& World::posteffect() {
+	return posteffect_;
 }
 
 Field* World::get_field() {
@@ -172,4 +193,12 @@ void World::generate_attack_collider(float radius, const GSvector3& center, Acto
 	// オブジェクトプールがあるならプール管理する
 	if (attack_collider_pool_ != nullptr) attack_collider_pool_->generate(radius, center, owner, damage, lifespan, delay);
 	else add_actor(new AttackCollider{ radius, center, owner, damage, lifespan, delay });
+}
+
+bool& World::enable_avoid_posteffct() {
+	return posteffect_.enable_avoid_effect();
+}
+
+void World::set_avoid_effect_color(const GSvector3& color) {
+	posteffect_.set_avoid_color(color);
 }
