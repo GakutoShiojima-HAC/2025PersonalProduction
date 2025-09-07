@@ -5,6 +5,7 @@
 #include "Engine/Core/World/Light.h"
 #include "Engine/Core/Collision/AttackColliderPool.h"
 #include "Engine/Core/Tween/Tween.h"
+#include "Engine/Graphics/PostEffect/PostEffect.h"
 
 #include <gslib.h>	// tmp
 #include "Camera/FixedCamera.h"	// tmp
@@ -39,6 +40,9 @@ void GameScene::start() {
 	// シャドウマップのポリゴンオフセットを設定する
 	gsEnableShadowMapPolygonOffset();
 	gsSetShadowMapPolygonOffset(2.5f, 1.0f);
+
+	// ポストエフェクトの初期化
+	world_.posteffect().init();
 
 	// tmp
 	LoadAssets* asset = new LoadAssets{};
