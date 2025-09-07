@@ -176,6 +176,7 @@
     <ClCompile Include="Src\Engine\Core\Tween\ValueUnit.cpp" />
     <ClCompile Include="Src\Engine\Core\Tween\Vector2Unit.cpp" />
     <ClCompile Include="Src\Engine\Core\Tween\Vector3Unit.cpp" />
+    <ClCompile Include="Src\Engine\Graphics\PostEffect\PostEffect.cpp" />
     <ClCompile Include="Src\Lib\imgui_stdlib.cpp" />
     <ClCompile Include="Src\Engine\Core\Actor\Pawn\Character\Character.cpp" />
     <ClCompile Include="Src\Engine\Core\Actor\Pawn\Character\CharacterManager.cpp" />
@@ -193,6 +194,7 @@
     <ClCompile Include="Src\Scene\MenuScene.cpp" />
     <ClCompile Include="Src\Scene\TimelineEditorScene.cpp" />
     <ClCompile Include="Src\Scene\TitleScene.cpp" />
+    <ClCompile Include="Src\Engine\Core\Setting\Setting.cpp" />
     <ClCompile Include="Src\State\Player\PlayerAttackState.cpp" />
     <ClCompile Include="Src\State\Player\PlayerAvoidState.cpp" />
     <ClCompile Include="Src\State\Player\PlayerDeadState.cpp" />
@@ -239,6 +241,7 @@
     <ClInclude Include="Src\Engine\Core\Tween\ValueUnit.h" />
     <ClInclude Include="Src\Engine\Core\Tween\Vector2Unit.h" />
     <ClInclude Include="Src\Engine\Core\Tween\Vector3Unit.h" />
+    <ClInclude Include="Src\Engine\Graphics\PostEffect\PostEffect.h" />
     <ClInclude Include="Src\Engine\Utils\Calc.h" />
     <ClInclude Include="Src\Engine\Utils\Check.h" />
     <ClInclude Include="Src\Engine\Utils\DebugMarker.h" />
@@ -279,6 +282,7 @@
     <ClInclude Include="Src\Scene\SceneTag.h" />
     <ClInclude Include="Src\Scene\TimelineEditorScene.h" />
     <ClInclude Include="Src\Scene\TitleScene.h" />
+    <ClInclude Include="Src\Engine\Core\Setting\Setting.h" />
     <ClInclude Include="Src\State\Player\PlayerAttackState.h" />
     <ClInclude Include="Src\State\Player\PlayerAvoidState.h" />
     <ClInclude Include="Src\State\Player\PlayerDeadState.h" />
@@ -294,6 +298,14 @@
     <ClInclude Include="Src\stdafx.h" />
     <ClInclude Include="Src\Weapon\WeaponManager.h" />
     <ClInclude Include="Src\Weapon\WeaponType.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resource\Private\Shader\AvoidEffect.frag" />
+    <None Include="Resource\Private\Shader\BloomCombine.frag" />
+    <None Include="Resource\Private\Shader\BloomExtract.frag" />
+    <None Include="Resource\Private\Shader\FXAA.frag" />
+    <None Include="Resource\Private\Shader\GaussianBlur.frag" />
+    <None Include="Resource\Private\Shader\RenderTexture.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
