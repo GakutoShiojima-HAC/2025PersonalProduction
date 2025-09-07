@@ -167,10 +167,6 @@ private:
 #ifdef _DEBUG
 	// ナビメッシュを描画するかどうか
 	bool draw_navmesh_{ false };
-	// ナビメッシュのポリゴンの頂点を描画するかどうか
-	bool draw_navmesh_vertex_{ false };
-	// ナビメッシュのポリゴンの中心点を描画するかどうか
-	bool draw_navmesh_center_{ false };
 #endif
 
 public:
