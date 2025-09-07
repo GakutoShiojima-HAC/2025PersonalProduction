@@ -55,20 +55,26 @@ void GameScene::start() {
 	// ポストエフェクトの初期化
 	world_.posteffect().init();
 
+	// ライトマップの読み込み
+	gsLoadLightmap(0, "Resource/Assets/Octree/Stage1/Lightmap/Lightmap.txt");
+	// リフレクションプローブの読み込み
+	gsLoadReflectionProbe(0, "Resource/Assets/Octree/Stage1/RefProbe/ReflectionProbe.txt");
+
 	// tmp
 	LoadAssets* asset = new LoadAssets{};
 	asset->name = "Game";
-	asset->octree.push_back({ (GSuint)OctreeID::Mesh, "Resource/Assets/Octree/stage.oct" });
-	asset->octree.push_back({ (GSuint)OctreeID::Collider, "Resource/Assets/Octree/stage_collider.oct"});
-	asset->texture.push_back({ (GSuint)TextureID::Skybox, "Resource/Assets/Skybox/default_skybox.dds"});
+	asset->octree.push_back({ (GSuint)OctreeID::Mesh, "Resource/Assets/Octree/Stage1/stage.oct" });
+	asset->octree.push_back({ (GSuint)OctreeID::Collider, "Resource/Assets/Octree/Stage1/stage_collider.oct"});
+	asset->texture.push_back({ (GSuint)TextureID::Skybox, "Resource/Assets/Skybox/stage1test.dds"});
 	asset->skinmesh.push_back({ (GSuint)MeshID::Player, "Resource/Assets/Skinmesh/Player1/Player.mshb" });
+	asset->skinmesh.push_back({ (GSuint)MeshID::DummyEnemy, "Resource/Assets/Skinmesh/DummyEnemy/DummyEnemy.mshb" });
 	asset->texture.push_back({ (GSuint)TextureID::TmpUI, "Resource/Assets/Texture/kari.png" });
 	AssetsManager::get_instance().load_assets(asset);
 
 	world_.add_field(new Field{ (GSuint)OctreeID::Mesh, (GSuint)OctreeID::Collider, (GSuint)TextureID::Skybox });
 	world_.add_light(new Light{});
 	world_.add_attack_collider_pool(new AttackColliderPool{ &world_ });
-	world_.add_navmesh(new NavMeshSurface{ "Resource/Assets/Octree/navmesh_export.txt" });	// tmp
+	world_.add_navmesh(new NavMeshSurface{ "Resource/Assets/Octree/Stage1/navmesh.txt" });	// tmp
 	
 	// tmp
 	world_.add_camera(new FixedCamera{ &world_, GSvector3{ 0.0f, 3.0f, -10.0f }, GSvector3{ 0.0f, 2.0f, 0.0f } });
@@ -85,7 +91,7 @@ void GameScene::start() {
 	world_.camera_transition(player_camera);
 
 	// tmp
-	world_.add_pawn(new DummyEnemy{ &world_, GSvector3{ 0.0f, 0.0f, 2.0f } });
+	world_.add_character(new DummyEnemy{ &world_, GSvector3{ 0.0f, 0.0f, 2.0f } });
 
 	// 同期
 	world_.update(0.0f);
@@ -96,12 +102,22 @@ void GameScene::update(float delta_time) {
 	if (gsGetKeyState(GKEY_LCONTROL) && gsGetKeyTrigger(GKEY_RETURN)) is_end_ = true;
 
 	world_.update(delta_time);
+
+	// TODO tmp scene end func
+	{
+		if (world_.count_actor_with_tag(ActorTag::Enemy) <= 0) {
+			is_end_ = true;
+			return;
+		}
+		if (world_.count_actor_with_tag(ActorTag::Player) <= 0) {
+			is_end_ = true;
+			return;
+		}
+	}
 }
 
 void GameScene::draw() const {
-	world_.draw();
-	
-	gsDrawText("game");
+	world_.draw();	
 }
 
 void GameScene::end() {

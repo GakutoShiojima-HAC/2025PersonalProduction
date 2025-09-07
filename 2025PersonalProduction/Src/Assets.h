@@ -17,13 +17,16 @@
 #define MESH_ID_LIST \
     X(NONE) \
     X(Player) \
-    X(Enemy) \
+    X(DummyEnemy) \
     X(MAX_SIZE) // 要素数
 
 // テクスチャ 
 #define TEXTURE_ID_LIST \
     X(NONE) \
     X(Skybox) \
+    X(TitleLogo) \
+    X(MenuLogo) \
+    X(TmpUI) \
     X(MAX_SIZE) // 要素数
 
 // オクツリー
