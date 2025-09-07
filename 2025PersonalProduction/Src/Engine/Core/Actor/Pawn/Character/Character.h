@@ -12,6 +12,7 @@
 #define CHARACTER_H_
 
 #include "Engine/Core/Actor/Pawn/Pawn.h"
+#include "Engine/Core/StateMachine/StateMachine.h"
 
 class Character : public Pawn {
 public:

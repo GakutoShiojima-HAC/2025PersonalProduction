@@ -29,9 +29,7 @@ void AttackCollider::update(float delta_time) {
 }
 
 void AttackCollider::draw() const {
-#ifdef _DEBUG
-	draw_collider();
-#endif
+
 }
 
 void AttackCollider::react(Actor& other) {

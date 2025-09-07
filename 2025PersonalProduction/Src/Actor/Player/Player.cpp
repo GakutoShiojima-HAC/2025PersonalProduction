@@ -7,6 +7,7 @@
 #include "Engine/Utils/Check.h"
 #include "Engine/Utils/Calc.h"
 #include "Engine/Core/Tween/Tween.h"
+#include "GameConfig.h"
 
 #include "State/Player/PlayerAttackState.h"
 #include "State/Player/PlayerAvoidState.h"
@@ -22,8 +23,10 @@
 
 #ifdef _DEBUG
 #include <imgui/imgui.h>
-#include "Engine/Core/Setting/Setting.h"
+#include "Engine/Core/Screen/Screen.h"
 #endif
+
+#include "Engine/Graphics/Canvas/Canvas.h"	// tmp
 
 // 衝突判定用の半径
 const float RADIUS{ 0.4f };
@@ -81,8 +84,8 @@ void Player::update(float delta_time) {
 
 	// 回避演出タイマーの更新
 	if (avoid_effect_timer_ > 0.0f) {
-		avoid_effect_timer_ -= delta_time / 60.0f;
-		if (avoid_effect_timer_ <= 0.0f) Tween::vector3(AVOID_EFFECT_COLOR, GSvector3::one(), 30.0f, [=](GSvector3 color) {
+		avoid_effect_timer_ -= delta_time / cFPS;
+		if (avoid_effect_timer_ <= 0.0f) Tween::vector3(AVOID_EFFECT_COLOR, GSvector3::one(), 0.5f * cFPS, [=](GSvector3 color) {
 				world_->set_avoid_effect_color(color);
 			}).on_complete([=] { world_->enable_avoid_posteffct() = false; });
 	}
@@ -122,14 +125,14 @@ void Player::update(float delta_time) {
 	ImGui::Text("current motion is %d.", (int)motion_);
 	ImGui::End();
 
-	ImGui::Begin("Setting Window");
-	Setting& setting = Setting::get_instance();
-	std::string text1 = "draw posteffect current: "; text1 += setting.is_draw_posteffect() ? "on" : "off";
-	if (ImGui::Button(text1.c_str())) setting.enable_draw_posteffect() = !setting.is_draw_posteffect();
-	std::string text2 = "draw fxaa current: "; text2 += setting.is_draw_fxaa() ? "on" : "off";
-	if (ImGui::Button(text2.c_str())) setting.enable_draw_fxaa() = !setting.is_draw_fxaa();
-	std::string text3 = "draw avoid effect current: "; text3 += world_->enable_avoid_posteffct() ? "on" : "off";
-	if (ImGui::Button(text3.c_str())) world_->enable_avoid_posteffct() = !world_->enable_avoid_posteffct();
+	ImGui::Begin("App Window");
+	const ScreenData& screen = Screen::get_instance().get_current_data();
+	ImGui::Text("fps %f", delta_time * screen.refresh_rate);
+	ImGui::Text("width %d height %d", screen.width_px, screen.height_px);
+	std::string input_type = "input ";
+	if (input_.is_pad()) input_type += "gamepad";
+	else input_type += "keyboard + mouse";
+	ImGui::Text("%s", input_type.c_str());
 	ImGui::End();
 #endif
 }
@@ -143,14 +146,15 @@ void Player::draw() const {
 	mesh_.draw();
 
 	// state_.draw();
-
-#ifdef _DEBUG
-	draw_collider();
-#endif
 }
 
 void Player::draw_gui() const {
 	// TODO GUI
+
+	{
+		const GSrect rect{ 0.0f, 0.0f, 77.0f, 80.0f };
+		Canvas::draw_texture((GSuint)TextureID::TmpUI, GSvector2{ 20.0f, 20.0f }, rect, GSvector2::zero(), GSvector2::one(), GScolor{ 1.0f, 1.0f, 1.0f, 1.0f }, 0.0f, Anchor::TopLeft);
+	}
 
 	// state_.draw_gui();
 }
@@ -164,7 +168,7 @@ void Player::take_damage(Actor& other, const int damage) {
 	)) return;
 	if (invincible_timer() > 0.0f) {
 		// 回避演出
-		if (state_.get_current_state(), (GSuint)PlayerStateType::Avoid) {
+		if (state_.get_current_state() == (GSuint)PlayerStateType::Avoid) {
 			world_->enable_avoid_posteffct() = true;
 			world_->set_avoid_effect_color(AVOID_EFFECT_COLOR);
 			avoid_effect_timer_ = AVOID_EFFECT_TIME;
@@ -402,7 +406,7 @@ void Player::on_avoid() {
 	}
 
 	// 移動先を決定
-	avoid_velocity = avoid_velocity.normalized() * AVOID_SPEED * 0.016f;
+	avoid_velocity = avoid_velocity.normalized() * AVOID_SPEED * 1.0f / cFPS;
 	// モーションを適用
 	change_state((GSuint)PlayerStateType::Avoid, motion, false);
 

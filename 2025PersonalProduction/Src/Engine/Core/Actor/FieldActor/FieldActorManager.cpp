@@ -9,6 +9,12 @@ FieldActorManager::~FieldActorManager() {
     clear();
 }
 
+void FieldActorManager::update(float delta_time) {
+    for (const auto& actor : actors_) {
+        actor->update(delta_time);
+    }
+}
+
 FieldActor* FieldActorManager::collide(const Ray& ray, float max_distance, GSvector3* intersect, GSplane* plane) const {
     // ƒŒƒC‚ğü•ª‚É•ÏŠ·‚·‚é
     Line line;

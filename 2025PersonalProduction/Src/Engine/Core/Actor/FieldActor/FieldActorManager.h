@@ -30,6 +30,12 @@ public:
 
 public:
     /// <summary>
+    /// フィールドアクターの更新
+    /// </summary>
+    void update(float delta_time) override;
+
+public:
+    /// <summary>
     /// レイとの衝突判定
     /// </summary>
     /// <param name="max_distance">= レイの長さ</param>

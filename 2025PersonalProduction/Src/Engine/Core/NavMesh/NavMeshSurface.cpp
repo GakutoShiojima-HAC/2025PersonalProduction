@@ -23,17 +23,12 @@ NavMeshSurface::~NavMeshSurface() {
 
 void NavMeshSurface::update(float delta_time) {
 #ifdef _DEBUG
-    ImGui::Begin("NavMesh Window");
+    ImGui::Begin("Field Window");
 
+    ImGui::Separator();
     ImGui::Text("NavMesh Surface Option");
 
     if (ImGui::Button("Toggle Draw NavMesh")) draw_navmesh_ = !draw_navmesh_;
-
-    if (ImGui::Button("Toggle Draw NavMesh Polygon Vertex")) draw_navmesh_vertex_ = !draw_navmesh_vertex_;
-
-    if (ImGui::Button("Toggle Draw NavMesh Polygon Center")) draw_navmesh_center_ = !draw_navmesh_center_;
-
-    ImGui::Separator();
 
     ImGui::End();
 #endif
@@ -54,20 +49,6 @@ void NavMeshSurface::draw() const {
         // ライティングを有効にする
         glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
         glEnable(GL_LIGHTING);
-    }
-
-    if (draw_navmesh_vertex_) {
-        for (const auto& node : graph_) {
-            const auto& pos = node.center;
-            MyLib::draw_sphere(pos, 0.025, GScolor{ 0.0f, 1.0f, 0.0f, 0.4f });
-        }
-    }
-
-    if (draw_navmesh_center_) {
-        for (const auto& v : path_vertices_) {
-            const auto& pos = v.position;
-            MyLib::draw_sphere(pos, 0.025, GScolor{ 0.0f, 1.0f, 1.0f, 0.4f });
-        }
     }
 #endif
 }

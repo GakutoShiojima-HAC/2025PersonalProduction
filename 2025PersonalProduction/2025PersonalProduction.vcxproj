@@ -195,6 +195,10 @@
     <ClCompile Include="Src\Scene\TimelineEditorScene.cpp" />
     <ClCompile Include="Src\Scene\TitleScene.cpp" />
     <ClCompile Include="Src\Engine\Core\Setting\Setting.cpp" />
+    <ClCompile Include="Src\State\DummyEnemy\DummyEnemyAttackState.cpp" />
+    <ClCompile Include="Src\State\DummyEnemy\DummyEnemyDeadState.cpp" />
+    <ClCompile Include="Src\State\DummyEnemy\DummyEnemyIdleState.cpp" />
+    <ClCompile Include="Src\State\DummyEnemy\DummyEnemyMoveState.cpp" />
     <ClCompile Include="Src\State\Player\PlayerAttackState.cpp" />
     <ClCompile Include="Src\State\Player\PlayerAvoidState.cpp" />
     <ClCompile Include="Src\State\Player\PlayerDeadState.cpp" />
@@ -283,6 +287,11 @@
     <ClInclude Include="Src\Scene\TimelineEditorScene.h" />
     <ClInclude Include="Src\Scene\TitleScene.h" />
     <ClInclude Include="Src\Engine\Core\Setting\Setting.h" />
+    <ClInclude Include="Src\State\DummyEnemy\DummyEnemyState.h" />
+    <ClInclude Include="Src\State\DummyEnemy\DummyEnemyAttackState.h" />
+    <ClInclude Include="Src\State\DummyEnemy\DummyEnemyDeadState.h" />
+    <ClInclude Include="Src\State\DummyEnemy\DummyEnemyIdleState.h" />
+    <ClInclude Include="Src\State\DummyEnemy\DummyEnemyMoveState.h" />
     <ClInclude Include="Src\State\Player\PlayerAttackState.h" />
     <ClInclude Include="Src\State\Player\PlayerAvoidState.h" />
     <ClInclude Include="Src\State\Player\PlayerDeadState.h" />
@@ -303,6 +312,7 @@
     <None Include="Resource\Private\Shader\AvoidEffect.frag" />
     <None Include="Resource\Private\Shader\BloomCombine.frag" />
     <None Include="Resource\Private\Shader\BloomExtract.frag" />
+    <None Include="Resource\Private\Shader\Fog.frag" />
     <None Include="Resource\Private\Shader\FXAA.frag" />
     <None Include="Resource\Private\Shader\GaussianBlur.frag" />
     <None Include="Resource\Private\Shader\RenderTexture.vert" />

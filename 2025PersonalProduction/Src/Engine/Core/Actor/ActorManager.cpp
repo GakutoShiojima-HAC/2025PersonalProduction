@@ -1,6 +1,10 @@
 #include "Engine/Core/Actor/ActorManager.h"
 #include "Engine/Core/Actor/Actor.h"
 
+#ifdef _DEBUG
+#include <imgui/imgui.h>
+#endif
+
 ActorManager::~ActorManager() {
 	clear();
 }
@@ -13,6 +17,13 @@ void ActorManager::update(float delta_time) {
 	for (const auto& actor : actors_) {
 		actor->update(delta_time);
 	}
+
+#ifdef _DEBUG
+	ImGui::Begin("Game Window");
+	// Õ“Ë”»’è‚ð•`‰æ‚·‚é‚©‚Ç‚¤‚©
+	if (ImGui::Button("draw collision detection")) draw_collision_detection_ = !draw_collision_detection_;
+	ImGui::End();
+#endif
 }
 
 void ActorManager::late_update(float delta_time) {
@@ -24,6 +35,11 @@ void ActorManager::late_update(float delta_time) {
 void ActorManager::draw() const {
 	for (const auto& actor : actors_) {
 		actor->draw();
+
+#ifdef _DEBUG
+		if (!draw_collision_detection_) continue;
+		if (actor->is_collision()) actor->draw_collider();
+#endif
 	}
 }
 

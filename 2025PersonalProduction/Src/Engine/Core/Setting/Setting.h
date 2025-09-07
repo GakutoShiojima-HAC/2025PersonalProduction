@@ -45,7 +45,7 @@ public:
 
 private:
 	bool enable_draw_posteffect_{ true };
-	bool enable_draw_fxaa_{ false };
+	bool enable_draw_fxaa_{ true };
 
 public:
 	// ƒRƒs[‹Ö~
