@@ -21,7 +21,7 @@ namespace MyLib {
 	/// <param name="f">= 前方向</param>
 	/// <param name="div">= 分割数</param>
 	/// <returns>前が0、そこから反時計回りに分割数 方向ベクトルが無ければ負の値を返却</returns>
-	int get_direction(const GSvector2& d, const GSvector2& f, const int div) {
+	inline int get_direction(const GSvector2& d, const GSvector2& f, const int div) {
 		if (d.magnitude() < 0.01f || div <= 0) return -1;
 
 		// 正規化
