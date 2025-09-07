@@ -7,6 +7,7 @@
 #include "Engine/Utils/Check.h"
 #include "Engine/Utils/Calc.h"
 #include "Engine/Core/Tween/Tween.h"
+#include "GameConfig.h"
 
 #include "State/Player/PlayerAttackState.h"
 #include "State/Player/PlayerAvoidState.h"
@@ -22,6 +23,7 @@
 
 #ifdef _DEBUG
 #include <imgui/imgui.h>
+#include "Engine/Core/Screen/Screen.h"
 #endif
 
 #include "Engine/Graphics/Canvas/Canvas.h"	// tmp
@@ -82,8 +84,8 @@ void Player::update(float delta_time) {
 
 	// 回避演出タイマーの更新
 	if (avoid_effect_timer_ > 0.0f) {
-		avoid_effect_timer_ -= delta_time / 60.0f;
-		if (avoid_effect_timer_ <= 0.0f) Tween::vector3(AVOID_EFFECT_COLOR, GSvector3::one(), 30.0f, [=](GSvector3 color) {
+		avoid_effect_timer_ -= delta_time / cFPS;
+		if (avoid_effect_timer_ <= 0.0f) Tween::vector3(AVOID_EFFECT_COLOR, GSvector3::one(), 0.5f * cFPS, [=](GSvector3 color) {
 				world_->set_avoid_effect_color(color);
 			}).on_complete([=] { world_->enable_avoid_posteffct() = false; });
 	}
@@ -121,6 +123,16 @@ void Player::update(float delta_time) {
 	ImGui::Text("current position is X:%.3f Y:%.3f Z:%.3f", transform_.position().x, transform_.position().y, transform_.position().z);
 	ImGui::Text("current state is %s.", state_string(PlayerStateType(state_.get_current_state())));
 	ImGui::Text("current motion is %d.", (int)motion_);
+	ImGui::End();
+
+	ImGui::Begin("App Window");
+	const ScreenData& screen = Screen::get_instance().get_current_data();
+	ImGui::Text("fps %f", delta_time * screen.refresh_rate);
+	ImGui::Text("width %d height %d", screen.width_px, screen.height_px);
+	std::string input_type = "input ";
+	if (input_.is_pad()) input_type += "gamepad";
+	else input_type += "keyboard + mouse";
+	ImGui::Text("%s", input_type.c_str());
 	ImGui::End();
 #endif
 }
@@ -398,7 +410,7 @@ void Player::on_avoid() {
 	}
 
 	// 移動先を決定
-	avoid_velocity = avoid_velocity.normalized() * AVOID_SPEED * 0.016f;
+	avoid_velocity = avoid_velocity.normalized() * AVOID_SPEED * 1.0f / cFPS;
 	// モーションを適用
 	change_state((GSuint)PlayerStateType::Avoid, motion, false);
 
