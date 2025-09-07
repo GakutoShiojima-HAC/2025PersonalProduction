@@ -41,6 +41,17 @@ void GameScene::start() {
 	gsEnableShadowMapPolygonOffset();
 	gsSetShadowMapPolygonOffset(2.5f, 1.0f);
 
+	// 通常フォグの設定
+	GScolor4 color = world_.posteffect().fog_color();
+	const float fog_color[4]{ color.r, color.g, color.b, color.a };
+	const float fog_start{ 10.0f };
+	const float fog_end{ 300.0f };
+	glFogi(GL_FOG_MODE, GL_LINEAR);     // 線形フォグ
+	glFogfv(GL_FOG_COLOR, fog_color);   // フォグの色
+	glFogf(GL_FOG_START, fog_start);    // フォグの開始位置（視点からの距離）
+	glFogf(GL_FOG_END, fog_end);        // フォグの終了位置（視点からの距離）
+	glEnable(GL_FOG);                   // フォグを有効にする
+
 	// ポストエフェクトの初期化
 	world_.posteffect().init();
 
@@ -51,6 +62,7 @@ void GameScene::start() {
 	asset->octree.push_back({ (GSuint)OctreeID::Collider, "Resource/Assets/Octree/stage_collider.oct"});
 	asset->texture.push_back({ (GSuint)TextureID::Skybox, "Resource/Assets/Skybox/default_skybox.dds"});
 	asset->skinmesh.push_back({ (GSuint)MeshID::Player, "Resource/Assets/Skinmesh/Player1/Player.mshb" });
+	asset->texture.push_back({ (GSuint)TextureID::TmpUI, "Resource/Assets/Texture/kari.png" });
 	AssetsManager::get_instance().load_assets(asset);
 
 	world_.add_field(new Field{ (GSuint)OctreeID::Mesh, (GSuint)OctreeID::Collider, (GSuint)TextureID::Skybox });
@@ -81,10 +93,7 @@ void GameScene::start() {
 
 void GameScene::update(float delta_time) {
 	// tmp scene end
-	if (gsGetKeyTrigger(GKEY_L)) is_end_ = true;
-
-	// tmp timeline play
-	if (gsGetKeyTrigger(GKEY_T)) world_.timeline().camera_timeline()->play("test");
+	if (gsGetKeyState(GKEY_LCONTROL) && gsGetKeyTrigger(GKEY_RETURN)) is_end_ = true;
 
 	world_.update(delta_time);
 }

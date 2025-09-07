@@ -5,11 +5,17 @@
 #include "Engine/Core/World/Light.h"
 #include "Engine/Core/Collision/AttackColliderPool.h"
 #include "Engine/Core/Tween/Tween.h"
+#include "Engine/Graphics/PostEffect/PostEffect.h"
 
 #include <gslib.h>	// tmp
 #include "Camera/FixedCamera.h"	// tmp
 #include "Engine/Core/Timeline/Parameters/CameraTimeline.h"	// tmp
 #include "Camera/TimelineCamera.h"	// tmp
+#include "Camera/PlayerCamera.h"	// tmp
+#include "Actor/Player/Player.h"	// tmp
+#include "Camera/EditorCamera.h"	// tmp
+#include "Actor/Enemy/DummyEnemy.h"	// tmp
+#include "Assets.h"	// tmp
 
 #define GS_ENABLE_MESH_SHADOW			// メッシュに影を付ける
 //#define GS_ENABLE_SKIN_MESH_SHADOW	// スキニングメッシュに影を付ける
@@ -24,6 +30,7 @@
 void TimelineEditorScene::start() {
 	is_end_ = false;
 
+	gsInitDefaultShader();
 	// 視錐台カリングを有効にする
 	gsEnable(GS_FRUSTUM_CULLING);
 	// シャドウマップの作成（２枚のカスケードシャドウマップ）
@@ -39,19 +46,23 @@ void TimelineEditorScene::start() {
 	gsEnableShadowMapPolygonOffset();
 	gsSetShadowMapPolygonOffset(2.5f, 1.0f);
 
+	// ポストエフェクトの初期化
+	world_.posteffect().init();
+
 	// tmp
 	LoadAssets* asset = new LoadAssets{};
 	asset->name = "TimelineEditor";
-	asset->octree.push_back({ 0, "Resource/Assets/Octree/Octree.oct" });
-	asset->octree.push_back({ 1, "Resource/Assets/Octree/Collider.oct" });
-	asset->texture.push_back({ 0, "Resource/Assets/Skybox/default_skybox.dds" });
+	asset->octree.push_back({ (GSuint)OctreeID::Mesh, "Resource/Assets/Octree/stage.oct" });
+	asset->octree.push_back({ (GSuint)OctreeID::Collider, "Resource/Assets/Octree/stage_collider.oct" });
+	asset->texture.push_back({ (GSuint)TextureID::Skybox, "Resource/Assets/Skybox/default_skybox.dds" });
+	asset->skinmesh.push_back({ (GSuint)MeshID::Player, "Resource/Assets/Skinmesh/Player1/Player.mshb" });
 	AssetsManager::get_instance().load_assets(asset);
 
-	world_.add_navmesh(new NavMeshSurface{ "Resource/Assets/Octree/navmesh_export.txt" });
 
-	world_.add_field(new Field{ 0, 1, 0 });
+	world_.add_field(new Field{ (GSuint)OctreeID::Mesh, (GSuint)OctreeID::Collider, (GSuint)TextureID::Skybox });
 	world_.add_light(new Light{});
 	world_.add_attack_collider_pool(new AttackColliderPool{ &world_ });
+	world_.add_navmesh(new NavMeshSurface{ "Resource/Assets/Octree/navmesh_export.txt" });	// tmp
 
 	// tmp
 	world_.timeline().add(new CameraTimeline{ &world_, "Resource/Private/Timeline/Camera/List/world1.json" });
@@ -67,11 +78,23 @@ void TimelineEditorScene::start() {
 
 	// tmp
 	editor_.add(new CameraTimelineEditor{ &world_ });
+
+	// tmp
+	PlayerCamera* player_camera = new PlayerCamera{ &world_ };
+	world_.add_camera(player_camera);
+	world_.add_character(new Player{ &world_, GSvector3{ 0.0f, 0.0f, 0.0f }, GSvector3{ 0.0f, 1.0f, 0.0f }, player_camera });
+	world_.camera_transition(player_camera);
+
+	// tmp
+	world_.add_pawn(new DummyEnemy{ &world_, GSvector3{ 0.0f, 0.0f, 2.0f } });
+
+	// 同期
+	world_.update(0.0f);
 }
 
 void TimelineEditorScene::update(float delta_time) {
 	// tmp scene end
-	if (gsGetKeyTrigger(GKEY_L)) is_end_ = true;
+	if (gsGetKeyState(GKEY_LCONTROL) && gsGetKeyTrigger(GKEY_RETURN)) is_end_ = true;
 
 	world_.update(delta_time);
 	editor_.update(delta_time);
