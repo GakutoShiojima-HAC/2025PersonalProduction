@@ -14,4 +14,11 @@
 // FPS
 const float cFPS{ 60.0f };
 
+// 視野角
+const float cFOV{ 45.0f };
+// 近クリップ
+const float cNEAR{ 0.3f };
+// 遠クリップ
+const float cFAR{ 1000.0f };
+
 #endif
