@@ -29,6 +29,8 @@ void AssetsManager::clear() {
 }
 
 LoadedAssets* AssetsManager::load_assets(LoadAssets* data) {
+	loading_assets_.push_back(data);	// 読み込み中に追加
+
 	LoadedAssets* result = new LoadedAssets{};
 	result->name = data->name;
 	int loaded_assets_num{ 0 };
@@ -76,13 +78,12 @@ LoadedAssets* AssetsManager::load_assets(LoadAssets* data) {
 	}
 	// ロードが終了したので数をリセット
 	loaded_assets_count_ -= loaded_assets_num;
-	delete data;
+	remove_loading_asset(data);		// 読み込み中から消去
 	assets_.push_back(result);
 	return result;
 }
 
 void AssetsManager::load_assets_async(LoadAssets* data) {
-	loading_assets_.push_back(data);	// 読み込み中に追加
 	// 別スレッドで読み込み処理を行う
 	gslib::Game::run_thread([=] { async_load_asset(data); });
 }
@@ -117,7 +118,6 @@ LoadedAssets* AssetsManager::find(const string& assets_name) {
 
 void AssetsManager::async_load_asset(LoadAssets* data) {
 	load_assets(data);				// 読み込む
-	remove_loading_asset(data);		// 読み込み中から消去
 }
 
 void AssetsManager::delete_asset(LoadedAssets* data) {
