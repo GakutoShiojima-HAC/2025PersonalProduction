@@ -19,7 +19,7 @@
 
 #define GS_ENABLE_MESH_SHADOW			// メッシュに影を付ける
 //#define GS_ENABLE_SKIN_MESH_SHADOW	// スキニングメッシュに影を付ける
-//#define GS_ENABLE_SOFT_SHADOW			// 影の輪郭をぼかす
+#define GS_ENABLE_SOFT_SHADOW			// 影の輪郭をぼかす
 #include <GSstandard_shader.h>
 
 void GameScene::start() {
@@ -72,7 +72,9 @@ void GameScene::start() {
 	AssetsManager::get_instance().load_assets(asset);
 
 	world_.add_field(new Field{ (GSuint)OctreeID::Mesh, (GSuint)OctreeID::Collider, (GSuint)TextureID::Skybox });
-	world_.add_light(new Light{});
+	Light* light = new Light{};
+	light->position() = GSvector3{ 0.0f, 100.0f, -200.0f };
+	world_.add_light(light);
 	world_.add_attack_collider_pool(new AttackColliderPool{ &world_ });
 	world_.add_navmesh(new NavMeshSurface{ "Resource/Assets/Octree/Stage1/navmesh.txt" });	// tmp
 	
