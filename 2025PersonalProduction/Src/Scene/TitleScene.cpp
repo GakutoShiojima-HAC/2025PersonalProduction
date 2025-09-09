@@ -30,9 +30,6 @@ void TitleScene::update(float delta_time) {
 	if (!AssetsManager::get_instance().is_async_load()) {
 		is_end_ = true;
 	}
-	else {
-		printf("A\n");
-	}
 	
 	// tmp scene end
 	if (gsGetKeyState(GKEY_LCONTROL) && gsGetKeyTrigger(GKEY_RETURN)) is_end_ = true;
@@ -41,7 +38,7 @@ void TitleScene::update(float delta_time) {
 void TitleScene::draw() const {
 	gsDrawText("title");
 
-	// ‰¼ƒƒS•`‰æ
+	// ä»®ãƒ­ã‚´æç”»
 	{
 		const GSrect rect{ 0.0f, 0.0f, 507.0f, 84.0f };
 		const GSvector2 center{ rect.right / 2.0f, rect.bottom / 2.0f };
@@ -50,7 +47,7 @@ void TitleScene::draw() const {
 }
 
 void TitleScene::end() {
-	// Tween‚ÌI—¹
+	// Tweenã®çµ‚äº†
 	Tween::clear();
 
 	// tmp
@@ -74,5 +71,5 @@ bool TitleScene::is_application_end() const {
 }
 
 void TitleScene::reception_message(const std::string& message, void* param) {
-	// ‚È‚É‚àó‚¯æ‚ç‚È‚¢
+	// ãªã«ã‚‚å—ã‘å–ã‚‰ãªã„
 }
