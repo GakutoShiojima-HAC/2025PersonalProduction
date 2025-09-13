@@ -34,11 +34,11 @@ namespace MyRandom {
         return dist(get_engine());
     }
 
-    inline GSvector2 random_vec2(GSvector2 min, GSvector2 max) {
+    inline GSvector2 random_vec2(const GSvector2& min, const GSvector2& max) {
         return GSvector2{ random_float(min.x, max.x), random_float(min.y, max.y) };
     }
 
-    inline GSvector3 random_vec3(GSvector3 min, GSvector3 max) {
+    inline GSvector3 random_vec3(const GSvector3& min, const GSvector3& max) {
         return GSvector3{ random_float(min.x, max.x), random_float(min.y, max.y), random_float(min.z, max.z) };
     }
 }

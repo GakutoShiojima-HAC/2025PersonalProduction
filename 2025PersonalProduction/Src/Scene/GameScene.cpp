@@ -5,7 +5,8 @@
 #include "Engine/Core/World/Light.h"
 #include "Engine/Core/Collision/AttackColliderPool.h"
 #include "Engine/Core/Tween/Tween.h"
-#include "Engine/Graphics/PostEffect/PostEffect.h"
+#include "Engine/Graphics/Shader/GameShader.h"
+#include "Engine/Graphics/Shader/GamePostEffect.h"
 
 #include <gslib.h>	// tmp
 #include "Camera/FixedCamera.h"	// tmp
@@ -17,47 +18,45 @@
 #include "Actor/Enemy/DummyEnemy.h"	// tmp
 #include "Assets.h"	// tmp
 
-#define GS_ENABLE_MESH_SHADOW			// ƒƒbƒVƒ…‚É‰e‚ğ•t‚¯‚é
-//#define GS_ENABLE_SKIN_MESH_SHADOW	// ƒXƒLƒjƒ“ƒOƒƒbƒVƒ…‚É‰e‚ğ•t‚¯‚é
-#define GS_ENABLE_SOFT_SHADOW			// ‰e‚Ì—ÖŠs‚ğ‚Ú‚©‚·
+#define GS_ENABLE_MESH_SHADOW			// ãƒ¡ãƒƒã‚·ãƒ¥ã«å½±ã‚’ä»˜ã‘ã‚‹
+//#define GS_ENABLE_SKIN_MESH_SHADOW	// ã‚¹ã‚­ãƒ‹ãƒ³ã‚°ãƒ¡ãƒƒã‚·ãƒ¥ã«å½±ã‚’ä»˜ã‘ã‚‹
+#define GS_ENABLE_SOFT_SHADOW			// å½±ã®è¼ªéƒ­ã‚’ã¼ã‹ã™
 #include <GSstandard_shader.h>
 
 void GameScene::start() {
 	is_end_ = false;
 
 	gsInitDefaultShader();
-	// ‹‘äƒJƒŠƒ“ƒO‚ğ—LŒø‚É‚·‚é
+	// è¦–éŒå°ã‚«ãƒªãƒ³ã‚°ã‚’æœ‰åŠ¹ã«ã™ã‚‹
 	gsEnable(GS_FRUSTUM_CULLING);
-	// ƒVƒƒƒhƒEƒ}ƒbƒv‚Ìì¬i‚Q–‡‚ÌƒJƒXƒP[ƒhƒVƒƒƒhƒEƒ}ƒbƒvj
+	// ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—ã®ä½œæˆï¼ˆï¼’æšã®ã‚«ã‚¹ã‚±ãƒ¼ãƒ‰ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—ï¼‰
 	static const GSuint shadow_map_size[] = { 2048, 2048 };
 	gsCreateShadowMap(2, shadow_map_size, GS_TRUE);
-	// ƒVƒƒƒhƒEƒ}ƒbƒv‚ğ“K—p‚·‚é‹——£
+	// ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—ã‚’é©ç”¨ã™ã‚‹è·é›¢
 	gsSetShadowMapDistance(60.0f);
-	// ƒJƒXƒP[ƒhƒVƒƒƒhƒE‚ÌƒVƒƒƒhƒEƒ}ƒbƒv‚Ì•ªŠ„ˆÊ’u‚ğ’²®
+	// ã‚«ã‚¹ã‚±ãƒ¼ãƒ‰ã‚·ãƒ£ãƒ‰ã‚¦ã®ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—ã®åˆ†å‰²ä½ç½®ã‚’èª¿æ•´
 	gsSetShadowMapCascadeLamda(0.7f);
-	// ƒVƒƒƒhƒE‚É‚æ‚éŒõ‚ÌŒ¸Š—¦‚ğİ’è(0.0:Œ¸Š`1.0:Œ¸Š‚µ‚È‚¢)
+	// ã‚·ãƒ£ãƒ‰ã‚¦ã«ã‚ˆã‚‹å…‰ã®æ¸›è¡°ç‡ã‚’è¨­å®š(0.0:æ¸›è¡°ï½1.0:æ¸›è¡°ã—ãªã„)
 	gsSetShadowMapAttenuation(0.0f);
-	// ƒVƒƒƒhƒEƒ}ƒbƒv‚Ìƒ|ƒŠƒSƒ“ƒIƒtƒZƒbƒg‚ğİ’è‚·‚é
+	// ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—ã®ãƒãƒªã‚´ãƒ³ã‚ªãƒ•ã‚»ãƒƒãƒˆã‚’è¨­å®šã™ã‚‹
 	gsEnableShadowMapPolygonOffset();
 	gsSetShadowMapPolygonOffset(2.5f, 1.0f);
 
-	// ’ÊíƒtƒHƒO‚Ìİ’è
-	GScolor4 color = world_.posteffect().fog_color();
+	// é€šå¸¸ãƒ•ã‚©ã‚°ã®è¨­å®š
+    GScolor4 color{ 1.0f, 1.0f, 1.0f, 1.0f };
 	const float fog_color[4]{ color.r, color.g, color.b, color.a };
 	const float fog_start{ 10.0f };
 	const float fog_end{ 300.0f };
-	glFogi(GL_FOG_MODE, GL_LINEAR);     // üŒ`ƒtƒHƒO
-	glFogfv(GL_FOG_COLOR, fog_color);   // ƒtƒHƒO‚ÌF
-	glFogf(GL_FOG_START, fog_start);    // ƒtƒHƒO‚ÌŠJnˆÊ’ui‹“_‚©‚ç‚Ì‹——£j
-	glFogf(GL_FOG_END, fog_end);        // ƒtƒHƒO‚ÌI—¹ˆÊ’ui‹“_‚©‚ç‚Ì‹——£j
-	glEnable(GL_FOG);                   // ƒtƒHƒO‚ğ—LŒø‚É‚·‚é
+	glFogi(GL_FOG_MODE, GL_LINEAR);     // ç·šå½¢ãƒ•ã‚©ã‚°
+	glFogfv(GL_FOG_COLOR, fog_color);   // ãƒ•ã‚©ã‚°ã®è‰²
+	glFogf(GL_FOG_START, fog_start);    // ãƒ•ã‚©ã‚°ã®é–‹å§‹ä½ç½®ï¼ˆè¦–ç‚¹ã‹ã‚‰ã®è·é›¢ï¼‰
+	glFogf(GL_FOG_END, fog_end);        // ãƒ•ã‚©ã‚°ã®çµ‚äº†ä½ç½®ï¼ˆè¦–ç‚¹ã‹ã‚‰ã®è·é›¢ï¼‰
+	glEnable(GL_FOG);                   // ãƒ•ã‚©ã‚°ã‚’æœ‰åŠ¹ã«ã™ã‚‹
 
-	// ƒ|ƒXƒgƒGƒtƒFƒNƒg‚Ì‰Šú‰»
-	world_.posteffect().init();
 
-	// ƒ‰ƒCƒgƒ}ƒbƒv‚Ì“Ç‚İ‚İ
+	// ãƒ©ã‚¤ãƒˆãƒãƒƒãƒ—ã®èª­ã¿è¾¼ã¿
 	gsLoadLightmap(0, "Resource/Assets/Octree/Stage1/Lightmap/Lightmap.txt");
-	// ƒŠƒtƒŒƒNƒVƒ‡ƒ“ƒvƒ[ƒu‚Ì“Ç‚İ‚İ
+	// ãƒªãƒ•ãƒ¬ã‚¯ã‚·ãƒ§ãƒ³ãƒ—ãƒ­ãƒ¼ãƒ–ã®èª­ã¿è¾¼ã¿
 	gsLoadReflectionProbe(0, "Resource/Assets/Octree/Stage1/RefProbe/ReflectionProbe.txt");
 
 	// tmp
@@ -77,7 +76,7 @@ void GameScene::start() {
 	world_.add_light(light);
 	world_.add_attack_collider_pool(new AttackColliderPool{ &world_ });
 	world_.add_navmesh(new NavMeshSurface{ "Resource/Assets/Octree/Stage1/navmesh.txt" });	// tmp
-	
+
 	// tmp
 	world_.add_camera(new FixedCamera{ &world_, GSvector3{ 0.0f, 3.0f, -10.0f }, GSvector3{ 0.0f, 2.0f, 0.0f } });
 	world_.add_camera(new TimelineCamera{ &world_ });
@@ -95,7 +94,12 @@ void GameScene::start() {
 	// tmp
 	world_.add_character(new DummyEnemy{ &world_, GSvector3{ 0.0f, 0.0f, 2.0f } });
 
-	// “¯Šú
+    // ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®æœ‰åŠ¹åŒ–
+    GameShader::get_instance().start();
+    // ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®ä½œæˆ
+    GamePostEffect::get_instance().start();
+
+	// åŒæœŸ
 	world_.update(0.0f);
 }
 
@@ -124,10 +128,15 @@ void GameScene::draw() const {
 
 void GameScene::end() {
 	world_.clear();
-	// Tween‚ÌI—¹
+	// Tweenã®çµ‚äº†
 	Tween::clear();
-	// ‘S‚Ä‚ÌƒGƒtƒFƒNƒg‚ğ’â~‚·‚é
+	// å…¨ã¦ã®ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’åœæ­¢ã™ã‚‹
 	gsStopAllEffects();
+
+    // ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®ç„¡åŠ¹åŒ–
+    GameShader::get_instance().end();
+    // ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®å‰Šé™¤
+    GamePostEffect::get_instance().end();
 
 	// tmp
 	AssetsManager::get_instance().delete_assets("Game");
@@ -150,5 +159,5 @@ bool GameScene::is_application_end() const {
 }
 
 void GameScene::reception_message(const std::string& message, void* param) {
-	// ‚È‚É‚àó‚¯æ‚ç‚È‚¢
+	// ãªã«ã‚‚å—ã‘å–ã‚‰ãªã„
 }

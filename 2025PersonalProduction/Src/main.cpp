@@ -20,6 +20,9 @@
 #include "Engine/Core/Tween/Tween.h"
 #include "Engine/Core/Setting/Setting.h"
 #include "Engine/Utils/MyRandom.h"
+#include "Engine/Graphics/Shader/GameShader.h"
+#include "Engine/Graphics/Shader/GamePostEffect.h"
+
 #include "Engine/Core/Scene/SceneManager.h"
 #include "Scene/TitleScene.h"
 #include "Scene/MenuScene.h"
@@ -88,6 +91,9 @@ private:
         Tween::clear();
         // アセットの破棄
         AssetsManager::get_instance().clear();
+        // シェーダーの破棄
+        GameShader::get_instance().clear();
+        GamePostEffect::get_instance().clear();
         // エフェクトの終了
         gsFinishEffect();
         // カーソルの移動制限を解除

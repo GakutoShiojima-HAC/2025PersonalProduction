@@ -5,7 +5,7 @@
 
 class Setting {
 private:
-	// ƒRƒ“ƒXƒgƒ‰ƒNƒ^iŠO•”‚©‚ç‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğ‹Ö~j
+	// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ï¼ˆå¤–éƒ¨ã‹ã‚‰ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ç¦æ­¢ï¼‰
 	Setting() = default;
 
 public:
@@ -13,42 +13,46 @@ public:
 
 public:
 	/// <summary>
-	/// ƒCƒ“ƒXƒ^ƒ“ƒX‚ğæ“¾‚·‚é‚½‚ß‚Ìstaticƒƒ“ƒoŠÖ”
+	/// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’å–å¾—ã™ã‚‹ãŸã‚ã®staticãƒ¡ãƒ³ãƒé–¢æ•°
 	/// </summary>
-	/// <returns>ƒCƒ“ƒXƒ^ƒ“ƒX</returns>
+	/// <returns>ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹</returns>
 	static Setting& get_instance();
 
 public:
 	/// <summary>
-	/// İ’è‚ğ“Ç‚İ‚Ş
+	/// è¨­å®šã‚’èª­ã¿è¾¼ã‚€
 	/// </summary>
-	/// <param name="setting_path">= İ’èƒtƒ@ƒCƒ‹‚ÌƒpƒX</param>
+	/// <param name="setting_path">= è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ‘ã‚¹</param>
 	void load(const std::string& setting_path);
 
 	/// <summary>
-	/// İ’è‚ğ‰Šúó‘Ô‚É–ß‚·
+	/// è¨­å®šã‚’åˆæœŸçŠ¶æ…‹ã«æˆ»ã™
 	/// </summary>
 	void reset();
 
 	/// <summary>
-	/// İ’è‚ğ•Û‘¶‚·‚é
+	/// è¨­å®šã‚’ä¿å­˜ã™ã‚‹
 	/// </summary>
 	void save();
 
-	// ƒV[ƒ“•`‰æŠÖŒW
-public: 
-	bool is_draw_posteffect() const;
-	bool& enable_draw_posteffect();
+	// ã‚·ãƒ¼ãƒ³æç”»é–¢ä¿‚
+public:
+    bool is_draw_ssao() const;
+    bool& enable_draw_ssao();
+
+	bool is_draw_bloom() const;
+	bool& enable_draw_bloom();
 	
 	bool is_draw_fxaa() const;
 	bool& enable_draw_fxaa();
 
 private:
-	bool enable_draw_posteffect_{ true };
+    bool enable_draw_ssao_{ true };
+	bool enable_draw_bloom_{ true };
 	bool enable_draw_fxaa_{ true };
 
 public:
-	// ƒRƒs[‹Ö~
+	// ã‚³ãƒ”ãƒ¼ç¦æ­¢
 	Setting(const Setting& other) = delete;
 	Setting& operator = (const Setting& other) = delete;
 

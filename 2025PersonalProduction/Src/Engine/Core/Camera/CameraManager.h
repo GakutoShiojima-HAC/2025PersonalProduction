@@ -2,10 +2,10 @@
 //  File        : CameraManager.h
 //  Author      : Shiojima Gakuto
 //  Created     : 2025/07/10
-//  Updated     : 2025/07/10
-//  Description : ƒQ[ƒ€“à‚É“oê‚·‚éƒJƒƒ‰‚ğŠÇ—‚·‚éƒNƒ‰ƒX
+//  Updated     : 2025/09/13
+//  Description : ã‚²ãƒ¼ãƒ å†…ã«ç™»å ´ã™ã‚‹ã‚«ãƒ¡ãƒ©ã‚’ç®¡ç†ã™ã‚‹ã‚¯ãƒ©ã‚¹
 //
-//  ’ˆÓF–{ƒ\[ƒXƒR[ƒh‚Ì–³’f“]ÚEƒR[ƒh‚ÌƒRƒs[E“\‚è•t‚¯‚É‚æ‚é—¬—pEÄ”z•z‚ğ‹Ö~‚µ‚Ü‚·B
+//  æ³¨æ„ï¼šæœ¬ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã®ç„¡æ–­è»¢è¼‰ãƒ»ã‚³ãƒ¼ãƒ‰ã®ã‚³ãƒ”ãƒ¼ãƒ»è²¼ã‚Šä»˜ã‘ã«ã‚ˆã‚‹æµç”¨ãƒ»å†é…å¸ƒã‚’ç¦æ­¢ã—ã¾ã™ã€‚
 // -----------------------------------------------------------------------------------------
 
 #ifndef CAMERA_MANAGER_H_
@@ -17,10 +17,12 @@
 using namespace std;
 
 class Camera;
+struct ScreenData;
+struct GSmatrix4;
 
 class CameraManager {
 public:
-	CameraManager() = default;
+	CameraManager();
 
 	virtual ~CameraManager();
 
@@ -30,84 +32,102 @@ public:
 	virtual void draw() const;
 
 	/// <summary>
-	/// ƒJƒƒ‰‚ğŠÇ—‰º‚É’Ç‰Á
+	/// ã‚«ãƒ¡ãƒ©ã‚’ç®¡ç†ä¸‹ã«è¿½åŠ 
 	/// </summary>
-	/// <param name="camera">ƒJƒƒ‰</param>
+	/// <param name="camera">ã‚«ãƒ¡ãƒ©</param>
 	void add(Camera* camera);
 	
 	/// <summary>
-	/// ŠÇ—‰º‚Ì‘S‚Ä‚ÌƒJƒƒ‰‚ğŠÇ—‘ÎÛ‚©‚çŠO‚·
+	/// ç®¡ç†ä¸‹ã®å…¨ã¦ã®ã‚«ãƒ¡ãƒ©ã‚’ç®¡ç†å¯¾è±¡ã‹ã‚‰å¤–ã™
 	/// </summary>
 	void clear();
 
 	/// <summary>
-	/// Œ»İg—p‚µ‚Ä‚¢‚éƒJƒƒ‰‚ğ•Ô‹p
+	/// ç¾åœ¨ä½¿ç”¨ã—ã¦ã„ã‚‹ã‚«ãƒ¡ãƒ©ã‚’è¿”å´
 	/// </summary>
-	/// <returns>ƒJƒƒ‰</returns>
+	/// <returns>ã‚«ãƒ¡ãƒ©</returns>
 	Camera* current() const;
 
 	/// <summary>
-	/// ‘JˆÚŒ³‚Ég—p‚µ‚Ä‚¢‚éƒJƒƒ‰‚ğ•Ô‹p
+	/// é·ç§»å…ƒã«ä½¿ç”¨ã—ã¦ã„ã‚‹ã‚«ãƒ¡ãƒ©ã‚’è¿”å´
 	/// </summary>
-	/// <returns>g—p‚µ‚Ä‚¢‚ê‚ÎƒJƒƒ‰‚ğA‚µ‚Ä‚¢‚È‚¯‚ê‚Înullptr</returns>
+	/// <returns>ä½¿ç”¨ã—ã¦ã„ã‚Œã°ã‚«ãƒ¡ãƒ©ã‚’ã€ã—ã¦ã„ãªã‘ã‚Œã°nullptr</returns>
 	Camera* prev() const;
 
 	/// <summary>
-	/// ƒJƒƒ‰‚ğŒŸõ
+	/// ã‚«ãƒ¡ãƒ©ã‚’æ¤œç´¢
 	/// </summary>
-	/// <param name="tag">ƒJƒƒ‰ƒ^ƒO</param>
-	/// <returns>Œ©‚Â‚©‚ê‚ÎƒJƒƒ‰‚ğAŒ©‚Â‚©‚ç‚È‚¯‚ê‚Înullptr</returns>
+	/// <param name="tag">ã‚«ãƒ¡ãƒ©ã‚¿ã‚°</param>
+	/// <returns>è¦‹ã¤ã‹ã‚Œã°ã‚«ãƒ¡ãƒ©ã‚’ã€è¦‹ã¤ã‹ã‚‰ãªã‘ã‚Œã°nullptr</returns>
 	Camera* find(const CameraTag tag) const;
 
 	/// <summary>
-	/// Œ»İ‚ÌƒJƒƒ‰‚©‚çw’è‚µ‚½ƒJƒƒ‰‚É‘JˆÚ
+	/// ç¾åœ¨ã®ã‚«ãƒ¡ãƒ©ã‹ã‚‰æŒ‡å®šã—ãŸã‚«ãƒ¡ãƒ©ã«é·ç§»
 	/// </summary>
-	/// <param name="to">= ‘JˆÚæ</param>
-	/// <param name="time">= ‘JˆÚ‚É‚©‚©‚éŠÔ</param>
+	/// <param name="to">= é·ç§»å…ˆ</param>
+	/// <param name="time">= é·ç§»ã«ã‹ã‹ã‚‹æ™‚é–“</param>
 	void transition(Camera* to, float time = 0);
 
 	/// <summary>
-	/// w’è‚µ‚½ƒJƒƒ‰‚©‚çw’è‚µ‚½ƒJƒƒ‰‚É‘JˆÚ
+	/// æŒ‡å®šã—ãŸã‚«ãƒ¡ãƒ©ã‹ã‚‰æŒ‡å®šã—ãŸã‚«ãƒ¡ãƒ©ã«é·ç§»
 	/// </summary>
-	/// <param name="from">= ‘JˆÚŒ³</param>
-	/// <param name="to">= ‘JˆÚæ</param>
-	/// <param name="time">= ‘JˆÚ‚É‚©‚©‚éŠÔ</param>
+	/// <param name="from">= é·ç§»å…ƒ</param>
+	/// <param name="to">= é·ç§»å…ˆ</param>
+	/// <param name="time">= é·ç§»ã«ã‹ã‹ã‚‹æ™‚é–“</param>
 	void transition(Camera* from, Camera* to, float time = 0);
+
+    /// <summary>
+    /// è¦–é‡è§’ã‚’å–å¾—
+    /// </summary>
+    /// <returns>å‚ç…§</returns>
+    float& fov();
+
+    /// <summary>
+    /// å°„å½±è¡Œåˆ—ã®å–å¾—
+    /// </summary>
+    /// <returns>ç¾åœ¨ã®å°„å½±è¡Œåˆ—</returns>
+    GSmatrix4 get_projection_matrix() const;
 
 protected:
 	/// <summary>
-	/// ŠÇ—‰º‚Ìõ–½‚ªs‚«‚½ƒJƒƒ‰‚ğŠÇ—‘ÎÛ‚©‚çŠO‚·
+	/// ç®¡ç†ä¸‹ã®å¯¿å‘½ãŒå°½ããŸã‚«ãƒ¡ãƒ©ã‚’ç®¡ç†å¯¾è±¡ã‹ã‚‰å¤–ã™
 	/// </summary>
 	void remove();
 
 	/// <summary>
-	/// ƒJƒƒ‰‚ª‚È‚¢‚Æ‚«‚Ì•`‰æˆ—
+	/// ã‚«ãƒ¡ãƒ©ãŒãªã„ã¨ãã®æç”»å‡¦ç†
 	/// </summary>
 	virtual void draw_empty() const;
 
 	/// <summary>
-	/// ƒJƒƒ‰‚ÌÀ•WA•ûŒüAŠp“x‚ğæ“¾
+	/// ã‚«ãƒ¡ãƒ©ã®åº§æ¨™ã€æ–¹å‘ã€è§’åº¦ã‚’å–å¾—
 	/// </summary>
-	/// <param name="pos">= ƒJƒƒ‰À•W</param>
-	/// <param name="at">= ƒJƒƒ‰•ûŒü</param>
-	/// <param name="up">= ƒJƒƒ‰Šp“x</param>
+	/// <param name="pos">= ã‚«ãƒ¡ãƒ©åº§æ¨™</param>
+	/// <param name="at">= ã‚«ãƒ¡ãƒ©æ–¹å‘</param>
+	/// <param name="up">= ã‚«ãƒ¡ãƒ©è§’åº¦</param>
 	void camera_lookat(GSvector3& pos, GSvector3& at, GSvector3& up) const;
 
 protected:
-	// ƒJƒƒ‰ƒ}ƒbƒv
+	// ã‚«ãƒ¡ãƒ©ãƒãƒƒãƒ—
 	unordered_map<GSuint, Camera*> cameras_;
-	// Œ»İg—p‚µ‚Ä‚¢‚éƒJƒƒ‰
+	// ç¾åœ¨ä½¿ç”¨ã—ã¦ã„ã‚‹ã‚«ãƒ¡ãƒ©
 	Camera* current_{ nullptr };
-	// ƒgƒ‰ƒ“ƒWƒVƒ‡ƒ“—p‚ÌˆÈ‘O‚Ég‚Á‚Ä‚¢‚½ƒJƒƒ‰
+	// ãƒˆãƒ©ãƒ³ã‚¸ã‚·ãƒ§ãƒ³ç”¨ã®ä»¥å‰ã«ä½¿ã£ã¦ã„ãŸã‚«ãƒ¡ãƒ©
 	Camera* prev_{ nullptr };
 
-	// ƒgƒ‰ƒ“ƒWƒVƒ‡ƒ“‚É‚©‚©‚éŠÔ
+    // ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ãƒ‡ãƒ¼ã‚¿
+    ScreenData* screen_data_{ nullptr };
+
+    // è¦–é‡è§’
+    float fov_{ 45.0f };
+
+	// ãƒˆãƒ©ãƒ³ã‚¸ã‚·ãƒ§ãƒ³ã«ã‹ã‹ã‚‹æ™‚é–“
 	float transition_time_{ 0.0f };
-	// ƒgƒ‰ƒ“ƒWƒVƒ‡ƒ“ƒ^ƒCƒ}[
+	// ãƒˆãƒ©ãƒ³ã‚¸ã‚·ãƒ§ãƒ³ã‚¿ã‚¤ãƒãƒ¼
 	float transition_timer_{ 0.0f };
 
 public:
-	// ƒRƒs[‹Ö~
+	// ã‚³ãƒ”ãƒ¼ç¦æ­¢
 	CameraManager(const CameraManager& other) = delete;
 	CameraManager& operator = (const CameraManager& other) = delete;
 

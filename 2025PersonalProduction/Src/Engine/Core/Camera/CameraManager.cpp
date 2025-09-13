@@ -2,9 +2,14 @@
 #include "Engine/Core/Camera/Camera.h"
 #include <gslib.h>
 #include "GameConfig.h"
+#include "Engine/Core/Screen/Screen.h"
+
+CameraManager::CameraManager() {
+    screen_data_ = &Screen::get_instance().get_current_data();
+}
 
 CameraManager::~CameraManager() {
-	clear();
+
 }
 
 void CameraManager::update(float delta_time) {
@@ -12,10 +17,10 @@ void CameraManager::update(float delta_time) {
 		camera.second->update(delta_time);
 	}
 
-	// ‘JˆÚƒ^ƒCƒ}[‚ğXV
+	// é·ç§»ã‚¿ã‚¤ãƒãƒ¼ã‚’æ›´æ–°
 	if (prev_ != nullptr && transition_timer_ <= transition_time_) {
 		transition_timer_ += delta_time / cFPS;
-		// ‘JˆÚ‚ªI—¹‚µ‚½‚ç
+		// é·ç§»ãŒçµ‚äº†ã—ãŸã‚‰
 		if (transition_timer_ >= transition_time_) prev_ = nullptr;
 	}
 
@@ -23,17 +28,27 @@ void CameraManager::update(float delta_time) {
 }
 
 void CameraManager::draw() const {
-	// ƒJƒƒ‰‚Ìİ’è
+    // é€è¦–å°„å½±è¡Œåˆ—ã‚’è¨­å®šã™ã‚‹
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(
+        fov_,				// è¦–é‡è§’
+        (float)screen_data_->width_px / (float)screen_data_->height_px,	    // ç”»é¢ã®ç¸¦æ¨ªæ¯”ï¼ˆã‚¢ã‚¹ãƒšã‚¯ãƒˆæ¯”ï¼‰
+        cNEAR,              // è¿‘ã‚¯ãƒªãƒƒãƒ—é¢ã®ä½ç½®
+        cFAR                // é ã‚¯ãƒªãƒƒãƒ—é¢ã®ä½ç½®
+    );
+
+	// ã‚«ãƒ¡ãƒ©ã®è¨­å®š
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	// ƒJƒƒ‰‚ª‚È‚©‚Á‚½‚ç’è“_•`‰æ‚µ‚ÄI—¹
+	// ã‚«ãƒ¡ãƒ©ãŒãªã‹ã£ãŸã‚‰å®šç‚¹æç”»ã—ã¦çµ‚äº†
 	if (current_ == nullptr) {
 		draw_empty();
 		return;
 	}
 
-	// ƒJƒƒ‰‚ÌˆÊ’u‚ğæ“¾
+	// ã‚«ãƒ¡ãƒ©ã®ä½ç½®ã‚’å–å¾—
 	GSvector3 pos, at, up;
 	camera_lookat(pos, at, up);
 	gluLookAt(
@@ -46,17 +61,17 @@ void CameraManager::draw() const {
 void CameraManager::add(Camera* camera) {
 	const GSuint key = (GSuint)camera->tag();
 
-	// Šù‚É‘¶İ‚·‚éê‡
+	// æ—¢ã«å­˜åœ¨ã™ã‚‹å ´åˆ
 	if (cameras_.find(key) != cameras_.end()) {
 		if (current_ == camera) current_ = nullptr;
-		delete cameras_[key];	// Šù‘¶‚Ì‚ğÁ‹
+		delete cameras_[key];	// æ—¢å­˜ã®ã‚’æ¶ˆå»
 		cameras_[key] = camera;
 	}
 	else {
 		cameras_[key] = camera;
 	}
 
-	// ƒJƒƒ‰‚ª‘¶İ‚µ‚È‚¢ê‡
+	// ã‚«ãƒ¡ãƒ©ãŒå­˜åœ¨ã—ãªã„å ´åˆ
 	if (current_ == nullptr) {
 		current_ = camera;
 		current_->enter();
@@ -108,15 +123,23 @@ void CameraManager::transition(Camera* from, Camera* to, float time) {
 	transition_time_ = time;
 }
 
+float& CameraManager::fov() {
+    return fov_;
+}
+
+GSmatrix4 CameraManager::get_projection_matrix() const {
+    return GSmatrix4::perspective(fov_, (float)screen_data_->width_px / (float)screen_data_->height_px, cNEAR, cFAR);
+}
+
 void CameraManager::remove() {
 	for (auto i = cameras_.begin(); i != cameras_.end(); ) {
 		Camera* camera = i->second;
 		if (camera != nullptr && camera->is_dead()) {
-			// ‚à‚µg‚Á‚Ä‚¢‚½‚çnullptr‚É‚·‚é
+			// ã‚‚ã—ä½¿ã£ã¦ã„ãŸã‚‰nullptrã«ã™ã‚‹
 			if (camera == current_) current_ = nullptr;
 			if (camera == prev_) prev_ = nullptr;
 			delete camera;
-			i = cameras_.erase(i);	// key-value‚ğíœ‚µAŸ‚Ì—v‘f‚Ö
+			i = cameras_.erase(i);	// key-valueã‚’å‰Šé™¤ã—ã€æ¬¡ã®è¦ç´ ã¸
 		}
 		else {
 			++i;
@@ -133,16 +156,16 @@ void CameraManager::draw_empty() const {
 }
 
 void CameraManager::camera_lookat(GSvector3& pos, GSvector3& at, GSvector3& up) const {
-	// ƒgƒ‰ƒ“ƒWƒVƒ‡ƒ“‚µ‚Ä‚¢‚È‚¢
+	// ãƒˆãƒ©ãƒ³ã‚¸ã‚·ãƒ§ãƒ³ã—ã¦ã„ãªã„
 	if (prev_ == nullptr) {
 		pos = current_->transform().position();
 		at = pos + current_->transform().forward();
 		up = current_->transform().up();
 		return;
 	}
-	// i’»—¦
+	// é€²æ—ç‡
 	const float progress = transition_timer_ / transition_time_;
-	// üŒ`•âŠÔ‚·‚é
+	// ç·šå½¢è£œé–“ã™ã‚‹
 	pos = GSvector3::lerp(prev_->transform().position(), current_->transform().position(), progress);
 	at = pos + GSvector3::lerp(prev_->transform().forward(), current_->transform().forward(), progress);
 	up = GSvector3::lerp(prev_->transform().up(), current_->transform().up(), progress);

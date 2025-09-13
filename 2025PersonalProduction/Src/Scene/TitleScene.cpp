@@ -2,12 +2,18 @@
 #include "Engine/Core/Assets/AssetsManager.h"
 #include "Engine/Graphics/Canvas/Canvas.h"
 #include "Engine/Core/Tween/Tween.h"
+#include "Engine/Graphics/Shader/GameShader.h"
+#include "Engine/Graphics/Shader/GamePostEffect.h"
 
 #include <gslib.h>	// tmp
 #include "Assets.h"	// tmp
 
 void TitleScene::start() {
 	is_end_ = false;
+
+    // ゲームに必要なシェーダーの読み込み
+    GameShader::get_instance().load();
+    GamePostEffect::get_instance().load();
 
 	// tmp
 	{
