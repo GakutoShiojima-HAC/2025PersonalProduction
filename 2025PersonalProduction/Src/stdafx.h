@@ -3,10 +3,10 @@
 //  Author        : Shiojima Gakuto
 //  Created       : 2025/07/08
 //  Updated       : 2025/07/08
-//  Description   : •p”É‚ÉXV‚µ‚È‚¢ƒNƒ‰ƒX‚©‚Âg—p•p“x‚Ì‚‚¢ƒwƒbƒ_[ƒtƒ@ƒCƒ‹‚ğ
-//					–‘O‚ÉƒRƒ“ƒpƒCƒ‹‚·‚é‚½‚ß‚É’è‹`‚·‚é‚½‚ß‚ÌƒNƒ‰ƒX
-//
-//  ’ˆÓF–{ƒ\[ƒXƒR[ƒh‚Ì–³’f“]ÚEƒR[ƒh‚ÌƒRƒs[E“\‚è•t‚¯‚É‚æ‚é—¬—pEÄ”z•z‚ğ‹Ö~‚µ‚Ü‚·B
+//  Description   : é »ç¹ã«æ›´æ–°ã—ãªã„ã‚¯ãƒ©ã‚¹ã‹ã¤ä½¿ç”¨é »åº¦ã®é«˜ã„ãƒ˜ãƒƒãƒ€ãƒ¼ãƒ•ã‚¡ã‚¤ãƒ«ã‚’
+//					äº‹å‰ã«ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«ã™ã‚‹ãŸã‚ã«å®šç¾©ã™ã‚‹ãŸã‚ã®ã‚¯ãƒ©ã‚¹
+// 
+//  æ³¨æ„ï¼šæœ¬ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã®ç„¡æ–­è»¢è¼‰ãƒ»ã‚³ãƒ¼ãƒ‰ã®ã‚³ãƒ”ãƒ¼ãƒ»è²¼ã‚Šä»˜ã‘ã«ã‚ˆã‚‹æµç”¨ãƒ»å†é…å¸ƒã‚’ç¦æ­¢ã—ã¾ã™ã€‚
 // -----------------------------------------------------------------------------------------
 
 #ifndef STDAFX_H_
@@ -102,7 +102,6 @@
 
 #include "Engine/Graphics/AnimatedMesh/AnimatedMesh.h"
 #include "Engine/Graphics/Canvas/Canvas.h"
-#include "Engine/Graphics/PostEffect/PostEffect.h"
 
 #include "Engine/Utils/Calc.h"
 #include "Engine/Utils/Check.h"
