@@ -176,7 +176,14 @@
     <ClCompile Include="Src\Engine\Core\Tween\ValueUnit.cpp" />
     <ClCompile Include="Src\Engine\Core\Tween\Vector2Unit.cpp" />
     <ClCompile Include="Src\Engine\Core\Tween\Vector3Unit.cpp" />
-    <ClCompile Include="Src\Engine\Graphics\PostEffect\PostEffect.cpp" />
+    <ClCompile Include="Src\Engine\Graphics\Shader\GamePostEffect.cpp" />
+    <ClCompile Include="Src\Engine\Graphics\Shader\GameShader.cpp" />
+    <ClCompile Include="Src\Engine\Graphics\Shader\PostEffects\FogEffect.cpp" />
+    <ClCompile Include="Src\Engine\Graphics\Shader\PostEffects\FXAAEffect.cpp" />
+    <ClCompile Include="Src\Engine\Graphics\Shader\PostEffects\MaskEffect.cpp" />
+    <ClCompile Include="Src\Engine\Graphics\Shader\PostEffects\BloomEffect.cpp" />
+    <ClCompile Include="Src\Engine\Graphics\Shader\PostEffects\BlurEffect.cpp" />
+    <ClCompile Include="Src\Engine\Graphics\Shader\PostEffects\SSAOEffect.cpp" />
     <ClCompile Include="Src\Lib\imgui_stdlib.cpp" />
     <ClCompile Include="Src\Engine\Core\Actor\Pawn\Character\Character.cpp" />
     <ClCompile Include="Src\Engine\Core\Actor\Pawn\Character\CharacterManager.cpp" />
@@ -245,7 +252,15 @@
     <ClInclude Include="Src\Engine\Core\Tween\ValueUnit.h" />
     <ClInclude Include="Src\Engine\Core\Tween\Vector2Unit.h" />
     <ClInclude Include="Src\Engine\Core\Tween\Vector3Unit.h" />
-    <ClInclude Include="Src\Engine\Graphics\PostEffect\PostEffect.h" />
+    <ClInclude Include="Src\Engine\Graphics\Shader\GamePostEffect.h" />
+    <ClInclude Include="Src\Engine\Graphics\Shader\GameShader.h" />
+    <ClInclude Include="Src\Engine\Graphics\Shader\PostEffects\FogEffect.h" />
+    <ClInclude Include="Src\Engine\Graphics\Shader\PostEffects\FXAAEffect.h" />
+    <ClInclude Include="Src\Engine\Graphics\Shader\PostEffects\MaskEffect.h" />
+    <ClInclude Include="Src\Engine\Graphics\Shader\PostEffects\BloomEffect.h" />
+    <ClInclude Include="Src\Engine\Graphics\Shader\PostEffects\BlurEffect.h" />
+    <ClInclude Include="Src\Engine\Graphics\Shader\PostEffects\SSAOEffect.h" />
+    <ClInclude Include="Src\Engine\Graphics\Shader\Shaders.h" />
     <ClInclude Include="Src\Engine\Utils\Calc.h" />
     <ClInclude Include="Src\Engine\Utils\Check.h" />
     <ClInclude Include="Src\Engine\Utils\DebugMarker.h" />
@@ -309,13 +324,23 @@
     <ClInclude Include="Src\Weapon\WeaponType.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resource\Private\Shader\AvoidEffect.frag" />
+    <None Include="Resource\Private\Shader\MaskEffect.frag" />
     <None Include="Resource\Private\Shader\BloomCombine.frag" />
     <None Include="Resource\Private\Shader\BloomExtract.frag" />
     <None Include="Resource\Private\Shader\Fog.frag" />
     <None Include="Resource\Private\Shader\FXAA.frag" />
     <None Include="Resource\Private\Shader\GaussianBlur.frag" />
+    <None Include="Resource\Private\Shader\MyInstanced.frag" />
+    <None Include="Resource\Private\Shader\MyInstanced.vert" />
+    <None Include="Resource\Private\Shader\MyMesh.frag" />
+    <None Include="Resource\Private\Shader\MyMesh.vert" />
+    <None Include="Resource\Private\Shader\MyOctree.frag" />
+    <None Include="Resource\Private\Shader\MyOctree.vert" />
+    <None Include="Resource\Private\Shader\MySkinMesh.frag" />
+    <None Include="Resource\Private\Shader\MySkinMesh.vert" />
     <None Include="Resource\Private\Shader\RenderTexture.vert" />
+    <None Include="Resource\Private\Shader\SSAO.frag" />
+    <None Include="Resource\Private\Shader\SSAOCombine.frag" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
