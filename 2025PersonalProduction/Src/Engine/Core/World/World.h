@@ -2,9 +2,9 @@
 //  Author      : Shiojima Gakuto
 //  Created     : 2025/06/25
 //  Updated     : 2025/07/10
-//  Description : ƒ[ƒ‹ƒhŠÇ—ƒNƒ‰ƒX
+//  Description : ãƒ¯ãƒ¼ãƒ«ãƒ‰ç®¡ç†ã‚¯ãƒ©ã‚¹
 //
-//  ’ˆÓF–{ƒ\[ƒXƒR[ƒh‚Ì–³’f“]ÚEƒR[ƒh‚ÌƒRƒs[E“\‚è•t‚¯‚É‚æ‚é—¬—pEÄ”z•z‚ğ‹Ö~‚µ‚Ü‚·B
+//  æ³¨æ„ï¼šæœ¬ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã®ç„¡æ–­è»¢è¼‰ãƒ»ã‚³ãƒ¼ãƒ‰ã®ã‚³ãƒ”ãƒ¼ãƒ»è²¼ã‚Šä»˜ã‘ã«ã‚ˆã‚‹æµç”¨ãƒ»å†é…å¸ƒã‚’ç¦æ­¢ã—ã¾ã™ã€‚
 // -----------------------------------------------------------------------------------------
 
 #ifndef WORLD_H_
@@ -18,7 +18,8 @@
 #include "Engine/Core/Camera/CameraManager.h"
 #include "Engine/Core/Timeline/TimelineManager.h"
 #include "Engine/Core/NavMesh/NavMeshSurface.h"
-#include "Engine/Graphics/PostEffect/PostEffect.h"
+#include "Engine/Graphics/Shader/GameShader.h"
+#include "Engine/Graphics/Shader/GamePostEffect.h"
 
 class AttackColliderPool;
 
@@ -37,58 +38,52 @@ public:
 
 public:
 	/// <summary>
-	/// ƒVƒƒƒhƒEƒ}ƒbƒv‚Ì•`‰æ—p‚ÌŠÖ”
+	/// ã‚·ãƒ£ãƒ‰ã‚¦ãƒãƒƒãƒ—ã®æç”»ç”¨ã®é–¢æ•°
 	/// </summary>
 	static void shadow_map_callback(void* param, const GSmatrix4* view, const GSmatrix4* projection);
 
 public:
 	/// <summary>
-	/// ƒtƒB[ƒ‹ƒh‚Ì’Ç‰Á
+	/// ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã®è¿½åŠ 
 	/// </summary>
-	/// <param name="field">= ƒtƒB[ƒ‹ƒh</param>
+	/// <param name="field">= ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰</param>
 	void add_field(Field* field);
 
 	/// <summary>
-	/// ƒ‰ƒCƒg‚Ì’Ç‰Á
+	/// ãƒ©ã‚¤ãƒˆã®è¿½åŠ 
 	/// </summary>
-	/// <param name="light">= ƒ‰ƒCƒg</param>
+	/// <param name="light">= ãƒ©ã‚¤ãƒˆ</param>
 	void add_light(Light* light);
 
 	/// <summary>
-	/// ƒiƒrƒƒbƒVƒ…‚Ì’Ç‰Á
+	/// ãƒŠãƒ“ãƒ¡ãƒƒã‚·ãƒ¥ã®è¿½åŠ 
 	/// </summary>
-	/// <param name="navmesh">= ƒiƒrƒƒbƒVƒ…</param>
+	/// <param name="navmesh">= ãƒŠãƒ“ãƒ¡ãƒƒã‚·ãƒ¥</param>
 	void add_navmesh(NavMeshSurface* navmesh);
 
 	/// <summary>
-	/// ƒAƒNƒ^[‚Ì’Ç‰Á
+	/// ã‚¢ã‚¯ã‚¿ãƒ¼ã®è¿½åŠ 
 	/// </summary>
-	/// <param name="actor">= ƒAƒNƒ^[</param>
+	/// <param name="actor">= ã‚¢ã‚¯ã‚¿ãƒ¼</param>
 	void add_actor(Actor* actor);
 
 	/// <summary>
-	/// ƒ|[ƒ“‚Ì’Ç‰Á
+	/// ãƒãƒ¼ãƒ³ã®è¿½åŠ 
 	/// </summary>
-	/// <param name="pawn">= ƒ|[ƒ“</param>
+	/// <param name="pawn">= ãƒãƒ¼ãƒ³</param>
 	void add_pawn(Pawn* pawn);
 
 	/// <summary>
-	/// ƒLƒƒƒ‰ƒNƒ^[‚Ì’Ç‰Á
+	/// ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã®è¿½åŠ 
 	/// </summary>
-	/// <param name="character">= ƒLƒƒƒ‰ƒNƒ^[</param>
+	/// <param name="character">= ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼</param>
 	void add_character(Character* character);
 
 	/// <summary>
-	/// UŒ‚”»’èƒv[ƒ‹‚Ì’Ç‰Á
+	/// æ”»æ’ƒåˆ¤å®šãƒ—ãƒ¼ãƒ«ã®è¿½åŠ 
 	/// </summary>
-	/// <param name="pool">= UŒ‚”»’èƒv[ƒ‹</param>
+	/// <param name="pool">= æ”»æ’ƒåˆ¤å®šãƒ—ãƒ¼ãƒ«</param>
 	void add_attack_collider_pool(AttackColliderPool* pool);
-
-	/// <summary>
-	/// ƒ|ƒXƒgƒGƒtƒFƒNƒg‚Ö‚ÌƒAƒNƒZƒX
-	/// </summary>
-	/// <returns>QÆ</returns>
-	PostEffect& posteffect();
 
 public:
 	Field* get_field() override;
@@ -127,32 +122,33 @@ public:
 
 	void generate_attack_collider(float radius, const GSvector3& center, Actor* owner, int damage, float lifespan = 1.0f, float delay = 0.0f) override;
 
-	bool& enable_avoid_posteffct() override;
+    void set_mask_color(const GScolor& color) override;
 
-	void set_avoid_effect_color(const GSvector3& color) override;
+	bool& enable_avoid_effect() override;
 
 protected:
-	// ƒtƒB[ƒ‹ƒh
+	// ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰
 	Field* field_{ nullptr };
-	// ƒ‰ƒCƒg
+	// ãƒ©ã‚¤ãƒˆ
 	Light* light_{ nullptr };
-	// ƒiƒrƒƒbƒVƒ…
+	// ãƒŠãƒ“ãƒ¡ãƒƒã‚·ãƒ¥
 	NavMeshSurface* navmesh_{ nullptr };
-	// ƒAƒNƒ^[ƒ}ƒl[ƒWƒƒ[
+	// ã‚¢ã‚¯ã‚¿ãƒ¼ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼
 	ActorManager actor_;
-	// ƒ|[ƒ“ƒ}ƒl[ƒWƒƒ[
+	// ãƒãƒ¼ãƒ³ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼
 	PawnManager pawn_;
-	// ƒLƒƒƒ‰ƒNƒ^[ƒ}ƒl[ƒWƒƒ[
+	// ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼
 	CharacterManager character_;
-	// ƒJƒƒ‰ƒ}ƒl[ƒWƒƒ[
+	// ã‚«ãƒ¡ãƒ©ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼
 	CameraManager camera_;
-	// ƒ^ƒCƒ€ƒ‰ƒCƒ“ƒ}ƒl[ƒWƒƒ[
+	// ã‚¿ã‚¤ãƒ ãƒ©ã‚¤ãƒ³ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼
 	TimelineManager timeline_;
-	// UŒ‚”»’èƒv[ƒ‹
+	// æ”»æ’ƒåˆ¤å®šãƒ—ãƒ¼ãƒ«
 	AttackColliderPool* attack_collider_pool_{ nullptr };
-	// ƒ|ƒXƒgƒGƒtƒFƒNƒg
-	PostEffect posteffect_;
-
+	// ã‚²ãƒ¼ãƒ ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼
+    GameShader& game_shader_ = GameShader::get_instance();
+    // ã‚²ãƒ¼ãƒ ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆ
+    GamePostEffect& game_post_effect_ = GamePostEffect::get_instance();
 };
 
 #endif

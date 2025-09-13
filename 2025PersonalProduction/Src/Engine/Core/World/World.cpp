@@ -28,31 +28,39 @@ void World::update(float delta_time) {
 }
 
 void World::draw() const {
-	posteffect_.start();
+    // ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆã®é–‹å§‹
+    game_post_effect_.draw_start();
 
 	camera_.draw();
 	gsSetEffectCamera();
 	light_->draw();
 	gsDrawShadowMap(World::shadow_map_callback, (void*)this);
+
 	field_->draw();
 	if (navmesh_ != nullptr) navmesh_->draw();
-
 	actor_.draw();
 	actor_.draw_tranparent();
 	gsDrawEffect();
 
-	posteffect_.end();
+    // ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆã®çµ‚äº†
+    game_post_effect_.draw_end();
 
-	// ‰ñ”ð‰‰o
-	if (posteffect_.is_draw_avoid_effect()) {
-		posteffect_.start_avoid_effect();
-		actor_.draw();
-		actor_.draw_tranparent();
-		gsDrawEffect();
-		posteffect_.end_avoid_effect();
-	}
+	// ãƒžã‚¹ã‚¯ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã®æç”»
+    if (game_post_effect_.is_draw_mask()) {
+        game_post_effect_.draw_mask_start();
 
-	posteffect_.draw();
+        // å›žé¿ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‹
+        if (game_post_effect_.is_draw_avoid_effect()) {
+            actor_.draw();
+            actor_.draw_tranparent();
+            gsDrawEffect();
+        }
+
+        game_post_effect_.draw_mask_end();
+    }
+	
+    // ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆã®çµæžœã‚’æç”»
+    game_post_effect_.draw(camera_.get_projection_matrix());
 
 	actor_.draw_gui();
 }
@@ -71,17 +79,16 @@ void World::clear() {
 	actor_.clear();
 	camera_.clear();
 	timeline_.clear();
-	posteffect_.clear();
 }
 
 void World::shadow_map_callback(void* param, const GSmatrix4* view, const GSmatrix4* projection) {
 	World* self = (World*)param;
-	// ƒVƒƒƒhƒEƒ}ƒbƒv‚ÉƒAƒNƒ^[‚ð•`‰æ
+	// ã‚·ãƒ£ãƒ‰ã‚¦ãƒžãƒƒãƒ—ã«ã‚¢ã‚¯ã‚¿ãƒ¼ã‚’æç”»
 	self->actor_.draw();
-	// ƒVƒƒƒhƒEƒ}ƒbƒv‚ÉƒtƒB[ƒ‹ƒh—p‚ÌƒAƒNƒ^[‚ð•`‰æ
+	// ã‚·ãƒ£ãƒ‰ã‚¦ãƒžãƒƒãƒ—ã«ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ç”¨ã®ã‚¢ã‚¯ã‚¿ãƒ¼ã‚’æç”»
 	self->field_->draw_field_actor();
-	// ƒVƒƒƒhƒEƒ}ƒbƒv‚ÉƒtƒB[ƒ‹ƒh‘S‘Ì‚ð•`‰æiƒtƒB[ƒh—p‚ÌƒAƒNƒ^[‚àŠÜ‚Þj
-	//self->field_->draw(); // ‚±‚êŽg‚¤ê‡‚ÍƒtƒB[ƒ‹ƒh—p‚ÌƒAƒNƒ^[•`‰æ‚ðƒRƒƒ“ƒgƒAƒEƒg
+	// ã‚·ãƒ£ãƒ‰ã‚¦ãƒžãƒƒãƒ—ã«ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰å…¨ä½“ã‚’æç”»ï¼ˆãƒ•ã‚£ãƒ¼ãƒ‰ç”¨ã®ã‚¢ã‚¯ã‚¿ãƒ¼ã‚‚å«ã‚€ï¼‰
+	//self->field_->draw(); // ã“ã‚Œä½¿ã†å ´åˆã¯ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ç”¨ã®ã‚¢ã‚¯ã‚¿ãƒ¼æç”»ã‚’ã‚³ãƒ¡ãƒ³ãƒˆã‚¢ã‚¦ãƒˆ
 }
 
 void World::add_field(Field* field) {
@@ -116,10 +123,6 @@ void World::add_character(Character* character) {
 void World::add_attack_collider_pool(AttackColliderPool* pool) {
 	delete attack_collider_pool_;
 	attack_collider_pool_ = pool;
-}
-
-PostEffect& World::posteffect() {
-	return posteffect_;
 }
 
 Field* World::get_field() {
@@ -191,15 +194,15 @@ TimelineManager& World::timeline() {
 }
 
 void World::generate_attack_collider(float radius, const GSvector3& center, Actor* owner, int damage, float lifespan, float delay) {
-	// ƒIƒuƒWƒFƒNƒgƒv[ƒ‹‚ª‚ ‚é‚È‚çƒv[ƒ‹ŠÇ—‚·‚é
+	// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãƒ—ãƒ¼ãƒ«ãŒã‚ã‚‹ãªã‚‰ãƒ—ãƒ¼ãƒ«ç®¡ç†ã™ã‚‹
 	if (attack_collider_pool_ != nullptr) attack_collider_pool_->generate(radius, center, owner, damage, lifespan, delay);
 	else add_actor(new AttackCollider{ radius, center, owner, damage, lifespan, delay });
 }
 
-bool& World::enable_avoid_posteffct() {
-	return posteffect_.enable_avoid_effect();
+void World::set_mask_color(const GScolor& color) {
+    game_post_effect_.set_mask_color(color);
 }
 
-void World::set_avoid_effect_color(const GSvector3& color) {
-	posteffect_.set_avoid_color(color);
+bool& World::enable_avoid_effect() {
+    return game_post_effect_.enable_draw_avoid_effect();
 }

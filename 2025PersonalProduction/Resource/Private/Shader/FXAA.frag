@@ -1,51 +1,53 @@
 #version 330
 
 layout(location = 0) out vec4 out_FragColor;
-// ƒeƒNƒXƒ`ƒƒÀ•W
+// ãƒ†ã‚¯ã‚¹ãƒãƒ£åº§æ¨™
 in vec2 v_TexCoord;
+// ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ç³»ã®æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«
+in vec3 v_WorldNormal;
 
-// ÅIƒeƒNƒXƒ`ƒƒ
+// æœ€çµ‚ãƒ†ã‚¯ã‚¹ãƒãƒ£
 uniform sampler2D u_SceneTexture;
-// ƒXƒNƒŠ[ƒ“ƒTƒCƒY‚Ì‹t”(—á: w = 1.0/1920.0, h = 1.0/1080.0)
+// ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ã‚µã‚¤ã‚ºã®é€†æ•°(ä¾‹: w = 1.0/1920.0, h = 1.0/1080.0)
 uniform vec2 u_InvScreenSize;
 
-// ƒƒCƒ“‚Ì’TõƒXƒeƒbƒv” (•i¿‚É’¼Œ‹)
+// ãƒ¡ã‚¤ãƒ³ã®æ¢ç´¢ã‚¹ãƒ†ãƒƒãƒ—æ•° (å“è³ªã«ç›´çµ)
 #define FXAA_QUALITY_PS 8
-// ƒGƒbƒWŒŸo‚ÌŠ´“xi‚‚¢‚Ù‚Çã‚¢ƒGƒbƒW‚àŒŸoj
+// ã‚¨ãƒƒã‚¸æ¤œå‡ºã®æ„Ÿåº¦ï¼ˆé«˜ã„ã»ã©å¼±ã„ã‚¨ãƒƒã‚¸ã‚‚æ¤œå‡ºï¼‰
 #define FXAA_QUALITY_EDGE_THRESHOLD (1.0/8.0) 
-// ŒŸo‚·‚éÅ¬‚Ì‹P“x·
+// æ¤œå‡ºã™ã‚‹æœ€å°ã®è¼åº¦å·®
 #define FXAA_QUALITY_EDGE_THRESHOLD_MIN (1.0/32.0) 
 
-// ‹P“x‚Ö‚Ì•ÏŠ·ŒW”
+// è¼åº¦ã¸ã®å¤‰æ›ä¿‚æ•°
 const vec3 LUMA_VEC = vec3(0.299, 0.587, 0.114);
 
 vec4 FxaaPixelShader(vec2 texCoord) {
-    // ü•ÓƒsƒNƒZƒ‹‚Ì‹P“x‚ğæ“¾
-    // ’†SA–kA“ìA“ŒA¼‚ÌƒeƒNƒXƒ`ƒƒÀ•W‚ğŒvZ
+    // å‘¨è¾ºãƒ”ã‚¯ã‚»ãƒ«ã®è¼åº¦ã‚’å–å¾—
+    // ä¸­å¿ƒã€åŒ—ã€å—ã€æ±ã€è¥¿ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£åº§æ¨™ã‚’è¨ˆç®—
     vec2 posM = texCoord;
     vec2 posN = posM + vec2(0.0,  u_InvScreenSize.y);
     vec2 posS = posM - vec2(0.0,  u_InvScreenSize.y);
     vec2 posE = posM + vec2(u_InvScreenSize.x, 0.0);
     vec2 posW = posM - vec2(u_InvScreenSize.x, 0.0);
 
-    // ƒeƒNƒXƒ`ƒƒ‚ğƒTƒ“ƒvƒŠƒ“ƒO‚µ‚ÄRGB‚ğæ“¾‚µA‹P“x‚É•ÏŠ·
+    // ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’ã‚µãƒ³ãƒ—ãƒªãƒ³ã‚°ã—ã¦RGBã‚’å–å¾—ã—ã€è¼åº¦ã«å¤‰æ›
     float lumaM = dot(texture(u_SceneTexture, posM).rgb, LUMA_VEC);
     float lumaN = dot(texture(u_SceneTexture, posN).rgb, LUMA_VEC);
     float lumaS = dot(texture(u_SceneTexture, posS).rgb, LUMA_VEC);
     float lumaE = dot(texture(u_SceneTexture, posE).rgb, LUMA_VEC);
     float lumaW = dot(texture(u_SceneTexture, posW).rgb, LUMA_VEC);
 
-    // ƒ[ƒJƒ‹ƒRƒ“ƒgƒ‰ƒXƒg‚ğŒvZ‚µAƒGƒbƒW‚©”»’è
+    // ãƒ­ãƒ¼ã‚«ãƒ«ã‚³ãƒ³ãƒˆãƒ©ã‚¹ãƒˆã‚’è¨ˆç®—ã—ã€ã‚¨ãƒƒã‚¸ã‹åˆ¤å®š
     float lumaMin = min(lumaM, min(min(lumaN, lumaS), min(lumaE, lumaW)));
     float lumaMax = max(lumaM, max(max(lumaN, lumaS), max(lumaE, lumaW)));
     float lumaRange = lumaMax - lumaMin;
 
-    // ‹P“x·‚ª¬‚³‚·‚¬‚éê‡‚ÍAAAˆ—‚ğ‚¹‚¸Œ³‚ÌF‚ğ•Ô‚µ‚ÄI—¹
+    // è¼åº¦å·®ãŒå°ã•ã™ãã‚‹å ´åˆã¯ã€AAå‡¦ç†ã‚’ã›ãšå…ƒã®è‰²ã‚’è¿”ã—ã¦çµ‚äº†
     if (lumaRange < max(FXAA_QUALITY_EDGE_THRESHOLD_MIN, lumaMax * FXAA_QUALITY_EDGE_THRESHOLD)) {
-        return texture(u_SceneTexture, posM);   // ƒ{ƒP–h~
+        return texture(u_SceneTexture, posM);   // ãƒœã‚±é˜²æ­¢
     }
     
-    // ƒR[ƒi[ƒsƒNƒZƒ‹‚àƒTƒ“ƒvƒŠƒ“ƒO
+    // ã‚³ãƒ¼ãƒŠãƒ¼ãƒ”ã‚¯ã‚»ãƒ«ã‚‚ã‚µãƒ³ãƒ—ãƒªãƒ³ã‚°
     vec2 posNW = posM + vec2(-u_InvScreenSize.x,  u_InvScreenSize.y);
     vec2 posNE = posM + vec2( u_InvScreenSize.x,  u_InvScreenSize.y);
     vec2 posSW = posM + vec2(-u_InvScreenSize.x, -u_InvScreenSize.y);
@@ -56,7 +58,7 @@ vec4 FxaaPixelShader(vec2 texCoord) {
     float lumaSW = dot(texture(u_SceneTexture, posSW).rgb, LUMA_VEC);
     float lumaSE = dot(texture(u_SceneTexture, posSE).rgb, LUMA_VEC);
 
-    // ƒGƒbƒW‚Ì•ûŒü‚ğ”»’è
+    // ã‚¨ãƒƒã‚¸ã®æ–¹å‘ã‚’åˆ¤å®š
     float edgeVert = abs((0.25 * lumaNW) + (-0.5 * lumaW) + (0.25 * lumaSW) + 
                        (0.50 * lumaN ) + (-1.0 * lumaM) + (0.50 * lumaS ) +
                        (0.25 * lumaNE) + (-0.5 * lumaE) + (0.25 * lumaSE));
@@ -65,19 +67,19 @@ vec4 FxaaPixelShader(vec2 texCoord) {
                        (0.25 * lumaSW) + ( 0.5 * lumaS) + (0.25 * lumaSE));
     bool isHorizontal = (edgeHorz >= edgeVert);
     
-    // ƒGƒbƒW‚Ì’Tõ•ûŒü‚Æ’TõƒXƒeƒbƒv•‚ğŒˆ’è
+    // ã‚¨ãƒƒã‚¸ã®æ¢ç´¢æ–¹å‘ã¨æ¢ç´¢ã‚¹ãƒ†ãƒƒãƒ—å¹…ã‚’æ±ºå®š
     float stepLength = isHorizontal ? u_InvScreenSize.y : u_InvScreenSize.x;
     vec2 stepDir;
     if (isHorizontal)  stepDir = vec2(0.0, stepLength); 
     else stepDir = vec2(stepLength, 0.0); 
 
-    // ƒGƒbƒW‚Ì—¼’[iƒvƒ‰ƒX•ûŒü‚Æƒ}ƒCƒiƒX•ûŒüj‚ğ’Tõ‚·‚é
-    // Œ»İˆÊ’u‚Ì2•Ó‚Ì‹P“x‚Ì•½‹Ï‚ğŒvZ (ƒGƒbƒW’Tõ‚ÌŠî€’l)
+    // ã‚¨ãƒƒã‚¸ã®ä¸¡ç«¯ï¼ˆãƒ—ãƒ©ã‚¹æ–¹å‘ã¨ãƒã‚¤ãƒŠã‚¹æ–¹å‘ï¼‰ã‚’æ¢ç´¢ã™ã‚‹
+    // ç¾åœ¨ä½ç½®ã®2è¾ºã®è¼åº¦ã®å¹³å‡ã‚’è¨ˆç®— (ã‚¨ãƒƒã‚¸æ¢ç´¢ã®åŸºæº–å€¤)
     float lumaEdgeAverage;
     if (isHorizontal) lumaEdgeAverage = (lumaN + lumaS) * 0.5; 
     else lumaEdgeAverage = (lumaE + lumaW) * 0.5;
     
-    // ƒvƒ‰ƒX•ûŒü‚Ö’Tõ
+    // ãƒ—ãƒ©ã‚¹æ–¹å‘ã¸æ¢ç´¢
     vec2 posP = posM;
     vec2 offP = vec2(0.0);
 
@@ -88,22 +90,22 @@ vec4 FxaaPixelShader(vec2 texCoord) {
     for (int i = 0; i < FXAA_QUALITY_PS; i++) {
         posP += offP;
         lumaEndP = dot(texture(u_SceneTexture, posP).rgb, LUMA_VEC);
-        // •½‹Ï‹P“x‚Æ‚Ì·‚ªè‡’l‚ğ’´‚¦‚½‚çAƒGƒbƒW‚Ì’[‚Æ”»’è
+        // å¹³å‡è¼åº¦ã¨ã®å·®ãŒé–¾å€¤ã‚’è¶…ãˆãŸã‚‰ã€ã‚¨ãƒƒã‚¸ã®ç«¯ã¨åˆ¤å®š
         if(abs(lumaEndP - lumaEdgeAverage) >= lumaRange * 0.5) break; 
     }
 
-    // ƒ}ƒCƒiƒX•ûŒü‚Ö’Tõ
+    // ãƒã‚¤ãƒŠã‚¹æ–¹å‘ã¸æ¢ç´¢
     vec2 posN_ = posM;
     vec2 offN = -offP;
     float lumaEndN = lumaM;
     for (int i = 0; i < FXAA_QUALITY_PS; i++) {
         posN_ += offN;
         lumaEndN = dot(texture(u_SceneTexture, posN_).rgb, LUMA_VEC);
-        // •½‹Ï‹P“x‚Æ‚Ì·‚ªè‡’l‚ğ’´‚¦‚½‚çAƒGƒbƒW‚Ì’[‚Æ”»’è
+        // å¹³å‡è¼åº¦ã¨ã®å·®ãŒé–¾å€¤ã‚’è¶…ãˆãŸã‚‰ã€ã‚¨ãƒƒã‚¸ã®ç«¯ã¨åˆ¤å®š
         if (abs(lumaEndN - lumaEdgeAverage) >= lumaRange * 0.5) break;
     }
     
-    // ƒGƒbƒW‚Ì’†SˆÊ’uiƒTƒuƒsƒNƒZƒ‹j‚ğŒvZ
+    // ã‚¨ãƒƒã‚¸ã®ä¸­å¿ƒä½ç½®ï¼ˆã‚µãƒ–ãƒ”ã‚¯ã‚»ãƒ«ï¼‰ã‚’è¨ˆç®—
     float distP = isHorizontal ? (posP.y - posM.y) : (posP.x - posM.x);
     float distN = isHorizontal ? (posM.y - posN_.y) : (posM.x - posN_.x);
     
@@ -111,15 +113,15 @@ vec4 FxaaPixelShader(vec2 texCoord) {
     if (distP < distN) pixelOffset = -stepLength * 0.5 * (distP / (distP + distN));
     else  pixelOffset = stepLength * 0.5 * (distN / (distP + distN));
 
-    // ƒTƒuƒsƒNƒZƒ‹ƒIƒtƒZƒbƒg‚ªŒvZ‚Å‚«‚½‚çA‚»‚ê‚ğUV‚É“K—p
+    // ã‚µãƒ–ãƒ”ã‚¯ã‚»ãƒ«ã‚ªãƒ•ã‚»ãƒƒãƒˆãŒè¨ˆç®—ã§ããŸã‚‰ã€ãã‚Œã‚’UVã«é©ç”¨
     vec2 uvOffset = isHorizontal ? vec2(0.0, pixelOffset) : vec2(pixelOffset, 0.0);
     vec2 finalUV = posM + uvOffset;
 
-    // ŒvZ‚µ‚½ƒTƒuƒsƒNƒZƒ‹À•W‚©‚çÅI“I‚ÈF‚ğƒTƒ“ƒvƒŠƒ“ƒO
+    // è¨ˆç®—ã—ãŸã‚µãƒ–ãƒ”ã‚¯ã‚»ãƒ«åº§æ¨™ã‹ã‚‰æœ€çµ‚çš„ãªè‰²ã‚’ã‚µãƒ³ãƒ—ãƒªãƒ³ã‚°
     return texture(u_SceneTexture, finalUV);
 }
 
 void main() {
-    // ÅIƒJƒ‰[‚Ìo—Í
+    // æœ€çµ‚ã‚«ãƒ©ãƒ¼ã®å‡ºåŠ›
     out_FragColor = FxaaPixelShader(v_TexCoord);
 }

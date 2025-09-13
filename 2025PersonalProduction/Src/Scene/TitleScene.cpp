@@ -2,12 +2,18 @@
 #include "Engine/Core/Assets/AssetsManager.h"
 #include "Engine/Graphics/Canvas/Canvas.h"
 #include "Engine/Core/Tween/Tween.h"
+#include "Engine/Graphics/Shader/GameShader.h"
+#include "Engine/Graphics/Shader/GamePostEffect.h"
 
 #include <gslib.h>	// tmp
 #include "Assets.h"	// tmp
 
 void TitleScene::start() {
 	is_end_ = false;
+
+    // ゲームに必要なシェーダーの読み込み
+    GameShader::get_instance().load();
+    GamePostEffect::get_instance().load();
 
 	// tmp
 	{
@@ -30,9 +36,6 @@ void TitleScene::update(float delta_time) {
 	if (!AssetsManager::get_instance().is_async_load()) {
 		is_end_ = true;
 	}
-	else {
-		printf("A\n");
-	}
 	
 	// tmp scene end
 	if (gsGetKeyState(GKEY_LCONTROL) && gsGetKeyTrigger(GKEY_RETURN)) is_end_ = true;
@@ -41,7 +44,7 @@ void TitleScene::update(float delta_time) {
 void TitleScene::draw() const {
 	gsDrawText("title");
 
-	// �����S�`��
+	// 仮ロゴ描画
 	{
 		const GSrect rect{ 0.0f, 0.0f, 507.0f, 84.0f };
 		const GSvector2 center{ rect.right / 2.0f, rect.bottom / 2.0f };
@@ -50,7 +53,7 @@ void TitleScene::draw() const {
 }
 
 void TitleScene::end() {
-	// Tween�̏I��
+	// Tweenの終了
 	Tween::clear();
 
 	// tmp
@@ -74,5 +77,5 @@ bool TitleScene::is_application_end() const {
 }
 
 void TitleScene::reception_message(const std::string& message, void* param) {
-	// �Ȃɂ��󂯎��Ȃ�
+	// なにも受け取らない
 }

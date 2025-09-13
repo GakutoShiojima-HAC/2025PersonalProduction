@@ -3,9 +3,9 @@
 //  Author      : Shiojima Gakuto
 //  Created     : 2025/06/25
 //  Updated     : 2025/07/10
-//  Description : ƒ[ƒ‹ƒhŠÇ—ƒNƒ‰ƒX‚ÌƒCƒ“ƒ^[ƒtƒF[ƒX
+//  Description : ãƒ¯ãƒ¼ãƒ«ãƒ‰ç®¡ç†ã‚¯ãƒ©ã‚¹ã®ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹
 //
-//  ’ˆÓF–{ƒ\[ƒXƒR[ƒh‚Ì–³’f“]ÚEƒR[ƒh‚ÌƒRƒs[E“\‚è•t‚¯‚É‚æ‚é—¬—pEÄ”z•z‚ğ‹Ö~‚µ‚Ü‚·B
+//  æ³¨æ„ï¼šæœ¬ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã®ç„¡æ–­è»¢è¼‰ãƒ»ã‚³ãƒ¼ãƒ‰ã®ã‚³ãƒ”ãƒ¼ãƒ»è²¼ã‚Šä»˜ã‘ã«ã‚ˆã‚‹æµç”¨ãƒ»å†é…å¸ƒã‚’ç¦æ­¢ã—ã¾ã™ã€‚
 // -----------------------------------------------------------------------------------------
 
 #ifndef I_WORLD_H_
@@ -28,6 +28,8 @@ class Character;
 class TimelineManager;
 class NavMeshSurface;
 
+struct GSvector3;
+
 class IWorld {
 public:
     IWorld() = default;
@@ -36,143 +38,143 @@ public:
 
 public:
 	/// <summary>
-	/// ƒtƒB[ƒ‹ƒh‚Ìæ“¾
+	/// ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã®å–å¾—
 	/// </summary>
-	/// <returns>ƒtƒB[ƒ‹ƒh</returns>
+	/// <returns>ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰</returns>
 	virtual Field* get_field() = 0;
 
 	/// <summary>
-	/// ƒ‰ƒCƒg‚Ìæ“¾
+	/// ãƒ©ã‚¤ãƒˆã®å–å¾—
 	/// </summary>
-	/// <returns>ƒ‰ƒCƒg</returns>
+	/// <returns>ãƒ©ã‚¤ãƒˆ</returns>
 	virtual Light* get_light() = 0;
 
     /// <summary>
-    /// ƒJƒƒ‰‚ğ’Ç‰Á
+    /// ã‚«ãƒ¡ãƒ©ã‚’è¿½åŠ 
     /// </summary>
-    /// <param name="camera">ƒJƒƒ‰</param>
+    /// <param name="camera">ã‚«ãƒ¡ãƒ©</param>
     virtual void add_camera(Camera* camera) = 0;
 
     /// <summary>
-    /// Œ»İg—p‚µ‚Ä‚¢‚éƒJƒƒ‰‚ğæ“¾
+    /// ç¾åœ¨ä½¿ç”¨ã—ã¦ã„ã‚‹ã‚«ãƒ¡ãƒ©ã‚’å–å¾—
     /// </summary>
-    /// <returns>ƒJƒƒ‰</returns>
+    /// <returns>ã‚«ãƒ¡ãƒ©</returns>
     virtual Camera* get_camera() const = 0;
 
     /// <summary>
-    /// ƒJƒƒ‰‚ğŒŸõ
+    /// ã‚«ãƒ¡ãƒ©ã‚’æ¤œç´¢
     /// </summary>
-    /// <param name="tag">= ƒJƒƒ‰ƒ^ƒO</param>
-    /// <returns>Œ©‚Â‚©‚ê‚ÎƒJƒƒ‰‚ğAŒ©‚Â‚©‚ç‚È‚¯‚ê‚Înullptr</returns>
+    /// <param name="tag">= ã‚«ãƒ¡ãƒ©ã‚¿ã‚°</param>
+    /// <returns>è¦‹ã¤ã‹ã‚Œã°ã‚«ãƒ¡ãƒ©ã‚’ã€è¦‹ã¤ã‹ã‚‰ãªã‘ã‚Œã°nullptr</returns>
     virtual Camera* find_camera(const CameraTag tag) const = 0;
 
     /// <summary>
-    /// Œ»İ‚ÌƒJƒƒ‰‚©‚çw’è‚µ‚½ƒJƒƒ‰‚É‘JˆÚ
+    /// ç¾åœ¨ã®ã‚«ãƒ¡ãƒ©ã‹ã‚‰æŒ‡å®šã—ãŸã‚«ãƒ¡ãƒ©ã«é·ç§»
     /// </summary>
-    /// <param name="to">= ‘JˆÚæ</param>
-    /// <param name="time">= ‘JˆÚ‚É‚©‚©‚éŠÔ</param>
+    /// <param name="to">= é·ç§»å…ˆ</param>
+    /// <param name="time">= é·ç§»ã«ã‹ã‹ã‚‹æ™‚é–“</param>
     virtual void camera_transition(Camera* to, float time = 0) = 0;
 
     /// <summary>
-    /// w’è‚µ‚½ƒJƒƒ‰‚©‚çw’è‚µ‚½ƒJƒƒ‰‚É‘JˆÚ
+    /// æŒ‡å®šã—ãŸã‚«ãƒ¡ãƒ©ã‹ã‚‰æŒ‡å®šã—ãŸã‚«ãƒ¡ãƒ©ã«é·ç§»
     /// </summary>
-    /// <param name="from">= ‘JˆÚŒ³</param>
-    /// <param name="to">= ‘JˆÚæ</param>
-    /// <param name="time">= ‘JˆÚ‚É‚©‚©‚éŠÔ</param>
+    /// <param name="from">= é·ç§»å…ƒ</param>
+    /// <param name="to">= é·ç§»å…ˆ</param>
+    /// <param name="time">= é·ç§»ã«ã‹ã‹ã‚‹æ™‚é–“</param>
     virtual void camera_transition(Camera* from, Camera* to, float time = 0) = 0;
 
     /// <summary>
-    /// ƒiƒrƒƒbƒVƒ…‚ğæ“¾
+    /// ãƒŠãƒ“ãƒ¡ãƒƒã‚·ãƒ¥ã‚’å–å¾—
     /// </summary>
-    /// <returns>ƒiƒrƒƒbƒVƒ…</returns>
+    /// <returns>ãƒŠãƒ“ãƒ¡ãƒƒã‚·ãƒ¥</returns>
     virtual NavMeshSurface* navmesh() = 0;
 
     /// <summary>
-    /// w’è‚µ‚½–¼‘O‚ğ‚ÂƒAƒNƒ^[‚ğŒŸõ
+    /// æŒ‡å®šã—ãŸåå‰ã‚’æŒã¤ã‚¢ã‚¯ã‚¿ãƒ¼ã‚’æ¤œç´¢
     /// </summary>
-    /// <param name="name">= –¼‘O</param>
-    /// <returns>Œ©‚Â‚©‚ê‚ÎƒAƒNƒ^[‚ğAŒ©‚Â‚©‚ç‚È‚¯‚ê‚Înullptr</returns>
+    /// <param name="name">= åå‰</param>
+    /// <returns>è¦‹ã¤ã‹ã‚Œã°ã‚¢ã‚¯ã‚¿ãƒ¼ã‚’ã€è¦‹ã¤ã‹ã‚‰ãªã‘ã‚Œã°nullptr</returns>
     virtual Actor* find_actor(const string& name) const = 0;
 
     /// <summary>
-    /// w’è‚µ‚½ƒ^ƒO‚ğ‚ÂƒAƒNƒ^[‚ğ‘S‚ÄŒŸõ
+    /// æŒ‡å®šã—ãŸã‚¿ã‚°ã‚’æŒã¤ã‚¢ã‚¯ã‚¿ãƒ¼ã‚’å…¨ã¦æ¤œç´¢
     /// </summary>
-    /// <param name="tag">= ƒ^ƒO</param>
-    /// <returns>ƒAƒNƒ^[</returns>
+    /// <param name="tag">= ã‚¿ã‚°</param>
+    /// <returns>ã‚¢ã‚¯ã‚¿ãƒ¼</returns>
     virtual vector<Actor*> find_actor_with_tag(const ActorTag tag) const = 0;
 
     /// <summary>
-    /// ŠÇ—‚µ‚Ä‚¢‚éƒAƒNƒ^[‚Ì”
+    /// ç®¡ç†ã—ã¦ã„ã‚‹ã‚¢ã‚¯ã‚¿ãƒ¼ã®æ•°
     /// </summary>
-    /// <returns>”</returns>
+    /// <returns>æ•°</returns>
     virtual int count_actor() const = 0;
 
     /// <summary>
-    /// w’è‚µ‚½ƒ^ƒO‚ğ‚ÂƒAƒNƒ^[‚Ì”
+    /// æŒ‡å®šã—ãŸã‚¿ã‚°ã‚’æŒã¤ã‚¢ã‚¯ã‚¿ãƒ¼ã®æ•°
     /// </summary>
-    /// <param name="tag">= ƒ^ƒO</param>
-    /// <returns>”</returns>
+    /// <param name="tag">= ã‚¿ã‚°</param>
+    /// <returns>æ•°</returns>
     virtual int count_actor_with_tag(const ActorTag tag) const = 0;
 
     /// <summary>
-    /// w’è‚µ‚½–¼‘O‚ğ‚Âƒ|[ƒ“‚ğŒŸõ
+    /// æŒ‡å®šã—ãŸåå‰ã‚’æŒã¤ãƒãƒ¼ãƒ³ã‚’æ¤œç´¢
     /// </summary>
-    /// <param name="name">= –¼‘O</param>
-    /// <returns>Œ©‚Â‚©‚ê‚Îƒ|[ƒ“‚ğAŒ©‚Â‚©‚ç‚È‚¯‚ê‚Înullptr</returns>
+    /// <param name="name">= åå‰</param>
+    /// <returns>è¦‹ã¤ã‹ã‚Œã°ãƒãƒ¼ãƒ³ã‚’ã€è¦‹ã¤ã‹ã‚‰ãªã‘ã‚Œã°nullptr</returns>
     virtual Pawn* find_pawn(const string& name) const = 0;
 
     /// <summary>
-    /// w’è‚µ‚½ƒ^ƒO‚ğ‚Âƒ|[ƒ“‚ğ‘S‚ÄŒŸõ
+    /// æŒ‡å®šã—ãŸã‚¿ã‚°ã‚’æŒã¤ãƒãƒ¼ãƒ³ã‚’å…¨ã¦æ¤œç´¢
     /// </summary>
-    /// <param name="tag">= ƒ^ƒO</param>
-    /// <returns>ƒ|[ƒ“</returns>
+    /// <param name="tag">= ã‚¿ã‚°</param>
+    /// <returns>ãƒãƒ¼ãƒ³</returns>
     virtual vector<Pawn*> find_pawn_with_tag(const ActorTag tag) const = 0;
 
     /// <summary>
-    /// w’è‚µ‚½–¼‘O‚ğ‚ÂƒLƒƒƒ‰ƒNƒ^[‚ğŒŸõ
+    /// æŒ‡å®šã—ãŸåå‰ã‚’æŒã¤ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã‚’æ¤œç´¢
     /// </summary>
-    /// <param name="name">= –¼‘O</param>
-    /// <returns>Œ©‚Â‚©‚ê‚ÎƒLƒƒƒ‰ƒNƒ^[‚ğAŒ©‚Â‚©‚ç‚È‚¯‚ê‚Înullptr</returns>
+    /// <param name="name">= åå‰</param>
+    /// <returns>è¦‹ã¤ã‹ã‚Œã°ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã‚’ã€è¦‹ã¤ã‹ã‚‰ãªã‘ã‚Œã°nullptr</returns>
     virtual Character* find_character(const string& name) const = 0;
 
     /// <summary>
-    /// w’è‚µ‚½ƒ^ƒO‚ğ‚ÂƒLƒƒƒ‰ƒNƒ^[‚ğ‘S‚ÄŒŸõ
+    /// æŒ‡å®šã—ãŸã‚¿ã‚°ã‚’æŒã¤ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã‚’å…¨ã¦æ¤œç´¢
     /// </summary>
-    /// <param name="tag">= ƒ^ƒO</param>
-    /// <returns>ƒLƒƒƒ‰ƒNƒ^[</returns>
+    /// <param name="tag">= ã‚¿ã‚°</param>
+    /// <returns>ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼</returns>
     virtual vector<Character*> find_character_with_tag(const ActorTag tag) const = 0;
 
     /// <summary>
-    /// ƒ^ƒCƒ€ƒ‰ƒCƒ“ƒ}ƒl[ƒWƒƒ[‚ğæ“¾
+    /// ã‚¿ã‚¤ãƒ ãƒ©ã‚¤ãƒ³ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼ã‚’å–å¾—
     /// </summary>
-    /// <returns>ƒ^ƒCƒ€ƒ‰ƒCƒ“ƒ}ƒl[ƒWƒƒ[</returns>
+    /// <returns>ã‚¿ã‚¤ãƒ ãƒ©ã‚¤ãƒ³ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼</returns>
     virtual TimelineManager& timeline() = 0;
 
     /// <summary>
-    /// UŒ‚”»’è‚ğ¶¬
+    /// æ”»æ’ƒåˆ¤å®šã‚’ç”Ÿæˆ
     /// </summary>
-    /// <param name="radius">= ”»’è‚Ì”¼Œa</param>
-    /// <param name="center">= ¶¬”»’è‹…‚Ì’†S</param>
-    /// <param name="owner">= ¶¬å</param>
-    /// <param name="damage">= ƒ_ƒ[ƒW’l</param>
-    /// <param name="lifespan">= ”»’è‚Ìõ–½</param>
-    /// <param name="delay">= ”»’è‚ª—LŒø‚É‚È‚é‚Ü‚Å‚Ì’x‰„</param>
+    /// <param name="radius">= åˆ¤å®šã®åŠå¾„</param>
+    /// <param name="center">= ç”Ÿæˆåˆ¤å®šçƒã®ä¸­å¿ƒ</param>
+    /// <param name="owner">= ç”Ÿæˆä¸»</param>
+    /// <param name="damage">= ãƒ€ãƒ¡ãƒ¼ã‚¸å€¤</param>
+    /// <param name="lifespan">= åˆ¤å®šã®å¯¿å‘½</param>
+    /// <param name="delay">= åˆ¤å®šãŒæœ‰åŠ¹ã«ãªã‚‹ã¾ã§ã®é…å»¶</param>
     virtual void generate_attack_collider(float radius, const GSvector3& center, Actor* owner, int damage, float lifespan = 1.0f, float delay = 0.0f) = 0;
 
     /// <summary>
-    /// ‰ñ”ğ‰‰o—pƒ|ƒXƒgƒGƒtƒFƒNƒg‚ğ•`‰æ‚·‚é‚©‚Ç‚¤‚©
+    /// ãƒã‚¹ã‚¯ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã®è‰²ã‚’è¨­å®š
     /// </summary>
-    /// <returns>QÆ</returns>
-    virtual bool& enable_avoid_posteffct() = 0;
+    /// <param name="color">RGBA</param>
+    virtual void set_mask_color(const GScolor& color) = 0;
 
     /// <summary>
-    /// ‰ñ”ğ‰‰o—pƒ|ƒXƒgƒGƒtƒFƒNƒg‚ÌF‚ğİ’è
+    /// å›é¿æ¼”å‡ºç”¨ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’æç”»ã™ã‚‹ã‹ã©ã†ã‹
     /// </summary>
-    /// <param name="color">RGB</param>
-    virtual void set_avoid_effect_color(const GSvector3& color) = 0;
+    /// <returns>å‚ç…§</returns>
+    virtual bool& enable_avoid_effect() = 0;
 
 public:
-	// ƒRƒs[‹Ö~
+	// ã‚³ãƒ”ãƒ¼ç¦æ­¢
 	IWorld(const IWorld& other) = delete;
 	IWorld& operator = (const IWorld& other) = delete;
 

@@ -72,7 +72,7 @@ void EditorCamera::update(float delta_time) {
 		// 視点移動
 		input = input_.right_axis();
 		yaw_ -= input.x * SENSITIVITY;
-		pitch_ += input.y * SENSITIVITY;
+		pitch_ -= input.y * SENSITIVITY;
 		pitch_ = CLAMP(pitch_, -89.0f, 89.0f);
 	}
 	// 方向

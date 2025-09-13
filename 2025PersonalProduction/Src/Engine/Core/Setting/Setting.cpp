@@ -1,30 +1,35 @@
 #include "Engine/Core/Setting/Setting.h"
 
 Setting& Setting::get_instance() {
-	// static•Ï”‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚Í‚P‚Â
-	// ƒCƒ“ƒXƒ^ƒ“ƒX‰»‚à‚P‰ñ‚Ì‚İ
+	// staticå¤‰æ•°ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã¯ï¼‘ã¤
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹åŒ–ã‚‚ï¼‘å›ã®ã¿
 	static Setting self;
 	return self;
 }
 
 void Setting::load(const std::string& setting_path) {
-	// TODO ¡‚Íreset‚Å’l‚ğ“K—p‚µ‚Ä‚¨‚­
+	// TODO ä»Šã¯resetã§å€¤ã‚’é©ç”¨ã—ã¦ãŠã
 	reset();
 }
 
 void Setting::reset() {
-	// ƒV[ƒ“•`‰æŠÖŒW
-	enable_draw_posteffect_ = true;
+	// ã‚·ãƒ¼ãƒ³æç”»é–¢ä¿‚
+    enable_draw_ssao_ = true;
+	enable_draw_bloom_ = true;
 	enable_draw_fxaa_ = true;
 }
 
 void Setting::save() {
-	// TODO ¡‚Í–³‚µ
+	// TODO ä»Šã¯ç„¡ã—
 }
 
-bool Setting::is_draw_posteffect() const { return enable_draw_posteffect_; }
+bool Setting::is_draw_ssao() const { return enable_draw_ssao_; }
 
-bool& Setting::enable_draw_posteffect() { return enable_draw_posteffect_; }
+bool& Setting::enable_draw_ssao() { return enable_draw_ssao_; }
+
+bool Setting::is_draw_bloom() const { return enable_draw_bloom_; }
+
+bool& Setting::enable_draw_bloom() { return enable_draw_bloom_; }
 
 bool Setting::is_draw_fxaa() const { return enable_draw_fxaa_; }
 

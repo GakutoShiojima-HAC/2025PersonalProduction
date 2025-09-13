@@ -24,29 +24,30 @@
 #ifdef _DEBUG
 #include <imgui/imgui.h>
 #include "Engine/Core/Screen/Screen.h"
+#include "Engine/Core/Setting/Setting.h"
 #endif
 
 #include "Engine/Graphics/Canvas/Canvas.h"	// tmp
 
-// Õ“Ë”»’è—p‚Ì”¼Œa
+// è¡çªåˆ¤å®šç”¨ã®åŠå¾„
 const float RADIUS{ 0.4f };
-// ˆÚ“®‚ÌƒJƒƒ‰Œü‚«‚Ö‚Ì‰ñ“]Šp“x
+// ç§»å‹•æ™‚ã®ã‚«ãƒ¡ãƒ©å‘ãã¸ã®å›è»¢è§’åº¦
 const float TURN_SPEED{ 11.5f };
-// ’ÊíˆÚ“®‘¬“x
+// é€šå¸¸ç§»å‹•é€Ÿåº¦
 const float MOVE_SPEED{ 0.1f };
-// ¾‘–ˆÚ“®‘¬“x
+// ç–¾èµ°ç§»å‹•é€Ÿåº¦
 const float SPRINT_SPEED{ 0.15f };
-// Œ¸‘¬ˆÚ“®‘¬“x”{—¦
+// æ¸›é€Ÿç§»å‹•é€Ÿåº¦å€ç‡
 const float DECELERATION_SPEED{ 0.75f };
-// –³“GŠÔ(•b)
+// ç„¡æ•µæ™‚é–“(ç§’)
 const float INVINCIBLE_TIME{ 0.5f };
-// ‰ñ”ğˆÚ“®‘¬“x
+// å›é¿ç§»å‹•é€Ÿåº¦
 const float AVOID_SPEED{ 12.0f };
 
-// ‰ñ”ğ‰‰o‚ÌŠÔ
+// å›é¿æ¼”å‡ºã®æ™‚é–“
 const float AVOID_EFFECT_TIME{ 3.0f };
-// ‰ñ”ğ‰‰o‚ÌF
-const GSvector3 AVOID_EFFECT_COLOR{ 0.592f, 0.627f, 1.0f };
+// å›é¿æ¼”å‡ºã®è‰²
+const GScolor AVOID_EFFECT_COLOR{ 0.592f, 0.627f, 1.0f, 1.0f };
 
 Player::Player(IWorld* world, const GSvector3& position, const GSvector3& lookat, PlayerCamera* camera) {
 	world_ = world;
@@ -64,7 +65,7 @@ Player::Player(IWorld* world, const GSvector3& position, const GSvector3& lookat
 	add_state();
 	change_state((GSuint)PlayerStateType::Move, Motion::Idle, true);
 	
-	// Õ“Ë”»’è‹…‚ğ¶¬
+	// è¡çªåˆ¤å®šçƒã‚’ç”Ÿæˆ
 	collider_ = BoundingSphere{ RADIUS, GSvector3{ 0.0f, height_ / 2.0f, 0.0f } };
 
 	transform_.position(position);
@@ -72,7 +73,7 @@ Player::Player(IWorld* world, const GSvector3& position, const GSvector3& lookat
 	collide_field();
 	mesh_.transform(transform_.localToWorldMatrix());
 
-	// UŒ‚ƒAƒjƒ[ƒVƒ‡ƒ“ƒCƒxƒ“ƒg
+	// æ”»æ’ƒã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¤ãƒ™ãƒ³ãƒˆ
 	add_attack_animation_event();
 }
 
@@ -82,12 +83,12 @@ void Player::update(float delta_time) {
 	update_gravity(delta_time);
 	update_mesh(delta_time);
 
-	// ‰ñ”ğ‰‰oƒ^ƒCƒ}[‚ÌXV
+	// å›é¿æ¼”å‡ºã‚¿ã‚¤ãƒãƒ¼ã®æ›´æ–°
 	if (avoid_effect_timer_ > 0.0f) {
 		avoid_effect_timer_ -= delta_time / cFPS;
-		if (avoid_effect_timer_ <= 0.0f) Tween::vector3(AVOID_EFFECT_COLOR, GSvector3::one(), 0.5f * cFPS, [=](GSvector3 color) {
-				world_->set_avoid_effect_color(color);
-			}).on_complete([=] { world_->enable_avoid_posteffct() = false; });
+		if (avoid_effect_timer_ <= 0.0f) Tween::color(AVOID_EFFECT_COLOR, GScolor{1.0f, 1.0f, 1.0f, 1.0f }, 0.5f * cFPS, [=](GScolor color) {
+				world_->set_mask_color(color);
+			}).on_complete([=] { world_->enable_avoid_effect() = false; });
 	}
 
 #ifdef _DEBUG
@@ -133,6 +134,20 @@ void Player::update(float delta_time) {
 	if (input_.is_pad()) input_type += "gamepad";
 	else input_type += "keyboard + mouse";
 	ImGui::Text("%s", input_type.c_str());
+
+    Setting& setting = Setting::get_instance();
+    std::string ssao = "ssao: ";
+    ssao += setting.is_draw_ssao() ? "on" : "off";
+    if (ImGui::Button(ssao.c_str())) setting.enable_draw_ssao() = !setting.enable_draw_ssao();
+
+    std::string bloom = "bloom: ";
+    bloom += setting.is_draw_bloom() ? "on" : "off";
+    if (ImGui::Button(bloom.c_str())) setting.enable_draw_bloom() = !setting.enable_draw_bloom();
+
+    std::string fxaa = "fxaa: ";
+    fxaa += setting.is_draw_fxaa() ? "on" : "off";
+    if (ImGui::Button(fxaa.c_str())) setting.enable_draw_fxaa() = !setting.enable_draw_fxaa();
+
 	ImGui::End();
 #endif
 }
@@ -164,13 +179,13 @@ void Player::take_damage(Actor& other, const int damage) {
 		state_.get_current_state(), 
 		(GSuint)PlayerStateType::Idle, 
 		(GSuint)PlayerStateType::Dead,
-		(GSuint)PlayerStateType::Skill	// ƒXƒLƒ‹’†‚à–³“G
+		(GSuint)PlayerStateType::Skill	// ã‚¹ã‚­ãƒ«ä¸­ã‚‚ç„¡æ•µ
 	)) return;
 	if (invincible_timer() > 0.0f) {
-		// ‰ñ”ğ‰‰o
+		// å›é¿æ¼”å‡º
 		if (state_.get_current_state() == (GSuint)PlayerStateType::Avoid) {
-			world_->enable_avoid_posteffct() = true;
-			world_->set_avoid_effect_color(AVOID_EFFECT_COLOR);
+			world_->enable_avoid_effect() = true;
+			world_->set_mask_color(AVOID_EFFECT_COLOR);
 			avoid_effect_timer_ = AVOID_EFFECT_TIME;
 		}
 		return;
@@ -182,7 +197,7 @@ void Player::take_damage(Actor& other, const int damage) {
 		change_state((GSuint)PlayerStateType::Dead, Motion::Dead, false);
 	}
 	else {
-		// ƒRƒ‰ƒCƒ_[‚ÌˆÊ’u‚©‚ç•‰ƒ‚[ƒVƒ‡ƒ“‚ğæ“¾
+		// ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã®ä½ç½®ã‹ã‚‰è² å‚·ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å–å¾—
 		const GSvector3 other_dir = other.transform().position() - transform().position();
 		const int dir = MyLib::get_direction(GSvector2{ other_dir.x, other_dir.z }, GSvector2{ transform().forward().x, transform().forward().z}, 4);
 		GSuint motion = Motion::HurtF;
@@ -223,26 +238,26 @@ void Player::add_state() {
 }
 
 void Player::update_move(float delta_time) {
-	// ƒJƒƒ‰Šî€‚Ì•ûŒü‚ğæ“¾
+	// ã‚«ãƒ¡ãƒ©åŸºæº–ã®æ–¹å‘ã‚’å–å¾—
 	Camera* camera = world_->get_camera();
 	GSvector3 forward = camera != nullptr ? camera->transform().forward() : GSvector3{ 0.0f, 0.0f, 1.0f };
 	forward.y = 0.0f;
 	GSvector3 right = camera != nullptr ? camera->transform().right() : GSvector3{ -1.0f, 0.0f, 0.0f };
 	right.y = 0.0f;
 
-	// “ü—Í‚©‚çˆÚ“®ƒxƒNƒgƒ‹‚ğZo
+	// å…¥åŠ›ã‹ã‚‰ç§»å‹•ãƒ™ã‚¯ãƒˆãƒ«ã‚’ç®—å‡º
 	GSvector3 velocity{ 0.0f, 0.0f, 0.0f };
 	const GSvector2 input = input_.left_axis();
 	velocity += right * input.x;
 	velocity += forward * input.y;
 	
-	// •às‚©¾‘–‚©‚ğæ“¾
+	// æ­©è¡Œã‹ç–¾èµ°ã‹ã‚’å–å¾—
 	const bool is_walk = input_.action(InputAction::GAME_Sprint);
 
-	// ƒƒbƒNƒIƒ“’†‚©‚Ç‚¤‚©‚ğæ“¾
+	// ãƒ­ãƒƒã‚¯ã‚ªãƒ³ä¸­ã‹ã©ã†ã‹ã‚’å–å¾—
 	const bool is_lockon = camera_->is_lockon();
 
-	// ˆÚ“®‚µ‚Ä‚¢‚½‚çˆÚ“®—Ê‚ğAˆÚ“®‚µ‚Ä‚¢‚È‚©‚Á‚½‚çŒ¸‘¬‚·‚é‚æ‚¤‚ÉˆÚ“®—Ê‚ğŒvZ
+	// ç§»å‹•ã—ã¦ã„ãŸã‚‰ç§»å‹•é‡ã‚’ã€ç§»å‹•ã—ã¦ã„ãªã‹ã£ãŸã‚‰æ¸›é€Ÿã™ã‚‹ã‚ˆã†ã«ç§»å‹•é‡ã‚’è¨ˆç®—
 	if (velocity.magnitude() > 0.01f) {
 		move_speed_ = is_walk ? SPRINT_SPEED : MOVE_SPEED;
 		velocity = velocity.normalized() * move_speed_ * delta_time;
@@ -250,24 +265,24 @@ void Player::update_move(float delta_time) {
 	else {
 		velocity.x = velocity_.x;
 		velocity.z = velocity_.z;
-		// Œ¸‘¬
-		if (velocity.magnitude() > 0.01f) velocity *= DECELERATION_SPEED * delta_time;	// delta_timeŒãŒvZ‚Å‚Ì‘½­‚ÌŒë·‚Í‹C‚É‚µ‚È‚¢‚à‚Ì‚Æ‚·‚é
-		// ’â~
+		// æ¸›é€Ÿ
+		if (velocity.magnitude() > 0.01f) velocity *= DECELERATION_SPEED * delta_time;	// delta_timeå¾Œè¨ˆç®—ã§ã®å¤šå°‘ã®èª¤å·®ã¯æ°—ã«ã—ãªã„ã‚‚ã®ã¨ã™ã‚‹
+		// åœæ­¢
 		else velocity = GSvector3{ 0.0f, 0.0f, 0.0f };
 	}
-	// ˆÚ“®—Ê‚ğXV
+	// ç§»å‹•é‡ã‚’æ›´æ–°
 	velocity_.x = velocity.x;
 	velocity_.z = velocity.z;
 
-	// ”ñŠÑ’ÊˆÚ“®
+	// éè²«é€šç§»å‹•
 	non_penetrating_move(velocity, is_lockon ? &forward : &velocity, TURN_SPEED * delta_time);
 
-	// ˆÚ“®ó‘Ô‚Å‚È‚¯‚ê‚ÎI—¹
+	// ç§»å‹•çŠ¶æ…‹ã§ãªã‘ã‚Œã°çµ‚äº†
 	if (!(state_.get_current_state() == (GSuint)PlayerStateType::Move)) return;
-	// ƒ‚[ƒVƒ‡ƒ“‚ğİ’è
+	// ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ã‚’è¨­å®š
 	GSuint motion = Motion::Idle;
 	if (input.magnitude() > 0.01f) {
-		// ƒƒbƒNƒIƒ“’†‚È‚ç8•ûŒüƒ‚[ƒVƒ‡ƒ“‚ğ“K—p‚·‚é
+		// ãƒ­ãƒƒã‚¯ã‚ªãƒ³ä¸­ãªã‚‰8æ–¹å‘ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ã‚’é©ç”¨ã™ã‚‹
 		if (is_lockon) {
 			const int dir = MyLib::get_direction(GSvector2{ velocity.x, velocity.z }, GSvector2{ forward.x, forward.z }, 8);
 			switch (dir) {
@@ -282,39 +297,39 @@ void Player::update_move(float delta_time) {
 			default: break;
 			}
 		}
-		// ƒƒbƒNƒIƒ“’†‚Å‚È‚¯‚ê‚Î1•ûŒüƒ‚[ƒVƒ‡ƒ“‚ğ“K—p‚·‚é
+		// ãƒ­ãƒƒã‚¯ã‚ªãƒ³ä¸­ã§ãªã‘ã‚Œã°1æ–¹å‘ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ã‚’é©ç”¨ã™ã‚‹
 		else {
 			motion = is_walk ? Motion::WalkF : Motion::SprintF;
 		}
 	}
-	// ƒ‚[ƒVƒ‡ƒ“‚ğ“K—p
+	// ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ã‚’é©ç”¨
 	mesh_.change_motion(motion, true);
 }
 
 void Player::update_move_air(float delta_time) {
-	// ƒJƒƒ‰Šî€‚Ì•ûŒü‚ğæ“¾
+	// ã‚«ãƒ¡ãƒ©åŸºæº–ã®æ–¹å‘ã‚’å–å¾—
 	Camera* camera = world_->get_camera();
 	GSvector3 forward = camera != nullptr ? camera->transform().forward() : GSvector3{ 0.0f, 0.0f, 1.0f };
 	forward.y = 0.0f;
 	GSvector3 right = camera != nullptr ? camera->transform().right() : GSvector3{ -1.0f, 0.0f, 0.0f };
 	right.y = 0.0f;
 
-	// “ü—Í‚©‚ç‰ñ“]ƒxƒNƒgƒ‹‚ğZo
+	// å…¥åŠ›ã‹ã‚‰å›è»¢ãƒ™ã‚¯ãƒˆãƒ«ã‚’ç®—å‡º
 	GSvector3 rotate_velocity{ 0.0f, 0.0f, 0.0f };
 	GSvector2 input = input_.left_axis();
 	rotate_velocity += right * input.x;
 	rotate_velocity += forward * input.y; 
 
-	// ‘O‚ÌˆÚ“®—Ê‚ğæ“¾
+	// å‰ã®ç§»å‹•é‡ã‚’å–å¾—
 	GSvector3 prev_velocity = velocity_;
 	prev_velocity.y = 0.0f;
 	prev_velocity = prev_velocity.normalized() * move_speed_ * delta_time;
 
-	// ˆÚ“®—Ê‚ğXV
+	// ç§»å‹•é‡ã‚’æ›´æ–°
 	velocity_.x = prev_velocity.x;
 	velocity_.z = prev_velocity.z;
 
-	// ”ñŠÑ’ÊˆÚ“®
+	// éè²«é€šç§»å‹•
 	non_penetrating_move(prev_velocity, camera_->is_lockon() ? nullptr : &rotate_velocity, TURN_SPEED * delta_time);
 }
 
@@ -323,21 +338,21 @@ void Player::to_move_state() {
 }
 
 void Player::update_lockon_camera() {
-	// w’è‚Ìó‘Ô‚Å‚ÍƒƒbƒNƒIƒ“Ø‚è‘Ö‚¦‚ğg‚¦‚È‚¢
+	// æŒ‡å®šã®çŠ¶æ…‹ã§ã¯ãƒ­ãƒƒã‚¯ã‚ªãƒ³åˆ‡ã‚Šæ›¿ãˆã‚’ä½¿ãˆãªã„
 	if (MyLib::is_in(
 		state_.get_current_state(),
 		(GSuint)PlayerStateType::Idle,
 		(GSuint)PlayerStateType::Dead
 	)) return;
 	
-	// ƒƒbƒNƒIƒ““ü—Í‚ª‚ ‚Á‚½‚ç
+	// ãƒ­ãƒƒã‚¯ã‚ªãƒ³å…¥åŠ›ãŒã‚ã£ãŸã‚‰
 	if (input_.action(InputAction::GAME_Lockon)) {
-		// ƒƒbƒNƒIƒ“ƒ^[ƒQƒbƒg‚ª‚¢‚é‚È‚çƒƒbƒNƒIƒ“‚ğ‰ğœ
+		// ãƒ­ãƒƒã‚¯ã‚ªãƒ³ã‚¿ãƒ¼ã‚²ãƒƒãƒˆãŒã„ã‚‹ãªã‚‰ãƒ­ãƒƒã‚¯ã‚ªãƒ³ã‚’è§£é™¤
 		if (camera_->is_lockon()) {
 			camera_->set_lockon_target(nullptr);
 			return;
 		}
-		// ƒƒbƒNƒIƒ“ƒ^[ƒQƒbƒg‚ª‚¢‚È‚¯‚ê‚Î‘ÎÛ‚ğ’T‚·
+		// ãƒ­ãƒƒã‚¯ã‚ªãƒ³ã‚¿ãƒ¼ã‚²ãƒƒãƒˆãŒã„ãªã‘ã‚Œã°å¯¾è±¡ã‚’æ¢ã™
 		else {
 			Pawn* target = nullptr;
 			// TODO search
@@ -351,45 +366,45 @@ void Player::update_lockon_camera() {
 }
 
 void Player::on_attack() {
-	// UŒ‚’i”‚ğˆê’iŠK–Ú‚ÉƒZƒbƒg
+	// æ”»æ’ƒæ®µæ•°ã‚’ä¸€æ®µéšç›®ã«ã‚»ãƒƒãƒˆ
 	attack_count_ = 1;
 }
 
 void Player::on_avoid() {
-	// ˆê’èŠÔ–³“G‚É‚·‚é
+	// ä¸€å®šæ™‚é–“ç„¡æ•µã«ã™ã‚‹
 	invincible_timer_ = INVINCIBLE_TIME;
 
-	// ƒJƒƒ‰Šî€‚Ì•ûŒü‚ğæ“¾
+	// ã‚«ãƒ¡ãƒ©åŸºæº–ã®æ–¹å‘ã‚’å–å¾—
 	Camera* camera = world_->get_camera();
 	GSvector3 forward = camera != nullptr ? camera->transform().forward() : GSvector3{ 0.0f, 0.0f, 1.0f };
 	forward.y = 0.0f;
 	GSvector3 right = camera != nullptr ? camera->transform().right() : GSvector3{ -1.0f, 0.0f, 0.0f };
 	right.y = 0.0f;
 
-	// ƒƒbƒNƒIƒ“’†‚©‚Ç‚¤‚©‚ğæ“¾
+	// ãƒ­ãƒƒã‚¯ã‚ªãƒ³ä¸­ã‹ã©ã†ã‹ã‚’å–å¾—
 	const bool is_lockon =camera_->is_lockon();
 
-	// “ü—Í‚©‚ç‰ñ”ğƒxƒNƒgƒ‹‚ğZo
+	// å…¥åŠ›ã‹ã‚‰å›é¿ãƒ™ã‚¯ãƒˆãƒ«ã‚’ç®—å‡º
 	GSvector3 avoid_velocity{ 0.0f, 0.0f, 0.0f };
 	const GSvector2 input = input_.left_axis();
-	// ƒƒbƒNƒIƒ“’†‚È‚çl•ûŒü‚É‰ñ”ğ‚·‚é
+	// ãƒ­ãƒƒã‚¯ã‚ªãƒ³ä¸­ãªã‚‰å››æ–¹å‘ã«å›é¿ã™ã‚‹
 	if (is_lockon) {
-		// ¶‰E‚ğ—Dæ‚·‚é
+		// å·¦å³ã‚’å„ªå…ˆã™ã‚‹
 		avoid_velocity += right * input.x;
-		// ¶‰E“ü—Í‚ª–³‚¯‚ê‚Î‘OŒã‚É‰ñ”ğ‚·‚é
+		// å·¦å³å…¥åŠ›ãŒç„¡ã‘ã‚Œã°å‰å¾Œã«å›é¿ã™ã‚‹
 		if (avoid_velocity.magnitude() < 0.01f) avoid_velocity += forward * input.y;
 	}
-	// ”ñƒƒbƒNƒIƒ“‚È‚ç©—R‚É‰ñ”ğ‚·‚é
+	// éãƒ­ãƒƒã‚¯ã‚ªãƒ³ãªã‚‰è‡ªç”±ã«å›é¿ã™ã‚‹
 	else {
 		avoid_velocity += right * input.x;
 		avoid_velocity += forward * input.y;
 	}
-	// “ü—Í‚ª–³‚¯‚ê‚ÎŒã‘Ş‚Æ‚·‚é
+	// å…¥åŠ›ãŒç„¡ã‘ã‚Œã°å¾Œé€€ã¨ã™ã‚‹
 	if (avoid_velocity.magnitude() < 0.01f) avoid_velocity += forward * -1.0f;
 
-	// ƒ‚[ƒVƒ‡ƒ“‚ğİ’è
+	// ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ã‚’è¨­å®š
 	GSuint motion = Motion::AvoidB;
-	// ƒƒbƒNƒIƒ“’†‚È‚ç4•ûŒüƒ‚[ƒVƒ‡ƒ“‚ğ“K—p‚·‚é
+	// ãƒ­ãƒƒã‚¯ã‚ªãƒ³ä¸­ãªã‚‰4æ–¹å‘ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ã‚’é©ç”¨ã™ã‚‹
 	if (is_lockon) {
 		const int dir = MyLib::get_direction(GSvector2{ avoid_velocity.x, avoid_velocity.z }, GSvector2{ forward.x, forward.z }, 4);
 		switch (dir) {
@@ -400,21 +415,21 @@ void Player::on_avoid() {
 		default: break;
 		}
 	}
-	// ƒƒbƒNƒIƒ“’†‚Å‚È‚¯‚ê‚Î1•ûŒüƒ‚[ƒVƒ‡ƒ“‚ğ“K—p‚·‚é
+	// ãƒ­ãƒƒã‚¯ã‚ªãƒ³ä¸­ã§ãªã‘ã‚Œã°1æ–¹å‘ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ã‚’é©ç”¨ã™ã‚‹
 	else {
 		motion = Motion::AvoidF;
 	}
 
-	// ˆÚ“®æ‚ğŒˆ’è
+	// ç§»å‹•å…ˆã‚’æ±ºå®š
 	avoid_velocity = avoid_velocity.normalized() * AVOID_SPEED * 1.0f / cFPS;
-	// ƒ‚[ƒVƒ‡ƒ“‚ğ“K—p
+	// ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ã‚’é©ç”¨
 	change_state((GSuint)PlayerStateType::Avoid, motion, false);
 
-	// ˆÚ“®
+	// ç§»å‹•
 	float move_time = mesh_.motion_end_time();
 	Tween::vector3(avoid_velocity, GSvector3::zero(), move_time, [&](GSvector3 pos) {
 		non_penetrating_move(pos); }).ease(EaseType::EaseOutCubic);
-	// ‹­§‰ñ“]
+	// å¼·åˆ¶å›è»¢
 	transform_.lookAt(transform_.position() + (is_lockon ? forward : avoid_velocity));
 
 	velocity_.x = 0.0f;
@@ -480,7 +495,7 @@ void Player::generate_attack_collider() {
 }
 
 void Player::add_attack_animation_event() {
-	// TODO ŠO•”ƒtƒ@ƒCƒ‹“Ç‚İ‚İ‚É‚·‚é player_weapon_data.json ?
+	// TODO å¤–éƒ¨ãƒ•ã‚¡ã‚¤ãƒ«èª­ã¿è¾¼ã¿ã«ã™ã‚‹ player_weapon_data.json ?
 
 	// mabye key = weapon type
 	// value = [
@@ -498,22 +513,22 @@ void Player::add_attack_animation_event() {
 	WeaponType type = WeaponType::PlayerSword;
 	std::vector<WeaponManager::WeaponAnimationData*> data;
 	
-	// for2 start // TODO ***‰¼‚Å‚»‚Ì‚Ü‚Ü‹Lq***
-	// 1’i–Ú
+	// for2 start // TODO ***ä»®ã§ãã®ã¾ã¾è¨˜è¿°***
+	// 1æ®µç›®
 	data.push_back(new WeaponManager::WeaponAnimationData(0, 20, GSvector3{ 0.0f, 1.0f, 1.0f }, 30.0f));
 	add_event(0, 20);
-	// 2’i–Ú
+	// 2æ®µç›®
 	data.push_back(new WeaponManager::WeaponAnimationData(1, 15, GSvector3{ 0.0f, 1.0f, 1.0f }, 30.0f));
 	add_event(1, 15);
-	// 3’i–Ú
+	// 3æ®µç›®
 	data.push_back(new WeaponManager::WeaponAnimationData(2, 15, GSvector3{ 0.0f, 1.0f, 1.0f }, 30.0f));
 	add_event(2, 15);
-	// 4’i–Ú
+	// 4æ®µç›®
 	data.push_back(new WeaponManager::WeaponAnimationData(3, 15, GSvector3{ 0.0f, 1.0f, 1.0f }, 20.0f));
 	add_event(3, 15);
 	// for2 end
 
-	// ’Ç‰Á
+	// è¿½åŠ 
 	weapon_manager_.add_weapon_parameter(type, data);
 	// for1 end
 }

@@ -3,9 +3,9 @@
 //  Author        : Shiojima Gakuto
 //  Created       : 2025/07/08
 //  Updated       : 2025/07/09
-//  Description   : ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚Æ‚µ‚Ä“®ì‚³‚¹‚é‚½‚ß‚Ì‹@”\‚ğ‚ÂƒNƒ‰ƒX
+//  Description   : ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã¨ã—ã¦å‹•ä½œã•ã›ã‚‹ãŸã‚ã®æ©Ÿèƒ½ã‚’æŒã¤ã‚¯ãƒ©ã‚¹
 //
-//  ’ˆÓF–{ƒ\[ƒXƒR[ƒh‚Ì–³’f“]ÚEƒR[ƒh‚ÌƒRƒs[E“\‚è•t‚¯‚É‚æ‚é—¬—pEÄ”z•z‚ğ‹Ö~‚µ‚Ü‚·B
+//  æ³¨æ„ï¼šæœ¬ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã®ç„¡æ–­è»¢è¼‰ãƒ»ã‚³ãƒ¼ãƒ‰ã®ã‚³ãƒ”ãƒ¼ãƒ»è²¼ã‚Šä»˜ã‘ã«ã‚ˆã‚‹æµç”¨ãƒ»å†é…å¸ƒã‚’ç¦æ­¢ã—ã¾ã™ã€‚
 // -----------------------------------------------------------------------------------------
 
 #include <GSgame.h>
@@ -19,6 +19,10 @@
 #include "Engine/Core/Input/Input.h"
 #include "Engine/Core/Tween/Tween.h"
 #include "Engine/Core/Setting/Setting.h"
+#include "Engine/Utils/MyRandom.h"
+#include "Engine/Graphics/Shader/GameShader.h"
+#include "Engine/Graphics/Shader/GamePostEffect.h"
+
 #include "Engine/Core/Scene/SceneManager.h"
 #include "Scene/TitleScene.h"
 #include "Scene/MenuScene.h"
@@ -30,26 +34,27 @@
 class MyGame : public gslib::Game {
 public:
     /// <summary>
-    /// ƒAƒvƒŠƒP[ƒVƒ‡ƒ“ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+    /// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
     /// </summary>
-    /// <param name="width_px">= ƒEƒBƒ“ƒhƒE‚Ì‰Šú•(ƒsƒNƒZƒ‹)</param>
-    /// <param name="height_px">= ƒEƒBƒ“ƒhƒE‚Ì‰Šú‚‚³(ƒsƒNƒZƒ‹)</param>
-    /// <param name="full_screen">= ƒtƒ‹ƒXƒNƒŠ[ƒ“‚É‚·‚é‚È‚ç^</param>
-    /// <param name="refresh_rate">= ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ÌƒŠƒtƒŒƒbƒVƒ…ƒŒ[ƒg</param>
+    /// <param name="width_px">= ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®åˆæœŸå¹…(ãƒ”ã‚¯ã‚»ãƒ«)</param>
+    /// <param name="height_px">= ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®åˆæœŸé«˜ã•(ãƒ”ã‚¯ã‚»ãƒ«)</param>
+    /// <param name="full_screen">= ãƒ•ãƒ«ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ã«ã™ã‚‹ãªã‚‰çœŸ</param>
+    /// <param name="refresh_rate">= ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®ãƒªãƒ•ãƒ¬ãƒƒã‚·ãƒ¥ãƒ¬ãƒ¼ãƒˆ</param>
     MyGame(int width_px, int height_px, bool full_screen, float refresh_rate) : gslib::Game{ width_px, height_px, full_screen, refresh_rate } {
-        // ƒXƒNƒŠ[ƒ“ƒf[ƒ^‚ğƒZƒbƒg
+        // ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ãƒ‡ãƒ¼ã‚¿ã‚’ã‚»ãƒƒãƒˆ
         screen_.set_initialize_data(width_px, height_px, full_screen, refresh_rate);
 
-        // ‰Šú‰»
+        // åˆæœŸåŒ–
         gsInitEffect();
         scene_manager_.init();
         Canvas::init();
         Setting::get_instance().load("tmp");
+        MyRandom::set_seed(5);
     }
 
 private:
     void start() override {
-        // ‰Šú‰¹—Ê’²®
+        // åˆæœŸéŸ³é‡èª¿æ•´
         float master = 0.75;
         float se = 0.8;
         float bgm = 0.8;
@@ -57,7 +62,7 @@ private:
         gsSetVolumeBGM(bgm);
         gsSetMasterVolumeSE(se);
 
-        // ƒV[ƒ“‚ğ’Ç‰Á
+        // ã‚·ãƒ¼ãƒ³ã‚’è¿½åŠ 
         scene_manager_.add(new TitleScene{});
         scene_manager_.add(new MenuScene{});
         scene_manager_.add(new GameScene{});
@@ -65,7 +70,7 @@ private:
         // tmp
         scene_manager_.add(new TimelineEditorScene{});
 
-        // ƒ^ƒCƒgƒ‹ƒV[ƒ“‚©‚çn‚ß‚é
+        // ã‚¿ã‚¤ãƒˆãƒ«ã‚·ãƒ¼ãƒ³ã‹ã‚‰å§‹ã‚ã‚‹
         scene_manager_.change(SceneTag::Title);
     }
 
@@ -82,43 +87,46 @@ private:
 
     void end() override {
         scene_manager_.clear();
-        // Tween‚Ì”jŠü
+        // Tweenã®ç ´æ£„
         Tween::clear();
-        // ƒAƒZƒbƒg‚Ì”jŠü
+        // ã‚¢ã‚»ãƒƒãƒˆã®ç ´æ£„
         AssetsManager::get_instance().clear();
-        // ƒGƒtƒFƒNƒg‚ÌI—¹
+        // ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®ç ´æ£„
+        GameShader::get_instance().clear();
+        GamePostEffect::get_instance().clear();
+        // ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã®çµ‚äº†
         gsFinishEffect();
-        // ƒJ[ƒ\ƒ‹‚ÌˆÚ“®§ŒÀ‚ğ‰ğœ
+        // ã‚«ãƒ¼ã‚½ãƒ«ã®ç§»å‹•åˆ¶é™ã‚’è§£é™¤
         ClipCursor(NULL);
-        // ƒJ[ƒ\ƒ‹‚ğ•\¦
+        // ã‚«ãƒ¼ã‚½ãƒ«ã‚’è¡¨ç¤º
         gsShowMouseCursor();
 
-        // ƒAƒ“ƒP[ƒgƒtƒH[ƒ€‚ğŠJ‚­
+        // ã‚¢ãƒ³ã‚±ãƒ¼ãƒˆãƒ•ã‚©ãƒ¼ãƒ ã‚’é–‹ã
 #ifndef _DEBUG
         MyLib::open_browser_by_url("https://forms.gle/RvXri1WB3r3DGJQm7");
 #endif
     }
 
     /// <summary>
-    /// ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ÌÀs‚ªŒp‘±‚·‚é‚©‚Ç‚¤‚©
+    /// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®å®Ÿè¡ŒãŒç¶™ç¶šã™ã‚‹ã‹ã©ã†ã‹
     /// </summary>
-    /// <returns>Às‚ğŒp‘±‚·‚é‚È‚ç^</returns>
+    /// <returns>å®Ÿè¡Œã‚’ç¶™ç¶šã™ã‚‹ãªã‚‰çœŸ</returns>
     bool is_running() override {
-        // ‹­§I—¹
+        // å¼·åˆ¶çµ‚äº†
         if (input_.action(InputAction::APP_ForceEnd)) return false;
         
-        // ƒV[ƒ“‚©‚ç‚ÌI—¹ƒŠƒNƒGƒXƒg
+        // ã‚·ãƒ¼ãƒ³ã‹ã‚‰ã®çµ‚äº†ãƒªã‚¯ã‚¨ã‚¹ãƒˆ
         if (scene_manager_.is_application_end()) return false;
 
         return true;
     }
 
 private:
-    // ƒV[ƒ“ƒ}ƒl[ƒWƒƒ[
+    // ã‚·ãƒ¼ãƒ³ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼
     SceneManager& scene_manager_ = SceneManager::get_instance();
-    // ƒXƒNƒŠ[ƒ“
+    // ã‚¹ã‚¯ãƒªãƒ¼ãƒ³
     Screen& screen_ = Screen::get_instance();
-    // ƒCƒ“ƒvƒbƒg
+    // ã‚¤ãƒ³ãƒ—ãƒƒãƒˆ
     Input& input_ = Input::get_instance();
 
 };
