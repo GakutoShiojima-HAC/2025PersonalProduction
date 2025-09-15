@@ -1,4 +1,4 @@
-﻿#include "Camera/EditorCamera.h"
+#include "Camera/EditorCamera.h"
 #include <imgui/imgui.h>
 #include "Engine/Core/World/IWorld.h"
 #include "Engine/Core/Timeline/TimelineManager.h"
@@ -61,7 +61,7 @@ void EditorCamera::update(float delta_time) {
 
 		// 入力から移動ベクトルを算出
 		GSvector3 velocity{ 0.0f, 0.0f, 0.0f };
-		GSvector2 input = input_.left_axis();
+		GSvector2 input = input_.debug_left_axis();
 		velocity += right * input.x;
 		velocity += forward * input.y;
 		velocity.y += (input_.action(InputAction::DEBUG_Up) ? 1.0f : input_.action(InputAction::DEBUG_Down) ? -1.0f : 0.0f);
@@ -70,7 +70,7 @@ void EditorCamera::update(float delta_time) {
 		transform_.translate(velocity, GStransform::Space::World);
 
 		// 視点移動
-		input = input_.right_axis();
+		input = input_.debug_right_axis();
 		yaw_ -= input.x * SENSITIVITY;
 		pitch_ -= input.y * SENSITIVITY;
 		pitch_ = CLAMP(pitch_, -89.0f, 89.0f);
