@@ -162,6 +162,8 @@
     <ClCompile Include="Src\Engine\Core\Collision\BoundingSphere.cpp" />
     <ClCompile Include="Src\Engine\Core\Field\Field.cpp" />
     <ClCompile Include="Src\Engine\Core\Input\Input.cpp" />
+    <ClCompile Include="Src\Engine\Core\LogSystem\LogManager.cpp" />
+    <ClCompile Include="Src\Engine\Core\LogSystem\SystemLog.cpp" />
     <ClCompile Include="Src\Engine\Core\NavMesh\NavMeshAgent.cpp" />
     <ClCompile Include="Src\Engine\Core\NavMesh\NavMeshDebugger.cpp" />
     <ClCompile Include="Src\Engine\Core\NavMesh\NavMeshSurface.cpp" />
@@ -237,6 +239,8 @@
     <ClInclude Include="Src\Camera\TimelineCamera.h" />
     <ClInclude Include="Src\Engine\Core\Assets\AssetsManager.h" />
     <ClInclude Include="Src\Engine\Core\Input\Input.h" />
+    <ClInclude Include="Src\Engine\Core\LogSystem\LogManager.h" />
+    <ClInclude Include="Src\Engine\Core\LogSystem\SystemLog.h" />
     <ClInclude Include="Src\Engine\Core\NavMesh\NavMeshAgent.h" />
     <ClInclude Include="Src\Engine\Core\NavMesh\NavMeshDebugger.h" />
     <ClInclude Include="Src\Engine\Core\NavMesh\NavMeshSurface.h" />
@@ -265,6 +269,9 @@
     <ClInclude Include="Src\Engine\Utils\Check.h" />
     <ClInclude Include="Src\Engine\Utils\DebugMarker.h" />
     <ClInclude Include="Src\Engine\Utils\Folder.h" />
+    <ClInclude Include="Src\Engine\Utils\MyRandom.h" />
+    <ClInclude Include="Src\Engine\Utils\MyTime.h" />
+    <ClInclude Include="Src\Engine\Utils\SystemData.h" />
     <ClInclude Include="Src\GameConfig.h" />
     <ClInclude Include="Src\Engine\Core\Actor\Actor.h" />
     <ClInclude Include="Src\Engine\Core\Actor\ActorManager.h" />
