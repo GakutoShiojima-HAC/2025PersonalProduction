@@ -1,4 +1,4 @@
-// PC���͂�PAD�ڑ����Ȃ��ꍇ�̂ݓK�p�����
+// PC入力はPAD接続がない場合のみ適用される
 //
 //
 
@@ -8,35 +8,35 @@
 #include <gslib.h>
 
 enum class InputAction {
-    APP_Pause,          // �|�[�Y���
-    APP_ForceEnd,       // �A�v���P�[�V���������I��
+    APP_Pause,          // ポーズ画面
+    APP_ForceEnd,       // アプリケーション強制終了
 
-    MENU_Decision,      // ����
-    MENU_UP,            // ��
-    MENU_DOWN,          // ��
-    MENU_LEFT,          // ��
-    MENU_RIGHT,         // �E
+    MENU_Decision,      // 決定
+    MENU_UP,            // 上
+    MENU_DOWN,          // 下
+    MENU_LEFT,          // 左
+    MENU_RIGHT,         // 右
 
-    GAME_Attack,        // �U��
-    GAME_Jump,          // �W�����v
-    GAME_Avoid,         // ���
-    GAME_Skill,         // �X�L������
-    GAME_Lockon,        // ���b�N�I��
-    GAME_Sprint,        // ����
+    GAME_Attack,        // 攻撃
+    GAME_Jump,          // ジャンプ
+    GAME_Avoid,         // 回避
+    GAME_Skill,         // スキル発動
+    GAME_Lockon,        // ロックオン
+    GAME_Sprint,        // 疾走
 
-    GAME_Interact,      // �C���^���N�g
-    GAME_Inventory,     // �C���x���g��
+    GAME_Interact,      // インタラクト
+    GAME_Inventory,     // インベントリ
 
-    DEBUG_CameraActive, // �J�����L����
-    DEBUG_Up,           // �㏸
-    DEBUG_Down,         // ���~
+    DEBUG_CameraActive, // カメラ有効化
+    DEBUG_Up,           // 上昇
+    DEBUG_Down,         // 下降
 
 
 };
 
 class Input {
 private:
-    // �R���X�g���N�^�i�O������̃C���X�^���X���֎~�j
+    // コンストラクタ（外部からのインスタンスを禁止）
     Input() = default;
 
 public:
@@ -44,9 +44,9 @@ public:
 
 public:
     /// <summary>
-    /// �C���X�^���X���擾���邽�߂�static�����o�֐�
+    /// インスタンスを取得するためのstaticメンバ関数
     /// </summary>
-    /// <returns>�C���X�^���X</returns>
+    /// <returns>インスタンス</returns>
     static Input& get_instance();
 
 public:
@@ -54,72 +54,86 @@ public:
 
 public:
     /// <summary>
-    /// �����̏�Ԃ�ԋp
+    /// 左軸の状態を返却
     /// </summary>
     /// <returns>1.0f ~ -1.0f</returns>
     const GSvector2& left_axis();
 
     /// <summary>
-    /// �E���̏�Ԃ�ԋp
+    /// 右軸の状態を返却
     /// </summary>
     /// <returns>1.0f ~ -1.0f</returns>
     const GSvector2& right_axis();
 
     /// <summary>
-    /// �J�[�\�����W��ԋp
+    /// デバッグ用の左軸の状態を返却
+    /// 必ずPC入力が返却される
     /// </summary>
-    /// <returns>���W</returns>
+    /// <returns>1.0f ~ -1.0f</returns>
+    const GSvector2 debug_left_axis() const;
+
+    /// <summary>
+    /// デバッグ用の右軸の状態を返却
+    /// 必ずPC入力が返却される
+    /// </summary>
+    /// <returns>1.0f ~ -1.0f</returns>
+    const GSvector2 debug_right_axis() const;
+
+    /// <summary>
+    /// カーソル座標を返却
+    /// </summary>
+    /// <returns>座標</returns>
     const GSvector2& cursor_position();
 
     /// <summary>
-    /// �J�[�\�����W�����Z�b�g
+    /// カーソル座標をリセット
     /// </summary>
     void reset_cursor_position(const GSvector2& reset_position);
 
     /// <summary>
-    /// �J�[�\�����W�̍X�V�t���O���擾
+    /// カーソル座標の更新フラグを取得
     /// </summary>
-    /// <returns>�^�ōX�V</returns>
+    /// <returns>真で更新</returns>
     bool& enable_update_cursor_position();
 
     /// <summary>
-    /// PAD��Ԃ̃J�[�\���ړ����x���擾
+    /// PAD状態のカーソル移動速度を取得
     /// </summary>
-    /// <returns>�ړ����x</returns>
+    /// <returns>移動速度</returns>
     float& pad_cursor_speed();
 
     /// <summary>
-    /// �p�b�h���ڑ��������擾
+    /// パッドが接続中かを取得
     /// </summary>
-    /// <returns>�ڑ����Ă���Ȃ�^��ԋp</returns>
+    /// <returns>接続しているなら真を返却</returns>
     bool is_pad() const;
 
 public:
     /// <summary>
-    /// �w�肵���A�N�V�������s���Ă��邩�ǂ���
+    /// 指定したアクションを行っているかどうか
     /// </summary>
-    /// <param name="action">= �A�N�V����</param>
-    /// <returns>�s���Ă���Ȃ�^��ԋp</returns>
+    /// <param name="action">= アクション</param>
+    /// <returns>行っているなら真を返却</returns>
     bool action(InputAction action) const;
 
 private:
-    // PAD�ڑ������ǂ���
+    // PAD接続中かどうか
     bool is_pad_{ false };
 
-    // PAD�̍��X�e�B�b�N�EPC��WASD���
+    // PADの左スティック・PCのWASD情報
     GSvector2 left_axis_;
-    // PAD�̉E�X�e�B�b�N�EPC�̃}�E�X���
+    // PADの右スティック・PCのマウス情報
     GSvector2 right_axis_;
 
-    // �J�[�\�����W�̍X�V���s�����ǂ���
+    // カーソル座標の更新を行うかどうか
     bool is_update_cursor_position_{ false };
-    // �J�[�\�����W
+    // カーソル座標
     GSvector2 cursor_position_;
-    // PAD��Ԃ̃J�[�\���ړ����x
+    // PAD状態のカーソル移動速度
     float pad_cursor_speed_{ 1.0f };
 
 public:
-    // �R�s�[�֎~
+    // コピー禁止
     Input(const Input& other) = delete;
     Input& operator = (const Input& other) = delete;
 

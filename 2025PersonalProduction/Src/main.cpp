@@ -22,6 +22,7 @@
 #include "Engine/Utils/MyRandom.h"
 #include "Engine/Graphics/Shader/GameShader.h"
 #include "Engine/Graphics/Shader/GamePostEffect.h"
+#include "Engine/Core/LogSystem/LogManager.h"
 
 #include "Engine/Core/Scene/SceneManager.h"
 #include "Scene/TitleScene.h"
@@ -43,6 +44,7 @@ public:
     MyGame(int width_px, int height_px, bool full_screen, float refresh_rate) : gslib::Game{ width_px, height_px, full_screen, refresh_rate } {
         // スクリーンデータをセット
         screen_.set_initialize_data(width_px, height_px, full_screen, refresh_rate);
+        LogManager::get_instance().app_start();
 
         // 初期化
         gsInitEffect();
@@ -86,23 +88,26 @@ private:
     }
 
     void end() override {
-        scene_manager_.clear();
-        // Tweenの破棄
-        Tween::clear();
-        // アセットの破棄
-        AssetsManager::get_instance().clear();
-        // シェーダーの破棄
-        GameShader::get_instance().clear();
-        GamePostEffect::get_instance().clear();
-        // エフェクトの終了
-        gsFinishEffect();
         // カーソルの移動制限を解除
         ClipCursor(NULL);
         // カーソルを表示
         gsShowMouseCursor();
+        // ログを出力
+        LogManager::get_instance().save("Log/");
+        // シーン終了
+        scene_manager_.clear();
+        // Tweenの破棄
+        Tween::clear();
+        // シェーダーの破棄
+        GameShader::get_instance().clear();
+        GamePostEffect::get_instance().clear();
+        // アセットの破棄
+        AssetsManager::get_instance().clear();
+        // エフェクトの終了
+        gsFinishEffect();
 
-        // アンケートフォームを開く
 #ifndef _DEBUG
+        // アンケートフォームを開く
         MyLib::open_browser_by_url("https://forms.gle/RvXri1WB3r3DGJQm7");
 #endif
     }

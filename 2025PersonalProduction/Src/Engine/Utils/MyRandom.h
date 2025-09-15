@@ -1,8 +1,19 @@
+// -----------------------------------------------------------------------------------------
+//  File        : MyRandom.h
+//  Author      : Shiojima Gakuto
+//  Created     : 2025/09/12
+//  Updated     : 2025/09/15
+//  Description : ランダム関数
+//
+//  注意：本ソースコードの無断転載・コードのコピー・貼り付けによる流用・再配布を禁止します。
+// -----------------------------------------------------------------------------------------
+
 #ifndef MY_RANDOM_H_
 #define MY_RANDOM_H_
 
 #include <random>
 #include <gslib.h>
+#include "Engine/Core/LogSystem/LogManager.h"
 
 namespace MyRandom {
     /// <summary>
@@ -21,6 +32,7 @@ namespace MyRandom {
     /// <returns>設定したシード値</returns>
     inline unsigned int set_seed(unsigned int seed) {
         get_engine().seed(seed);
+        LogManager::get_instance().set_seed(seed);
         return seed;
     }
 

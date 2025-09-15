@@ -1,46 +1,46 @@
 #include "Engine/Core/Input/Input.h"
 
-// PADÚ‘±’†”»’è‚Ég—p‚·‚é¯•Ê”Ô†
+// PADæ¥ç¶šä¸­åˆ¤å®šã«ä½¿ç”¨ã™ã‚‹è­˜åˆ¥ç•ªå·
 const int USE_PAD_NUM{ 0 };
 
 Input& Input::get_instance() {
-	// static•Ï”‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚Í‚P‚Â
-	// ƒCƒ“ƒXƒ^ƒ“ƒX‰»‚à‚P‰ñ‚Ì‚İ
+	// staticå¤‰æ•°ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã¯ï¼‘ã¤
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹åŒ–ã‚‚ï¼‘å›ã®ã¿
 	static Input self;
 	return self;
 }
 
 void Input::update(float delta_time) {
-	// PADÚ‘±‚ª‚ ‚é‚©XV
+	// PADæ¥ç¶šãŒã‚ã‚‹ã‹æ›´æ–°
 	is_pad_ = gsXBoxGetPadCount() > 0;
 
-	// PADó‘Ô‚ÌXV
+	// PADçŠ¶æ…‹ã®æ›´æ–°
 	if (is_pad_) {
-		// ¶²
+		// å·¦è»¸
 		gsXBoxPadGetLeftAxis(USE_PAD_NUM, &left_axis_);
-		// ‰E²
+		// å³è»¸
 		gsXBoxPadGetRightAxis(USE_PAD_NUM, &right_axis_);
 
-		// ƒJ[ƒ\ƒ‹‚Í¶ƒXƒeƒBƒbƒN‚ÅˆÚ“®‚Æ‚·‚é
+		// ã‚«ãƒ¼ã‚½ãƒ«ã¯å·¦ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã§ç§»å‹•ã¨ã™ã‚‹
 		if (!is_update_cursor_position_) return;
 		cursor_position_.x += left_axis_.x * pad_cursor_speed_ * delta_time;
 		cursor_position_.y += -left_axis_.y * pad_cursor_speed_ * delta_time;
 	}
-	// PCó‘Ô‚ÌXV
+	// PCçŠ¶æ…‹ã®æ›´æ–°
 	else {
-		// ¶²
+		// å·¦è»¸
 		left_axis_ = GSvector2{ 0.0f, 0.0f };
 		if (gsGetKeyState(GKEY_W)) left_axis_.y += 1;
 		if (gsGetKeyState(GKEY_S)) left_axis_.y += -1;
 		if (gsGetKeyState(GKEY_D)) left_axis_.x += 1;
 		if (gsGetKeyState(GKEY_A)) left_axis_.x += -1;
-		// ‰E²
+		// å³è»¸
 		int x, y;
 		gsGetMouseVelocity(&x, &y, nullptr);
 		right_axis_.x = x;
 		right_axis_.y = -y;
 
-		// ƒJ[ƒ\ƒ‹À•W
+		// ã‚«ãƒ¼ã‚½ãƒ«åº§æ¨™
 		if (!is_update_cursor_position_) return;
 		gsGetMouseCursorPosition(&x, &y);
 		cursor_position_.x = x;
@@ -54,6 +54,29 @@ const GSvector2& Input::left_axis() {
 
 const GSvector2& Input::right_axis() {
 	return right_axis_;
+}
+
+const GSvector2 Input::debug_left_axis() const {
+#ifdef _DEBUG
+    GSvector2 left_axis{ 0.0f, 0.0f };
+    if (gsGetKeyState(GKEY_W)) left_axis.y += 1;
+    if (gsGetKeyState(GKEY_S)) left_axis.y += -1;
+    if (gsGetKeyState(GKEY_D)) left_axis.x += 1;
+    if (gsGetKeyState(GKEY_A)) left_axis.x += -1;
+    return left_axis;
+#else
+    return GSvector2{ 0.0f, 0.0f };
+#endif
+}
+
+const GSvector2 Input::debug_right_axis() const {
+#ifdef _DEBUG
+    int x, y;
+    gsGetMouseVelocity(&x, &y, nullptr);
+    return GSvector2{ (float)x, (float)-y };
+#else
+    return GSvector2{ 0.0f, 0.0f };
+#endif
 }
 
 const GSvector2& Input::cursor_position() {
