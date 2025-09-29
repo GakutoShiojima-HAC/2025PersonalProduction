@@ -14,9 +14,10 @@
 enum class SceneTag {
 	Null,
     Standard,
-	Title,	// ゲームタイトル
-	Menu,	// ゲームメニュー
-	Game,	// ゲームプレイ
+    Loading,    //ロード
+	Title,	    // ゲームタイトル
+	Menu,	    // ゲームメニュー
+	Game,	    // ゲームプレイ
 	TimelineEditor,
 
 	MAX_SIZE	// 要素数

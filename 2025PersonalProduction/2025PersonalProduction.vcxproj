@@ -200,6 +200,7 @@
     <ClCompile Include="Src\main.cpp" />
     <ClCompile Include="Src\Engine\Core\Actor\Pawn\PawnManager.cpp" />
     <ClCompile Include="Src\Scene\GameScene.cpp" />
+    <ClCompile Include="Src\Scene\LoadingScene.cpp" />
     <ClCompile Include="Src\Scene\MenuScene.cpp" />
     <ClCompile Include="Src\Scene\TimelineEditorScene.cpp" />
     <ClCompile Include="Src\Scene\TitleScene.cpp" />
@@ -305,6 +306,7 @@
     <ClInclude Include="Src\Lib\json.hpp" />
     <ClInclude Include="Src\Engine\Core\Actor\Pawn\PawnManager.h" />
     <ClInclude Include="Src\Scene\GameScene.h" />
+    <ClInclude Include="Src\Scene\LoadingScene.h" />
     <ClInclude Include="Src\Scene\MenuScene.h" />
     <ClInclude Include="Src\Scene\SceneTag.h" />
     <ClInclude Include="Src\Scene\TimelineEditorScene.h" />
