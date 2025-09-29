@@ -18,28 +18,21 @@
 #include "Actor/Enemy/DummyEnemy.h"	// tmp
 #include "Assets.h"	// tmp
 
-#define GS_ENABLE_MESH_SHADOW			// メッシュに影を付ける
-//#define GS_ENABLE_SKIN_MESH_SHADOW	// スキニングメッシュに影を付ける
-#define GS_ENABLE_SOFT_SHADOW			// 影の輪郭をぼかす
-#include <GSstandard_shader.h>
-
 void GameScene::load() {
     // 初期化
     is_load_end_ = false;
     load_progress_ = 0.0f;
 
-    // TODO load function
-    // maybe async other function
-
-    // 終了
-    is_load_end_ = true;
-    load_progress_ = 1.0f;
+    // 別スレッドで読み込み処理を行う
+    gslib::Game::run_thread([=] { load_data(); });
 }
 
 void GameScene::start() {
 	is_end_ = false;
 
-	gsInitDefaultShader();
+    // TODO Game or Menu
+    next_scene_tag_ = SceneTag::Menu;
+
 	// 視錐台カリングを有効にする
 	gsEnable(GS_FRUSTUM_CULLING);
 	// シャドウマップの作成（２枚のカスケードシャドウマップ）
@@ -66,37 +59,16 @@ void GameScene::start() {
 	glFogf(GL_FOG_END, fog_end);        // フォグの終了位置（視点からの距離）
 	glEnable(GL_FOG);                   // フォグを有効にする
 
-
-	// ライトマップの読み込み
-	gsLoadLightmap(0, "Resource/Assets/Octree/Stage1/Lightmap/Lightmap.txt");
-	// リフレクションプローブの読み込み
-	gsLoadReflectionProbe(0, "Resource/Assets/Octree/Stage1/RefProbe/ReflectionProbe.txt");
-
-	// tmp
-	LoadAssets* asset = new LoadAssets{};
-	asset->name = "Game";
-	asset->octree.push_back({ (GSuint)OctreeID::Mesh, "Resource/Assets/Octree/Stage1/stage.oct" });
-	asset->octree.push_back({ (GSuint)OctreeID::Collider, "Resource/Assets/Octree/Stage1/stage_collider.oct"});
-	asset->texture.push_back({ (GSuint)TextureID::Skybox, "Resource/Assets/Skybox/stage1test.dds"});
-	asset->skinmesh.push_back({ (GSuint)MeshID::Player, "Resource/Assets/Skinmesh/Player1/Player.mshb" });
-	asset->skinmesh.push_back({ (GSuint)MeshID::DummyEnemy, "Resource/Assets/Skinmesh/DummyEnemy/DummyEnemy.mshb" });
-	asset->texture.push_back({ (GSuint)TextureID::TmpUI, "Resource/Assets/Texture/kari.png" });
-	AssetsManager::get_instance().load_assets(asset);
-
 	world_.add_field(new Field{ (GSuint)OctreeID::Mesh, (GSuint)OctreeID::Collider, (GSuint)TextureID::Skybox });
 	Light* light = new Light{};
 	light->position() = GSvector3{ 0.0f, 100.0f, -200.0f };
 	world_.add_light(light);
 	world_.add_attack_collider_pool(new AttackColliderPool{ &world_ });
-	world_.add_navmesh(new NavMeshSurface{ "Resource/Assets/Octree/Stage1/navmesh.txt" });	// tmp
 
 	// tmp
 	world_.add_camera(new FixedCamera{ &world_, GSvector3{ 0.0f, 3.0f, -10.0f }, GSvector3{ 0.0f, 2.0f, 0.0f } });
 	world_.add_camera(new TimelineCamera{ &world_ });
 	world_.add_camera(new EditorCamera{ &world_ });
-
-	// tmp
-	world_.timeline().add(new CameraTimeline{ &world_, "Resource/Private/Timeline/Camera/List/world1.json" });
 
 	// tmp
 	PlayerCamera* player_camera = new PlayerCamera{ &world_ };
@@ -140,6 +112,7 @@ void GameScene::draw() const {
 }
 
 void GameScene::end() {
+    // ワールドクリア
 	world_.clear();
 	// Tweenの終了
 	Tween::clear();
@@ -150,13 +123,16 @@ void GameScene::end() {
     GameShader::get_instance().end();
     // レンダーターゲットの削除
     GamePostEffect::get_instance().end();
-
-	// tmp
-	AssetsManager::get_instance().delete_assets("Game");
+	// アセットの開放
+	AssetsManager::get_instance().delete_asset("Game");
 
     // 初期化
     is_load_end_ = false;
     load_progress_ = 0.0f;
+
+    // 次のシーンの情報を渡す
+    std::any data = next_scene_tag_;
+    scene_manager_.send_message(SceneTag::Loading, "NextSceneTag", data);
 }
 
 SceneTag GameScene::scene_tag() const {
@@ -169,4 +145,41 @@ bool GameScene::is_application_end() const {
 
 void GameScene::reception_message(const std::string& message, std::any& param) {
 	// なにも受け取らない
+}
+
+void GameScene::load_data() {
+    // 読み込み処理の数から一つの処理分の進捗率を計算
+    const int count = 5;
+    const float progress = 1.0f / (float)count;
+
+    // アセットの読み込み
+    LoadAssets* asset = new LoadAssets{};
+    asset->name = "Game";
+    asset->octree.push_back({ (GSuint)OctreeID::Mesh, "Resource/Assets/Octree/Stage1/stage.oct" });
+    asset->octree.push_back({ (GSuint)OctreeID::Collider, "Resource/Assets/Octree/Stage1/stage_collider.oct" });
+    asset->texture.push_back({ (GSuint)TextureID::Skybox, "Resource/Assets/Skybox/stage1test.dds" });
+    asset->skinmesh.push_back({ (GSuint)MeshID::Player, "Resource/Assets/Skinmesh/Player1/Player.mshb" });
+    asset->skinmesh.push_back({ (GSuint)MeshID::DummyEnemy, "Resource/Assets/Skinmesh/DummyEnemy/DummyEnemy.mshb" });
+    asset->texture.push_back({ (GSuint)TextureID::TmpUI, "Resource/Assets/Texture/kari.png" });
+    AssetsManager::get_instance().load_asset(asset);
+    load_progress_ += progress;
+
+    // ライトマップの読み込み
+    gsLoadLightmap(0, "Resource/Assets/Octree/Stage1/Lightmap/Lightmap.txt");
+    load_progress_ += progress;
+    // リフレクションプローブの読み込み
+    gsLoadReflectionProbe(0, "Resource/Assets/Octree/Stage1/RefProbe/ReflectionProbe.txt");
+    load_progress_ += progress;
+
+    // ナビメッシュデータの読み込み
+    world_.add_navmesh(new NavMeshSurface{ "Resource/Assets/Octree/Stage1/navmesh.txt" });
+    load_progress_ += progress;
+
+    // タイムラインデータの読み込み
+    world_.timeline().add(new CameraTimeline{ &world_, "Resource/Private/Timeline/Camera/List/world1.json" });
+    load_progress_ += progress;
+
+    // 終了
+    is_load_end_ = true;
+    load_progress_ = 1.0f;
 }

@@ -1,4 +1,5 @@
 #include "Scene/LoadingScene.h"
+#include "Engine/Graphics/Canvas/Canvas.h"
 
 void LoadingScene::start() {
     is_end_ = false;
@@ -7,6 +8,7 @@ void LoadingScene::start() {
 
     // 次のシーンのロード処理を呼び出す
     scene_manager_.load_scene(next_scene_tag_);
+
 }
 
 void LoadingScene::update(float delta_time) {
@@ -15,8 +17,9 @@ void LoadingScene::update(float delta_time) {
 }
 
 void LoadingScene::draw() const {
-    // TODO load image
-    // scene_manager_.load_progress(next_scene_tag_)
+    // 進捗率仮描画
+    std::string text = "progress: " + to_string(scene_manager_.load_progress(next_scene_tag_) * 100.0f);
+    Canvas::draw_text(text, GSvector2{ 0.0f, 0.0f }, 50.0f);
 }
 
 void LoadingScene::end() {

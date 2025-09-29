@@ -12,6 +12,7 @@
 #define TITLE_SCENE_H_
 
 #include "Engine/Core/Scene/IScene.h"
+#include "Engine/Core/Scene/SceneManager.h"
 
 class TitleScene : public IScene {
 public:
@@ -45,7 +46,28 @@ public:
     float load_progress() const override;
 
 private:
+    /// <summary>
+    /// データロード用
+    /// </summary>
+    void load_data();
+
+private:
+    enum class State {
+        None,
+        MainLoading,
+        NextSceneLoading,
+        End,
+    };
+
+private:
+    // シーンマネージャー
+    SceneManager& scene_manager_ = SceneManager::get_instance();
+    // シーンが終了したかどうか
     bool is_end_{ false };
+    // ロード処理が終了したかどうか
+    bool is_load_end_{ false };
+    // 現在の状態
+    TitleScene::State current_state_{ TitleScene::State::None };
 
 };
 

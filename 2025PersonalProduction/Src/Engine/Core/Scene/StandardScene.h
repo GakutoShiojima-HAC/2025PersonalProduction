@@ -3,7 +3,7 @@
 //  Author        : Shiojima Gakuto
 //  Created       : 2025/09/29
 //  Updated       : 2025/09/29
-//  Description   : 実際に使うシーンの基礎
+//  Description   : 実際に使うシーンの基礎 ロードシーンを挟むことを前提としている
 //
 //  注意：本ソースコードの無断転載・コードのコピー・貼り付けによる流用・再配布を禁止します。
 // -----------------------------------------------------------------------------------------
@@ -35,7 +35,7 @@ public:
 
     virtual SceneTag scene_tag() const override { return SceneTag::Standard; }
 
-    virtual SceneTag next_scene_tag() const override { return next_scene_tag_; }
+    virtual SceneTag next_scene_tag() const override { return SceneTag::Loading; }
 
     virtual bool is_application_end() const override { return false; }
 

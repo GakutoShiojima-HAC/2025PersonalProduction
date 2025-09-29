@@ -15,23 +15,12 @@ void MenuScene::load() {
     is_load_end_ = false;
     load_progress_ = 0.0f;
 
-    // TODO load function
-    // maybe async other function
-
-    // 終了
-    is_load_end_ = true;
-    load_progress_ = 1.0f;
+    // 別スレッドで読み込み処理を行う
+    gslib::Game::run_thread([=] { load_data(); });
 }
 
 void MenuScene::start() {
 	is_end_ = false;
-
-	if (AssetsManager::get_instance().find("Menu") == nullptr) {
-		LoadAssets* asset = new LoadAssets{};
-		asset->name = "Menu";
-		asset->texture.push_back({ (GSuint)TextureID::MenuLogo, "Resource/Assets/Texture/menu_test.png" });
-		AssetsManager::get_instance().load_assets(asset);
-	}
 }
 
 void MenuScene::update(float delta_time) {
@@ -63,12 +52,16 @@ void MenuScene::end() {
 	// Tweenの終了
 	Tween::clear();
 
-	// tmp
-	AssetsManager::get_instance().delete_assets("Menu");
+	// アセットの開放
+	AssetsManager::get_instance().delete_asset("Menu");
 
     // 初期化
     is_load_end_ = false;
     load_progress_ = 0.0f;
+
+    // 次のシーンの情報を渡す
+    std::any data = next_scene_tag_;
+    scene_manager_.send_message(SceneTag::Loading, "NextSceneTag", data);
 }
 
 SceneTag MenuScene::scene_tag() const {
@@ -81,4 +74,21 @@ bool MenuScene::is_application_end() const {
 
 void MenuScene::reception_message(const std::string& message, std::any& param) {
 	// なにも受け取らない
+}
+
+void MenuScene::load_data() {
+    // 読み込み処理の数から一つの処理分の進捗率を計算
+    const int count = 1;
+    const float progress = 1.0f / (float)count;
+
+    // アセットの読み込み
+    LoadAssets* asset = new LoadAssets{};
+    asset->name = "Menu";
+    asset->texture.push_back({ (GSuint)TextureID::MenuLogo, "Resource/Assets/Texture/menu_test.png" });
+    AssetsManager::get_instance().load_asset(asset);
+    load_progress_ += progress;
+
+    // 終了
+    is_load_end_ = true;
+    load_progress_ = 1.0f;
 }

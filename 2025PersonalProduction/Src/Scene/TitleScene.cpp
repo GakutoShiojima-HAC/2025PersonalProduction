@@ -4,41 +4,51 @@
 #include "Engine/Core/Tween/Tween.h"
 #include "Engine/Graphics/Shader/GameShader.h"
 #include "Engine/Graphics/Shader/GamePostEffect.h"
+#include <gslib.h>
 
-#include <gslib.h>	// tmp
 #include "Assets.h"	// tmp
+
+SceneTag NEXT_SCENE{ SceneTag::Menu };
 
 void TitleScene::start() {
 	is_end_ = false;
+    is_load_end_ = false;
 
-    // ゲームに必要なシェーダーの読み込み
-    GameShader::get_instance().load();
-    GamePostEffect::get_instance().load();
+    // タイトル用アセットの読み込み
+    LoadAssets* asset = new LoadAssets{};
+    asset->name = "Title";
+    asset->texture.push_back({ (GSuint)TextureID::TitleLogo, "Resource/Assets/Texture/titlelogo_test.png" });
+    AssetsManager::get_instance().load_asset(asset);
 
-	// tmp
-	{
-		LoadAssets* asset = new LoadAssets{};
-		asset->name = "Title";
-		asset->texture.push_back({ (GSuint)TextureID::TitleLogo, "Resource/Assets/Texture/titlelogo_test.png" });
-		AssetsManager::get_instance().load_assets(asset);
-	}
-
-	{
-		LoadAssets* asset = new LoadAssets{};
-		asset->name = "Menu";
-		asset->texture.push_back({ (GSuint)TextureID::MenuLogo, "Resource/Assets/Texture/menu_test.png" });
-		AssetsManager::get_instance().load_assets_async(asset);
-	}
+    // 別スレッドで読み込み処理を行う
+    gslib::Game::run_thread([=] { load_data(); });
+    current_state_ = TitleScene::State::MainLoading;
 }
 
 void TitleScene::update(float delta_time) {
-	// change scene
-	if (!AssetsManager::get_instance().is_async_load()) {
-		is_end_ = true;
-	}
-	
-	// tmp scene end
-	if (gsGetKeyState(GKEY_LCONTROL) && gsGetKeyTrigger(GKEY_RETURN)) is_end_ = true;
+    switch (current_state_) {
+    case TitleScene::State::None:
+        break;
+    case TitleScene::State::MainLoading:
+        if (is_load_end_) {
+            current_state_ = TitleScene::State::NextSceneLoading;
+            // 次のシーンのロード処理を呼び出す
+            scene_manager_.load_scene(NEXT_SCENE);
+        }
+        break;
+    case TitleScene::State::NextSceneLoading:
+        // 次のシーンのロード処理が終了したらシーンを終了する
+        if (scene_manager_.is_load_end(NEXT_SCENE)) {
+            current_state_ = TitleScene::State::End;
+            // 終了
+            is_end_ = true;
+        }
+        break;
+    case TitleScene::State::End:
+        break;
+    default:
+        break;
+    }
 }
 
 void TitleScene::draw() const {
@@ -56,8 +66,10 @@ void TitleScene::end() {
 	// Tweenの終了
 	Tween::clear();
 
-	// tmp
-	AssetsManager::get_instance().delete_assets("Title");
+	// アセットの開放
+	AssetsManager::get_instance().delete_asset("Title");
+    // 初期化
+    is_load_end_ = false;
 }
 
 bool TitleScene::is_end() const {
@@ -69,7 +81,7 @@ SceneTag TitleScene::scene_tag() const {
 }
 
 SceneTag TitleScene::next_scene_tag() const {
-    return SceneTag::Menu;
+    return NEXT_SCENE;
 }
 
 bool TitleScene::is_application_end() const {
@@ -86,4 +98,12 @@ bool TitleScene::is_load_end() const {
 
 float TitleScene::load_progress() const {
     return 1.0f;
+}
+
+void TitleScene::load_data() {
+    // ゲームに必要なシェーダーの読み込み
+    GameShader::get_instance().load();
+    GamePostEffect::get_instance().load();
+
+    is_load_end_ = true;
 }

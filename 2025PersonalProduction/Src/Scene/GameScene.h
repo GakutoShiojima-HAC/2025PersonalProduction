@@ -38,6 +38,12 @@ public:
 	void reception_message(const std::string& message, std::any& param) override;
 
 private:
+    /// <summary>
+    /// データロード用
+    /// </summary>
+    void load_data();
+
+private:
 	// ワールド
 	World world_;
 
