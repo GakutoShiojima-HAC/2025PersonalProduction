@@ -85,7 +85,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <LanguageStandard>Default</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <ForcedIncludeFiles>stdafx.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
@@ -106,7 +106,7 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <ForcedIncludeFiles>stdafx.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <LanguageStandard>Default</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -244,6 +244,7 @@
     <ClInclude Include="Src\Engine\Core\NavMesh\NavMeshAgent.h" />
     <ClInclude Include="Src\Engine\Core\NavMesh\NavMeshDebugger.h" />
     <ClInclude Include="Src\Engine\Core\NavMesh\NavMeshSurface.h" />
+    <ClInclude Include="Src\Engine\Core\Scene\StandardScene.h" />
     <ClInclude Include="Src\Engine\Core\Timeline\Editor\CameraTimelineEditor.h" />
     <ClInclude Include="Src\Engine\Core\Timeline\ITimeline.h" />
     <ClInclude Include="Src\Engine\Core\Timeline\Editor\TimelineEditor.h" />
