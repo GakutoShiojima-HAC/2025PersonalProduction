@@ -23,6 +23,19 @@
 #define GS_ENABLE_SOFT_SHADOW			// 影の輪郭をぼかす
 #include <GSstandard_shader.h>
 
+void GameScene::load() {
+    // 初期化
+    is_load_end_ = false;
+    load_progress_ = 0.0f;
+
+    // TODO load function
+    // maybe async other function
+
+    // 終了
+    is_load_end_ = true;
+    load_progress_ = 1.0f;
+}
+
 void GameScene::start() {
 	is_end_ = false;
 
@@ -140,24 +153,20 @@ void GameScene::end() {
 
 	// tmp
 	AssetsManager::get_instance().delete_assets("Game");
-}
 
-bool GameScene::is_end() const {
-	return is_end_;
+    // 初期化
+    is_load_end_ = false;
+    load_progress_ = 0.0f;
 }
 
 SceneTag GameScene::scene_tag() const {
 	return SceneTag::Game;
 }
 
-SceneTag GameScene::next_scene_tag() const {
-	return SceneTag::Menu;
-}
-
 bool GameScene::is_application_end() const {
 	return false;
 }
 
-void GameScene::reception_message(const std::string& message, void* param) {
+void GameScene::reception_message(const std::string& message, std::any& param) {
 	// なにも受け取らない
 }

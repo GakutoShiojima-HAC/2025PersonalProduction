@@ -10,6 +10,19 @@
 #include <imgui/imgui.h>
 #endif
 
+void MenuScene::load() {
+    // åˆæœŸåŒ–
+    is_load_end_ = false;
+    load_progress_ = 0.0f;
+
+    // TODO load function
+    // maybe async other function
+
+    // çµ‚äº†
+    is_load_end_ = true;
+    load_progress_ = 1.0f;
+}
+
 void MenuScene::start() {
 	is_end_ = false;
 
@@ -38,7 +51,7 @@ void MenuScene::update(float delta_time) {
 void MenuScene::draw() const {
 	gsDrawText("menu");
 
-	// ‰¼ƒƒS•`‰æ
+	// ä»®ãƒ­ã‚´æç”»
 	{
 		const GSrect rect{ 0.0f, 0.0f, 340.0f, 76.0f };
 		const GSvector2 center{ rect.right / 2.0f, rect.bottom / 2.0f };
@@ -47,29 +60,25 @@ void MenuScene::draw() const {
 }
 
 void MenuScene::end() {
-	// Tween‚ÌI—¹
+	// Tweenã®çµ‚äº†
 	Tween::clear();
 
 	// tmp
 	AssetsManager::get_instance().delete_assets("Menu");
-}
 
-bool MenuScene::is_end() const {
-	return is_end_;
+    // åˆæœŸåŒ–
+    is_load_end_ = false;
+    load_progress_ = 0.0f;
 }
 
 SceneTag MenuScene::scene_tag() const {
 	return SceneTag::Menu;
 }
 
-SceneTag MenuScene::next_scene_tag() const {
-	return next_scene_tag_;
-}
-
 bool MenuScene::is_application_end() const {
 	return false;
 }
 
-void MenuScene::reception_message(const std::string& message, void* param) {
-	// ‚È‚É‚àó‚¯æ‚ç‚È‚¢
+void MenuScene::reception_message(const std::string& message, std::any& param) {
+	// ãªã«ã‚‚å—ã‘å–ã‚‰ãªã„
 }

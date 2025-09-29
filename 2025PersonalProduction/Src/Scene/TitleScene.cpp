@@ -69,13 +69,21 @@ SceneTag TitleScene::scene_tag() const {
 }
 
 SceneTag TitleScene::next_scene_tag() const {
-	return SceneTag::Menu;
+    return SceneTag::Menu;
 }
 
 bool TitleScene::is_application_end() const {
 	return false;
 }
 
-void TitleScene::reception_message(const std::string& message, void* param) {
+void TitleScene::reception_message(const std::string& message, std::any& param) {
 	// なにも受け取らない
+}
+
+bool TitleScene::is_load_end() const {
+    return true;
+}
+
+float TitleScene::load_progress() const {
+    return 1.0f;
 }

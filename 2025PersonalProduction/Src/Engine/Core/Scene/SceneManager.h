@@ -3,11 +3,11 @@
 //  Author        : Shiojima Gakuto
 //  Created       : 2025/07/08
 //  Updated       : 2025/07/08
-//  Description   : ƒV[ƒ“ŠÇ—ƒNƒ‰ƒX
-//                  ƒVƒ“ƒOƒ‹ƒgƒ“‚É‚µ‚Ä‚¢‚é——R‚ÍƒV[ƒ“ŠÔ‚Ìƒf[ƒ^‹¤—L‚âA
-//                  ƒV[ƒ“ƒ}ƒl[ƒWƒƒ[‚ğ•¡”À‘•‚³‚ê‚½‚­‚È‚¢‚½‚ß
+//  Description   : ã‚·ãƒ¼ãƒ³ç®¡ç†ã‚¯ãƒ©ã‚¹
+//                  ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³ã«ã—ã¦ã„ã‚‹ç†ç”±ã¯ã‚·ãƒ¼ãƒ³é–“ã®ãƒ‡ãƒ¼ã‚¿å…±æœ‰ã‚„ã€
+//                  ã‚·ãƒ¼ãƒ³ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼ã‚’è¤‡æ•°å®Ÿè£…ã•ã‚ŒãŸããªã„ãŸã‚
 //
-//  ’ˆÓF–{ƒ\[ƒXƒR[ƒh‚Ì–³’f“]ÚEƒR[ƒh‚ÌƒRƒs[E“\‚è•t‚¯‚É‚æ‚é—¬—pEÄ”z•z‚ğ‹Ö~‚µ‚Ü‚·B
+//  æ³¨æ„ï¼šæœ¬ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã®ç„¡æ–­è»¢è¼‰ãƒ»ã‚³ãƒ¼ãƒ‰ã®ã‚³ãƒ”ãƒ¼ãƒ»è²¼ã‚Šä»˜ã‘ã«ã‚ˆã‚‹æµç”¨ãƒ»å†é…å¸ƒã‚’ç¦æ­¢ã—ã¾ã™ã€‚
 // -----------------------------------------------------------------------------------------
 
 #ifndef SCENE_MANAGER_H_
@@ -15,15 +15,14 @@
 
 #include <vector>
 #include <string>
+#include <any>
 #include "Scene/SceneTag.h"
-
-using namespace std;
 
 class IScene;
 
 class SceneManager {
 private:
-    // ƒRƒ“ƒXƒgƒ‰ƒNƒ^iŠO•”‚©‚ç‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğ‹Ö~j
+    // ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ï¼ˆå¤–éƒ¨ã‹ã‚‰ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ç¦æ­¢ï¼‰
     SceneManager() = default;
 
 public:
@@ -31,104 +30,125 @@ public:
 
 public:
     /// <summary>
-    /// ƒCƒ“ƒXƒ^ƒ“ƒX‚ğæ“¾‚·‚é‚½‚ß‚Ìstaticƒƒ“ƒoŠÖ”
+    /// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’å–å¾—ã™ã‚‹ãŸã‚ã®staticãƒ¡ãƒ³ãƒé–¢æ•°
     /// </summary>
-    /// <returns>ƒCƒ“ƒXƒ^ƒ“ƒX</returns>
+    /// <returns>ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹</returns>
     static SceneManager& get_instance();
 
 public:
     /// <summary>
-    /// ƒV[ƒ“ƒ}ƒl[ƒWƒƒ[‚Ì‰Šú‰»
+    /// ã‚·ãƒ¼ãƒ³ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼ã®åˆæœŸåŒ–
     /// </summary>
     void init();
 
     /// <summary>
-    /// Œ»İ‚ÌƒV[ƒ“‚ğXV
+    /// ç¾åœ¨ã®ã‚·ãƒ¼ãƒ³ã‚’æ›´æ–°
     /// </summary>
-    /// <param name="delta_time">= ‘OƒtƒŒ[ƒ€‚©‚ç‚ÌŒo‰ßƒtƒŒ[ƒ€”</param>
+    /// <param name="delta_time">= å‰ãƒ•ãƒ¬ãƒ¼ãƒ ã‹ã‚‰ã®çµŒéãƒ•ãƒ¬ãƒ¼ãƒ æ•°</param>
     void update(float delta_time);
 
     /// <summary>
-    /// Œ»İ‚ÌƒV[ƒ“‚ğ•`‰æ
+    /// ç¾åœ¨ã®ã‚·ãƒ¼ãƒ³ã‚’æç”»
     /// </summary>
     void draw();
 
     /// <summary>
-    /// Œ»İ‚ÌƒV[ƒ“‚ğI—¹
+    /// ç¾åœ¨ã®ã‚·ãƒ¼ãƒ³ã‚’çµ‚äº†
     /// </summary>
     void end();
 
     /// <summary>
-    /// “o˜^Ï‚İƒV[ƒ“‚ğÁ‹
+    /// ç™»éŒ²æ¸ˆã¿ã‚·ãƒ¼ãƒ³ã‚’æ¶ˆå»
     /// </summary>
     void clear();
 
 public:
     /// <summary>
-    /// ƒV[ƒ“‚Ì’Ç‰Á
+    /// ã‚·ãƒ¼ãƒ³ã®è¿½åŠ 
     /// </summary>
-    /// <param name="scene">ƒV[ƒ“</param>
+    /// <param name="scene">ã‚·ãƒ¼ãƒ³</param>
     void add(IScene* scene);
 
     /// <summary>
-    /// w’è‚µ‚½ƒV[ƒ“ƒ^ƒO‚ÌƒV[ƒ“‚É•ÏX
+    /// æŒ‡å®šã—ãŸã‚·ãƒ¼ãƒ³ã‚¿ã‚°ã®ã‚·ãƒ¼ãƒ³ã«å¤‰æ›´
     /// </summary>
-    /// <param name="tag">= ƒV[ƒ“ƒ^ƒO</param>
+    /// <param name="tag">= ã‚·ãƒ¼ãƒ³ã‚¿ã‚°</param>
     void change(SceneTag tag);
 
     /// <summary>
-    /// ŠÇ—’†‚ÌƒV[ƒ“‚ğ‘S‚Ä•Ô‹p
+    /// ç®¡ç†ä¸­ã®ã‚·ãƒ¼ãƒ³ã‚’å…¨ã¦è¿”å´
     /// </summary>
-    /// <returns>‘S‚Ä‚ÌƒV[ƒ“</returns>
+    /// <returns>å…¨ã¦ã®ã‚·ãƒ¼ãƒ³</returns>
     vector<IScene*> get_scenes() const;
 
     /// <summary>
-    /// ŠÇ—’†‚ÌƒV[ƒ“‚Ì”‚ğ•Ô‹p
+    /// ç®¡ç†ä¸­ã®ã‚·ãƒ¼ãƒ³ã®æ•°ã‚’è¿”å´
     /// </summary>
-    /// <returns>ƒV[ƒ“‚Ì”</returns>
+    /// <returns>ã‚·ãƒ¼ãƒ³ã®æ•°</returns>
     int count() const;
 
     /// <summary>
-    /// Œ»İ‚ÌƒV[ƒ“‚ğ•Ô‹p
+    /// ç¾åœ¨ã®ã‚·ãƒ¼ãƒ³ã‚’è¿”å´
     /// </summary>
-    /// <returns>ƒV[ƒ“</returns>
+    /// <returns>ã‚·ãƒ¼ãƒ³</returns>
     IScene* get_current_scene() const;
 
     /// <summary>
-    /// Œ»İ‚ÌƒV[ƒ“ƒ^ƒO‚ğ•Ô‹p
+    /// ç¾åœ¨ã®ã‚·ãƒ¼ãƒ³ã‚¿ã‚°ã‚’è¿”å´
     /// </summary>
-    /// <returns>ƒV[ƒ“ƒ^ƒO</returns>
+    /// <returns>ã‚·ãƒ¼ãƒ³ã‚¿ã‚°</returns>
     SceneTag get_current_scene_tag() const;
 
     /// <summary>
-    /// w’è‚µ‚½ƒV[ƒ“‚ğŒŸõ
+    /// æŒ‡å®šã—ãŸã‚·ãƒ¼ãƒ³ã‚’æ¤œç´¢
     /// </summary>
-    /// <param name="tag">= ƒV[ƒ“ƒ^ƒO</param>
-    /// <returns>Œ©‚Â‚©‚ê‚ÎƒV[ƒ“‚ğAŒ©‚Â‚©‚ç‚È‚¯‚ê‚Înullptr</returns>
+    /// <param name="tag">= ã‚·ãƒ¼ãƒ³ã‚¿ã‚°</param>
+    /// <returns>è¦‹ã¤ã‹ã‚Œã°ã‚·ãƒ¼ãƒ³ã‚’ã€è¦‹ã¤ã‹ã‚‰ãªã‘ã‚Œã°nullptr</returns>
     IScene* find(SceneTag tag) const;
 
     /// <summary>
-    /// Œ»İ‚ÌƒV[ƒ“‚ªƒAƒvƒŠƒP[ƒVƒ‡ƒ“I—¹‚ğƒŠƒNƒGƒXƒg‚µ‚Ä‚¢‚é‚©
+    /// ç¾åœ¨ã®ã‚·ãƒ¼ãƒ³ãŒã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³çµ‚äº†ã‚’ãƒªã‚¯ã‚¨ã‚¹ãƒˆã—ã¦ã„ã‚‹ã‹
     /// </summary>
-    /// <returns>ƒŠƒNƒGƒXƒg‚µ‚Ä‚¢‚½‚ç^</returns>
+    /// <returns>ãƒªã‚¯ã‚¨ã‚¹ãƒˆã—ã¦ã„ãŸã‚‰çœŸ</returns>
     bool is_application_end() const;
 
     /// <summary>
-    /// w’è‚µ‚½ƒV[ƒ“‚ÉƒƒbƒZ[ƒW‚ğ‘—‚é
+    /// æŒ‡å®šã—ãŸã‚·ãƒ¼ãƒ³ã«ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’é€ã‚‹
     /// </summary>
-    /// <param name="tag">= ‘—Mæ‚ÌƒV[ƒ“ƒ^ƒO</param>
-    /// <param name="message">= ƒƒbƒZ[ƒW¯•Ê•¶š—ñ</param>
-    /// <param name="param">= ƒƒbƒZ[ƒWƒpƒ‰ƒ[ƒ^</param>
-    void send_message(SceneTag tag, const string& message, void* param);
+    /// <param name="tag">= é€ä¿¡å…ˆã®ã‚·ãƒ¼ãƒ³ã‚¿ã‚°</param>
+    /// <param name="message">= ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸è­˜åˆ¥æ–‡å­—åˆ—</param>
+    /// <param name="param">= ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿</param>
+    void send_message(SceneTag tag, const std::string& message, std::any& param);
+
+    /// <summary>
+    /// æŒ‡å®šã—ãŸã‚·ãƒ¼ãƒ³ã®ãƒ­ãƒ¼ãƒ‰å‡¦ç†ã‚’å‘¼ã³å‡ºã™
+    /// </summary>
+    /// <param name="tag">= å‘¼ã³å‡ºã™ã‚·ãƒ¼ãƒ³ã®ã‚¿ã‚°</param>
+    /// <returns>å‘¼ã³å‡ºã›ãŸã‚‰çœŸã‚’è¿”å´</returns>
+    bool load_scene(SceneTag tag);
+
+    /// <summary>
+    /// æŒ‡å®šã—ãŸã‚·ãƒ¼ãƒ³ã®ãƒ­ãƒ¼ãƒ‰å‡¦ç†ãŒçµ‚äº†ã—ãŸã‹ã©ã†ã‹
+    /// </summary>
+    /// <param name="tag">= ã‚·ãƒ¼ãƒ³ã‚¿ã‚°</param>
+    /// <returns>çµ‚äº†ã—ã¦ã„ãŸã‚‰çœŸã‚’è¿”å´</returns>
+    bool is_load_end(SceneTag tag) const;
+
+    /// <summary>
+    /// æŒ‡å®šã—ãŸã‚·ãƒ¼ãƒ³ã®ãƒ­ãƒ¼ãƒ‰å‡¦ç†ã®é€²æ—ç‡ã‚’å–å¾—
+    /// </summary>
+    /// <param name="tag">= ã‚·ãƒ¼ãƒ³ã‚¿ã‚°</param>
+    /// <returns>é€²æ—ç‡ã‚’0.0~1.0ã§è¿”å´ ã‚·ãƒ¼ãƒ³ãŒå­˜åœ¨ã—ãªã‘ã‚Œã°-1.0ã‚’è¿”å´</returns>
+    float load_progress(SceneTag tag) const;
 
 private:
-    // “o˜^Ï‚İ‚ÌƒV[ƒ“
+    // ç™»éŒ²æ¸ˆã¿ã®ã‚·ãƒ¼ãƒ³
     vector<IScene*> scenes_;
-    // Œ»İ‚ÌƒV[ƒ“
+    // ç¾åœ¨ã®ã‚·ãƒ¼ãƒ³
     IScene* current_scene_{ nullptr };
 
 public:
-	// ƒRƒs[‹Ö~
+	// ã‚³ãƒ”ãƒ¼ç¦æ­¢
 	SceneManager(const SceneManager& other) = delete;
 	SceneManager& operator = (const SceneManager& other) = delete;
 

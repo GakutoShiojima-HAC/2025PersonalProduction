@@ -3,18 +3,17 @@
 //  Author        : Shiojima Gakuto
 //  Created       : 2025/07/08
 //  Updated       : 2025/07/08
-//  Description   : ƒV[ƒ“‚ÌƒCƒ“ƒ^[ƒtƒF[ƒX
+//  Description   : ã‚·ãƒ¼ãƒ³ã®ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹
 //
-//  ’ˆÓF–{ƒ\[ƒXƒR[ƒh‚Ì–³’f“]ÚEƒR[ƒh‚ÌƒRƒs[E“\‚è•t‚¯‚É‚æ‚é—¬—pEÄ”z•z‚ğ‹Ö~‚µ‚Ü‚·B
+//  æ³¨æ„ï¼šæœ¬ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã®ç„¡æ–­è»¢è¼‰ãƒ»ã‚³ãƒ¼ãƒ‰ã®ã‚³ãƒ”ãƒ¼ãƒ»è²¼ã‚Šä»˜ã‘ã«ã‚ˆã‚‹æµç”¨ãƒ»å†é…å¸ƒã‚’ç¦æ­¢ã—ã¾ã™ã€‚
 // -----------------------------------------------------------------------------------------
 
 #ifndef I_SCENE_H_
 #define I_SCENE_H_
 
 #include <string>
+#include <any>
 #include "Scene/SceneTag.h"
-
-using namespace std;
 
 class IScene {
 public:
@@ -24,59 +23,76 @@ public:
 
 public:
     /// <summary>
-    /// ƒV[ƒ“ŠJn
+    /// ã‚·ãƒ¼ãƒ³ã«å¿…è¦ãªãƒ­ãƒ¼ãƒ‰å‡¦ç†
+    /// </summary>
+    virtual void load() = 0;
+
+    /// <summary>
+    /// ã‚·ãƒ¼ãƒ³é–‹å§‹
     /// </summary>
     virtual void start() = 0;
 
     /// <summary>
-    /// XV
+    /// æ›´æ–°
     /// </summary>
-    /// <param name="delta_time">= ‘OƒtƒŒ[ƒ€‚©‚ç‚ÌŒo‰ßƒtƒŒ[ƒ€”</param>
+    /// <param name="delta_time">= å‰ãƒ•ãƒ¬ãƒ¼ãƒ ã‹ã‚‰ã®çµŒéãƒ•ãƒ¬ãƒ¼ãƒ æ•°</param>
     virtual void update(float delta_time) = 0;
 
     /// <summary>
-    /// •`‰æ
+    /// æç”»
     /// </summary>
     virtual void draw() const = 0;
     
     /// <summary>
-    /// ƒV[ƒ“I—¹
+    /// ã‚·ãƒ¼ãƒ³çµ‚äº†
     /// </summary>
     virtual void end() = 0;
 
     /// <summary>
-    /// ƒV[ƒ“‚ªI—¹‚µ‚Ä‚¢‚é‚©
+    /// ã‚·ãƒ¼ãƒ³ãŒçµ‚äº†ã—ã¦ã„ã‚‹ã‹
     /// </summary>
-    /// <returns>I—¹‚µ‚Ä‚¢‚½‚ç^</returns>
+    /// <returns>çµ‚äº†ã—ã¦ã„ãŸã‚‰çœŸ</returns>
     virtual bool is_end() const = 0;
 
     /// <summary>
-    /// Œ»İ‚ÌƒV[ƒ“ƒ^ƒO‚ğ•Ô‹p
+    /// ç¾åœ¨ã®ã‚·ãƒ¼ãƒ³ã‚¿ã‚°ã‚’è¿”å´
     /// </summary>
-    /// <returns>ƒV[ƒ“ƒ^ƒO</returns>
+    /// <returns>ã‚·ãƒ¼ãƒ³ã‚¿ã‚°</returns>
     virtual SceneTag scene_tag() const = 0;
     
     /// <summary>
-    /// ‘JˆÚæ‚ÌƒV[ƒ“ƒ^ƒO‚ğ•Ô‹p
+    /// é·ç§»å…ˆã®ã‚·ãƒ¼ãƒ³ã‚¿ã‚°ã‚’è¿”å´
     /// </summary>
-    /// <returns>ƒV[ƒ“ƒ^ƒO</returns>
+    /// <returns>ã‚·ãƒ¼ãƒ³ã‚¿ã‚°</returns>
     virtual SceneTag next_scene_tag() const = 0;
 
     /// <summary>
-    /// ƒV[ƒ“‚ªƒAƒvƒŠƒP[ƒVƒ‡ƒ“I—¹‚ğƒŠƒNƒGƒXƒg‚µ‚Ä‚¢‚é‚©
+    /// ã‚·ãƒ¼ãƒ³ãŒã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³çµ‚äº†ã‚’ãƒªã‚¯ã‚¨ã‚¹ãƒˆã—ã¦ã„ã‚‹ã‹
     /// </summary>
-    /// <returns>ƒŠƒNƒGƒXƒg‚µ‚Ä‚¢‚½‚ç^</returns>
+    /// <returns>ãƒªã‚¯ã‚¨ã‚¹ãƒˆã—ã¦ã„ãŸã‚‰çœŸ</returns>
     virtual bool is_application_end() const = 0;
 
     /// <summary>
-    /// ‘¼‚ÌƒV[ƒ“‚©‚çƒƒbƒZ[ƒW‚ğó‚¯æ‚é
+    /// ä»–ã®ã‚·ãƒ¼ãƒ³ã‹ã‚‰ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’å—ã‘å–ã‚‹
     /// </summary>
-    /// <param name="message">= ƒƒbƒZ[ƒW¯•Ê•¶š—ñ</param>
-    /// <param name="param">= ƒƒbƒZ[ƒWƒpƒ‰ƒ[ƒ^</param>
-    virtual void reception_message(const string& message, void* param) = 0;
+    /// <param name="message">= ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸è­˜åˆ¥æ–‡å­—åˆ—</param>
+    /// <param name="param">= ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿</param>
+    virtual void reception_message(const std::string& message, std::any& param) = 0;
+
+    /// <summary>
+    /// ãƒ­ãƒ¼ãƒ‰å‡¦ç†ãŒçµ‚äº†ã—ãŸã‹ã©ã†ã‹
+    /// </summary>
+    /// <returns>çµ‚äº†ã—ãŸã‚‰çœŸã‚’è¿”å´</returns>
+    virtual bool is_load_end() const = 0;
+
+    /// <summary>
+    /// ãƒ­ãƒ¼ãƒ‰å‡¦ç†ã®é€²æ—ç‡ã‚’å–å¾—
+    /// </summary>
+    /// <returns>é€²æ—ç‡ã‚’0.0~1.0ã§è¿”å´</returns>
+    virtual float load_progress() const = 0;
 
 public:
-    // ƒRƒs[‹Ö~
+    // ã‚³ãƒ”ãƒ¼ç¦æ­¢
     IScene(const IScene& other) = delete;
     IScene& operator = (const IScene& other) = delete;
 

@@ -3,24 +3,26 @@
 //  Author        : Shiojima Gakuto
 //  Created       : 2025/07/09
 //  Updated       : 2025/07/09
-//  Description   : ƒQ[ƒ€ƒV[ƒ“
+//  Description   : ã‚²ãƒ¼ãƒ ã‚·ãƒ¼ãƒ³
 //
-//  ’ˆÓF–{ƒ\[ƒXƒR[ƒh‚Ì–³’f“]ÚEƒR[ƒh‚ÌƒRƒs[E“\‚è•t‚¯‚É‚æ‚é—¬—pEÄ”z•z‚ğ‹Ö~‚µ‚Ü‚·B
+//  æ³¨æ„ï¼šæœ¬ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã®ç„¡æ–­è»¢è¼‰ãƒ»ã‚³ãƒ¼ãƒ‰ã®ã‚³ãƒ”ãƒ¼ãƒ»è²¼ã‚Šä»˜ã‘ã«ã‚ˆã‚‹æµç”¨ãƒ»å†é…å¸ƒã‚’ç¦æ­¢ã—ã¾ã™ã€‚
 // -----------------------------------------------------------------------------------------
 
 #ifndef GAME_SCENE_H_
 #define GAME_SCENE_H_
 
-#include "Engine/Core/Scene/IScene.h"
+#include "Engine/Core/Scene/StandardScene.h"
 #include "Engine/Core/World/World.h"
 
-class GameScene : public IScene {
+class GameScene : public StandardScene {
 public:
 	GameScene() = default;
 
 	~GameScene() = default;
 
 public:
+    void load() override;
+
 	void start() override;
 
 	void update(float delta_time) override;
@@ -29,21 +31,16 @@ public:
 
 	void end() override;
 
-	bool is_end() const override;
-
 	SceneTag scene_tag() const override;
-
-	SceneTag next_scene_tag() const override;
 
 	bool is_application_end() const override;
 
-	void reception_message(const std::string& message, void* param) override;
+	void reception_message(const std::string& message, std::any& param) override;
 
 private:
-	bool is_end_{ false };
-
-	// ƒ[ƒ‹ƒh
+	// ãƒ¯ãƒ¼ãƒ«ãƒ‰
 	World world_;
+
 };
 
 #endif

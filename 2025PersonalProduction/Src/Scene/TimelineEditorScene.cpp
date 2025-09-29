@@ -28,6 +28,23 @@
 
 #include "Engine/Core/NavMesh/NavMeshDebugger.h"
 
+TimelineEditorScene::TimelineEditorScene() {
+    next_scene_tag_ = SceneTag::Menu;
+}
+
+void TimelineEditorScene::load() {
+    // 初期化
+    is_load_end_ = false;
+    load_progress_ = 0.0f;
+
+    // TODO load function
+    // maybe async other function
+
+    // 終了
+    is_load_end_ = true;
+    load_progress_ = 1.0f;
+}
+
 void TimelineEditorScene::start() {
 	is_end_ = false;
 
@@ -125,24 +142,21 @@ void TimelineEditorScene::end() {
 
 	// tmp
 	AssetsManager::get_instance().delete_assets("TimelineEditor");
+
+    // 初期化
+    is_load_end_ = false;
+    load_progress_ = 0.0f;
 }
 
-bool TimelineEditorScene::is_end() const {
-	return is_end_;
-}
 
 SceneTag TimelineEditorScene::scene_tag() const {
 	return SceneTag::TimelineEditor;
-}
-
-SceneTag TimelineEditorScene::next_scene_tag() const {
-	return SceneTag::Menu;
 }
 
 bool TimelineEditorScene::is_application_end() const {
 	return false;
 }
 
-void TimelineEditorScene::reception_message(const std::string& message, void* param) {
+void TimelineEditorScene::reception_message(const std::string& message, std::any& param) {
 	// なにも受け取らない
 }
