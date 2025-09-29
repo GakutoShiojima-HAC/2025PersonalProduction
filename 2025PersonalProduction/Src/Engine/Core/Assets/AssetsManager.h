@@ -2,10 +2,10 @@
 //  File          : AssetsManager.h
 //  Author        : Shiojima Gakuto
 //  Created       : 2025/07/11
-//  Updated       : 2025/07/11
-//  Description   : ƒAƒZƒbƒg‚Ìƒ[ƒhEƒNƒŠƒA‚ğŠÇ—‚·‚éƒNƒ‰ƒX
+//  Updated       : 2025/09/29
+//  Description   : ã‚¢ã‚»ãƒƒãƒˆã®ãƒ­ãƒ¼ãƒ‰ãƒ»ã‚¯ãƒªã‚¢ã‚’ç®¡ç†ã™ã‚‹ã‚¯ãƒ©ã‚¹
 //
-//  ’ˆÓF–{ƒ\[ƒXƒR[ƒh‚Ì–³’f“]ÚEƒR[ƒh‚ÌƒRƒs[E“\‚è•t‚¯‚É‚æ‚é—¬—pEÄ”z•z‚ğ‹Ö~‚µ‚Ü‚·B
+//  æ³¨æ„ï¼šæœ¬ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã®ç„¡æ–­è»¢è¼‰ãƒ»ã‚³ãƒ¼ãƒ‰ã®ã‚³ãƒ”ãƒ¼ãƒ»è²¼ã‚Šä»˜ã‘ã«ã‚ˆã‚‹æµç”¨ãƒ»å†é…å¸ƒã‚’ç¦æ­¢ã—ã¾ã™ã€‚
 // -----------------------------------------------------------------------------------------
 
 #ifndef ASSETS_MANAGER_H_
@@ -17,23 +17,22 @@
 #include <utility>
 
 typedef	unsigned int GSuint;
-using namespace std;
 
-// “Ç‚İ‚ŞƒAƒZƒbƒg
+// èª­ã¿è¾¼ã‚€ã‚¢ã‚»ãƒƒãƒˆ
 struct LoadAssets {
-	string name{ "" };	// ¯•Ê–¼
-	vector<pair<GSuint, string>> mesh;
-	vector<pair<GSuint, string>> skinmesh;
-	vector<pair<GSuint, string>> texture;
-	vector<pair<GSuint, string>> octree;
-	vector<pair<GSuint, string>> bgm;
-	vector<pair<GSuint, string>> se;
-	vector<pair<GSuint, string>> effect;
+	std::string name{ "" };	// è­˜åˆ¥å
+	vector<pair<GSuint, std::string>> mesh;
+	vector<pair<GSuint, std::string>> skinmesh;
+	vector<pair<GSuint, std::string>> texture;
+	vector<pair<GSuint, std::string>> octree;
+	vector<pair<GSuint, std::string>> bgm;
+	vector<pair<GSuint, std::string>> se;
+	vector<pair<GSuint, std::string>> effect;
 };
 
-// “Ç‚İ‚ñ‚¾ƒAƒZƒbƒg
+// èª­ã¿è¾¼ã‚“ã ã‚¢ã‚»ãƒƒãƒˆ
 struct LoadedAssets {
-	string name{ "" };	// ¯•Ê–¼
+	std::string name{ "" };	// è­˜åˆ¥å
 	vector<GSuint> mesh;
 	vector<GSuint> skinmesh;
 	vector<GSuint> texture;
@@ -45,7 +44,7 @@ struct LoadedAssets {
 
 class AssetsManager {
 private:
-	// ƒRƒ“ƒXƒgƒ‰ƒNƒ^iŠO•”‚©‚ç‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğ‹Ö~j
+	// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ï¼ˆå¤–éƒ¨ã‹ã‚‰ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ç¦æ­¢ï¼‰
 	AssetsManager() = default;
 
 public:
@@ -53,109 +52,72 @@ public:
 
 public:
 	/// <summary>
-	/// ƒCƒ“ƒXƒ^ƒ“ƒX‚ğæ“¾‚·‚é‚½‚ß‚Ìstaticƒƒ“ƒoŠÖ”
+	/// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’å–å¾—ã™ã‚‹ãŸã‚ã®staticãƒ¡ãƒ³ãƒé–¢æ•°
 	/// </summary>
-	/// <returns>ƒCƒ“ƒXƒ^ƒ“ƒX</returns>
+	/// <returns>ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹</returns>
 	static AssetsManager& get_instance();
 
 public:
 	/// <summary>
-	/// ŠÇ—‰º‚ÌƒAƒZƒbƒg‚ğ‘S‚Ä”jŠü‚µAŠÇ—‰º‚©‚çÁ‹
+	/// ç®¡ç†ä¸‹ã®ã‚¢ã‚»ãƒƒãƒˆã‚’å…¨ã¦ç ´æ£„ã—ã€ç®¡ç†ä¸‹ã‹ã‚‰æ¶ˆå»
 	/// </summary>
 	void clear();
 
 	/// <summary>
-	/// ƒAƒZƒbƒg‚ğƒ[ƒh
+	/// ã‚¢ã‚»ãƒƒãƒˆã‚’ãƒ­ãƒ¼ãƒ‰
 	/// </summary>
-	/// <param name="data">= ƒf[ƒ^</param>
-	/// <returns>ƒf[ƒ^</returns>
-	LoadedAssets* load_assets(LoadAssets* data);
+	/// <param name="data">= ãƒ‡ãƒ¼ã‚¿</param>
+	/// <returns>ãƒ‡ãƒ¼ã‚¿</returns>
+	LoadedAssets* load_asset(LoadAssets* data);
 
 	/// <summary>
-	/// ƒAƒZƒbƒg‚ğ”ñ“¯Šú‚Åƒ[ƒh
+	/// æŒ‡å®šã—ãŸã‚¢ã‚»ãƒƒãƒˆã‚’ç ´æ£„
 	/// </summary>
-	/// <param name="data">= ƒf[ƒ^</param>
-	void load_assets_async(LoadAssets* data);
-
-public:
-	/// <summary>
-	/// w’è‚µ‚½ƒAƒZƒbƒg‚ğ”jŠü
-	/// </summary>
-	/// <param name="name">= ¯•Ê–¼</param>
-	/// <returns>”jŠü‚ªŠ®—¹‚µ‚½‚ç^</returns>
-	bool delete_assets(const string& assets_name);
+	/// <param name="name">= è­˜åˆ¥å</param>
+	/// <returns>ç ´æ£„ãŒå®Œäº†ã—ãŸã‚‰çœŸ</returns>
+	bool delete_asset(const std::string& assets_name);
 
 	/// <summary>
-	/// w’è‚µ‚½ƒAƒZƒbƒg‚ğ”jŠü
+	/// æŒ‡å®šã—ãŸã‚¢ã‚»ãƒƒãƒˆã‚’ç ´æ£„
 	/// </summary>
-	/// <param name="data">= ƒf[ƒ^</param>
-	/// <returns>”jŠü‚ªŠ®—¹‚µ‚½‚ç^</returns>
-	bool delete_assets(LoadedAssets* data);
-
-public:
-	/// <summary>
-	/// ”ñ“¯Šú‚ÅƒAƒZƒbƒg‚ğ“Ç‚İ‚ñ‚Å‚¢‚é‚©
-	/// </summary>
-	/// <returns>‚µ‚Ä‚¢‚½‚ç^</returns>
-	bool is_async_load() const;
+	/// <param name="data">= ãƒ‡ãƒ¼ã‚¿</param>
+	/// <returns>ç ´æ£„ãŒå®Œäº†ã—ãŸã‚‰çœŸ</returns>
+	bool delete_asset(LoadedAssets* data);
 
 	/// <summary>
-	/// “Ç‚İ‚ñ‚¾ƒAƒZƒbƒg” “Ç‚İ‚İI—¹‚Å0‚ÉƒŠƒZƒbƒg
+	/// è­˜åˆ¥åã‹ã‚‰èª­ã¿è¾¼ã¿æ¸ˆã¿ã‚¢ã‚»ãƒƒãƒˆæ§‹é€ ä½“ã‚’æ¤œç´¢
 	/// </summary>
-	/// <returns>”</returns>
-	int loaded_count() const;
-
-	/// <summary>
-	/// ¯•Ê–¼‚©‚ç“Ç‚İ‚İÏ‚İƒAƒZƒbƒg\‘¢‘Ì‚ğŒŸõ
-	/// </summary>
-	/// <param name="name">= ¯•Ê–¼</param>
-	/// <returns>\‘¢‘Ì</returns>
-	LoadedAssets* find(const string& assets_name);
+	/// <param name="name">= è­˜åˆ¥å</param>
+	/// <returns>æ§‹é€ ä½“</returns>
+	LoadedAssets* find(const std::string& assets_name);
 
 private:
-	/// <summary>
-	/// ”ñ“¯Šú‚ÅƒAƒZƒbƒg“Ç‚İ‚İ‚ğŠJn
-	/// </summary>
-	/// <param name="data">ƒf[ƒ^</param>
-	void async_load_asset(LoadAssets* data);
-	
-	/// <summary>
-	/// ƒAƒZƒbƒg‚ğ”jŠü
-	/// </summary>
-	/// <param name="data">= ”jŠü‚·‚éƒAƒZƒbƒgƒf[ƒ^</param>
-	void delete_asset(LoadedAssets* data);
+    /// <summary>
+    /// ã‚¢ã‚»ãƒƒãƒˆã‚’ç ´æ£„ã™ã‚‹
+    /// </summary>
+    /// <param name="data">= èª­ã¿è¾¼ã¿æ¸ˆã¿ãƒ‡ãƒ¼ã‚¿</param>
+    void assets_delete(LoadedAssets* data);
 
 	/// <summary>
-	/// w’è‚µ‚½“Ç‚İ‚İÏ‚İƒAƒZƒbƒg‚ğŠÇ—‰º‚©‚çÁ‹‚·‚é
+	/// æŒ‡å®šã—ãŸèª­ã¿è¾¼ã¿æ¸ˆã¿ã‚¢ã‚»ãƒƒãƒˆã‚’ç®¡ç†ä¸‹ã‹ã‚‰æ¶ˆå»ã™ã‚‹
 	/// </summary>
-	/// <param name="data">= ƒf[ƒ^</param>
-	void remove_loaded_asset(LoadedAssets* data);
+	/// <param name="data">= ãƒ‡ãƒ¼ã‚¿</param>
+	void remove(LoadedAssets* data);
 
 	/// <summary>
-	/// w’è‚µ‚½“Ç‚İ‚İ’†ƒAƒZƒbƒg‚ğŠÇ—‰º‚©‚çÁ‹‚·‚é
+	/// åŒã˜ãƒªã‚½ãƒ¼ã‚¹IDã‚’ä»–ã‚¢ã‚»ãƒƒãƒˆã§ã‚‚ä½¿ç”¨ã—ã¦ã„ã‚‹ã‹
 	/// </summary>
-	/// <param name="data">= ƒf[ƒ^</param>
-	void remove_loading_asset(LoadAssets* data);
-
-	/// <summary>
-	/// “¯‚¶ƒŠƒ\[ƒXID‚ğ‘¼ƒAƒZƒbƒg‚Å‚àg—p‚µ‚Ä‚¢‚é‚©
-	/// </summary>
-	/// <param name="id">= Šm”F‚µ‚½‚¢ID</param>
-	/// <param name="other">= “¯íƒŠƒ\[ƒX</param>
-	/// <returns>g—p‚µ‚Ä‚¢‚½‚ç^</returns>
+	/// <param name="id">= ç¢ºèªã—ãŸã„ID</param>
+	/// <param name="other">= åŒç¨®ãƒªã‚½ãƒ¼ã‚¹</param>
+	/// <returns>ä½¿ç”¨ã—ã¦ã„ãŸã‚‰çœŸ</returns>
 	bool is_same_id_for_other_asset(const GSuint id, const vector<GSuint>& other) const;
 
 private:
-	// “Ç‚İ‚ñ‚¾ƒAƒZƒbƒg
+	// èª­ã¿è¾¼ã‚“ã ã‚¢ã‚»ãƒƒãƒˆ
 	list<LoadedAssets*> assets_;
-	// ”ñ“¯Šú‚Å“Ç‚İ‚İ’†‚ÌƒAƒZƒbƒg
-	list<LoadAssets*> loading_assets_;
-
-	// “Ç‚İ‚ñ‚¾ƒAƒZƒbƒg”
-	int loaded_assets_count_{ 0 };
 
 public:
-	// ƒRƒs[‹Ö~
+	// ã‚³ãƒ”ãƒ¼ç¦æ­¢
 	AssetsManager(const AssetsManager& other) = delete;
 	AssetsManager& operator = (const AssetsManager& other) = delete;
 
