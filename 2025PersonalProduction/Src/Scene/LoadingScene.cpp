@@ -1,14 +1,16 @@
 #include "Scene/LoadingScene.h"
 #include "Engine/Graphics/Canvas/Canvas.h"
+#include <gslib.h>
 
 void LoadingScene::start() {
     is_end_ = false;
 
     // TODO loading image asset load
 
-    // 次のシーンのロード処理を呼び出す
-    scene_manager_.load_scene(next_scene_tag_);
-
+    // 次のシーンのロード処理を非同期で呼び出す
+    gslib::Game::run_thread([=] {
+        scene_manager_.load_scene(next_scene_tag_);
+    });
 }
 
 void LoadingScene::update(float delta_time) {

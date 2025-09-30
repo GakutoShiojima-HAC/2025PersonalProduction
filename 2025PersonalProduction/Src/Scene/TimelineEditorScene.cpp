@@ -1,6 +1,7 @@
 #include "Scene/TimelineEditorScene.h"
 #include <GSeffect.h>
 #include "Engine/Core/Assets/AssetsManager.h"
+#include "Engine/Core/Assets/AssetsLoader.h"
 #include "Engine/Core/Field/Field.h"
 #include "Engine/Core/World/Light.h"
 #include "Engine/Core/Collision/AttackColliderPool.h"
@@ -32,8 +33,11 @@ void TimelineEditorScene::load() {
     is_load_end_ = false;
     load_progress_ = 0.0f;
 
-    // 別スレッドで読み込み処理を行う
-    gslib::Game::run_thread([=] { load_data(); });
+    load_data();
+
+    // 終了
+    is_load_end_ = true;
+    load_progress_ = 1.0f;
 }
 
 void TimelineEditorScene::start() {
@@ -170,8 +174,4 @@ void TimelineEditorScene::load_data() {
     // タイムラインデータの読み込み
     world_.timeline().add(new CameraTimeline{ &world_, "Resource/Private/Timeline/Camera/List/world1.json" });
     load_progress_ += progress;
-
-    // 終了
-    is_load_end_ = true;
-    load_progress_ = 1.0f;
 }

@@ -1,5 +1,6 @@
 #include "Scene/MenuScene.h"
 #include "Engine/Core/Assets/AssetsManager.h"
+#include "Engine/Core/Assets/AssetsLoader.h"
 #include "Engine/Graphics/Canvas/Canvas.h"
 #include "Engine/Core/Tween/Tween.h"
 
@@ -15,8 +16,11 @@ void MenuScene::load() {
     is_load_end_ = false;
     load_progress_ = 0.0f;
 
-    // 別スレッドで読み込み処理を行う
-    gslib::Game::run_thread([=] { load_data(); });
+    load_data();
+
+    // 終了
+    is_load_end_ = true;
+    load_progress_ = 1.0f;
 }
 
 void MenuScene::start() {
@@ -87,8 +91,4 @@ void MenuScene::load_data() {
     asset->texture.push_back({ (GSuint)TextureID::MenuLogo, "Resource/Assets/Texture/menu_test.png" });
     AssetsManager::get_instance().load_asset(asset);
     load_progress_ += progress;
-
-    // 終了
-    is_load_end_ = true;
-    load_progress_ = 1.0f;
 }

@@ -1,6 +1,7 @@
 #include "Scene/GameScene.h"
 #include <GSeffect.h>
 #include "Engine/Core/Assets/AssetsManager.h"
+#include "Engine/Core/Assets/AssetsLoader.h"
 #include "Engine/Core/Field/Field.h"
 #include "Engine/Core/World/Light.h"
 #include "Engine/Core/Collision/AttackColliderPool.h"
@@ -23,8 +24,11 @@ void GameScene::load() {
     is_load_end_ = false;
     load_progress_ = 0.0f;
 
-    // 別スレッドで読み込み処理を行う
-    gslib::Game::run_thread([=] { load_data(); });
+    load_data();
+
+    // 終了
+    is_load_end_ = true;
+    load_progress_ = 1.0f;
 }
 
 void GameScene::start() {
@@ -149,19 +153,16 @@ void GameScene::reception_message(const std::string& message, std::any& param) {
 
 void GameScene::load_data() {
     // 読み込み処理の数から一つの処理分の進捗率を計算
-    const int count = 5;
+    const int count = 6;
     const float progress = 1.0f / (float)count;
 
-    // アセットの読み込み
-    LoadAssets* asset = new LoadAssets{};
-    asset->name = "Game";
-    asset->octree.push_back({ (GSuint)OctreeID::Mesh, "Resource/Assets/Octree/Stage1/stage.oct" });
-    asset->octree.push_back({ (GSuint)OctreeID::Collider, "Resource/Assets/Octree/Stage1/stage_collider.oct" });
-    asset->texture.push_back({ (GSuint)TextureID::Skybox, "Resource/Assets/Skybox/stage1test.dds" });
-    asset->skinmesh.push_back({ (GSuint)MeshID::Player, "Resource/Assets/Skinmesh/Player1/Player.mshb" });
-    asset->skinmesh.push_back({ (GSuint)MeshID::DummyEnemy, "Resource/Assets/Skinmesh/DummyEnemy/DummyEnemy.mshb" });
-    asset->texture.push_back({ (GSuint)TextureID::TmpUI, "Resource/Assets/Texture/kari.png" });
-    AssetsManager::get_instance().load_asset(asset);
+    // 共通アセットの読み込み
+    if (AssetsManager::get_instance().find(AssetsLoader::GAME_COMMON_ASSET_NAME));
+    else  AssetsLoader::load_by_json("Resource/Private/LoadAsset/game_common.json", AssetsLoader::GAME_COMMON_ASSET_NAME);
+    load_progress_ += progress;
+
+    // ステージ固有アセットの読み込み
+    AssetsLoader::load_by_json("Resource/Private/LoadAsset/test_stage.json", AssetsLoader::GAME_STAGE_ASSET_NAME);
     load_progress_ += progress;
 
     // ライトマップの読み込み
@@ -178,8 +179,4 @@ void GameScene::load_data() {
     // タイムラインデータの読み込み
     world_.timeline().add(new CameraTimeline{ &world_, "Resource/Private/Timeline/Camera/List/world1.json" });
     load_progress_ += progress;
-
-    // 終了
-    is_load_end_ = true;
-    load_progress_ = 1.0f;
 }

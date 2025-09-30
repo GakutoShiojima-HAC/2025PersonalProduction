@@ -1,5 +1,6 @@
 #include "Scene/TitleScene.h"
 #include "Engine/Core/Assets/AssetsManager.h"
+#include "Engine/Core/Assets/AssetsLoader.h"
 #include "Engine/Graphics/Canvas/Canvas.h"
 #include "Engine/Core/Tween/Tween.h"
 #include "Engine/Graphics/Shader/GameShader.h"
@@ -12,7 +13,6 @@ SceneTag NEXT_SCENE{ SceneTag::Menu };
 
 void TitleScene::start() {
 	is_end_ = false;
-    is_load_end_ = false;
 
     // タイトル用アセットの読み込み
     LoadAssets* asset = new LoadAssets{};
@@ -21,34 +21,13 @@ void TitleScene::start() {
     AssetsManager::get_instance().load_asset(asset);
 
     // 別スレッドで読み込み処理を行う
-    gslib::Game::run_thread([=] { load_data(); });
-    current_state_ = TitleScene::State::MainLoading;
+    gslib::Game::run_thread([=] {
+        load_data();
+    });
 }
 
 void TitleScene::update(float delta_time) {
-    switch (current_state_) {
-    case TitleScene::State::None:
-        break;
-    case TitleScene::State::MainLoading:
-        if (is_load_end_) {
-            current_state_ = TitleScene::State::NextSceneLoading;
-            // 次のシーンのロード処理を呼び出す
-            scene_manager_.load_scene(NEXT_SCENE);
-        }
-        break;
-    case TitleScene::State::NextSceneLoading:
-        // 次のシーンのロード処理が終了したらシーンを終了する
-        if (scene_manager_.is_load_end(NEXT_SCENE)) {
-            current_state_ = TitleScene::State::End;
-            // 終了
-            is_end_ = true;
-        }
-        break;
-    case TitleScene::State::End:
-        break;
-    default:
-        break;
-    }
+
 }
 
 void TitleScene::draw() const {
@@ -68,8 +47,6 @@ void TitleScene::end() {
 
 	// アセットの開放
 	AssetsManager::get_instance().delete_asset("Title");
-    // 初期化
-    is_load_end_ = false;
 }
 
 bool TitleScene::is_end() const {
@@ -105,5 +82,9 @@ void TitleScene::load_data() {
     GameShader::get_instance().load();
     GamePostEffect::get_instance().load();
 
-    is_load_end_ = true;
+    // 次のシーンのアセットを読み込み
+    scene_manager_.load_scene(NEXT_SCENE);
+
+    // 終了
+    is_end_ = true;
 }
