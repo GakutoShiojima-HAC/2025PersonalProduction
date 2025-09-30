@@ -144,6 +144,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Engine\Core\Assets\AssetsLoader.cpp" />
     <ClCompile Include="Src\Engine\Core\Collision\AttackCollider.cpp" />
     <ClCompile Include="Src\Engine\Core\Collision\AttackColliderPool.cpp" />
     <ClCompile Include="Src\Actor\Enemy\DummyEnemy.cpp" />
@@ -228,6 +229,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Actor\ActorTag.h" />
+    <ClInclude Include="Src\Engine\Core\Assets\AssetsLoader.h" />
     <ClInclude Include="Src\Engine\Core\Collision\AttackCollider.h" />
     <ClInclude Include="Src\Engine\Core\Collision\AttackColliderPool.h" />
     <ClInclude Include="Src\Actor\Enemy\DummyEnemy.h" />
