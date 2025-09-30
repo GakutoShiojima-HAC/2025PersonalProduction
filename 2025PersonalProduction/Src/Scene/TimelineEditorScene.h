@@ -3,25 +3,27 @@
 //  Author        : Shiojima Gakuto
 //  Created       : 2025/07/28
 //  Updated       : 2025/07/28
-//  Description   : ƒ^ƒCƒ€ƒ‰ƒCƒ“ƒGƒfƒBƒ^ƒfƒoƒbƒO—pƒV[ƒ“
+//  Description   : ã‚¿ã‚¤ãƒ ãƒ©ã‚¤ãƒ³ã‚¨ãƒ‡ã‚£ã‚¿ãƒ‡ãƒãƒƒã‚°ç”¨ã‚·ãƒ¼ãƒ³
 //
-//  ’ˆÓF–{ƒ\[ƒXƒR[ƒh‚Ì–³’f“]ÚEƒR[ƒh‚ÌƒRƒs[E“\‚è•t‚¯‚É‚æ‚é—¬—pEÄ”z•z‚ğ‹Ö~‚µ‚Ü‚·B
+//  æ³¨æ„ï¼šæœ¬ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã®ç„¡æ–­è»¢è¼‰ãƒ»ã‚³ãƒ¼ãƒ‰ã®ã‚³ãƒ”ãƒ¼ãƒ»è²¼ã‚Šä»˜ã‘ã«ã‚ˆã‚‹æµç”¨ãƒ»å†é…å¸ƒã‚’ç¦æ­¢ã—ã¾ã™ã€‚
 // -----------------------------------------------------------------------------------------
 
 #ifndef TIMELINE_EDITOR_SCENE_H_
 #define TIMELINE_EDITOR_SCENE_H_
 
-#include "Engine/Core/Scene/IScene.h"
+#include "Engine/Core/Scene/StandardScene.h"
 #include "Engine/Core/World/World.h"
 #include "Engine/Core/Timeline/TimelineEditorManager.h"
 
-class TimelineEditorScene : public IScene {
+class TimelineEditorScene : public StandardScene {
 public:
-	TimelineEditorScene() = default;
+	TimelineEditorScene();
 
 	~TimelineEditorScene() = default;
 
 public:
+    void load() override;
+
 	void start() override;
 
 	void update(float delta_time) override;
@@ -30,22 +32,22 @@ public:
 
 	void end() override;
 
-	bool is_end() const override;
-
 	SceneTag scene_tag() const override;
-
-	SceneTag next_scene_tag() const override;
 
 	bool is_application_end() const override;
 
-	void reception_message(const std::string& message, void* param) override;
+	void reception_message(const std::string& message, std::any& param) override;
 
 private:
-	bool is_end_{ false };
+    /// <summary>
+    /// ãƒ‡ãƒ¼ã‚¿ãƒ­ãƒ¼ãƒ‰ç”¨
+    /// </summary>
+    void load_data();
 
-	// ƒ[ƒ‹ƒh
+private:
+	// ãƒ¯ãƒ¼ãƒ«ãƒ‰
 	World world_;
-	// ƒ^ƒCƒ€ƒ‰ƒCƒ“ƒGƒfƒBƒ^
+	// ã‚¿ã‚¤ãƒ ãƒ©ã‚¤ãƒ³ã‚¨ãƒ‡ã‚£ã‚¿
 	TimelineEditorManager editor_;
 
 };

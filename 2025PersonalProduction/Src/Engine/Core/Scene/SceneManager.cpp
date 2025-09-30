@@ -9,8 +9,8 @@ SceneManager::~SceneManager() {
 }
 
 SceneManager& SceneManager::get_instance() {
-	// static•Ï”‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚Í‚P‚Â
-	// ƒCƒ“ƒXƒ^ƒ“ƒX‰»‚à‚P‰ñ‚Ì‚Ý
+	// staticå¤‰æ•°ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã¯ï¼‘ã¤
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹åŒ–ã‚‚ï¼‘å›žã®ã¿
 	static SceneManager self;
 	return self;
 }
@@ -38,7 +38,7 @@ void SceneManager::end() {
 }
 
 void SceneManager::clear() {
-	// ƒV[ƒ“‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ðÁ‹Ž
+	// ã‚·ãƒ¼ãƒ³ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’æ¶ˆåŽ»
 	for (auto& scene : scenes_) {
 		delete scene;
 	}
@@ -88,7 +88,28 @@ bool SceneManager::is_application_end() const {
 	return current_scene_->is_application_end();
 }
 
-void SceneManager::send_message(SceneTag tag, const string& message, void* param) {
+void SceneManager::send_message(SceneTag tag, const std::string& message, std::any& param) {
 	IScene* scene = find(tag);
 	if (scene != nullptr) scene->reception_message(message, param);
+}
+
+bool SceneManager::load_scene(SceneTag tag) {
+    IScene* scene = find(tag);
+    if (scene != nullptr) {
+        scene->load();
+        return true;
+    }
+    return false;
+}
+
+bool SceneManager::is_load_end(SceneTag tag) const {
+    IScene* scene = find(tag);
+    if (scene != nullptr) return scene->is_load_end();
+    return false;
+}
+
+float SceneManager::load_progress(SceneTag tag) const {
+    IScene* scene = find(tag);
+    if (scene != nullptr) return scene->load_progress();
+    return -1.0f;
 }

@@ -25,6 +25,7 @@
 #include "Engine/Core/LogSystem/LogManager.h"
 
 #include "Engine/Core/Scene/SceneManager.h"
+#include "Scene/LoadingScene.h"
 #include "Scene/TitleScene.h"
 #include "Scene/MenuScene.h"
 #include "Scene/GameScene.h"
@@ -65,6 +66,7 @@ private:
         gsSetMasterVolumeSE(se);
 
         // シーンを追加
+        scene_manager_.add(new LoadingScene{});
         scene_manager_.add(new TitleScene{});
         scene_manager_.add(new MenuScene{});
         scene_manager_.add(new GameScene{});

@@ -1,5 +1,6 @@
 #include "Scene/MenuScene.h"
 #include "Engine/Core/Assets/AssetsManager.h"
+#include "Engine/Core/Assets/AssetsLoader.h"
 #include "Engine/Graphics/Canvas/Canvas.h"
 #include "Engine/Core/Tween/Tween.h"
 
@@ -10,15 +11,20 @@
 #include <imgui/imgui.h>
 #endif
 
+void MenuScene::load() {
+    // 初期化
+    is_load_end_ = false;
+    load_progress_ = 0.0f;
+
+    load_data();
+
+    // 終了
+    is_load_end_ = true;
+    load_progress_ = 1.0f;
+}
+
 void MenuScene::start() {
 	is_end_ = false;
-
-	if (AssetsManager::get_instance().find("Menu") == nullptr) {
-		LoadAssets* asset = new LoadAssets{};
-		asset->name = "Menu";
-		asset->texture.push_back({ (GSuint)TextureID::MenuLogo, "Resource/Assets/Texture/menu_test.png" });
-		AssetsManager::get_instance().load_assets(asset);
-	}
 }
 
 void MenuScene::update(float delta_time) {
@@ -38,7 +44,7 @@ void MenuScene::update(float delta_time) {
 void MenuScene::draw() const {
 	gsDrawText("menu");
 
-	// �����S�`��
+	// 仮ロゴ描画
 	{
 		const GSrect rect{ 0.0f, 0.0f, 340.0f, 76.0f };
 		const GSvector2 center{ rect.right / 2.0f, rect.bottom / 2.0f };
@@ -47,29 +53,42 @@ void MenuScene::draw() const {
 }
 
 void MenuScene::end() {
-	// Tween�̏I��
+	// Tweenの終了
 	Tween::clear();
 
-	// tmp
-	AssetsManager::get_instance().delete_assets("Menu");
-}
+	// アセットの開放
+	AssetsManager::get_instance().delete_asset("Menu");
 
-bool MenuScene::is_end() const {
-	return is_end_;
+    // 初期化
+    is_load_end_ = false;
+    load_progress_ = 0.0f;
+
+    // 次のシーンの情報を渡す
+    std::any data = next_scene_tag_;
+    scene_manager_.send_message(SceneTag::Loading, "NextSceneTag", data);
 }
 
 SceneTag MenuScene::scene_tag() const {
 	return SceneTag::Menu;
 }
 
-SceneTag MenuScene::next_scene_tag() const {
-	return next_scene_tag_;
-}
-
 bool MenuScene::is_application_end() const {
 	return false;
 }
 
-void MenuScene::reception_message(const std::string& message, void* param) {
-	// �Ȃɂ��󂯎��Ȃ�
+void MenuScene::reception_message(const std::string& message, std::any& param) {
+	// なにも受け取らない
+}
+
+void MenuScene::load_data() {
+    // 読み込み処理の数から一つの処理分の進捗率を計算
+    const int count = 1;
+    const float progress = 1.0f / (float)count;
+
+    // アセットの読み込み
+    LoadAssets* asset = new LoadAssets{};
+    asset->name = "Menu";
+    asset->texture.push_back({ (GSuint)TextureID::MenuLogo, "Resource/Assets/Texture/menu_test.png" });
+    AssetsManager::get_instance().load_asset(asset);
+    load_progress_ += progress;
 }

@@ -3,10 +3,10 @@
 //  Author        : Shiojima Gakuto
 //  Created       : 2025/07/08
 //  Updated       : 2025/07/08
-//  Description   : ƒV[ƒ“ƒ}ƒl[ƒWƒƒ[ƒGƒ‰[‰ñ”ğ—p‹óƒV[ƒ“
-//                  ‚±‚ÌƒV[ƒ“‚É‘JˆÚ‚µ‚Ä‚àƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚Í©“®‚ÅI—¹‚µ‚È‚¢
+//  Description   : ã‚·ãƒ¼ãƒ³ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼ã‚¨ãƒ©ãƒ¼å›é¿ç”¨ç©ºã‚·ãƒ¼ãƒ³
+//                  ã“ã®ã‚·ãƒ¼ãƒ³ã«é·ç§»ã—ã¦ã‚‚ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã¯è‡ªå‹•ã§çµ‚äº†ã—ãªã„
 //
-//  ’ˆÓF–{ƒ\[ƒXƒR[ƒh‚Ì–³’f“]ÚEƒR[ƒh‚ÌƒRƒs[E“\‚è•t‚¯‚É‚æ‚é—¬—pEÄ”z•z‚ğ‹Ö~‚µ‚Ü‚·B
+//  æ³¨æ„ï¼šæœ¬ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã®ç„¡æ–­è»¢è¼‰ãƒ»ã‚³ãƒ¼ãƒ‰ã®ã‚³ãƒ”ãƒ¼ãƒ»è²¼ã‚Šä»˜ã‘ã«ã‚ˆã‚‹æµç”¨ãƒ»å†é…å¸ƒã‚’ç¦æ­¢ã—ã¾ã™ã€‚
 // -----------------------------------------------------------------------------------------
 
 #ifndef NULL_SCENE_H_
@@ -16,6 +16,8 @@
 
 class NullScene : public IScene {
 public:
+    virtual void load() override {}
+
     virtual void start() override {}
 
     virtual void update(float delta_time) override {}
@@ -32,7 +34,11 @@ public:
 
     virtual bool is_application_end() const override { return false; }
 
-    virtual void reception_message(const std::string& message, void* param) override {}
+    virtual void reception_message(const std::string& message, std::any& param) override {}
+
+    virtual bool is_load_end() const override { return true; }
+
+    virtual float load_progress() const override { return 1.0f; }
 
 };
 

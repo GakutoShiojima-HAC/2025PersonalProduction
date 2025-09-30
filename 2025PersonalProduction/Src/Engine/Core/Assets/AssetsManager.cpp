@@ -2,109 +2,90 @@
 #include <gslib.h>
 #include <GSeffect.h>
 
+#define GS_ENABLE_MESH_SHADOW			// ãƒ¡ãƒƒã‚·ãƒ¥ã«å½±ã‚’ä»˜ã‘ã‚‹
+//#define GS_ENABLE_SKIN_MESH_SHADOW	// ã‚¹ã‚­ãƒ‹ãƒ³ã‚°ãƒ¡ãƒƒã‚·ãƒ¥ã«å½±ã‚’ä»˜ã‘ã‚‹
+#define GS_ENABLE_SOFT_SHADOW			// å½±ã®è¼ªéƒ­ã‚’ã¼ã‹ã™
+#include <GSstandard_shader.h>
+
 AssetsManager::~AssetsManager() {
 	clear();
 }
 
 AssetsManager& AssetsManager::get_instance() {
-	// static•Ï”‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚Í‚P‚Â
-	// ƒCƒ“ƒXƒ^ƒ“ƒX‰»‚à‚P‰ñ‚Ì‚İ
+	// staticå¤‰æ•°ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã¯ï¼‘ã¤
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹åŒ–ã‚‚ï¼‘å›ã®ã¿
 	static AssetsManager self;
 	return self;
 }
 
 void AssetsManager::clear() {
-	// “Ç‚İ‚İ’†‚Ì\‘¢‘Ì‚ğ”jŠü
-	for (auto asset : loading_assets_) {
-		delete asset;
+	// èª­ã¿è¾¼ã¿æ¸ˆã¿ã‚¢ã‚»ãƒƒãƒˆã‚’ç ´æ£„
+	for (auto& asset : assets_) {
+        assets_delete(asset);    // ç ´æ£„
 	}
-	loading_assets_.clear();
 
-	// “Ç‚İ‚İÏ‚İƒAƒZƒbƒg‚ğ”jŠü
-	for (auto asset : assets_) {
-		delete_asset(asset);
-		delete asset;
-	}
+    // ãƒªã‚¹ãƒˆã‚’ã‚¯ãƒªã‚¢
+    for (auto asset : assets_) {
+        delete asset;
+        asset = nullptr;
+    }
 	assets_.clear();
+
 }
 
-LoadedAssets* AssetsManager::load_assets(LoadAssets* data) {
-	loading_assets_.push_back(data);	// “Ç‚İ‚İ’†‚É’Ç‰Á
-
+LoadedAssets* AssetsManager::load_asset(LoadAssets* data) {
 	LoadedAssets* result = new LoadedAssets{};
-	result->name = data->name;
-	int loaded_assets_num{ 0 };
+    if (data == nullptr) return result;
 
-	// ƒ[ƒhI—¹‚µ‚½”‚ğƒJƒEƒ“ƒg
-	auto countup = [this, &loaded_assets_num]() {
-		++loaded_assets_num;
-		++loaded_assets_count_;
-	};
+    gsInitDefaultShader();
+	result->name = data->name;
 
 	for (const auto& asset : data->mesh) {
 		gsLoadMesh(asset.first, asset.second.c_str());
-		countup();
 		result->mesh.push_back(asset.first);
 	}
 	for (const auto& asset : data->skinmesh) {
 		gsLoadSkinMesh(asset.first, asset.second.c_str());
-		countup();
 		result->skinmesh.push_back(asset.first);
 	}
 	for (const auto& asset : data->octree) {
 		gsLoadOctree(asset.first, asset.second.c_str());
-		countup();
 		result->octree.push_back(asset.first);
 	}
 	for (const auto& asset : data->texture) {
 		gsLoadTexture(asset.first, asset.second.c_str());
-		countup();
 		result->texture.push_back(asset.first);
 	}
 	for (const auto& asset : data->mesh) {
 		gsLoadBGM(asset.first, asset.second.c_str(), GS_TRUE);
-		countup();
 		result->bgm.push_back(asset.first);
 	}
 	for (const auto& asset : data->texture) {
 		gsLoadSE(asset.first, asset.second.c_str(), 5, GWAVE_DEFAULT);
-		countup();
 		result->se.push_back(asset.first);
 	}
 	for (const auto& asset : data->texture) {
 		gsLoadEffect(asset.first, asset.second.c_str());
-		countup();
 		result->effect.push_back(asset.first);
 	}
-	// ƒ[ƒh‚ªI—¹‚µ‚½‚Ì‚Å”‚ğƒŠƒZƒbƒg
-	loaded_assets_count_ -= loaded_assets_num;
-	remove_loading_asset(data);		// “Ç‚İ‚İ’†‚©‚çÁ‹
-	assets_.push_back(result);
+
+	assets_.push_back(result);  // ç®¡ç†ä¸‹ã«è¿½åŠ 
+
+    delete data;                // ä¸è¦ãªã®ã§å‰Šé™¤
+    data = nullptr;
+
 	return result;
 }
 
-void AssetsManager::load_assets_async(LoadAssets* data) {
-	// •ÊƒXƒŒƒbƒh‚Å“Ç‚İ‚İˆ—‚ğs‚¤
-	gslib::Game::run_thread([=] { async_load_asset(data); });
+bool AssetsManager::delete_asset(const string& assets_name) {
+	return delete_asset(find(assets_name));
 }
 
-bool AssetsManager::delete_assets(const string& assets_name) {
-	return delete_assets(find(assets_name));
-}
-
-bool AssetsManager::delete_assets(LoadedAssets* data) {
-	if (data == nullptr) return false;
-	delete_asset(data);
-	remove_loaded_asset(data);	// ŠÇ—‰º‚©‚çÁ‹
+bool AssetsManager::delete_asset(LoadedAssets* data) {
+    if (data == nullptr) return false;
+    assets_delete(data);    // ç ´æ£„
+	remove(data);	// ç®¡ç†ä¸‹ã‹ã‚‰å‰Šé™¤
 	return true;
-}
-
-bool AssetsManager::is_async_load() const {
-	return loading_assets_.size() > 0;
-}
-
-int AssetsManager::loaded_count() const {
-	return loaded_assets_count_;
 }
 
 LoadedAssets* AssetsManager::find(const string& assets_name) {
@@ -116,114 +97,94 @@ LoadedAssets* AssetsManager::find(const string& assets_name) {
 	return nullptr;
 }
 
-void AssetsManager::async_load_asset(LoadAssets* data) {
-	load_assets(data);				// “Ç‚İ‚Ş
+void AssetsManager::assets_delete(LoadedAssets* data) {
+    if (data == nullptr) return;
+
+    for (const auto& asset : data->mesh) {
+        bool same{ false };
+        for (const auto& other : assets_) {
+            if (other == data) continue;
+            if (is_same_id_for_other_asset(asset, other->mesh)) {
+                same = true;
+                break;
+            }
+        }
+        if (!same) gsDeleteMesh(asset);
+    }
+    for (const auto& asset : data->skinmesh) {
+        bool same{ false };
+        for (const auto& other : assets_) {
+            if (other == data) continue;
+            if (is_same_id_for_other_asset(asset, other->skinmesh)) {
+                same = true;
+                break;
+            }
+        }
+        if (!same) gsDeleteSkinMesh(asset);
+    }
+    for (const auto& asset : data->octree) {
+        bool same{ false };
+        for (const auto& other : assets_) {
+            if (other == data) continue;
+            if (is_same_id_for_other_asset(asset, other->octree)) {
+                same = true;
+                break;
+            }
+        }
+        if (!same) gsDeleteOctree(asset);
+    }
+    for (const auto& asset : data->texture) {
+        bool same{ false };
+        for (const auto& other : assets_) {
+            if (other == data) continue;
+            if (is_same_id_for_other_asset(asset, other->texture)) {
+                same = true;
+                break;
+            }
+        }
+        if (!same) gsDeleteTexture(asset);
+    }
+    for (const auto& asset : data->bgm) {
+        bool same{ false };
+        for (const auto& other : assets_) {
+            if (other == data) continue;
+            if (is_same_id_for_other_asset(asset, other->bgm)) {
+                same = true;
+                break;
+            }
+        }
+        if (!same) gsDeleteBGM(asset);
+    }
+    for (const auto& asset : data->se) {
+        bool same{ false };
+        for (const auto& other : assets_) {
+            if (other == data) continue;
+            if (is_same_id_for_other_asset(asset, other->se)) {
+                same = true;
+                break;
+            }
+        }
+        if (!same) gsDeleteSE(asset);
+    }
+    for (const auto& asset : data->effect) {
+        bool same{ false };
+        for (const auto& other : assets_) {
+            if (other == data) continue;
+            if (is_same_id_for_other_asset(asset, other->effect)) {
+                same = true;
+                break;
+            }
+        }
+        if (!same) gsDeleteEffect(asset);
+    }
 }
 
-void AssetsManager::delete_asset(LoadedAssets* data) {
-	if (data == nullptr) return;
-
-	for (const auto& asset : data->mesh) {
-		bool same{ false };
-		for (const auto& other : assets_) {
-			if (other == data) continue;
-			if (is_same_id_for_other_asset(asset, other->mesh)) {
-				same = true;
-				break;
-			}
-		}
-		if (!same) gsDeleteMesh(asset);
-	}
-	for (const auto& asset : data->skinmesh) {
-		bool same{ false };
-		for (const auto& other : assets_) {
-			if (other == data) continue;
-			if (is_same_id_for_other_asset(asset, other->skinmesh)) {
-				same = true;
-				break;
-			}
-		}
-		if (!same) gsDeleteSkinMesh(asset);
-	}
-	for (const auto& asset : data->octree) {
-		bool same{ false };
-		for (const auto& other : assets_) {
-			if (other == data) continue;
-			if (is_same_id_for_other_asset(asset, other->octree)) {
-				same = true;
-				break;
-			}
-		}
-		if (!same) gsDeleteOctree(asset);
-	}
-	for (const auto& asset : data->texture) {
-		bool same{ false };
-		for (const auto& other : assets_) {
-			if (other == data) continue;
-			if (is_same_id_for_other_asset(asset, other->texture)) {
-				same = true;
-				break;
-			}
-		}
-		if (!same) gsDeleteTexture(asset);
-	}
-	for (const auto& asset : data->bgm) {
-		bool same{ false };
-		for (const auto& other : assets_) {
-			if (other == data) continue;
-			if (is_same_id_for_other_asset(asset, other->bgm)) {
-				same = true;
-				break;
-			}
-		}
-		if (!same) gsDeleteBGM(asset);
-	}
-	for (const auto& asset : data->se) {
-		bool same{ false };
-		for (const auto& other : assets_) {
-			if (other == data) continue;
-			if (is_same_id_for_other_asset(asset, other->se)) {
-				same = true;
-				break;
-			}
-		}
-		if (!same) gsDeleteSE(asset);
-	}
-	for (const auto& asset : data->effect) {
-		bool same{ false };
-		for (const auto& other : assets_) {
-			if (other == data) continue;
-			if (is_same_id_for_other_asset(asset, other->effect)) {
-				same = true;
-				break;
-			}
-		}
-		if (!same) gsDeleteEffect(asset);
-	}
-}
-
-void AssetsManager::remove_loaded_asset(LoadedAssets* data) {
-	for (auto i = assets_.begin(); i != assets_.end();) {
-		if ((*i) == data) {
-			delete* i;
-			i = assets_.erase(i);
-		}
-		else {
-			++i;
-		}
-	}
-}
-
-void AssetsManager::remove_loading_asset(LoadAssets* data) {
-	for (auto i = loading_assets_.begin(); i != loading_assets_.end();) {
-		if ((*i) == data) {
-			delete* i;
-			i = loading_assets_.erase(i);
-		}
-		else {
-			++i;
-		}
-	}
+void AssetsManager::remove(LoadedAssets* data) {
+    auto it = std::find(assets_.begin(), assets_.end(), data);
+    if (it != assets_.end()) {
+        delete* it;
+        assets_.erase(it);
+    }
 }
 
 bool AssetsManager::is_same_id_for_other_asset(const GSuint id, const vector<GSuint>& other) const {

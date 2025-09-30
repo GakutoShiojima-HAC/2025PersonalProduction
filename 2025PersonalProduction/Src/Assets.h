@@ -2,57 +2,57 @@
 //  File          : Assets.h
 //  Author        : Shiojima Gakuto
 //  Created       : 2025/07/07
-//  Updated       : 2025/07/11
-//  Description   : ƒAƒZƒbƒg”Ô†‚Ì’è‹`A•¶š—ñ•ÏŠ·ƒNƒ‰ƒX
-//					’è‹`‚µ‚½•¶š—ñ‚ğ‚»‚Ì‚Ü‚Üenum‚É•ÏŠ·‚·‚é‚Ì‚ÅAmap‚ğì‚ç‚¸’è‹`‚Å‚«‚é
+//  Updated       : 2025/09/30
+//  Description   : ã‚¢ã‚»ãƒƒãƒˆç•ªå·ã®å®šç¾©ã€æ–‡å­—åˆ—å¤‰æ›ã‚¯ãƒ©ã‚¹
+//					å®šç¾©ã—ãŸæ–‡å­—åˆ—ã‚’ãã®ã¾ã¾enumã«å¤‰æ›ã™ã‚‹ã®ã§ã€mapã‚’ä½œã‚‰ãšå®šç¾©ã§ãã‚‹
 //
-//  ’ˆÓF–{ƒ\[ƒXƒR[ƒh‚Ì–³’f“]ÚEƒR[ƒh‚ÌƒRƒs[E“\‚è•t‚¯‚É‚æ‚é—¬—pEÄ”z•z‚ğ‹Ö~‚µ‚Ü‚·B
+//  æ³¨æ„ï¼šæœ¬ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã®ç„¡æ–­è»¢è¼‰ãƒ»ã‚³ãƒ¼ãƒ‰ã®ã‚³ãƒ”ãƒ¼ãƒ»è²¼ã‚Šä»˜ã‘ã«ã‚ˆã‚‹æµç”¨ãƒ»å†é…å¸ƒã‚’ç¦æ­¢ã—ã¾ã™ã€‚
 // -----------------------------------------------------------------------------------------
 
 #ifndef ASSETS_H_
 #define ASSETS_H_
 
-#pragma region [’è‹`]
-// ƒƒbƒVƒ…EƒXƒLƒ“ƒƒbƒVƒ…
+#pragma region [å®šç¾©]
+// ãƒ¡ãƒƒã‚·ãƒ¥ãƒ»ã‚¹ã‚­ãƒ³ãƒ¡ãƒƒã‚·ãƒ¥
 #define MESH_ID_LIST \
     X(NONE) \
     X(Player) \
     X(DummyEnemy) \
-    X(MAX_SIZE) // —v‘f”
+    X(MAX_SIZE) // è¦ç´ æ•°
 
-// ƒeƒNƒXƒ`ƒƒ 
+// ãƒ†ã‚¯ã‚¹ãƒãƒ£ 
 #define TEXTURE_ID_LIST \
     X(NONE) \
     X(Skybox) \
     X(TitleLogo) \
     X(MenuLogo) \
     X(TmpUI) \
-    X(MAX_SIZE) // —v‘f”
+    X(MAX_SIZE) // è¦ç´ æ•°
 
-// ƒIƒNƒcƒŠ[
+// ã‚ªã‚¯ãƒ„ãƒªãƒ¼
 #define OCTREE_ID_LIST \
     X(NONE) \
     X(Mesh) \
     X(Collider) \
-    X(MAX_SIZE) // —v‘f”
+    X(MAX_SIZE) // è¦ç´ æ•°
 
 // BGM
 #define BGM_ID_LIST \
     X(NONE) \
     X(Title) \
-    X(MAX_SIZE) // —v‘f”
+    X(MAX_SIZE) // è¦ç´ æ•°
 
 // SE
 #define SE_ID_LIST \
     X(NONE) \
     X(Click) \
-    X(MAX_SIZE) // —v‘f”
+    X(MAX_SIZE) // è¦ç´ æ•°
 
-// ƒGƒtƒFƒNƒg
+// ã‚¨ãƒ•ã‚§ã‚¯ãƒˆ
 #define EFFECT_ID_LIST \
     X(NONE) \
     X(Boom) \
-    X(MAX_SIZE) // —v‘f”
+    X(MAX_SIZE) // è¦ç´ æ•°
 #pragma endregion
 
 #include <string>
@@ -61,7 +61,7 @@
 typedef	unsigned int GSuint;
 using namespace std;
 
-#pragma region [—ñ‹“‘Ì‚ğ¶¬]
+#pragma region [åˆ—æŒ™ä½“ã‚’ç”Ÿæˆ]
 #define X(name) name,
 enum class MeshID { MESH_ID_LIST };
 enum class TextureID { TEXTURE_ID_LIST };
@@ -74,11 +74,11 @@ enum class EffectID { EFFECT_ID_LIST };
 
 namespace Assets {
     /// <summary>
-    /// •¶š—ñ‚ğƒƒbƒVƒ…”Ô†‚É•ÏŠ·
+    /// æ–‡å­—åˆ—ã‚’ãƒ¡ãƒƒã‚·ãƒ¥ç•ªå·ã«å¤‰æ›
     /// </summary>
     inline GSuint to_mesh_id(const string& name) {
         static const unordered_map<string, MeshID> map = {
-    #define X(name) {#name, MeshID::name},
+    #define X(name) { #name, MeshID::name },
             MESH_ID_LIST
     #undef X
         };
@@ -87,11 +87,11 @@ namespace Assets {
     }
 
     /// <summary>
-    /// •¶š—ñ‚ğƒeƒNƒXƒ`ƒƒ”Ô†‚É•ÏŠ·
+    /// æ–‡å­—åˆ—ã‚’ãƒ†ã‚¯ã‚¹ãƒãƒ£ç•ªå·ã«å¤‰æ›
     /// </summary>
     inline GSuint to_texture_id(const string& name) {
         static const unordered_map<string, TextureID> map = {
-    #define X(name) {#name, TextureID::name},
+    #define X(name) { #name, TextureID::name },
             TEXTURE_ID_LIST
     #undef X
         };
@@ -100,11 +100,11 @@ namespace Assets {
     }
 
     /// <summary>
-    /// •¶š—ñ‚ğ’nŒ`ƒf[ƒ^”Ô†‚É•ÏŠ·
+    /// æ–‡å­—åˆ—ã‚’åœ°å½¢ãƒ‡ãƒ¼ã‚¿ç•ªå·ã«å¤‰æ›
     /// </summary>
     inline GSuint to_octree_id(const string& name) {
         static const unordered_map<string, OctreeID> map = {
-    #define X(name) {#name, OctreeID::name},
+    #define X(name) { #name, OctreeID::name },
             OCTREE_ID_LIST
     #undef X
         };
@@ -113,11 +113,11 @@ namespace Assets {
     }
 
     /// <summary>
-    /// •¶š—ñ‚ğBGM”Ô†‚É•ÏŠ·
+    /// æ–‡å­—åˆ—ã‚’BGMç•ªå·ã«å¤‰æ›
     /// </summary>
     inline GSuint to_bgm_id(const string& name) {
         static const unordered_map<string, BGMID> map = {
-    #define X(name) {#name, BGMID::name},
+    #define X(name) { #name, BGMID::name },
             BGM_ID_LIST
     #undef X
         };
@@ -126,11 +126,11 @@ namespace Assets {
     }
 
     /// <summary>
-    /// •¶š—ñ‚ğSE”Ô†‚É•ÏŠ·
+    /// æ–‡å­—åˆ—ã‚’SEç•ªå·ã«å¤‰æ›
     /// </summary>
     inline GSuint to_se_id(const string& name) {
         static const unordered_map<string, SEID> map = {
-    #define X(name) {#name, SEID::name},
+    #define X(name) { #name, SEID::name },
             SE_ID_LIST
     #undef X
         };
@@ -139,11 +139,11 @@ namespace Assets {
     }
 
     /// <summary>
-    /// •¶š—ñ‚ğƒGƒtƒFƒNƒg”Ô†‚É•ÏŠ·
+    /// æ–‡å­—åˆ—ã‚’ã‚¨ãƒ•ã‚§ã‚¯ãƒˆç•ªå·ã«å¤‰æ›
     /// </summary>
     inline GSuint to_effect_id(const string& name) {
         static const unordered_map<string, EffectID> map = {
-    #define X(name) {#name, EffectID::name},
+    #define X(name) { #name, EffectID::name },
             EFFECT_ID_LIST
     #undef X
         };
