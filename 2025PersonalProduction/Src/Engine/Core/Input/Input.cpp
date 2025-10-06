@@ -129,7 +129,11 @@ bool Input::action(InputAction action) const {
 		break;
 	case InputAction::GAME_Interact:
 		break;
-	case InputAction::GAME_Inventory:
+    case InputAction::GAME_Interact_Up:
+        return gsXBoxPadButtonTrigger(USE_PAD_NUM, GS_XBOX_PAD_UP);
+    case InputAction::GAME_Interact_Down:
+        return gsXBoxPadButtonTrigger(USE_PAD_NUM, GS_XBOX_PAD_DOWN);
+    case InputAction::GAME_Inventory:
 		break;
 	case InputAction::DEBUG_CameraActive:
 		return gsGetMouseButtonState(GMOUSE_BUTTON_2);
