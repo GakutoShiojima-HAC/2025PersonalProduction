@@ -144,6 +144,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Actor\ItemActor\ItemActor.cpp" />
     <ClCompile Include="Src\Engine\Core\Assets\AssetsLoader.cpp" />
     <ClCompile Include="Src\Engine\Core\Collision\AttackCollider.cpp" />
     <ClCompile Include="Src\Engine\Core\Collision\AttackColliderPool.cpp" />
@@ -187,6 +188,10 @@
     <ClCompile Include="Src\Engine\Graphics\Shader\PostEffects\BloomEffect.cpp" />
     <ClCompile Include="Src\Engine\Graphics\Shader\PostEffects\BlurEffect.cpp" />
     <ClCompile Include="Src\Engine\Graphics\Shader\PostEffects\SSAOEffect.cpp" />
+    <ClCompile Include="Src\GUI\InteractUI.cpp" />
+    <ClCompile Include="Src\Item\Inventory.cpp" />
+    <ClCompile Include="Src\Item\ItemDataManager.cpp" />
+    <ClCompile Include="Src\Item\Weapon\WeaponDataManager.cpp" />
     <ClCompile Include="Src\Lib\imgui_stdlib.cpp" />
     <ClCompile Include="Src\Engine\Core\Actor\Pawn\Character\Character.cpp" />
     <ClCompile Include="Src\Engine\Core\Actor\Pawn\Character\CharacterManager.cpp" />
@@ -200,6 +205,7 @@
     <ClCompile Include="Src\Engine\Graphics\Canvas\Canvas.cpp" />
     <ClCompile Include="Src\main.cpp" />
     <ClCompile Include="Src\Engine\Core\Actor\Pawn\PawnManager.cpp" />
+    <ClCompile Include="Src\SaveData\GameSaveData.cpp" />
     <ClCompile Include="Src\Scene\GameScene.cpp" />
     <ClCompile Include="Src\Scene\LoadingScene.cpp" />
     <ClCompile Include="Src\Scene\MenuScene.cpp" />
@@ -229,6 +235,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Actor\ActorTag.h" />
+    <ClInclude Include="Src\Actor\ItemActor\ItemActor.h" />
     <ClInclude Include="Src\Engine\Core\Assets\AssetsLoader.h" />
     <ClInclude Include="Src\Engine\Core\Collision\AttackCollider.h" />
     <ClInclude Include="Src\Engine\Core\Collision\AttackColliderPool.h" />
@@ -273,7 +280,9 @@
     <ClInclude Include="Src\Engine\Utils\Check.h" />
     <ClInclude Include="Src\Engine\Utils\DebugMarker.h" />
     <ClInclude Include="Src\Engine\Utils\Folder.h" />
+    <ClInclude Include="Src\Engine\Utils\MyJson.h" />
     <ClInclude Include="Src\Engine\Utils\MyRandom.h" />
+    <ClInclude Include="Src\Engine\Utils\MyString.h" />
     <ClInclude Include="Src\Engine\Utils\MyTime.h" />
     <ClInclude Include="Src\Engine\Utils\SystemData.h" />
     <ClInclude Include="Src\GameConfig.h" />
@@ -285,6 +294,11 @@
     <ClInclude Include="Src\Engine\Core\Camera\CameraManager.h" />
     <ClInclude Include="Src\Engine\Core\Collision\BoundingSphere.h" />
     <ClInclude Include="Src\Engine\Core\Field\Field.h" />
+    <ClInclude Include="Src\GUI\InteractUI.h" />
+    <ClInclude Include="Src\Item\Inventory.h" />
+    <ClInclude Include="Src\Item\ItemData.h" />
+    <ClInclude Include="Src\Item\ItemDataManager.h" />
+    <ClInclude Include="Src\Item\Weapon\WeaponDataManager.h" />
     <ClInclude Include="Src\Lib\imgui_stdlib.h" />
     <ClInclude Include="Src\Engine\Core\Actor\Pawn\Character\Character.h" />
     <ClInclude Include="Src\Engine\Core\Actor\Pawn\Character\CharacterManager.h" />
@@ -307,6 +321,7 @@
     <ClInclude Include="Src\Engine\Utils\Ray.h" />
     <ClInclude Include="Src\Lib\json.hpp" />
     <ClInclude Include="Src\Engine\Core\Actor\Pawn\PawnManager.h" />
+    <ClInclude Include="Src\SaveData\GameSaveData.h" />
     <ClInclude Include="Src\Scene\GameScene.h" />
     <ClInclude Include="Src\Scene\LoadingScene.h" />
     <ClInclude Include="Src\Scene\MenuScene.h" />
@@ -332,8 +347,8 @@
     <ClInclude Include="Src\State\Player\PlayerSkillState.h" />
     <ClInclude Include="Src\State\Player\PlayerState.h" />
     <ClInclude Include="Src\stdafx.h" />
+    <ClInclude Include="Src\Item\Weapon\WeaponData.h" />
     <ClInclude Include="Src\Weapon\WeaponManager.h" />
-    <ClInclude Include="Src\Weapon\WeaponType.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Private\Shader\MaskEffect.frag" />
