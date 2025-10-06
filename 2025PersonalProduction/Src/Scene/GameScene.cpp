@@ -8,6 +8,7 @@
 #include "Engine/Core/Tween/Tween.h"
 #include "Engine/Graphics/Shader/GameShader.h"
 #include "Engine/Graphics/Shader/GamePostEffect.h"
+#include "Item/ItemDataManager.h"
 
 #include <gslib.h>	// tmp
 #include "Camera/FixedCamera.h"	// tmp
@@ -18,6 +19,7 @@
 #include "Camera/EditorCamera.h"	// tmp
 #include "Actor/Enemy/DummyEnemy.h"	// tmp
 #include "Assets.h"	// tmp
+#include "Engine/Core/Actor/ItemActor/ItemActor.h"
 
 void GameScene::load() {
     // 初期化
@@ -83,6 +85,12 @@ void GameScene::start() {
 	// tmp
 	world_.add_character(new DummyEnemy{ &world_, GSvector3{ 0.0f, 0.0f, 2.0f } });
 
+    // tmp
+    world_.add_actor(new ItemActor{ &world_, GSvector3{ 0.0f, 0.0f, -3.0f }, ItemData::Data{ ItemType::Weapon, 1 } });
+    world_.add_actor(new ItemActor{ &world_, GSvector3{ 0.0f, 0.0f, -3.5f }, ItemData::Data{ ItemType::Weapon, 3 } });
+    world_.add_actor(new ItemActor{ &world_, GSvector3{ 0.0f, 0.0f, -4.0f }, ItemData::Data{ ItemType::Weapon, 1 } });
+    world_.add_actor(new ItemActor{ &world_, GSvector3{ 0.0f, 0.0f, -4.5f }, ItemData::Data{ ItemType::Weapon, 3 } });
+
     // シェーダーの有効化
     GameShader::get_instance().start();
     // レンダーターゲットの作成
@@ -116,6 +124,9 @@ void GameScene::draw() const {
 }
 
 void GameScene::end() {
+    // データを保存してクリア
+    world_.game_save_data().save();
+    world_.game_save_data().clear();
     // ワールドクリア
 	world_.clear();
 	// Tweenの終了
@@ -128,7 +139,9 @@ void GameScene::end() {
     // レンダーターゲットの削除
     GamePostEffect::get_instance().end();
 	// アセットの開放
-	AssetsManager::get_instance().delete_asset("Game");
+	AssetsManager::get_instance().delete_asset(AssetsLoader::GAME_STAGE_ASSET_NAME);
+    // メニューに戻るなら共通アセットも開放
+    if (next_scene_tag_ != SceneTag::Game) AssetsManager::get_instance().delete_asset(AssetsLoader::GAME_COMMON_ASSET_NAME);
 
     // 初期化
     is_load_end_ = false;
@@ -153,7 +166,7 @@ void GameScene::reception_message(const std::string& message, std::any& param) {
 
 void GameScene::load_data() {
     // 読み込み処理の数から一つの処理分の進捗率を計算
-    const int count = 6;
+    const int count = 8;
     const float progress = 1.0f / (float)count;
 
     // 共通アセットの読み込み
@@ -178,5 +191,13 @@ void GameScene::load_data() {
 
     // タイムラインデータの読み込み
     world_.timeline().add(new CameraTimeline{ &world_, "Resource/Private/Timeline/Camera/List/world1.json" });
+    load_progress_ += progress;
+
+    // アイテムデータの読み込み
+    ItemDataManager::get_instance().load();
+    load_progress_ += progress;
+
+    // セーブデータの読み込み
+    world_.game_save_data().load("test");
     load_progress_ += progress;
 }
