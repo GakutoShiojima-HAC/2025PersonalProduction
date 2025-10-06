@@ -20,6 +20,7 @@
 #include "Engine/Core/NavMesh/NavMeshSurface.h"
 #include "Engine/Graphics/Shader/GameShader.h"
 #include "Engine/Graphics/Shader/GamePostEffect.h"
+#include "SaveData/GameSaveData.h"
 
 class AttackColliderPool;
 
@@ -102,21 +103,23 @@ public:
 
 	NavMeshSurface* navmesh() override;
 
-	Actor* find_actor(const string& name) const override;
+    std::vector<Actor*> get_all_actor() const override;
 
-	vector<Actor*> find_actor_with_tag(const ActorTag tag) const override;
+	Actor* find_actor(const std::string& name) const override;
+
+    std::vector<Actor*> find_actor_with_tag(const ActorTag tag) const override;
 	
 	int count_actor() const override;
 
 	int count_actor_with_tag(const ActorTag tag) const override;
 
-	Pawn* find_pawn(const string& name) const override;
+	Pawn* find_pawn(const std::string& name) const override;
 
-	vector<Pawn*> find_pawn_with_tag(const ActorTag tag) const override;
+    std::vector<Pawn*> find_pawn_with_tag(const ActorTag tag) const override;
 
-	Character* find_character(const string& name) const override;
+	Character* find_character(const std::string& name) const override;
 
-	vector<Character*> find_character_with_tag(const ActorTag tag) const override;
+    std::vector<Character*> find_character_with_tag(const ActorTag tag) const override;
 
 	TimelineManager& timeline() override;
 
@@ -125,6 +128,8 @@ public:
     void set_mask_color(const GScolor& color) override;
 
 	bool& enable_avoid_effect() override;
+
+    GameSaveData& game_save_data() override;
 
 protected:
 	// フィールド
@@ -149,6 +154,9 @@ protected:
     GameShader& game_shader_ = GameShader::get_instance();
     // ゲームポストエフェクト
     GamePostEffect& game_post_effect_ = GamePostEffect::get_instance();
+    // ゲームセーブデータ
+    GameSaveData game_save_data_;
+
 };
 
 #endif

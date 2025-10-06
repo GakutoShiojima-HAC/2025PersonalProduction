@@ -157,6 +157,10 @@ NavMeshSurface* World::navmesh() {
 	return navmesh_;
 }
 
+std::vector<Actor*> World::get_all_actor() const {
+	return actor_.get_all();
+}
+
 Actor* World::find_actor(const string& name) const {
 	return actor_.find(name);
 }
@@ -205,4 +209,8 @@ void World::set_mask_color(const GScolor& color) {
 
 bool& World::enable_avoid_effect() {
     return game_post_effect_.enable_draw_avoid_effect();
+}
+
+GameSaveData& World::game_save_data() {
+    return game_save_data_;
 }
