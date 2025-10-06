@@ -3,15 +3,15 @@
 //  Author        : Shiojima Gakuto
 //  Created       : 2025/09/06
 //  Updated       : 2025/09/07
-//  Description   : ����̎�ނƃA�j���[�V�����␶���ʒu���Ǘ�����N���X
+//  Description   : 武器の種類とアニメーションや生成位置を管理するクラス
 //
-//  ���ӁF�{�\�[�X�R�[�h�̖��f�]�ځE�R�[�h�̃R�s�[�E�\��t���ɂ�闬�p�E�Ĕz�z���֎~���܂��B
+//  注意：本ソースコードの無断転載・コードのコピー・貼り付けによる流用・再配布を禁止します。
 // -----------------------------------------------------------------------------------------
 
 #ifndef WEAPON_MANAGER_H_
 #define WEAPON_MANAGER_H_
 
-#include "Weapon/WeaponType.h"
+#include "Item/Weapon/WeaponData.h"
 #include <gslib.h>
 #include <vector>
 #include <unordered_map>
@@ -24,13 +24,13 @@ public:
 
 public:
 	struct WeaponAnimationData {
-		// �A�j���[�V�����ԍ�
+		// アニメーション番号
 		int animation_num{ -1 };
-		// �U������𐶐�����L�[�t���[��
+		// 攻撃判定を生成するキーフレーム
 		float attack_frame{ -1.0f };
-		// �U������𐶐����鑊�΍��W
+		// 攻撃判定を生成する相対座標
 		GSvector3 collider_offset{ 0.0f, 0.0f, 0.0f };
-		// ���̕���A�j���[�V�����ɑJ�ڂł���܂ł̎���(delta_time)
+		// 次の武器アニメーションに遷移できるまでの時間(delta_time)
 		float enter_next_animation_time{ 0.0f };
 
 		WeaponAnimationData() {}
@@ -48,70 +48,70 @@ public:
 
 public:
 	/// <summary>
-	/// ����̎�ނƃp�����[�^��ǉ�
+	/// 武器の種類とパラメータを追加
 	/// </summary>
-	/// <param name="type">= �ǉ����镐��̎��</param>
-	/// <param name="data">= �����̃p�����[�^</param>
+	/// <param name="type">= 追加する武器の種類</param>
+	/// <param name="data">= 武器種のパラメータ</param>
 	void add_weapon_parameter(WeaponType type, const std::vector<WeaponAnimationData*>& data);
 
 	/// <summary>
-	/// ����̎�ނ���ő�U���\�i�����擾
+	/// 武器の種類から最大攻撃可能段数を取得
 	/// </summary>
-	/// <param name="type">= ����̎��</param>
-	/// <returns>�ő�U���\�i��</returns>
+	/// <param name="type">= 武器の種類</param>
+	/// <returns>最大攻撃可能段数</returns>
 	int get_max_attack_count(WeaponType type);
 
 	/// <summary>
-	/// ����̎�ނƍU���i������Đ�����A�j���[�V�����ԍ����擾
+	/// 武器の種類と攻撃段数から再生するアニメーション番号を取得
 	/// </summary>
-	/// <param name="type">����̎��</param>
-	/// <param name="attack_count">= �U���i��</param>
-	/// <returns>�Đ�����A�j���[�V�����ԍ� ���݂��Ȃ���Ε��̒l��ԋp</returns>
+	/// <param name="type">武器の種類</param>
+	/// <param name="attack_count">= 攻撃段数</param>
+	/// <returns>再生するアニメーション番号 存在しなければ負の値を返却</returns>
 	int get_animation_num(WeaponType type, int attack_count);
 
 	/// <summary>
-	/// ����̎�ނƍU���i������U������𔭐�������t���[�����擾
+	/// 武器の種類と攻撃段数から攻撃判定を発生させるフレームを取得
 	/// </summary>
-	/// <param name="type">= ����̎��</param>
-	/// <param name="attack_count">= �U���i��</param>
-	/// <returns>����𔭐�������t���[�� ���݂��Ȃ���Ε��̒l��ԋp</returns>
+	/// <param name="type">= 武器の種類</param>
+	/// <param name="attack_count">= 攻撃段数</param>
+	/// <returns>判定を発生させるフレーム 存在しなければ負の値を返却</returns>
 	float get_attack_frame(WeaponType type, int attack_count);
 
 	/// <summary>
-	/// ����̎�ނƍU���i������U������𐶐����鑊�΍��W���擾
+	/// 武器の種類と攻撃段数から攻撃判定を生成する相対座標を取得
 	/// </summary>
-	/// <param name="type">= ����̎��</param>
-	/// <param name="attack_count">= �U���i��</param>
-	/// <returns>�����ʒu�̑��΍��W</returns>
+	/// <param name="type">= 武器の種類</param>
+	/// <param name="attack_count">= 攻撃段数</param>
+	/// <returns>生成位置の相対座標</returns>
 	GSvector3 get_collider_offset(WeaponType type, int attack_count);
 
 	/// <summary>
-	/// ����̎�ނƍU���i�����玟�̍U�����[�V�����ɓ���܂ł̎��Ԃ��擾
+	/// 武器の種類と攻撃段数から次の攻撃モーションに入るまでの時間を取得
 	/// </summary>
-	/// <param name="type">= ����̎��</param>
-	/// <param name="attack_count">= �U���i��</param>
-	/// <returns>���̍U�����[�V�����ɓ���܂ł̎���</returns>
+	/// <param name="type">= 武器の種類</param>
+	/// <param name="attack_count">= 攻撃段数</param>
+	/// <returns>次の攻撃モーションに入るまでの時間</returns>
 	float get_enter_next_animation_time(WeaponType type, int attack_count);
 
 	/// <summary>
-	///  �o�^����Ă��镐��̎�ނ�ԋp
+	///  登録されている武器の種類を返却
 	/// </summary>
-	/// <returns>����̎�ޕ��̐��l</returns>
+	/// <returns>武器の種類分の数値</returns>
 	int count();
 
 private:
 	/// <summary>
-	/// ���킪�o�^����Ă��邩
+	/// 武器が登録されているか
 	/// </summary>
-	/// <param name="type">= ����̎��</param>
-	/// <returns>�o�^����Ă�����^��ԋp</returns>
+	/// <param name="type">= 武器の種類</param>
+	/// <returns>登録されていたら真を返却</returns>
 	bool has_weapon(WeaponType type) const;
 
 private:
 	std::unordered_map<WeaponType, std::vector<WeaponAnimationData*>> data_;
 
 public:
-	// �R�s�[�֎~
+	// コピー禁止
 	WeaponManager(const WeaponManager& other) = delete;
 	WeaponManager& operator = (const WeaponManager& other) = delete;
 };
