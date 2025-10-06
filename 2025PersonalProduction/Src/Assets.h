@@ -18,6 +18,8 @@
     X(NONE) \
     X(Player) \
     X(DummyEnemy) \
+    X(WeaponSword1) \
+    X(WeaponSword3) \
     X(MAX_SIZE) // 要素数
 
 // テクスチャ 
@@ -51,7 +53,7 @@
 // エフェクト
 #define EFFECT_ID_LIST \
     X(NONE) \
-    X(Boom) \
+    X(Item) \
     X(MAX_SIZE) // 要素数
 #pragma endregion
 

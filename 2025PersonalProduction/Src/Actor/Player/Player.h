@@ -3,9 +3,9 @@
 //  Author        : Shiojima Gakuto
 //  Created       : 2025/08/11
 //  Updated       : 2025/08/11
-//  Description   : ƒvƒŒƒCƒ„[
+//  Description   : ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼
 //
-//  ’ˆÓF–{ƒ\[ƒXƒR[ƒh‚Ì–³’f“]ÚEƒR[ƒh‚ÌƒRƒs[E“\‚è•t‚¯‚É‚æ‚é—¬—pEÄ”z•z‚ğ‹Ö~‚µ‚Ü‚·B
+//  æ³¨æ„ï¼šæœ¬ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã®ç„¡æ–­è»¢è¼‰ãƒ»ã‚³ãƒ¼ãƒ‰ã®ã‚³ãƒ”ãƒ¼ãƒ»è²¼ã‚Šä»˜ã‘ã«ã‚ˆã‚‹æµç”¨ãƒ»å†é…å¸ƒã‚’ç¦æ­¢ã—ã¾ã™ã€‚
 // -----------------------------------------------------------------------------------------
 
 #ifndef PLAYER_H_
@@ -13,6 +13,7 @@
 
 #include "Engine/Core/Actor/Pawn/Character/Character.h"
 #include "Engine/Core/Input/Input.h"
+#include "Item/ItemDataManager.h"
 #include "Weapon/WeaponManager.h"
 
 class PlayerCamera;
@@ -23,11 +24,11 @@ public:
 
 public:
 	enum Motion {
-		Idle = 14,			// ‘Ò‹@
-		Jump = 17,          // ƒWƒƒƒ“ƒv
-		Fall = 16,          // ‹ó’†
-		Land = 15,			// ’…’n
-		Dead = 9,           // €–S
+		Idle = 14,			// å¾…æ©Ÿ
+		Jump = 17,          // ã‚¸ãƒ£ãƒ³ãƒ—
+		Fall = 16,          // ç©ºä¸­
+		Land = 15,			// ç€åœ°
+		Dead = 9,           // æ­»äº¡
 
 		HurtF = 5,
 		HurtL = 6,
@@ -62,7 +63,7 @@ public:
 		Attack3 = 2,
 		Attack4 = 3,
 
-		Skill = 101,          // TODO ƒXƒLƒ‹
+		Skill = 101,          // TODO ã‚¹ã‚­ãƒ«
 	};
 
 public:
@@ -90,58 +91,58 @@ private:
 
 public:
 	/// <summary>
-	/// ˆÚ“®‚ÌXV
+	/// ç§»å‹•ã®æ›´æ–°
 	/// </summary>
 	void update_move(float delta_time);
 
 	/// <summary>
-	/// ‹ó’†‚Å‚ÌˆÚ“®‚ÌXV
+	/// ç©ºä¸­ã§ã®ç§»å‹•ã®æ›´æ–°
 	/// </summary>
 	void update_move_air(float delta_time);
 
 	/// <summary>
-	/// ˆÚ“®ƒXƒe[ƒg‚É‘JˆÚ(“¯ˆêˆ—‚ª‘½‚¢‚½‚ßƒ‰ƒbƒv)
+	/// ç§»å‹•ã‚¹ãƒ†ãƒ¼ãƒˆã«é·ç§»(åŒä¸€å‡¦ç†ãŒå¤šã„ãŸã‚ãƒ©ãƒƒãƒ—)
 	/// </summary>
 	void to_move_state();
 
 	/// <summary>
-	/// ’Ç]ƒJƒƒ‰‚ÌXV
+	/// è¿½å¾“ã‚«ãƒ¡ãƒ©ã®æ›´æ–°
 	/// </summary>
 	void update_lockon_camera();
 
 	/// <summary>
-	/// UŒ‚ˆ—
+	/// æ”»æ’ƒå‡¦ç†
 	/// </summary>
 	void on_attack();
 
 	/// <summary>
-	/// ‰ñ”ğˆ—
+	/// å›é¿å‡¦ç†
 	/// </summary>
 	void on_avoid();
 
 	/// <summary>
-	/// ƒXƒLƒ‹ˆ—
+	/// ã‚¹ã‚­ãƒ«å‡¦ç†
 	/// </summary>
 	void on_skill();
 
 	/// <summary>
-	/// ƒCƒ“ƒ^ƒ‰ƒNƒgˆ—
+	/// ã‚¤ãƒ³ã‚¿ãƒ©ã‚¯ãƒˆå‡¦ç†
 	/// </summary>
 	void on_interact();
 
 	/// <summary>
-	/// UŒ‚’i”
+	/// æ”»æ’ƒæ®µæ•°
 	/// </summary>
-	/// <returns>QÆ</returns>
+	/// <returns>å‚ç…§</returns>
 	int& attack_count();
 
 	/// <summary>
-	/// UŒ‚‚©‚çŸ‚ÌUŒ‚‚É“ü‚é‚Ü‚Å‚ÌÅ’ZŠÔ‚ğæ“¾
+	/// æ”»æ’ƒã‹ã‚‰æ¬¡ã®æ”»æ’ƒã«å…¥ã‚‹ã¾ã§ã®æœ€çŸ­æ™‚é–“ã‚’å–å¾—
 	/// </summary>
-	/// <returns>ŠÔ</returns>
+	/// <returns>æ™‚é–“</returns>
 	float get_enter_next_attack_animation_time();
 
-	/* ƒAƒNƒVƒ‡ƒ“‚É‚æ‚Á‚Äó‘Ô‚ª•Ï‚í‚éƒAƒNƒVƒ‡ƒ“‚Ì“ü—ÍŒŸ’m */
+	/* ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ã«ã‚ˆã£ã¦çŠ¶æ…‹ãŒå¤‰ã‚ã‚‹ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ã®å…¥åŠ›æ¤œçŸ¥ */
 public:
 	bool is_attack();
 	
@@ -153,7 +154,7 @@ public:
 
 	bool is_interact() const;
 
-	/* ƒAƒNƒVƒ‡ƒ“‚Ìƒ‚[ƒVƒ‡ƒ“”Ô†‚ğ•Ô‹p */
+	/* ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ã®ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ç•ªå·ã‚’è¿”å´ */
 public:
 	GSuint get_attack_motion();
 
@@ -163,35 +164,52 @@ public:
 
 private:
 	/// <summary>
-	/// UŒ‚”»’è‚ğ¶¬
+	/// æ”»æ’ƒåˆ¤å®šã‚’ç”Ÿæˆ
 	/// </summary>
 	void generate_attack_collider();
 
-private:
-	/// <summary>
-	/// UŒ‚ƒAƒjƒ[ƒVƒ‡ƒ“ƒCƒxƒ“ƒg‚ğ’Ç‰Á
+    /// <summary>
+    /// ã‚¤ãƒ³ã‚¿ãƒ©ã‚¯ãƒˆã‚’æ›´æ–°
+    /// </summary>
+    void interact_update();
+
+    /// <summary>
+    /// ã‚¤ãƒ³ã‚¿ãƒ©ã‚¯ãƒˆã§ãã‚‹ã‚¢ã‚¯ã‚¿ãƒ¼ã‚’é›†ã‚ã‚‹
+    /// </summary>
+    void get_interact_actor_list();
+
+    /// <summary>
+	/// æ”»æ’ƒã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¤ãƒ™ãƒ³ãƒˆã‚’è¿½åŠ 
 	/// </summary>
 	void add_attack_animation_event();
 
 private:
-	// ƒvƒŒƒCƒ„[ƒJƒƒ‰
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚«ãƒ¡ãƒ©
 	PlayerCamera* camera_{ nullptr };
 
-	// ÅŒã‚ÌˆÚ“®‘¬“x
+	// æœ€å¾Œã®ç§»å‹•é€Ÿåº¦
 	float move_speed_{ 0.0f };
 
 private:
 	Input& input_ = Input::get_instance();
 
-	// •ŠíŠÇ—
-	WeaponManager weapon_manager_;
-	// UŒ‚’i”
-	int attack_count_{ 0 };
-	// Œ»İ‚Ì•Ší // TODO itemƒNƒ‰ƒX‚É‚µ‚½‚¢
-	WeaponType weapon_type_{ WeaponType::PlayerSword };
+    // ã‚¢ã‚¤ãƒ†ãƒ ãƒ‡ãƒ¼ã‚¿
+    ItemDataManager& item_data_ = ItemDataManager::get_instance();
+    // ã‚¤ãƒ³ã‚¿ãƒ©ã‚¯ãƒˆå¯¾è±¡ã®ã‚¢ã‚¯ã‚¿ãƒ¼
+    std::vector<Actor*> interact_actors_;
+    // ã‚¤ãƒ³ã‚¿ãƒ©ã‚¯ãƒˆã—ã¦ã„ã‚‹ã‚¢ã‚¯ã‚¿ãƒ¼ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
+    GSint interact_target_index_{ 0 };
 
-	// ‰ñ”ğ‰‰o‚Ìƒ^ƒCƒ}[
+	// æ­¦å™¨ç®¡ç†
+	WeaponManager weapon_manager_;
+	// æ”»æ’ƒæ®µæ•°
+	int attack_count_{ 0 };
+
+	// å›é¿æ¼”å‡ºã®ã‚¿ã‚¤ãƒãƒ¼
 	float avoid_effect_timer_{ 0.0f };
+
+    // å³æ‰‹ãƒœãƒ¼ãƒ³
+    int right_hand_bone_{ 114 };
 };
 
 using PlayerMotion = Player::Motion;

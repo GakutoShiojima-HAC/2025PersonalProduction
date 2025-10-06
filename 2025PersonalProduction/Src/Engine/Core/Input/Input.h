@@ -25,6 +25,8 @@ enum class InputAction {
     GAME_Sprint,        // 疾走
 
     GAME_Interact,      // インタラクト
+    GAME_Interact_Up,   // インタラクト上選択
+    GAME_Interact_Down, // インタラクト下選択
     GAME_Inventory,     // インベントリ
 
     DEBUG_CameraActive, // カメラ有効化

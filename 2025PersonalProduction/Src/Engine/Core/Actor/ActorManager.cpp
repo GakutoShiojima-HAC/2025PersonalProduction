@@ -20,7 +20,7 @@ void ActorManager::update(float delta_time) {
 
 #ifdef _DEBUG
 	ImGui::Begin("Game Window");
-	// Õ“Ë”»’è‚ð•`‰æ‚·‚é‚©‚Ç‚¤‚©
+	// è¡çªåˆ¤å®šã‚’æç”»ã™ã‚‹ã‹ã©ã†ã‹
 	if (ImGui::Button("draw collision detection")) draw_collision_detection_ = !draw_collision_detection_;
 	ImGui::End();
 #endif
@@ -56,7 +56,7 @@ void ActorManager::draw_gui() const {
 }
 
 void ActorManager::collide() {
-	// ‚»‚ñ‚ÈƒAƒNƒ^[’Ç‰Á‚·‚é—\’è‚È‚¢‚Ì‚ÅƒVƒ“ƒvƒ‹‚É‘“–‚½‚è
+	// ãã‚“ãªã‚¢ã‚¯ã‚¿ãƒ¼è¿½åŠ ã™ã‚‹äºˆå®šãªã„ã®ã§ã‚·ãƒ³ãƒ—ãƒ«ã«ç·å½“ãŸã‚Š
 	for (auto i = actors_.begin(); i != actors_.end(); ++i) {
 		for (auto j = std::next(i); j != actors_.end(); ++j) {
 			(*i)->collide(**j);
@@ -76,6 +76,10 @@ void ActorManager::remove() {
 	}
 }
 
+std::vector<Actor*> ActorManager::get_all() const {
+    return std::vector<Actor*>(actors_.begin(), actors_.end());
+}
+
 Actor* ActorManager::find(const string& name) const {
 	for (const auto& actor : actors_) {
 		if (actor->name() == name) {
@@ -85,8 +89,8 @@ Actor* ActorManager::find(const string& name) const {
 	return nullptr;
 }
 
-vector<Actor*> ActorManager::find_with_tag(const ActorTag tag) const {
-	vector<Actor*> actors;
+std::vector<Actor*> ActorManager::find_with_tag(const ActorTag tag) const {
+    std::vector<Actor*> actors;
 	for (const auto& actor : actors_) {
 		if (actor->tag() == tag) {
 			actors.push_back(actor);

@@ -56,15 +56,15 @@ LoadedAssets* AssetsManager::load_asset(LoadAssets* data) {
 		gsLoadTexture(asset.first, asset.second.c_str());
 		result->texture.push_back(asset.first);
 	}
-	for (const auto& asset : data->mesh) {
+	for (const auto& asset : data->bgm) {
 		gsLoadBGM(asset.first, asset.second.c_str(), GS_TRUE);
 		result->bgm.push_back(asset.first);
 	}
-	for (const auto& asset : data->texture) {
+	for (const auto& asset : data->se) {
 		gsLoadSE(asset.first, asset.second.c_str(), 5, GWAVE_DEFAULT);
 		result->se.push_back(asset.first);
 	}
-	for (const auto& asset : data->texture) {
+	for (const auto& asset : data->effect) {
 		gsLoadEffect(asset.first, asset.second.c_str());
 		result->effect.push_back(asset.first);
 	}

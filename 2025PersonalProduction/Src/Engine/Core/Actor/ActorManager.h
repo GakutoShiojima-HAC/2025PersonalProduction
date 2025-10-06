@@ -3,9 +3,9 @@
 //  Author        : Shiojima Gakuto
 //  Created       : 2025/07/09
 //  Updated       : 2025/07/09
-//  Description   : ƒAƒNƒ^[ŠÇ—ƒNƒ‰ƒX
+//  Description   : ã‚¢ã‚¯ã‚¿ãƒ¼ç®¡ç†ã‚¯ãƒ©ã‚¹
 //
-//  ’ˆÓF–{ƒ\[ƒXƒR[ƒh‚Ì–³’f“]ÚEƒR[ƒh‚ÌƒRƒs[E“\‚è•t‚¯‚É‚æ‚é—¬—pEÄ”z•z‚ğ‹Ö~‚µ‚Ü‚·B
+//  æ³¨æ„ï¼šæœ¬ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã®ç„¡æ–­è»¢è¼‰ãƒ»ã‚³ãƒ¼ãƒ‰ã®ã‚³ãƒ”ãƒ¼ãƒ»è²¼ã‚Šä»˜ã‘ã«ã‚ˆã‚‹æµç”¨ãƒ»å†é…å¸ƒã‚’ç¦æ­¢ã—ã¾ã™ã€‚
 // -----------------------------------------------------------------------------------------
 
 #ifndef ACTOR_MANAGER_H_
@@ -15,8 +15,6 @@
 #include <vector>
 #include <string>
 #include "Actor/ActorTag.h"
-
-using namespace std;
 
 class Actor;
 
@@ -28,89 +26,95 @@ public:
 
 public:
     /// <summary>
-    /// ƒAƒNƒ^[‚ğŠÇ—‰º‚É’Ç‰Á
+    /// ã‚¢ã‚¯ã‚¿ãƒ¼ã‚’ç®¡ç†ä¸‹ã«è¿½åŠ 
     /// </summary>
-    /// <param name="actor">= ƒAƒNƒ^[</param>
+    /// <param name="actor">= ã‚¢ã‚¯ã‚¿ãƒ¼</param>
     void add(Actor* actor);
 
     /// <summary>
-    /// ƒAƒNƒ^[‚ÌXV
+    /// ã‚¢ã‚¯ã‚¿ãƒ¼ã®æ›´æ–°
     /// </summary>
     virtual void update(float delta_time);
 
     /// <summary>
-    /// ƒAƒNƒ^[‚ÌXV update‚Æcollide‚ÌŒã‚ÉŒÄ‚Î‚ê‚é
+    /// ã‚¢ã‚¯ã‚¿ãƒ¼ã®æ›´æ–° updateã¨collideã®å¾Œã«å‘¼ã°ã‚Œã‚‹
     /// </summary>
     void late_update(float delta_time);
 
     /// <summary>
-    /// ƒAƒNƒ^[‚Ì•`‰æ
+    /// ã‚¢ã‚¯ã‚¿ãƒ¼ã®æç”»
     /// </summary>
     void draw() const;
 
     /// <summary>
-    /// ƒAƒNƒ^[‚Ì”¼“§–¾•`‰æ
+    /// ã‚¢ã‚¯ã‚¿ãƒ¼ã®åŠé€æ˜æç”»
     /// </summary>
     void draw_tranparent() const;
 
     /// <summary>
-    /// ƒAƒNƒ^[‚ÌGUI•`‰æ
+    /// ã‚¢ã‚¯ã‚¿ãƒ¼ã®GUIæç”»
     /// </summary>
     void draw_gui() const;
 
     /// <summary>
-    /// ƒAƒNƒ^[‚ÌÕ“Ë”»’è
+    /// ã‚¢ã‚¯ã‚¿ãƒ¼ã®è¡çªåˆ¤å®š
     /// </summary>
     void collide();
 
     /// <summary>
-    /// õ–½‚ªs‚«‚½ƒAƒNƒ^[‚Ìíœ
+    /// å¯¿å‘½ãŒå°½ããŸã‚¢ã‚¯ã‚¿ãƒ¼ã®å‰Šé™¤
     /// </summary>
     void remove();
 
     /// <summary>
-    /// w’è‚µ‚½–¼‘O‚ğ‚ÂƒAƒNƒ^[‚ğŒŸõ
+    /// å…¨ã¦ã®ã‚¢ã‚¯ã‚¿ãƒ¼ã‚’è¿”å´
     /// </summary>
-    /// <param name="name">= –¼‘O</param>
-    /// <returns>Œ©‚Â‚©‚ê‚ÎƒAƒNƒ^[‚ğAŒ©‚Â‚©‚ç‚È‚¯‚ê‚Înullptr</returns>
+    /// <returns>å…¨ã¦ã®ã‚¢ã‚¯ã‚¿ãƒ¼</returns>
+    std::vector<Actor*> get_all() const;
+
+    /// <summary>
+    /// æŒ‡å®šã—ãŸåå‰ã‚’æŒã¤ã‚¢ã‚¯ã‚¿ãƒ¼ã‚’æ¤œç´¢
+    /// </summary>
+    /// <param name="name">= åå‰</param>
+    /// <returns>è¦‹ã¤ã‹ã‚Œã°ã‚¢ã‚¯ã‚¿ãƒ¼ã‚’ã€è¦‹ã¤ã‹ã‚‰ãªã‘ã‚Œã°nullptr</returns>
     Actor* find(const string& name) const;
 
     /// <summary>
-    /// w’è‚µ‚½ƒ^ƒO‚ğ‚ÂƒAƒNƒ^[‚ğ‘S‚ÄŒŸõ
+    /// æŒ‡å®šã—ãŸã‚¿ã‚°ã‚’æŒã¤ã‚¢ã‚¯ã‚¿ãƒ¼ã‚’å…¨ã¦æ¤œç´¢
     /// </summary>
-    /// <param name="tag">= ƒ^ƒO</param>
-    /// <returns>ƒAƒNƒ^[</returns>
-    vector<Actor*> find_with_tag(const ActorTag tag) const;
+    /// <param name="tag">= ã‚¿ã‚°</param>
+    /// <returns>ã‚¢ã‚¯ã‚¿ãƒ¼</returns>
+    std::vector<Actor*> find_with_tag(const ActorTag tag) const;
 
     /// <summary>
-    /// ŠÇ—‚µ‚Ä‚¢‚éƒAƒNƒ^[‚Ì”
+    /// ç®¡ç†ã—ã¦ã„ã‚‹ã‚¢ã‚¯ã‚¿ãƒ¼ã®æ•°
     /// </summary>
-    /// <returns>”</returns>
+    /// <returns>æ•°</returns>
     int count() const;
 
     /// <summary>
-    /// w’è‚µ‚½ƒ^ƒO‚ğ‚ÂƒAƒNƒ^[‚Ì”
+    /// æŒ‡å®šã—ãŸã‚¿ã‚°ã‚’æŒã¤ã‚¢ã‚¯ã‚¿ãƒ¼ã®æ•°
     /// </summary>
-    /// <param name="tag">= ƒ^ƒO</param>
-    /// <returns>”</returns>
+    /// <param name="tag">= ã‚¿ã‚°</param>
+    /// <returns>æ•°</returns>
     int count_with_tag(const ActorTag tag) const;
 
     /// <summary>
-    /// ŠÇ—‚µ‚Ä‚¢‚éƒAƒNƒ^[‚ğÁ‹
+    /// ç®¡ç†ã—ã¦ã„ã‚‹ã‚¢ã‚¯ã‚¿ãƒ¼ã‚’æ¶ˆå»
     /// </summary>
     void clear();
 
 protected:
-    // ƒAƒNƒ^[ƒŠƒXƒg
-    list<Actor*> actors_;
+    // ã‚¢ã‚¯ã‚¿ãƒ¼ãƒªã‚¹ãƒˆ
+    std::list<Actor*> actors_;
 
 #ifdef _DEBUG
-    // Õ“Ë”»’è‚ğ•`‰æ‚·‚é‚©‚Ç‚¤‚©
+    // è¡çªåˆ¤å®šã‚’æç”»ã™ã‚‹ã‹ã©ã†ã‹
     bool draw_collision_detection_{ false };
 #endif
 
 public:
-    // ƒRƒs[‹Ö~
+    // ã‚³ãƒ”ãƒ¼ç¦æ­¢
     ActorManager(const ActorManager& other) = delete;
     ActorManager& operator = (const ActorManager& other) = delete;
 

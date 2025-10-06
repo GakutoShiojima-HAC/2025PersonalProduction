@@ -16,8 +16,6 @@
 #include "Camera/CameraTag.h"
 #include "Actor/ActorTag.h"
 
-using namespace std;
-
 class Field;
 class FieldActor;
 class Light;
@@ -27,6 +25,7 @@ class Pawn;
 class Character;
 class TimelineManager;
 class NavMeshSurface;
+class GameSaveData;
 
 struct GSvector3;
 
@@ -90,18 +89,24 @@ public:
     virtual NavMeshSurface* navmesh() = 0;
 
     /// <summary>
+    /// 全てのアクターを返却
+    /// </summary>
+    /// <returns>全てのアクター</returns>
+    virtual std::vector<Actor*> get_all_actor() const = 0;
+
+    /// <summary>
     /// 指定した名前を持つアクターを検索
     /// </summary>
     /// <param name="name">= 名前</param>
     /// <returns>見つかればアクターを、見つからなければnullptr</returns>
-    virtual Actor* find_actor(const string& name) const = 0;
+    virtual Actor* find_actor(const std::string& name) const = 0;
 
     /// <summary>
     /// 指定したタグを持つアクターを全て検索
     /// </summary>
     /// <param name="tag">= タグ</param>
     /// <returns>アクター</returns>
-    virtual vector<Actor*> find_actor_with_tag(const ActorTag tag) const = 0;
+    virtual std::vector<Actor*> find_actor_with_tag(const ActorTag tag) const = 0;
 
     /// <summary>
     /// 管理しているアクターの数
@@ -121,28 +126,28 @@ public:
     /// </summary>
     /// <param name="name">= 名前</param>
     /// <returns>見つかればポーンを、見つからなければnullptr</returns>
-    virtual Pawn* find_pawn(const string& name) const = 0;
+    virtual Pawn* find_pawn(const std::string& name) const = 0;
 
     /// <summary>
     /// 指定したタグを持つポーンを全て検索
     /// </summary>
     /// <param name="tag">= タグ</param>
     /// <returns>ポーン</returns>
-    virtual vector<Pawn*> find_pawn_with_tag(const ActorTag tag) const = 0;
+    virtual std::vector<Pawn*> find_pawn_with_tag(const ActorTag tag) const = 0;
 
     /// <summary>
     /// 指定した名前を持つキャラクターを検索
     /// </summary>
     /// <param name="name">= 名前</param>
     /// <returns>見つかればキャラクターを、見つからなければnullptr</returns>
-    virtual Character* find_character(const string& name) const = 0;
+    virtual Character* find_character(const std::string& name) const = 0;
 
     /// <summary>
     /// 指定したタグを持つキャラクターを全て検索
     /// </summary>
     /// <param name="tag">= タグ</param>
     /// <returns>キャラクター</returns>
-    virtual vector<Character*> find_character_with_tag(const ActorTag tag) const = 0;
+    virtual std::vector<Character*> find_character_with_tag(const ActorTag tag) const = 0;
 
     /// <summary>
     /// タイムラインマネージャーを取得
@@ -172,6 +177,12 @@ public:
     /// </summary>
     /// <returns>参照</returns>
     virtual bool& enable_avoid_effect() = 0;
+
+    /// <summary>
+    /// ゲームセーブデータの取得
+    /// </summary>
+    /// <returns>ゲームセーブデータ管理クラス</returns>
+    virtual GameSaveData& game_save_data() = 0;
 
 public:
 	// コピー禁止
