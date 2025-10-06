@@ -3,9 +3,9 @@
 //  Author        : Shiojima Gakuto
 //  Created       : 2025/07/09
 //  Updated       : 2025/07/09
-//  Description   : ƒAƒNƒ^[ƒNƒ‰ƒX
+//  Description   : ã‚¢ã‚¯ã‚¿ãƒ¼ã‚¯ãƒ©ã‚¹
 //
-//  ’ˆÓF–{ƒ\[ƒXƒR[ƒh‚Ì–³’f“]ÚEƒR[ƒh‚ÌƒRƒs[E“\‚è•t‚¯‚É‚æ‚é—¬—pEÄ”z•z‚ğ‹Ö~‚µ‚Ü‚·B
+//  æ³¨æ„ï¼šæœ¬ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã®ç„¡æ–­è»¢è¼‰ãƒ»ã‚³ãƒ¼ãƒ‰ã®ã‚³ãƒ”ãƒ¼ãƒ»è²¼ã‚Šä»˜ã‘ã«ã‚ˆã‚‹æµç”¨ãƒ»å†é…å¸ƒã‚’ç¦æ­¢ã—ã¾ã™ã€‚
 // -----------------------------------------------------------------------------------------
 
 #ifndef ACTOR_H_
@@ -13,6 +13,7 @@
 
 #include <GStransform.h>
 #include <string>
+#include <any>
 #include "Actor/ActorTag.h"
 #include "Engine/Core/Collision/BoundingSphere.h"
 #include "GameConfig.h"
@@ -29,174 +30,192 @@ public:
 
 public:
 	/// <summary>
-	/// XV
+	/// æ›´æ–°
 	/// </summary>
 	virtual void update(float delta_time);
 
 	/// <summary>
-	/// XV update‚Æcollide‚ÌŒã‚ÉŒÄ‚Î‚ê‚é
+	/// æ›´æ–° updateã¨collideã®å¾Œã«å‘¼ã°ã‚Œã‚‹
 	/// </summary>
 	virtual void late_update(float delta_time);
 
 	/// <summary>
-	/// •`‰æ
+	/// æç”»
 	/// </summary>
 	virtual void draw() const;
 
 	/// <summary>
-	/// ”¼“§–¾•`‰æ
+	/// åŠé€æ˜æç”»
 	/// </summary>
 	virtual void draw_transparent() const;
 
 	/// <summary>
-	/// GUI•`‰æ
+	/// GUIæç”»
 	/// </summary>
 	virtual void draw_gui() const;
 
 	/// <summary>
-	/// ƒAƒNƒ^[‚Ìõ–½‚ğI‚í‚ç‚¹‚é
+	/// ã‚¢ã‚¯ã‚¿ãƒ¼ã®å¯¿å‘½ã‚’çµ‚ã‚ã‚‰ã›ã‚‹
 	/// </summary>
 	virtual void die();
 
 	/// <summary>
-	/// ‘¼ƒAƒNƒ^[‚ÆÕ“Ë‚µ‚½‚Æ‚«‚ÉŒÄ‚Î‚ê‚éÕ“Ëˆ—Õ“Ëˆ—
+	/// ä»–ã‚¢ã‚¯ã‚¿ãƒ¼ã¨è¡çªã—ãŸã¨ãã«å‘¼ã°ã‚Œã‚‹è¡çªå‡¦ç†è¡çªå‡¦ç†
 	/// </summary>
-	/// <param name="other">= Õ“Ë‚µ‚½ƒAƒNƒ^[</param>
+	/// <param name="other">= è¡çªã—ãŸã‚¢ã‚¯ã‚¿ãƒ¼</param>
 	virtual void react(Actor& other);
 
 public:
 	/// <summary>
-	/// Õ“Ë”»’è
+	/// è¡çªåˆ¤å®š
 	/// </summary>
 	void collide(Actor& other);
 
 	/// <summary>
-	/// ƒAƒNƒ^[‚Ìõ–½‚ªs‚«‚½‚©‚Ç‚¤‚©
+	/// ã‚¢ã‚¯ã‚¿ãƒ¼ã®å¯¿å‘½ãŒå°½ããŸã‹ã©ã†ã‹
 	/// </summary>
 	bool is_dead() const;
 
 	/// <summary>
-	/// ƒAƒNƒ^[‚Ìõ–½‚ª0‚¾‚Á‚½ê‡ƒƒ‚ƒŠ‰ğ•úˆ—‚Ü‚Ås‚¤‚©‚Ç‚¤‚©
+	/// ã‚¢ã‚¯ã‚¿ãƒ¼ã®å¯¿å‘½ãŒ0ã ã£ãŸå ´åˆãƒ¡ãƒ¢ãƒªè§£æ”¾å‡¦ç†ã¾ã§è¡Œã†ã‹ã©ã†ã‹
 	/// </summary>
 	/// <returns></returns>
 	bool is_clear() const;
 
 	/// <summary>
-	/// Õ“Ë‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ğ•Ô‹p
+	/// è¡çªã—ã¦ã„ã‚‹ã‹ã©ã†ã‹ã‚’è¿”å´
 	/// </summary>
 	bool is_collide(const Actor& other) const;
 
 	/// <summary>
-	/// ƒAƒNƒ^[‚Ì–¼‘O‚ğ•Ô‹p
+	/// ã‚¢ã‚¯ã‚¿ãƒ¼ã®åå‰ã‚’è¿”å´
 	/// </summary>
 	string& name();
 
 	/// <summary>
-	/// ƒAƒNƒ^[‚Ìƒ^ƒO‚ğ•Ô‹p
+	/// ã‚¢ã‚¯ã‚¿ãƒ¼ã®ã‚¿ã‚°ã‚’è¿”å´
 	/// </summary>
 	ActorTag& tag();
 
 	/// <summary>
-	/// ƒgƒ‰ƒ“ƒXƒtƒH[ƒ€‚ğ•Ô‹p(const)
+	/// ãƒˆãƒ©ãƒ³ã‚¹ãƒ•ã‚©ãƒ¼ãƒ ã‚’è¿”å´(const)
 	/// </summary>
 	const GStransform& transform() const;
 
 	/// <summary>
-	/// ƒgƒ‰ƒ“ƒXƒtƒH[ƒ€‚ğ•Ô‹p
+	/// ãƒˆãƒ©ãƒ³ã‚¹ãƒ•ã‚©ãƒ¼ãƒ ã‚’è¿”å´
 	/// </summary>
 	GStransform& transform();
 
 	/// <summary>
-	/// ˆÚ“®—Ê‚ğ•Ô‹p(const)
+	/// ç§»å‹•é‡ã‚’è¿”å´(const)
 	/// </summary>
 	GSvector3 velocity() const;
 
 	/// <summary>
-	/// ˆÚ“®—Ê‚ğ•Ô‹p
+	/// ç§»å‹•é‡ã‚’è¿”å´
 	/// </summary>
 	GSvector3& velocity();
 
 	/// <summary>
-	/// Õ“Ë”»’èƒf[ƒ^‚ğæ“¾
+	/// è¡çªåˆ¤å®šãƒ‡ãƒ¼ã‚¿ã‚’å–å¾—
 	/// </summary>
 	BoundingSphere collider() const;
 
 	/// <summary>
-	/// ƒ[ƒJƒ‹ˆÚ“®‚µ‚½Œã‚Ìƒ[ƒ‹ƒh‹óŠÔs—ñ‚ğ•Ô‹p
+	/// ãƒ­ãƒ¼ã‚«ãƒ«ç§»å‹•ã—ãŸå¾Œã®ãƒ¯ãƒ¼ãƒ«ãƒ‰ç©ºé–“è¡Œåˆ—ã‚’è¿”å´
 	/// </summary>
-	/// <param name="position">= ˆÚ“®—Ê</param>
-	/// <param name="rotate">= ‰ñ“]—Ê</param>
-	/// <param name="scale">= Šgk—Ê</param>
+	/// <param name="position">= ç§»å‹•é‡</param>
+	/// <param name="rotate">= å›è»¢é‡</param>
+	/// <param name="scale">= æ‹¡ç¸®é‡</param>
 	GSmatrix4 local_to_world(const GSvector3& position, const GSvector3& rotate, const GSvector3& scale) const;
 
 	/// <summary>
-	/// Õ“Ë”»’è‚ğs‚¤‚©‚Ç‚¤‚©
+	/// è¡çªåˆ¤å®šã‚’è¡Œã†ã‹ã©ã†ã‹
 	/// </summary>
-	/// <returns>s‚¤‚È‚ç^‚ğ•Ô‹p</returns>
+	/// <returns>è¡Œã†ãªã‚‰çœŸã‚’è¿”å´</returns>
 	bool is_collision() const;
 
 	/// <summary>
-	/// ƒRƒ‰ƒCƒ_[‚ğ•`‰æ
+	/// ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã‚’æç”»
 	/// </summary>
 	void draw_collider() const;
 
+    /// <summary>
+    /// ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
+    /// </summary>
+    /// <param name="message">= ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸è­˜åˆ¥æ–‡å­—åˆ—</param>
+    /// <param name="param">= ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿</param>
+    virtual void message(const std::string& message, std::any& param);
+
+    /// <summary>
+    /// ã‚¢ã‚¯ã‚¿ãƒ¼ã«ã‚¤ãƒ³ã‚¿ãƒ©ã‚¯ãƒˆã§ãã‚‹ã‹ã©ã†ã‹
+    /// </summary>
+    /// <returns>ã§ãã‚‹ãªã‚‰çœŸã‚’è¿”å´</returns>
+    virtual bool can_interact() const;
+
+    /// <summary>
+    /// ã‚¤ãƒ³ã‚¿ãƒ©ã‚¯ãƒˆæ™‚ã«è¡¨ç¤ºã™ã‚‹æ–‡å­—åˆ—ã‚’å–å¾—
+    /// </summary>
+    /// <returns>ã‚¤ãƒ³ã‚¿ãƒ©ã‚¯ãƒˆæ™‚ã«è¡¨ç¤ºã™ã‚‹æ–‡å­—åˆ—</returns>
+    virtual std::string interact_text() const;
+
 protected:
 	/// <summary>
-	/// ’nŒ`‚Æ‚ÌÕ“Ë”»’è
+	/// åœ°å½¢ã¨ã®è¡çªåˆ¤å®š
 	/// </summary>
 	virtual void collide_field();
 
 	/// <summary>
-	/// ƒAƒNƒ^[‚Æ‚ÌÕ“Ë”»’è
+	/// ã‚¢ã‚¯ã‚¿ãƒ¼ã¨ã®è¡çªåˆ¤å®š
 	/// </summary>
 	virtual void collide_actor(Actor& other);
 
-
 	/// <summary>
-	/// ’nŒ`‚ğŠÑ’Ê‚µ‚È‚¢ˆÚ“®
+	/// åœ°å½¢ã‚’è²«é€šã—ãªã„ç§»å‹•
 	/// </summary>
-	/// <param name="velocity">= ˆÚ“®—Ê</param>
-	/// <param name="foward">= ˆÚ“®‚ÉŒü‚­•ûŒü w’è–³‚µ‚Åˆ—‚ğs‚í‚È‚¢</param>
-	/// <param name="trun_angle">= ˆÚ“®‚ÉŒü‚­•ûŒü‚Ö‚Ì•âŠÔ’l</param>
+	/// <param name="velocity">= ç§»å‹•é‡</param>
+	/// <param name="foward">= ç§»å‹•æ™‚ã«å‘ãæ–¹å‘ æŒ‡å®šç„¡ã—ã§å‡¦ç†ã‚’è¡Œã‚ãªã„</param>
+	/// <param name="trun_angle">= ç§»å‹•æ™‚ã«å‘ãæ–¹å‘ã¸ã®è£œé–“å€¤</param>
 	virtual void non_penetrating_move(const GSvector3& velocity, GSvector3* foward = nullptr, float trun_angle = 1.0f);
 
 protected:
 	/// <summary>
-	/// ƒGƒtƒFƒNƒVƒA‚ÌƒGƒtƒFƒNƒg‚ğÄ¶
+	/// ã‚¨ãƒ•ã‚§ã‚¯ã‚·ã‚¢ã®ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’å†ç”Ÿ
 	/// </summary>
-	/// <param name="effect_id">= ƒGƒtƒFƒNƒgƒnƒ“ƒhƒ‹</param>
-	/// <param name="position">= ƒ[ƒJƒ‹ˆÚ“®—Ê</param>
-	/// <param name="rotation">= ƒ[ƒJƒ‹‰ñ“]—Ê</param>
-	/// <param name="scale">= ƒ[ƒJƒ‹Šgk—Ê</param>
+	/// <param name="effect_id">= ã‚¨ãƒ•ã‚§ã‚¯ãƒˆãƒãƒ³ãƒ‰ãƒ«</param>
+	/// <param name="position">= ãƒ­ãƒ¼ã‚«ãƒ«ç§»å‹•é‡</param>
+	/// <param name="rotation">= ãƒ­ãƒ¼ã‚«ãƒ«å›è»¢é‡</param>
+	/// <param name="scale">= ãƒ­ãƒ¼ã‚«ãƒ«æ‹¡ç¸®é‡</param>
 	GSuint play_effect(GSuint effect_id, const GSvector3& position, const GSvector3& rotate = GSvector3{ 0.0f, 0.0f, 0.0f }, const GSvector3& scale = GSvector3{ 1.0f, 1.0f, 1.0f }) const;
 
 protected:
-	// ƒ[ƒ‹ƒh
+	// ãƒ¯ãƒ¼ãƒ«ãƒ‰
 	IWorld* world_{ nullptr };
 	
-	// õ–½
+	// å¯¿å‘½
 	bool is_dead_{ false };
-	// õ–½‚ªs‚«‚½‚Æ‚«ƒƒ‚ƒŠ‰ğ•ú‚Ü‚Ås‚¤‚©
-	// ***ŠëŒ¯*** ƒIƒuƒWƒFƒNƒgƒv[ƒ‹‚Å‚Ì‚İg—p‚·‚é‚±‚Æ
+	// å¯¿å‘½ãŒå°½ããŸã¨ããƒ¡ãƒ¢ãƒªè§£æ”¾ã¾ã§è¡Œã†ã‹
+	// ***å±é™º*** ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãƒ—ãƒ¼ãƒ«ã§ã®ã¿ä½¿ç”¨ã™ã‚‹ã“ã¨
 	bool is_clear_{ true };	
 
-	// –¼‘O
+	// åå‰
 	string name_{ "Actor" };
-	// ƒ^ƒO
+	// ã‚¿ã‚°
 	ActorTag tag_{ ActorTag::None };
 
-	// ƒgƒ‰ƒ“ƒXƒtƒH[ƒ€
+	// ãƒˆãƒ©ãƒ³ã‚¹ãƒ•ã‚©ãƒ¼ãƒ 
 	GStransform transform_;
-	// ˆÚ“®—Ê
+	// ç§»å‹•é‡
 	GSvector3 velocity_{ 0.0f, 0.0f, 0.0f };
 
-	// Õ“Ë”»’è‚ğs‚¤‚©‚Ç‚¤‚©
+	// è¡çªåˆ¤å®šã‚’è¡Œã†ã‹ã©ã†ã‹
 	bool enable_collider_{ true };
-	// ‹…‘ÌÕ“Ë”»’è
+	// çƒä½“è¡çªåˆ¤å®š
 	BoundingSphere collider_;
 
 public:
-	// ƒRƒs[‹Ö~
+	// ã‚³ãƒ”ãƒ¼ç¦æ­¢
 	Actor(const Actor& other) = delete;
 	Actor& operator = (const Actor& other) = delete;
 

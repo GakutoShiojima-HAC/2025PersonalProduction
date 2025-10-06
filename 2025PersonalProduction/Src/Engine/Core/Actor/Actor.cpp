@@ -30,11 +30,11 @@ void Actor::react(Actor& other) {
 }
 
 void Actor::collide(Actor& other) {
-	// ‚Ç‚¿‚ç‚ÌƒAƒNƒ^[‚àÕ“Ë”»’è‚ª—LŒø‚È‚ç
+	// ã©ã¡ã‚‰ã®ã‚¢ã‚¯ã‚¿ãƒ¼ã‚‚è¡çªåˆ¤å®šãŒæœ‰åŠ¹ãªã‚‰
 	if (enable_collider_ && other.enable_collider_) {
-		// Õ“Ë”»’è‚ğs‚¤
+		// è¡çªåˆ¤å®šã‚’è¡Œã†
 		if (is_collide(other)) {
-			// Õ“Ë‚µ‚½ê‡‚ÍÕ“ËƒŠƒAƒNƒVƒ‡ƒ“‚ğs‚¤
+			// è¡çªã—ãŸå ´åˆã¯è¡çªãƒªã‚¢ã‚¯ã‚·ãƒ§ãƒ³ã‚’è¡Œã†
 			react(other);
 			other.react(*this);
 		}
@@ -82,14 +82,27 @@ BoundingSphere Actor::collider() const {
 }
 
 GSmatrix4 Actor::local_to_world(const GSvector3& position, const GSvector3& rotate, const GSvector3& scale) const {
-	// w’è‚³‚ê‚½Translate, Rotation, Scale‚Ìs—ñ‚ğì¬‚·‚é
+	// æŒ‡å®šã•ã‚ŒãŸTranslate, Rotation, Scaleã®è¡Œåˆ—ã‚’ä½œæˆã™ã‚‹
 	const GSmatrix4 local_matrix = GSmatrix4::TRS(position, GSquaternion::euler(rotate), scale);
-	// ƒ[ƒ‹ƒh‹óŠÔ‚É•ÏŠ·‚·‚é
+	// ãƒ¯ãƒ¼ãƒ«ãƒ‰ç©ºé–“ã«å¤‰æ›ã™ã‚‹
 	return local_matrix * transform_.localToWorldMatrix();
 }
 
 bool Actor::is_collision() const {
 	return enable_collider_;
+}
+
+void Actor::message(const std::string& message, std::any& param) {
+    // ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã¯ä½•ã‚‚å—ã‘å–ã‚‰ãªã„
+}
+
+bool Actor::can_interact() const {
+    // ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã¯ã§ããªã„
+	return false;
+}
+
+std::string Actor::interact_text() const {
+    return "";
 }
 
 void Actor::collide_field() {
@@ -101,9 +114,9 @@ void Actor::collide_actor(Actor& other) {
 }
 
 void Actor::non_penetrating_move(const GSvector3& velocity, GSvector3* foward, float trun_angle) {
-	// ˆÚ“®‚µ‚Ä‚¢‚½‚çŒü‚«‚ğ•âŠÔ‚·‚é
+	// ç§»å‹•ã—ã¦ã„ãŸã‚‰å‘ãã‚’è£œé–“ã™ã‚‹
 	if (foward != nullptr && velocity.magnitude() > 0.01f) {
-		// Œü‚«‚Ì•âŠÔ
+		// å‘ãã®è£œé–“
 		GSquaternion rotation = GSquaternion::rotateTowards(
 			transform().rotation(),
 			GSquaternion::lookRotation(*foward),
@@ -112,36 +125,36 @@ void Actor::non_penetrating_move(const GSvector3& velocity, GSvector3* foward, f
 		transform().rotation(rotation);
 	}
 
-	// ‘ˆÚ“®—Ê
+	// ç·ç§»å‹•é‡
 	float total_length = velocity.magnitude();
-	// ƒ‹[ƒvˆÚ“®‚Ìˆê“x‚ÌˆÚ“®—Ê
+	// ãƒ«ãƒ¼ãƒ—ç§»å‹•æ™‚ã®ä¸€åº¦ã®ç§»å‹•é‡
 	const float translate_length = collider_.radius;
-	// ”»’è‚·‚é‰ñ”
+	// åˆ¤å®šã™ã‚‹å›æ•°
 	const int times = ceil(total_length / translate_length);
 
 	if (times > 1) {
-		// ƒ‹[ƒvˆÚ“®‚ÌˆÚ“®•ûŒü
+		// ãƒ«ãƒ¼ãƒ—ç§»å‹•æ™‚ã®ç§»å‹•æ–¹å‘
 		const GSvector3 translate_velocity = velocity.normalized() * translate_length;
 		for (int i = 0; i < times - 1; ++i) {
-			// ˆÚ“®
+			// ç§»å‹•
 			transform().translate(translate_velocity, GStransform::Space::World);
-			// ’nŒ`‚Æ‚ÌÕ“Ë”»’è
+			// åœ°å½¢ã¨ã®è¡çªåˆ¤å®š
 			collide_field();
-			// ˆÚ“®‚µ‚½‹——£•ªˆø‚­
+			// ç§»å‹•ã—ãŸè·é›¢åˆ†å¼•ã
 			total_length -= translate_length;
 		}
 	}
 
-	// ”»’èˆ—‚É–‚½‚È‚¢ˆÚ“®—Ê‚ÌˆÚ“®
+	// åˆ¤å®šå‡¦ç†ã«æº€ãŸãªã„ç§»å‹•é‡ã®ç§»å‹•
 	const GSvector3 last_velocity = velocity.normalized() * total_length;
-	// ˆÚ“®
+	// ç§»å‹•
 	transform().translate(last_velocity, GStransform::Space::World);
-	// ’nŒ`‚Æ‚ÌÕ“Ë”»’è
+	// åœ°å½¢ã¨ã®è¡çªåˆ¤å®š
 	collide_field();
 }
 
 GSuint Actor::play_effect(GSuint effect_id, const GSvector3& position, const GSvector3& rotate, const GSvector3& scale) const {
-	// ƒGƒtƒFƒNƒg‚ğÄ¶‚·‚é
+	// ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’å†ç”Ÿã™ã‚‹
 	const GSmatrix4 mat = local_to_world(position, rotate, scale);
 	return gsPlayEffectEx(effect_id, &mat);
 }
