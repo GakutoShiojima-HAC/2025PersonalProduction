@@ -19,7 +19,7 @@
 #include "Camera/EditorCamera.h"	// tmp
 #include "Actor/Enemy/DummyEnemy.h"	// tmp
 #include "Assets.h"	// tmp
-#include "Engine/Core/Actor/ItemActor/ItemActor.h"
+#include "Actor/ItemActor/ItemActor.h"
 
 void GameScene::load() {
     // 初期化
