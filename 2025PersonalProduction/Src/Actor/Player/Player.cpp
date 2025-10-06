@@ -29,6 +29,8 @@
 
 #include "Engine/Graphics/Canvas/Canvas.h"	// tmp
 
+#include "GUI/InteractUI.h"
+
 // 衝突判定用の半径
 const float RADIUS{ 0.4f };
 // 移動時のカメラ向きへの回転角度
@@ -124,6 +126,7 @@ void Player::update(float delta_time) {
 	ImGui::Text("current position is X:%.3f Y:%.3f Z:%.3f", transform_.position().x, transform_.position().y, transform_.position().z);
 	ImGui::Text("current state is %s.", state_string(PlayerStateType(state_.get_current_state())));
 	ImGui::Text("current motion is %d.", (int)motion_);
+    ImGui::SliderInt("right hand bone", &right_hand_bone_, 0, 255);
 	ImGui::End();
 
 	ImGui::Begin("App Window");
@@ -150,26 +153,39 @@ void Player::update(float delta_time) {
 
 	ImGui::End();
 #endif
+
+    if (gsGetKeyTrigger(GKEY_7)) {
+        world_->game_save_data().inventory().add(ItemType::Weapon, 1, 1);
+    }
 }
 
 void Player::late_update(float delta_time) {
-
-	// TODO IK
+    interact_update();
 }
 
 void Player::draw() const {
 	mesh_.draw();
 
+    // 武器の描画
+    Inventory& inv = world_->game_save_data().inventory();
+    if (!inv.weapon().is_empty()) {
+        glPushMatrix();
+        glMultMatrixf(mesh_.bone_matrices(right_hand_bone_));   // 右手に持たせる
+        gsDrawMesh(item_data_.get_weapon(inv.weapon().id).mesh);
+        glPopMatrix();
+    }
+
 	// state_.draw();
 }
 
 void Player::draw_gui() const {
-	// TODO GUI
-
 	{
 		const GSrect rect{ 0.0f, 0.0f, 77.0f, 80.0f };
 		Canvas::draw_texture((GSuint)TextureID::TmpUI, GSvector2{ 20.0f, 20.0f }, rect, GSvector2::zero(), GSvector2::one(), GScolor{ 1.0f, 1.0f, 1.0f, 1.0f }, 0.0f, Anchor::TopLeft);
 	}
+
+    // インタラクトUIの描画
+    InteractUI::draw(interact_actors_, interact_target_index_);
 
 	// state_.draw_gui();
 }
@@ -449,11 +465,11 @@ int& Player::attack_count() {
 }
 
 float Player::get_enter_next_attack_animation_time() {
-	return weapon_manager_.get_enter_next_animation_time(weapon_type_, attack_count_);
+	return weapon_manager_.get_enter_next_animation_time(world_->game_save_data().inventory().weapon().type, attack_count_);
 }
 
 bool Player::is_attack() {
-	return attack_count_ < weapon_manager_.get_max_attack_count(weapon_type_) && input_.action(InputAction::GAME_Attack);
+	return attack_count_ < weapon_manager_.get_max_attack_count(world_->game_save_data().inventory().weapon().type) && input_.action(InputAction::GAME_Attack);
 }
 
 bool Player::is_jump() const {
@@ -473,7 +489,7 @@ bool Player::is_interact() const {
 }
 
 GSuint Player::get_attack_motion() {
-	int motion = weapon_manager_.get_animation_num(weapon_type_, attack_count_);
+	int motion = weapon_manager_.get_animation_num(world_->game_save_data().inventory().weapon().type, attack_count_);
 	return motion < 0 ? 99999 : motion;
 }
 
@@ -487,11 +503,52 @@ GSuint Player::get_current_motion() const {
 }
 
 void Player::generate_attack_collider() {
-	GSvector3 local_pos = weapon_manager_.get_collider_offset(weapon_type_, attack_count_);
+	GSvector3 local_pos = weapon_manager_.get_collider_offset(world_->game_save_data().inventory().weapon().type, attack_count_);
 	GSmatrix4 m = local_to_world(local_pos, GSvector3::zero(), GSvector3::one());
 
-	// TODO damage
-	world_->generate_attack_collider(0.3f, m.position(), this, 1, 0.1f, 0.0f);
+    WeaponData::Data weapon =  world_->game_save_data().inventory().weapon();
+    int damage = weapon.is_empty() ? 0 : weapon.damage;
+
+	world_->generate_attack_collider(0.3f, m.position(), this, damage, 0.1f, 0.0f);
+}
+
+void Player::interact_update() {
+    // インタラクトできるアクターを集める
+    get_interact_actor_list();
+
+    // 対象を選択
+    if (interact_actors_.empty()) {
+        interact_target_index_ = 0;
+        return;
+    }
+    int target_index = (int)interact_target_index_;
+    if (input_.action(InputAction::GAME_Interact_Up)) --target_index;
+    else if (input_.action(InputAction::GAME_Interact_Down)) ++target_index;
+    interact_target_index_ = CLAMP(target_index, 0, interact_actors_.size() - 1);
+
+    // インタラクト
+    if(input_.action(InputAction::GAME_Interact)) {
+        if (interact_target_index_ <= 0) return;
+        std::any data = this;
+        interact_actors_[interact_target_index_]->message("PlayerInteract", data);
+    }
+}
+
+void Player::get_interact_actor_list() {
+    // 初期化
+    interact_actors_.clear();
+
+    for (Actor* actor : world_->get_all_actor()) {
+        // インタラクトできないなら次
+        if (!actor->can_interact()) continue;
+        // 死んでるなら次
+        if (actor->is_dead()) continue;
+        // 距離外なら次
+        float r = (transform_.position() - actor->transform().position()).magnitude();
+        if (r > 1.5f) continue;
+        // 対象として追加
+        interact_actors_.push_back(actor);
+    }
 }
 
 void Player::add_attack_animation_event() {
@@ -510,7 +567,7 @@ void Player::add_attack_animation_event() {
 	};
 
 	// for1 start
-	WeaponType type = WeaponType::PlayerSword;
+	WeaponType type = WeaponType::Sword;
 	std::vector<WeaponManager::WeaponAnimationData*> data;
 	
 	// for2 start // TODO ***仮でそのまま記述***
