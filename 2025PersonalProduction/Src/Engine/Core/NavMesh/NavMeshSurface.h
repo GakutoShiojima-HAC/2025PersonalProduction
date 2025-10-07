@@ -3,9 +3,9 @@
 //  Author        : Shiojima Gakuto
 //  Created       : 2025/08/03
 //  Updated       : 2025/08/06
-//  Description   : ƒiƒrƒƒbƒVƒ…ŠÇ—‚ÆƒiƒrƒƒbƒVƒ…Œo˜H’TõƒNƒ‰ƒX
+//  Description   : ãƒŠãƒ“ãƒ¡ãƒƒã‚·ãƒ¥ç®¡ç†ã¨ãƒŠãƒ“ãƒ¡ãƒƒã‚·ãƒ¥çµŒè·¯æ¢ç´¢ã‚¯ãƒ©ã‚¹
 //
-//  ’ˆÓF–{ƒ\[ƒXƒR[ƒh‚Ì–³’f“]ÚEƒR[ƒh‚ÌƒRƒs[E“\‚è•t‚¯‚É‚æ‚é—¬—pEÄ”z•z‚ğ‹Ö~‚µ‚Ü‚·B
+//  æ³¨æ„ï¼šæœ¬ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã®ç„¡æ–­è»¢è¼‰ãƒ»ã‚³ãƒ¼ãƒ‰ã®ã‚³ãƒ”ãƒ¼ãƒ»è²¼ã‚Šä»˜ã‘ã«ã‚ˆã‚‹æµç”¨ãƒ»å†é…å¸ƒã‚’ç¦æ­¢ã—ã¾ã™ã€‚
 // -----------------------------------------------------------------------------------------
 
 #ifndef NAV_MESH_SURFACE_H_
@@ -14,40 +14,38 @@
 #include <string>
 #include <vector>
 #include <gslib.h>
-#include <map>
+#include <utility> 
 
-using namespace std;
-
-// ƒGƒ‰[ƒm[ƒh
+// ã‚¨ãƒ©ãƒ¼ãƒãƒ¼ãƒ‰
 const int ERROR_NODE_ID{ -1 };
 
 class NavMeshSurface {
 public:
-	NavMeshSurface(const string& mesh_path);
+	NavMeshSurface(const std::string& mesh_path);
 
 	~NavMeshSurface();
 
 public:
-	// Œo˜H’TõƒOƒ‰ƒt‚Ìƒm[ƒh
+	// çµŒè·¯æ¢ç´¢ã‚°ãƒ©ãƒ•ã®ãƒãƒ¼ãƒ‰
 	struct NavNode {
 		NavNode() : 
 			id{ 0 },
 			indices{ 0, 0, 0 }
 		{}
 
-		int id;						// ƒ|ƒŠƒSƒ“‚ÌƒCƒ“ƒfƒbƒNƒX
-		GLuint indices[3];			// \¬‚·‚é’¸“_‚ÌƒCƒ“ƒfƒbƒNƒX
-		GSvector3 center;			// ƒ|ƒŠƒSƒ“‚Ì’†SÀ•W
-		vector<int> neighbors_id;	// —×Ú‚·‚éƒ|ƒŠƒSƒ“‚ÌIDƒŠƒXƒg
+		int id;						// ãƒãƒªã‚´ãƒ³ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
+		GLuint indices[3];			// æ§‹æˆã™ã‚‹é ‚ç‚¹ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
+		GSvector3 center;			// ãƒãƒªã‚´ãƒ³ã®ä¸­å¿ƒåº§æ¨™
+        std::vector<int> neighbors_id;	// éš£æ¥ã™ã‚‹ãƒãƒªã‚´ãƒ³ã®IDãƒªã‚¹ãƒˆ
 	};
 
 private:
-	// ’¸“_ƒf[ƒ^\‘¢‘Ì
+	// é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿æ§‹é€ ä½“
 	struct Vertex {
 		GSvector3 position;
 	};
 
-	// GSvector3‚ğmap‚ÌƒL[‚Æ‚µ‚Äg‚¦‚é‚æ‚¤‚É‚·‚é
+	// GSvector3ã‚’mapã®ã‚­ãƒ¼ã¨ã—ã¦ä½¿ãˆã‚‹ã‚ˆã†ã«ã™ã‚‹
 	struct CompareGSvector3 {
 		bool operator()(const GSvector3& a, const GSvector3& b) const {
 			if (a.x != b.x) return a.x < b.x;
@@ -58,119 +56,111 @@ private:
 
 public:
 	/// <summary>
-	/// ƒiƒrƒƒbƒVƒ…‚ğXV‚·‚é
+	/// ãƒŠãƒ“ãƒ¡ãƒƒã‚·ãƒ¥ã‚’æ›´æ–°ã™ã‚‹
 	/// </summary>
 	void update(float delta_time);
 
 	/// <summary>
-	/// ƒiƒrƒƒbƒVƒ…‚ğ•`‰æ‚·‚é
+	/// ãƒŠãƒ“ãƒ¡ãƒƒã‚·ãƒ¥ã‚’æç”»ã™ã‚‹
 	/// </summary>
 	void draw() const;
 
 	/// <summary>
-	/// ƒiƒrƒƒbƒVƒ…‚ğ“Ç‚İ‚Ş
+	/// ãƒŠãƒ“ãƒ¡ãƒƒã‚·ãƒ¥ã‚’èª­ã¿è¾¼ã‚€
 	/// </summary>
-	/// <param name="mesh_path">= ƒtƒ@ƒCƒ‹ƒpƒX</param>
-	void load(const string& mesh_path);
+	/// <param name="mesh_path">= ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹</param>
+	void load(const std::string& mesh_path);
 
 	/// <summary>
-	/// ”jŠü
+	/// ç ´æ£„
 	/// </summary>
 	void clear();
 
 	/// <summary>
-	/// Œo˜H’Tõ
+	/// çµŒè·¯æ¢ç´¢
 	/// </summary>
-	/// <param name="start">= ŠJn’n“_</param>
-	/// <param name="end">= I—¹’n“_</param>
-	/// <returns>Œo˜H</returns>
+	/// <param name="start">= é–‹å§‹åœ°ç‚¹</param>
+	/// <param name="end">= çµ‚äº†åœ°ç‚¹</param>
+	/// <returns>çµŒè·¯</returns>
 	vector<int> find_path(const GSvector3& start, const GSvector3& end) const;
 
 	/// <summary>
-	/// ’¼ü“I‚ÈŒo˜H‚ğ¶¬
+	/// ç›´ç·šçš„ãªçµŒè·¯ã‚’ç”Ÿæˆ
 	/// </summary>
-	/// <param name="path">= Œo˜H’TõŒ‹‰Ê</param>
-	/// <param name="start">= ŠJn’n“_</param>
-	/// <param name="end">= I—¹’n“_</param>
-	/// <returns>’¼ü“I‚É‚µ‚½Œo˜H</returns>
-	vector<GSvector3> create_line_path(const vector<int>& path) const;
+	/// <param name="path">= çµŒè·¯æ¢ç´¢çµæœ</param>
+	/// <param name="start">= é–‹å§‹åœ°ç‚¹</param>
+	/// <param name="end">= çµ‚äº†åœ°ç‚¹</param>
+	/// <returns>ç›´ç·šçš„ã«ã—ãŸçµŒè·¯</returns>
+	vector<GSvector3> create_line_path(const std::vector<int>& path) const;
 
 	/// <summary>
-	/// ŠŠ‚ç‚©‚ÈŒo˜H‚ğ¶¬
+	/// æ»‘ã‚‰ã‹ãªçµŒè·¯ã‚’ç”Ÿæˆ
 	/// </summary>
-	/// <param name="path">= Œo˜H’TõŒ‹‰Ê</param>
-	/// <param name="start">= ŠJn’n“_</param>
-	/// <param name="end">= I—¹’n“_</param>
-	/// <returns>ŠŠ‚ç‚©‚É‚µ‚½Œo˜H</returns>
-	vector<GSvector3> create_smooth_path(const vector<int>& path, const GSvector3& start, const GSvector3& end) const;
+	/// <param name="path">= çµŒè·¯æ¢ç´¢çµæœ</param>
+	/// <param name="start">= é–‹å§‹åœ°ç‚¹</param>
+	/// <param name="end">= çµ‚äº†åœ°ç‚¹</param>
+	/// <returns>æ»‘ã‚‰ã‹ã«ã—ãŸçµŒè·¯</returns>
+	vector<GSvector3> create_smooth_path(const std::vector<int>& path, const GSvector3& start, const GSvector3& end) const;
 
 private:
 	/// <summary>
-	/// ƒoƒbƒtƒ@ƒIƒuƒWƒFƒNƒg‚Ìì¬
+	/// ãƒãƒƒãƒ•ã‚¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ä½œæˆ
 	/// </summary>
 	/// <param name="target">= </param>
 	/// <param name="size">= </param>
 	/// <param name="data">= </param>
-	/// <returns>ƒoƒbƒtƒ@ƒIƒuƒWƒFƒNƒg”Ô†</returns>
+	/// <returns>ãƒãƒƒãƒ•ã‚¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç•ªå·</returns>
 	GLuint create_buffer(GLenum target, GLuint size, const GLvoid* data);
 
 	/// <summary>
-	/// ’¸“_”z—ñƒIƒuƒWƒFƒNƒg‚Ìì¬
+	/// é ‚ç‚¹é…åˆ—ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ä½œæˆ
 	/// </summary>
-	/// <returns>’¸“_”z—ñƒIƒuƒWƒFƒNƒg”Ô†</returns>
+	/// <returns>é ‚ç‚¹é…åˆ—ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç•ªå·</returns>
 	GLuint create_vertex_array();
 
 	/// <summary>
-	/// Œo˜H’TõƒOƒ‰ƒt‚ğ¶¬‚·‚é
+	/// çµŒè·¯æ¢ç´¢ã‚°ãƒ©ãƒ•ã‚’ç”Ÿæˆã™ã‚‹
 	/// </summary>
-	void build_graph(const vector<Vertex>& vertices, const vector<GLuint>& indices);
+	void build_graph(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices);
 
 	/// <summary>
-	/// ƒ|ƒŠƒSƒ“‚Ì’†S‚ğ‹‚ß‚é
+	/// ãƒãƒªã‚´ãƒ³ã®ä¸­å¿ƒã‚’æ±‚ã‚ã‚‹
 	/// </summary>
-	/// <param name="v0">= ’¸“_</param>
-	/// <param name="v1">= ’¸“_</param>
-	/// <param name="v2">= ’¸“_</param>
-	/// <returns>’†S</returns>
+	/// <param name="v0">= é ‚ç‚¹</param>
+	/// <param name="v1">= é ‚ç‚¹</param>
+	/// <param name="v2">= é ‚ç‚¹</param>
+	/// <returns>ä¸­å¿ƒ</returns>
 	GSvector3 calc_polygon_center(const GSvector3& v0, const GSvector3& v1, const GSvector3& v2) const;
 
 	/// <summary>
-	/// À•W‚©‚çÅ‚à‹ß‚¢ƒ|ƒŠƒSƒ“‚ğŒŸõ
+	/// åº§æ¨™ã‹ã‚‰æœ€ã‚‚è¿‘ã„ãƒãƒªã‚´ãƒ³ã‚’æ¤œç´¢
 	/// </summary>
-	/// <param name="position">= À•W</param>
-	/// <returns>ƒ|ƒŠƒSƒ“</returns>
+	/// <param name="position">= åº§æ¨™</param>
+	/// <returns>ãƒãƒªã‚´ãƒ³</returns>
 	int find_nearest_polygon(const GSvector3& position) const;
 
-	// d•¡d•¡‚Ìƒ}[ƒW
-	void merging_duplicate_vertices(
-		const vector<Vertex>& original_vertices, 
-		const vector<GLuint>& original_indices,
-		vector<Vertex>& out_vertices,
-		vector<GLuint>& out_indices
-	);
-
 private:
-	// •`‰æ‚·‚é’¸“_”
+	// æç”»ã™ã‚‹é ‚ç‚¹æ•°
 	GLuint index_count_{ 0 };
-	// ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@
+	// ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡
 	GLuint indices_{ 0 };
-	// ’¸“_ƒoƒbƒtƒ@
+	// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡
 	GLuint vertices_{ 0 };
-	// ’¸“_”z—ñƒIƒuƒWƒFƒNƒg
+	// é ‚ç‚¹é…åˆ—ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	GLuint vertex_array_{ 0 };
 
-	// Œo˜H’Tõ—pƒOƒ‰ƒtƒf[ƒ^
-	vector<NavNode> graph_;
-	// ŠŠ‚ç‚©‚ÈŒo˜H’Tõ—pƒf[ƒ^
-	vector<Vertex> path_vertices_;
+	// çµŒè·¯æ¢ç´¢ç”¨ã‚°ãƒ©ãƒ•ãƒ‡ãƒ¼ã‚¿
+    std::vector<NavNode> graph_;
+	// æ»‘ã‚‰ã‹ãªçµŒè·¯æ¢ç´¢ç”¨ãƒ‡ãƒ¼ã‚¿
+    std::vector<Vertex> path_vertices_;
 
 #ifdef _DEBUG
-	// ƒiƒrƒƒbƒVƒ…‚ğ•`‰æ‚·‚é‚©‚Ç‚¤‚©
+	// ãƒŠãƒ“ãƒ¡ãƒƒã‚·ãƒ¥ã‚’æç”»ã™ã‚‹ã‹ã©ã†ã‹
 	bool draw_navmesh_{ false };
 #endif
 
 public:
-	// ƒRƒs[‹Ö~
+	// ã‚³ãƒ”ãƒ¼ç¦æ­¢
 	NavMeshSurface(const NavMeshSurface& other) = delete;
 	NavMeshSurface& operator = (const NavMeshSurface& other) = delete;
 

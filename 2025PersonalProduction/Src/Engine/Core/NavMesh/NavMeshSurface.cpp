@@ -2,18 +2,19 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
-#include <utility> 
 #include <algorithm>
 #include <queue>
 #include <unordered_map> 
 #include <cmath>
+#include <map>
+#include <limits>
 
 #ifdef _DEBUG
 #include <imgui/imgui.h>
 #include "Engine/Utils/DebugMarker.h"
 #endif
 
-NavMeshSurface::NavMeshSurface(const string& mesh_path) {
+NavMeshSurface::NavMeshSurface(const std::string& mesh_path) {
 	load(mesh_path);
 }
 
@@ -37,94 +38,88 @@ void NavMeshSurface::update(float delta_time) {
 void NavMeshSurface::draw() const {
 #ifdef _DEBUG
     if (draw_navmesh_) {
-        // ƒ‰ƒCƒeƒBƒ“ƒO‚ğ–³Œø‚É‚·‚é
+        // ãƒ©ã‚¤ãƒ†ã‚£ãƒ³ã‚°ã‚’ç„¡åŠ¹ã«ã™ã‚‹
         glDisable(GL_LIGHTING);
         glColor4f(0.0f, 1.0f, 1.0f, 0.2f);
-        // ’¸“_”z—ñƒIƒuƒWƒFƒNƒg‚ÌƒoƒCƒ“ƒh
+        // é ‚ç‚¹é…åˆ—ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ãƒã‚¤ãƒ³ãƒ‰
         glBindVertexArray(vertex_array_);
-        // ƒ|ƒŠƒSƒ“‚Ì•`‰æ
+        // ãƒãƒªã‚´ãƒ³ã®æç”»
         glDrawElements(GL_TRIANGLES, index_count_, GL_UNSIGNED_INT, nullptr);
-        // ’¸“_”z—ñƒIƒuƒWƒFƒNƒg‚ÌƒoƒCƒ“ƒh‰ğœ
+        // é ‚ç‚¹é…åˆ—ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ãƒã‚¤ãƒ³ãƒ‰è§£é™¤
         glBindVertexArray(0);
-        // ƒ‰ƒCƒeƒBƒ“ƒO‚ğ—LŒø‚É‚·‚é
+        // ãƒ©ã‚¤ãƒ†ã‚£ãƒ³ã‚°ã‚’æœ‰åŠ¹ã«ã™ã‚‹
         glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
         glEnable(GL_LIGHTING);
     }
 #endif
 }
 
-void NavMeshSurface::load(const string& mesh_path) {
-    // ƒƒbƒVƒ…ƒf[ƒ^‚Ì“Ç‚İ‚İ
+void NavMeshSurface::load(const std::string& mesh_path) {
+    // ãƒ¡ãƒƒã‚·ãƒ¥ãƒ‡ãƒ¼ã‚¿ã®èª­ã¿è¾¼ã¿
     ifstream file{ mesh_path };
-    // ƒtƒ@ƒCƒ‹ƒI[ƒvƒ“‚É¬Œ÷‚µ‚½‚©H
+    // ãƒ•ã‚¡ã‚¤ãƒ«ã‚ªãƒ¼ãƒ—ãƒ³ã«å¤±æ•—ã—ãŸã‚‰çµ‚äº†
     if (!file) return;
     
     clear();
 
-    vector<Vertex> vertices;
-    vector<GLuint> indices;
-    string line;
+    std::vector<Vertex> vertices;
+    std::vector<GLuint> indices;
+    std::string line;
 
-    // ’¸“_
+    // é ‚ç‚¹
     int vertex_count = 0;
-    getline(file, line);
-    vertex_count = stoi(line);
+    std::getline(file, line);
+    vertex_count = std::stoi(line);
     vertices.reserve(vertex_count);
     for (int i = 0; i < vertex_count; ++i) {
         getline(file, line);
-        stringstream ss(line);
-        string value;
+        std::stringstream ss(line);
+        std::string value;
         Vertex v;
-        getline(ss, value, ','); v.position.x = stof(value);
-        getline(ss, value, ','); v.position.y = stof(value);
-        getline(ss, value, ','); v.position.z = stof(value);
+        std::getline(ss, value, ','); v.position.x = std::stof(value);
+        std::getline(ss, value, ','); v.position.y = std::stof(value);
+        std::getline(ss, value, ','); v.position.z = std::stof(value);
         vertices.push_back(v);
     }
 
-    // ƒCƒ“ƒfƒbƒNƒX
+    // ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
     int index_count = 0;
-    getline(file, line);
-    index_count = stoi(line);
+    std::getline(file, line);
+    index_count = std::stoi(line);
     indices.reserve(index_count);
     for (int i = 0; i < index_count; i += 3) {
-        getline(file, line);
+        std::getline(file, line);
         stringstream ss(line);
-        string value;
+        std::string value;
         GLuint i1, i2, i3;
-        getline(ss, value, ','); i1 = stoul(value);
-        getline(ss, value, ','); i2 = stoul(value);
-        getline(ss, value, ','); i3 = stoul(value);
+        std::getline(ss, value, ','); i1 = std::stoul(value);
+        std::getline(ss, value, ','); i2 = std::stoul(value);
+        std::getline(ss, value, ','); i3 = std::stoul(value);
         indices.push_back(i1);
         indices.push_back(i2);
         indices.push_back(i3);
     }
 
-    vector<Vertex> final_vertices;
-    vector<GLuint> final_indices;
-
-    // ’¸“_ƒ}[ƒWˆ—‚ğŒÄ‚Ño‚·
-    merging_duplicate_vertices(vertices, indices, final_vertices, final_indices);
-
-    // ’¸“_”‚ğæ“¾
-    index_count_ = (GLsizei)final_indices.size();
-    // ƒf[ƒ^‚ğ•Û
-    path_vertices_ = final_vertices;
-    // ’¸“_ƒoƒbƒtƒ@‚Ìì¬
-    vertices_ = create_buffer(GL_ARRAY_BUFFER, sizeof(Vertex) * final_vertices.size(), final_vertices.data());
-    // ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@‚Ìì¬
-    indices_ = create_buffer(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * final_indices.size(), final_indices.data());
-    // ’¸“_”z—ñƒIƒuƒWƒFƒNƒg‚Ìì¬
+    // é ‚ç‚¹æ•°ã‚’å–å¾—
+    index_count_ = (GLsizei)indices.size();
+    // ãƒ‡ãƒ¼ã‚¿ã‚’ä¿æŒ
+    path_vertices_ = vertices;
+    // é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã®ä½œæˆ
+    vertices_ = create_buffer(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), vertices.data());
+    // ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡ã®ä½œæˆ
+    indices_ = create_buffer(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * indices.size(), indices.data());
+    // é ‚ç‚¹é…åˆ—ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ä½œæˆ
     vertex_array_ = create_vertex_array();
-    // ƒOƒ‰ƒt‚ğì¬
-    build_graph(final_vertices, final_indices);
+    // ã‚°ãƒ©ãƒ•ã‚’ä½œæˆ
+    build_graph(vertices, indices);
 }
 
 void NavMeshSurface::clear() {
-    // ’¸“_”z—ñƒIƒuƒWƒFƒNƒg‚Ìíœ
+    // é ‚ç‚¹é…åˆ—ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å‰Šé™¤
     glDeleteVertexArrays(1, &vertex_array_);
-    // ’¸“_ƒoƒbƒtƒ@ƒIƒuƒWƒFƒNƒg‚Ìíœ
+    // é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å‰Šé™¤
     glDeleteBuffers(1, &vertices_);
-    // ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@ƒIƒuƒWƒFƒNƒg‚Ìíœ
+    // ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å‰Šé™¤
     glDeleteBuffers(1, &indices_);
 
     index_count_ = 0;
@@ -136,64 +131,64 @@ void NavMeshSurface::clear() {
     path_vertices_.clear();
 }
 
-vector<int> NavMeshSurface::find_path(const GSvector3& start, const GSvector3& end) const {
-    // ƒiƒrƒƒbƒVƒ…‚ª–³‚¢
-    if (graph_.empty()) return vector<int>{};
+std::vector<int> NavMeshSurface::find_path(const GSvector3& start, const GSvector3& end) const {
+    // ãƒŠãƒ“ãƒ¡ãƒƒã‚·ãƒ¥ãŒç„¡ã„
+    if (graph_.empty()) return std::vector<int>{};
 
-    // ƒXƒ^[ƒg‚ÆƒS[ƒ‹‚Ìƒ|ƒŠƒSƒ“‚ğŒŸõ
+    // ã‚¹ã‚¿ãƒ¼ãƒˆã¨ã‚´ãƒ¼ãƒ«ã®ãƒãƒªã‚´ãƒ³ã‚’æ¤œç´¢
     int start_id = find_nearest_polygon(start);
     int end_id = find_nearest_polygon(end);
-    if (start_id == ERROR_NODE_ID || end_id == ERROR_NODE_ID) return vector<int>{};
+    if (start_id == ERROR_NODE_ID || end_id == ERROR_NODE_ID) return std::vector<int>{};
 
-    // Astarƒf[ƒ^\‘¢
-    priority_queue<pair<float, int>, vector<pair<float, int>>, greater<pair<float, int>>> open_list;
-    unordered_map<int, bool> closed_list; // •]‰¿Ï‚İƒm[ƒh
-    unordered_map<int, int> parent_umap;
-    unordered_map<int, float> goal_cost;
+    // Astarãƒ‡ãƒ¼ã‚¿æ§‹é€ 
+    std::priority_queue<std::pair<float, int>, std::vector<std::pair<float, int>>, std::greater<std::pair<float, int>>> open_list;
+    std::unordered_map<int, bool> closed_list; // è©•ä¾¡æ¸ˆã¿ãƒãƒ¼ãƒ‰
+    std::unordered_map<int, int> parent_umap;
+    std::unordered_map<int, float> goal_cost;
 
     auto heuristic = [&](int from_id, int to_id) {
         const auto& p1 = graph_[from_id].center;
         const auto& p2 = graph_[to_id].center;
-        return sqrt(pow(p1.x - p2.x, 2) + pow(p1.y - p2.y, 2) + pow(p1.z - p2.z, 2));
+        return std::sqrt(std::pow(p1.x - p2.x, 2) + std::pow(p1.y - p2.y, 2) + std::pow(p1.z - p2.z, 2));
     };
 
-    // ‰Šú‰»
+    // åˆæœŸåŒ–
     for (const auto& poly : graph_) {
-        goal_cost[poly.id] = numeric_limits<float>::max();
+        goal_cost[poly.id] = std::numeric_limits<float>::max();
         closed_list[poly.id] = false;
     }
     goal_cost[start_id] = 0;
     parent_umap[start_id] = ERROR_NODE_ID;
     open_list.push({ heuristic(start_id, end_id), start_id });
 
-    // Astar’Tõ
+    // Astaræ¢ç´¢
     while (!open_list.empty()) {
         int current_id = open_list.top().second;
         open_list.pop();
 
-        // ’TõÏ‚İ‚ÍƒXƒLƒbƒv
+        // æ¢ç´¢æ¸ˆã¿ã¯ã‚¹ã‚­ãƒƒãƒ—
         if (closed_list[current_id]) continue;
         closed_list[current_id] = true;
 
-        // ƒS[ƒ‹“’…
+        // ã‚´ãƒ¼ãƒ«åˆ°ç€
         if (current_id == end_id) {
-            vector<int> path;
+            std::vector<int> path;
             while (current_id != ERROR_NODE_ID) {
                 path.push_back(current_id);
                 current_id = parent_umap[current_id];
             }
-            reverse(path.begin(), path.end());
+            std::reverse(path.begin(), path.end());
             
-            // ’TõI—¹
+            // æ¢ç´¢çµ‚äº†
             return path;    
         }
 
-        // —×Úƒm[ƒh‚ğ’Tõ
+        // éš£æ¥ãƒãƒ¼ãƒ‰ã‚’æ¢ç´¢
         for (int neighbor_id : graph_[current_id].neighbors_id) {
-            // ’TõÏ‚İ‚ÍƒXƒLƒbƒv
+            // æ¢ç´¢æ¸ˆã¿ã¯ã‚¹ã‚­ãƒƒãƒ—
             if (closed_list[neighbor_id]) continue;
 
-            float tentative_goal_cost = goal_cost[current_id] + heuristic(current_id, neighbor_id); // ƒRƒXƒg = ‹——£
+            float tentative_goal_cost = goal_cost[current_id] + heuristic(current_id, neighbor_id); // ã‚³ã‚¹ãƒˆ = è·é›¢
             if (tentative_goal_cost < goal_cost[neighbor_id]) {
                 parent_umap[neighbor_id] = current_id;
                 goal_cost[neighbor_id] = tentative_goal_cost;
@@ -203,34 +198,34 @@ vector<int> NavMeshSurface::find_path(const GSvector3& start, const GSvector3& e
         }
     }
 
-    // ’Tõ¸”s
-    return vector<int>{};
+    // æ¢ç´¢å¤±æ•—
+    return std::vector<int>{};
 }
 
-vector<GSvector3> NavMeshSurface::create_line_path(const vector<int>& path) const {
-    if (path.empty()) return vector<GSvector3>{};
+std::vector<GSvector3> NavMeshSurface::create_line_path(const std::vector<int>& path) const {
+    if (path.empty()) return std::vector<GSvector3>{};
 
-    vector<GSvector3> final_path;
+    std::vector<GSvector3> final_path;
     for (int poly_id : path) {
         final_path.push_back(graph_[poly_id].center);
     }
     return final_path;
 }
 
-vector<GSvector3> NavMeshSurface::create_smooth_path(const vector<int>& path, const GSvector3& start, const GSvector3& end) const {
-    // ƒm[ƒh‚ª“¯‚¶‚È‚ç’Pƒ‚È’¼üˆÚ“®‚Å•Ô‹p
+std::vector<GSvector3> NavMeshSurface::create_smooth_path(const std::vector<int>& path, const GSvector3& start, const GSvector3& end) const {
+    // ãƒãƒ¼ãƒ‰ãŒåŒã˜ãªã‚‰å˜ç´”ãªç›´ç·šç§»å‹•ã§è¿”å´
     if (path.size() <= 1) return { start, end };
 
     vector<GSvector3> final_path;
 
-    // Å‰‚ÌƒEƒFƒCƒ|ƒCƒ“ƒg‚Æ‚µ‚ÄƒXƒ^[ƒg’n“_‚ğ’Ç‰Á
+    // æœ€åˆã®ã‚¦ã‚§ã‚¤ãƒã‚¤ãƒ³ãƒˆã¨ã—ã¦ã‚¹ã‚¿ãƒ¼ãƒˆåœ°ç‚¹ã‚’è¿½åŠ 
     final_path.push_back(start);
 
-    // TODO ŠŠ‚ç‚©‚ÈŒo˜H‚É•ÏŠ·‚·‚éˆ—
+    // TODO æ»‘ã‚‰ã‹ãªçµŒè·¯ã«å¤‰æ›ã™ã‚‹å‡¦ç†
     vector<GSvector3> tmp = create_line_path(path);
     final_path.insert(final_path.end(), tmp.begin(), tmp.end());
 
-    // ÅŒã‚ÌƒEƒFƒCƒ|ƒCƒ“ƒg‚Æ‚µ‚ÄƒS[ƒ‹’n“_‚ğ’Ç‰Á
+    // æœ€å¾Œã®ã‚¦ã‚§ã‚¤ãƒã‚¤ãƒ³ãƒˆã¨ã—ã¦ã‚´ãƒ¼ãƒ«åœ°ç‚¹ã‚’è¿½åŠ 
     final_path.push_back(end);
 
     return final_path;
@@ -247,20 +242,20 @@ GLuint NavMeshSurface::create_buffer(GLenum target, GLuint size, const GLvoid* d
 }
 
 GLuint NavMeshSurface::create_vertex_array() {
-    // ’¸“_”z—ñƒIƒuƒWƒFƒNƒg‚Ìì¬
+    // é ‚ç‚¹é…åˆ—ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ä½œæˆ
     GLuint vertex_array = 0;
     glGenVertexArrays(1, &vertex_array);
     glBindVertexArray(vertex_array);
 
-    // VBO‚Æ’¸“_‘®«‚Ìİ’è
+    // VBOã¨é ‚ç‚¹å±æ€§ã®è¨­å®š
     glBindBuffer(GL_ARRAY_BUFFER, vertices_);
     glEnableVertexAttribArray(0); // layout (location = 0) in vec3 aPos;
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
 
-    // EBO‚ğVAO‚É•R•t‚¯
+    // EBOã‚’VAOã«ç´ä»˜ã‘
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices_);
 
-    // ƒoƒCƒ“ƒh‚ğ‰ğœ
+    // ãƒã‚¤ãƒ³ãƒ‰ã‚’è§£é™¤
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -271,10 +266,10 @@ GLuint NavMeshSurface::create_vertex_array() {
 void NavMeshSurface::build_graph(const vector<Vertex>& vertices, const vector<GLuint>& indices) {
     graph_.clear();
 
-    int polygon_count = indices.size() / 3; // OŠpŒ`‘O’ñ
+    int polygon_count = indices.size() / 3; // ä¸‰è§’å½¢å‰æ
     graph_.reserve(polygon_count);
 
-    // ƒm[ƒh‚ğì¬
+    // ãƒãƒ¼ãƒ‰ã‚’ä½œæˆ
     for (int i = 0; i < polygon_count; ++i) {
         NavNode poly;
         poly.id = i;
@@ -282,7 +277,7 @@ void NavMeshSurface::build_graph(const vector<Vertex>& vertices, const vector<GL
         poly.indices[1] = indices[i * 3 + 1];
         poly.indices[2] = indices[i * 3 + 2];
 
-        // ƒ|ƒŠƒSƒ“‚Ì’†S“_‚ğŒvZ
+        // ãƒãƒªã‚´ãƒ³ã®ä¸­å¿ƒç‚¹ã‚’è¨ˆç®—
         const GSvector3& v0 = vertices[poly.indices[0]].position;
         const GSvector3& v1 = vertices[poly.indices[1]].position;
         const GSvector3& v2 = vertices[poly.indices[2]].position;
@@ -291,27 +286,27 @@ void NavMeshSurface::build_graph(const vector<Vertex>& vertices, const vector<GL
         graph_.push_back(poly);
     }
 
-    // ƒL[(•Ó—p‚Ì’¸“_) ’l(•Ó‚ğ‹¤—L‚·‚éƒm[ƒh‚ÌID)
-    map<pair<GLuint, GLuint>, vector<int>> edge;
+    // ã‚­ãƒ¼(è¾ºç”¨ã®é ‚ç‚¹) å€¤(è¾ºã‚’å…±æœ‰ã™ã‚‹ãƒãƒ¼ãƒ‰ã®ID)
+    std::map<std::pair<GLuint, GLuint>, std::vector<int>> edge;
 
-    // •Ó‚Ì—×ÚŒvZ
+    // è¾ºã®éš£æ¥è¨ˆç®—
     for (int i = 0; i < polygon_count; ++i) {
         const NavNode& poly = graph_[i];
         GLuint p_indices[] = { poly.indices[0], poly.indices[1], poly.indices[2] };
 
-        // ƒ|ƒŠƒSƒ“‚Ì3‚Â‚Ì•Ó‚ğƒ}ƒbƒv‚É“o˜^
+        // ãƒãƒªã‚´ãƒ³ã®3ã¤ã®è¾ºã‚’ãƒãƒƒãƒ—ã«ç™»éŒ²
         for (int j = 0; j < 3; ++j) {
             GLuint v1 = p_indices[j];
             GLuint v2 = p_indices[(j + 1) % 3];
-            // •Ó‚Ì’¸“_ƒCƒ“ƒfƒbƒNƒX‚ğƒ\[ƒg‚µ‚ÄA(1,2)‚Æ(2,1)‚ª“¯‚¶ƒL[‚É‚È‚é‚æ‚¤‚É‚·‚é
-            pair<GLuint, GLuint> e = { min(v1, v2), max(v1, v2) };
+            // è¾ºã®é ‚ç‚¹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’ã‚½ãƒ¼ãƒˆã—ã¦ã€(1,2)ã¨(2,1)ãŒåŒã˜ã‚­ãƒ¼ã«ãªã‚‹ã‚ˆã†ã«ã™ã‚‹
+            std::pair<GLuint, GLuint> e = { min(v1, v2), max(v1, v2) };
             edge[e].push_back(i);
         }
     }
 
     for (const auto& pair : edge) {
         const vector<int>& polygons = pair.second;
-        // 1‚Â‚Ì•Ó‚ğ2‚Â‚Ìƒ|ƒŠƒSƒ“‚ª‹¤—L‚µ‚Ä‚¢‚éê‡A‚»‚ê‚ç‚Í—×Ú‚µ‚Ä‚¢‚é
+        // 1ã¤ã®è¾ºã‚’2ã¤ã®ãƒãƒªã‚´ãƒ³ãŒå…±æœ‰ã—ã¦ã„ã‚‹å ´åˆã€ãã‚Œã‚‰ã¯éš£æ¥ã—ã¦ã„ã‚‹
         if (polygons.size() == 2) {
             int poly_id1 = polygons[0];
             int poly_id2 = polygons[1];
@@ -331,7 +326,7 @@ GSvector3 NavMeshSurface::calc_polygon_center(const GSvector3& v0, const GSvecto
 
 int NavMeshSurface::find_nearest_polygon(const GSvector3& position) const {
     int id = ERROR_NODE_ID;
-    float min_distance_sq = numeric_limits<float>::max();
+    float min_distance_sq = std::numeric_limits<float>::max();
 
     for (const auto& poly : graph_) {
         float dx = poly.center.x - position.x;
@@ -345,33 +340,4 @@ int NavMeshSurface::find_nearest_polygon(const GSvector3& position) const {
         }
     }
     return id;
-}
-
-void NavMeshSurface::merging_duplicate_vertices(const vector<Vertex>& original_vertices, const vector<GLuint>& original_indices, vector<Vertex>& out_vertices, vector<GLuint>& out_indices) {
-    // ƒL[: ’¸“_À•W, ’l: V‚µ‚¢ƒ†ƒj[ƒN‚È’¸“_ƒCƒ“ƒfƒbƒNƒX
-    map<GSvector3, GLuint, CompareGSvector3> unique_vertices_map;
-
-    out_vertices.clear();
-    out_indices.clear();
-    out_indices.reserve(original_indices.size());
-
-    for (const GLuint original_index : original_indices) {
-        const GSvector3& pos = original_vertices[original_index].position;
-
-        // ‚±‚ÌÀ•W‚ª‰‚ß‚ÄŒ©‚Â‚©‚Á‚½‚©‚Ç‚¤‚©‚ğƒ`ƒFƒbƒN
-        if (unique_vertices_map.find(pos) == unique_vertices_map.end()) {
-            // ‰‚ß‚ÄŒ©‚Â‚©‚Á‚½ê‡AV‚µ‚¢ƒ†ƒj[ƒN‚È’¸“_‚Æ‚µ‚ÄƒŠƒXƒg‚É’Ç‰Á
-            out_vertices.push_back({ pos });
-            // V‚µ‚¢ƒCƒ“ƒfƒbƒNƒX‚ğæ“¾(Œ»İ‚ÌƒŠƒXƒg‚ÌƒTƒCƒY - 1)
-            GLuint new_index = (GLuint)(out_vertices.size() - 1);
-            // ƒ}ƒbƒv‚É‹L˜^
-            unique_vertices_map[pos] = new_index;
-            // ’Ç‰Á
-            out_indices.push_back(new_index);
-        }
-        else {
-            // ‚·‚Å‚ÉŒ©‚Â‚©‚Á‚Ä‚¢‚é‚È‚çAƒ}ƒbƒv‚©‚çV‚µ‚¢ƒCƒ“ƒfƒbƒNƒX‚ğæ“¾‚µ‚ÄƒŠƒXƒg‚É’Ç‰Á
-            out_indices.push_back(unique_vertices_map[pos]);
-        }
-    }
 }
