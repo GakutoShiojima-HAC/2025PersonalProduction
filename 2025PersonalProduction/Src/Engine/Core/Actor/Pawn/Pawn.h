@@ -3,10 +3,10 @@
 //  Author        : Shiojima Gakuto
 //  Created       : 2025/07/09
 //  Updated       : 2025/07/09
-//  Description   : Actor‚ğŒp³‚·‚éAˆÓv‚ğ‚Â‚à‚Ì
-//					ƒLƒƒƒ‰ƒNƒ^[AƒG[ƒWƒFƒ“ƒg‚ªŒp³‚·‚é
+//  Description   : Actorã‚’ç¶™æ‰¿ã™ã‚‹ã€æ„æ€ã‚’æŒã¤ã‚‚ã®
+//					ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã€ã‚¨ãƒ¼ã‚¸ã‚§ãƒ³ãƒˆãŒç¶™æ‰¿ã™ã‚‹
 //
-//  ’ˆÓF–{ƒ\[ƒXƒR[ƒh‚Ì–³’f“]ÚEƒR[ƒh‚ÌƒRƒs[E“\‚è•t‚¯‚É‚æ‚é—¬—pEÄ”z•z‚ğ‹Ö~‚µ‚Ü‚·B
+//  æ³¨æ„ï¼šæœ¬ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã®ç„¡æ–­è»¢è¼‰ãƒ»ã‚³ãƒ¼ãƒ‰ã®ã‚³ãƒ”ãƒ¼ãƒ»è²¼ã‚Šä»˜ã‘ã«ã‚ˆã‚‹æµç”¨ãƒ»å†é…å¸ƒã‚’ç¦æ­¢ã—ã¾ã™ã€‚
 // -----------------------------------------------------------------------------------------
 
 #ifndef PAWN_H_
@@ -23,114 +23,114 @@ public:
 
 private:
 	/// <summary>
-	/// ‹ó’†
+	/// ç©ºä¸­
 	/// </summary>
 	virtual void on_air();
 
 	/// <summary>
-	/// Ú’n
+	/// æ¥åœ°
 	/// </summary>
 	virtual void on_ground();
 
 public:
 	/// <summary>
-	/// ƒ_ƒ[ƒWˆ—
+	/// ãƒ€ãƒ¡ãƒ¼ã‚¸å‡¦ç†
 	/// </summary>
-	/// <param name="other">= —^‚¦‚é‘¤‚Ìƒ|[ƒ“</param>
-	/// <param name="damage">= ƒ_ƒ[ƒW’l</param>
+	/// <param name="other">= ä¸ãˆã‚‹å´ã®ãƒãƒ¼ãƒ³</param>
+	/// <param name="damage">= ãƒ€ãƒ¡ãƒ¼ã‚¸å€¤</param>
 	virtual void take_damage(Actor& other, const int damage);
 
 	/// <summary>
-	/// ƒWƒƒƒ“ƒvˆ—
+	/// ã‚¸ãƒ£ãƒ³ãƒ—å‡¦ç†
 	/// </summary>
 	virtual void on_jump();
 
 	/// <summary>
-	/// €–Só‘Ô‚©‚Ç‚¤‚©
+	/// æ­»äº¡çŠ¶æ…‹ã‹ã©ã†ã‹
 	/// </summary>
-	/// <returns>€–Só‘Ô‚È‚ç^‚ğ•Ô‹p</returns>
+	/// <returns>æ­»äº¡çŠ¶æ…‹ãªã‚‰çœŸã‚’è¿”å´</returns>
 	virtual bool is_dead_state() const;
 
 public:
 	/// <summary>
-	/// HP‚ğæ“¾
+	/// HPã‚’å–å¾—
 	/// </summary>
 	int& hp();
 
 	/// <summary>
-	/// d—Í’l‚ğæ“¾
+	/// é‡åŠ›å€¤ã‚’å–å¾—
 	/// </summary>
 	float& gravity();
 
 	/// <summary>
-	/// –³“GŠÔ‚ğæ“¾
+	/// ç„¡æ•µæ™‚é–“ã‚’å–å¾—
 	/// </summary>
 	float& invincible_timer();
 
 	/// <summary>
-	/// ƒ‚[ƒVƒ‡ƒ“‚ªI—¹‚µ‚½‚©‚Ç‚¤‚©
+	/// ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ãŒçµ‚äº†ã—ãŸã‹ã©ã†ã‹
 	/// </summary>
-	/// <returns>ƒ‚[ƒVƒ‡ƒ“‚ªI—¹‚µ‚Ä‚¢‚½‚ç^‚ğ•Ô‹p</returns>
+	/// <returns>ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ãŒçµ‚äº†ã—ã¦ã„ãŸã‚‰çœŸã‚’è¿”å´</returns>
 	bool is_motion_end() const;
 
 protected:
 	/// <summary>
-	/// d—Í‚ÌXV
+	/// é‡åŠ›ã®æ›´æ–°
 	/// </summary>
 	void update_gravity(float delta_time);
 
 	/// <summary>
-	/// –³“GŠÔ‚ÌXV
+	/// ç„¡æ•µæ™‚é–“ã®æ›´æ–°
 	/// </summary>
 	void update_invincible(float delta_time);
 
 	/// <summary>
-	/// ƒƒbƒVƒ…‚ÌXV
+	/// ãƒ¡ãƒƒã‚·ãƒ¥ã®æ›´æ–°
 	/// </summary>
-	void update_mesh(float delta_time);
+	virtual void update_mesh(float delta_time);
 
 	/// <summary>
-	/// Œ»İ‚Ìƒ‚[ƒVƒ‡ƒ“‚Ì‘Ä¶ŠÔ‚ğæ“¾
+	/// ç¾åœ¨ã®ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ã®ç·å†ç”Ÿæ™‚é–“ã‚’å–å¾—
 	/// </summary>
 	/// <returns></returns>
 	float current_motion_end_time() const;
 
 protected:
 	/// <summary>
-	/// ’nŒ`‚Æ‚ÌÕ“Ë”»’è
+	/// åœ°å½¢ã¨ã®è¡çªåˆ¤å®š
 	/// </summary>
 	virtual void collide_field() override;
 
 	/// <summary>
-	/// ƒAƒNƒ^[‚Æ‚ÌÕ“Ë”»’è
+	/// ã‚¢ã‚¯ã‚¿ãƒ¼ã¨ã®è¡çªåˆ¤å®š
 	/// </summary>
 	virtual void collide_actor(Actor& other) override;
 
 protected:
-	// ƒAƒjƒ[ƒVƒ‡ƒ“ƒƒbƒVƒ…
+	// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãƒ¡ãƒƒã‚·ãƒ¥
 	AnimatedMesh mesh_{ 0, 0, 0, 0 };
-	// ƒ‚[ƒVƒ‡ƒ“”Ô†
+	// ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ç•ªå·
 	GSuint motion_{ 0 };
-	// ƒ‚[ƒVƒ‡ƒ“‚Ìƒ‹[ƒvw’è
+	// ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ã®ãƒ«ãƒ¼ãƒ—æŒ‡å®š
 	bool motion_loop_{ true };
 
 	// HP
 	int hp_{ 1 };
-	// d—Í’l
+	// é‡åŠ›å€¤
 	float gravity_{ 9.8f };
-	// ƒWƒƒƒ“ƒv—Í
+	// ã‚¸ãƒ£ãƒ³ãƒ—åŠ›
 	float jump_power_{ 2.0f };
-	// –³“GŠÔƒ^ƒCƒ}[(•b)
+	// ç„¡æ•µæ™‚é–“ã‚¿ã‚¤ãƒãƒ¼(ç§’)
 	float invincible_timer_{ 0.0f };
 
-	// g’·
+	// èº«é•·
 	float height_{ 2.0f };
-	// “ª‚ÌƒIƒtƒZƒbƒg
+	// é ­ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆ
 	float head_offset_{ 0.05f };
-	// ‘«Œ³‚ÌƒIƒtƒZƒbƒg
+	// è¶³å…ƒã®ã‚ªãƒ•ã‚»ãƒƒãƒˆ
 	float foot_offset_{ 0.05f };
 	
-	// Ú’n‚µ‚Ä‚¢‚é‚©
+	// æ¥åœ°ã—ã¦ã„ã‚‹ã‹
 	bool is_ground_{ false };
 
 };

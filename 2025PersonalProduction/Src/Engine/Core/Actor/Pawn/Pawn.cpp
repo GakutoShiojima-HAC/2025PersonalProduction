@@ -13,145 +13,146 @@ void Pawn::on_ground() {
 }
 
 void Pawn::take_damage(Actor& other, const int damage) {
-	hp_ = CLAMP(hp_ - damage, 0, INT_MAX);
+    hp_ = CLAMP(hp_ - damage, 0, INT_MAX);
 }
 
 void Pawn::on_jump() {
-	velocity_.y = jump_power_ * 0.1f + gravity_ * 0.1f / cFPS;	// d—Í‚ğ‰ÁZ‚·‚é‚±‚Æ‚Å‰‘¬‚ğˆÛ
+    velocity_.y = jump_power_ * 0.1f + gravity_ * 0.1f / cFPS;	// é‡åŠ›ã‚’åŠ ç®—ã™ã‚‹ã“ã¨ã§åˆé€Ÿã‚’ç¶­æŒ
 }
 
 bool Pawn::is_dead_state() const {
-	return false;
+    return false;
 }
 
 int& Pawn::hp() {
-	return hp_;
+    return hp_;
 }
 
 float& Pawn::gravity() {
-	return gravity_;
+    return gravity_;
 }
 
 float& Pawn::invincible_timer() {
-	return invincible_timer_;
+    return invincible_timer_;
 }
 
 bool Pawn::is_motion_end() const {
-	return mesh_.is_motion_end();
+    return mesh_.is_motion_end();
 }
 
 float Pawn::current_motion_end_time() const {
-	return mesh_.motion_end_time();
+    return mesh_.motion_end_time();
 }
 
 void Pawn::update_gravity(float delta_time) {
-	// d—Í‚ğ‰Á‚¦‚é
-	velocity_.y -= gravity_ * 0.1f / cFPS * delta_time;
-	// d—Í‚ğ”½‰f
-	transform_.translate(0.0f, velocity_.y, 0.0f);
-	// Õ“Ë”»’è
-	collide_field();
+    // é‡åŠ›ã‚’åŠ ãˆã‚‹
+    velocity_.y -= gravity_ * 0.1f / cFPS * delta_time;
+    // é‡åŠ›ã‚’åæ˜ 
+    transform_.translate(0.0f, velocity_.y, 0.0f);
+    // è¡çªåˆ¤å®š
+    collide_field();
 }
 
 void Pawn::update_invincible(float delta_time) {
-	// –³“GŠÔ‚ª–³‚¯‚ê‚ÎI—¹
-	if (invincible_timer_ <= 0.0f) return;
+    // ç„¡æ•µæ™‚é–“ãŒç„¡ã‘ã‚Œã°çµ‚äº†
+    if (invincible_timer_ <= 0.0f) return;
 
-	// –³“GŠÔ‚ğŒ¸‚ç‚·
-	invincible_timer_ = CLAMP(invincible_timer_ - delta_time / cFPS, 0.0f, FLT_MAX);
+    // ç„¡æ•µæ™‚é–“ã‚’æ¸›ã‚‰ã™
+    invincible_timer_ = CLAMP(invincible_timer_ - delta_time / cFPS, 0.0f, FLT_MAX);
 }
 
 void Pawn::update_mesh(float delta_time) {
-	// ƒƒbƒVƒ…‚Ìƒ‚[ƒVƒ‡ƒ“‚ğXV
-	mesh_.update(delta_time);
-	// ƒ[ƒ‹ƒh•ÏŠ·s—ñ‚ğİ’è
-	mesh_.transform(transform_.localToWorldMatrix());
+    // ãƒ¡ãƒƒã‚·ãƒ¥ã®ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ã‚’æ›´æ–°
+    mesh_.update(delta_time);
+
+    // ãƒ¯ãƒ¼ãƒ«ãƒ‰å¤‰æ›è¡Œåˆ—ã‚’è¨­å®š
+    mesh_.transform(transform_.localToWorldMatrix());
 }
 
 void Pawn::collide_field() {
-	// x,z²‚Ì‰ñ“]‚ğ–³Œø‚É‚·‚é
-	transform_.rotation(GSquaternion(0.0f, transform_.rotation().y, 0.0f, transform_.rotation().w));
+    // x,zè»¸ã®å›è»¢ã‚’ç„¡åŠ¹ã«ã™ã‚‹
+    transform_.rotation(GSquaternion(0.0f, transform_.rotation().y, 0.0f, transform_.rotation().w));
 
-	/* •Ç‚Æ‚ÌÕ“Ë”»’èi‹…‘Ì‚Æ‚Ì”»’èj */
-	GSvector3 center; // ‰Ÿ‚µ–ß‚µŒã‚Ì‹…‘Ì‚Ì’†SÀ•W
-	if (world_->get_field()->collide(collider(), &center)) {
-		// yÀ•W‚Í•ÏX‚µ‚È‚¢
-		center.y = transform_.position().y;
-		// •â³Œã‚ÌÀ•W‚É•ÏX‚·‚é
-		transform_.position(center);
-	}
-	
-	/* ’n–Ê‚Æ‚ÌÕ“Ë”»’èiü•ª‚Æ‚ÌŒğ·”»’èj*/
-	// ’n–Ê‚Æ‚ÌŒğ“_
-	GSvector3 intersect;
-	// Õ“Ë‚µ‚½ƒtƒB[ƒ‹ƒh—pƒAƒNƒ^[
-	Actor* field_actor{ nullptr };
-	// e‚ğƒŠƒZƒbƒg‚µ‚Ä‚¨‚­
-	transform_.parent(nullptr);
+    // å£ã¨ã®è¡çªåˆ¤å®šï¼ˆçƒä½“ã¨ã®åˆ¤å®š)
+    GSvector3 center; // æŠ¼ã—æˆ»ã—å¾Œã®çƒä½“ã®ä¸­å¿ƒåº§æ¨™
+    if (world_->get_field()->collide(collider(), &center)) {
+        // yåº§æ¨™ã¯å¤‰æ›´ã—ãªã„
+        center.y = transform_.position().y;
+        // è£œæ­£å¾Œã®åº§æ¨™ã«å¤‰æ›´ã™ã‚‹
+        transform_.position(center);
+    }
 
-	// ”»’èÀ•W
-	GSvector3 position_head = transform_.position();
-	GSvector3 position_foot = transform_.position();
-	Line head_line;
-	head_line.start = position_head + collider_.center;
-	head_line.end = position_head + GSvector3{ 0.0f, head_offset_, 0.0f };
-	Line foot_line;
-	foot_line.start = position_foot + collider_.center;
-	foot_line.end = position_foot + GSvector3{ 0.0f, -foot_offset_, 0.0f };
+    // åœ°é¢ã¨ã®è¡çªåˆ¤å®šï¼ˆç·šåˆ†ã¨ã®äº¤å·®åˆ¤å®š)
+    // åœ°é¢ã¨ã®äº¤ç‚¹
+    GSvector3 intersect;
+    // è¡çªã—ãŸãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ç”¨ã‚¢ã‚¯ã‚¿ãƒ¼
+    Actor* field_actor{ nullptr };
+    // è¦ªã‚’ãƒªã‚»ãƒƒãƒˆã—ã¦ãŠã
+    transform_.parent(nullptr);
 
-	// “Vˆä”»’è
-	if (world_->get_field()->collide(head_line, &intersect, nullptr, &field_actor)) {
-		// TODO intersect•ªy‚ğ‰º‚°‚é
+    // åˆ¤å®šåº§æ¨™
+    GSvector3 position_head = transform_.position();
+    GSvector3 position_foot = transform_.position();
+    Line head_line;
+    head_line.start = position_head + collider_.center;
+    head_line.end = position_head + GSvector3{ 0.0f, head_offset_, 0.0f };
+    Line foot_line;
+    foot_line.start = position_foot + collider_.center;
+    foot_line.end = position_foot + GSvector3{ 0.0f, -foot_offset_, 0.0f };
 
-		// À•W‚ğ•ÏX‚·‚é
-		transform_.position(position_head);
-		// d—Í‚ğ‰Šú‰»‚·‚é
-		velocity_.y = 0.0f;
-	}
+    // å¤©äº•åˆ¤å®š
+    if (world_->get_field()->collide(head_line, &intersect, nullptr, &field_actor)) {
+        // TODO intersectåˆ†yã‚’ä¸‹ã’ã‚‹
 
-	// ’n–Ê”»’è
-	if (world_->get_field()->collide(foot_line, &intersect, nullptr, &field_actor)) {
-		// Œğ·‚µ‚½“_‚©‚çyÀ•W‚Ì‚İ•â³‚·‚é
-		position_foot.y = intersect.y;
-		// À•W‚ğ•ÏX‚·‚é
-		transform_.position(position_foot);
-		// d—Í‚ğ‰Šú‰»‚·‚é
-		velocity_.y = 0.0f;
-		// ƒtƒB[ƒ‹ƒh—p‚ÌƒAƒNƒ^[ƒNƒ‰ƒX‚ÆÕ“Ë‚µ‚½‚©
-		if (field_actor != nullptr) {
-			// Õ“Ë‚µ‚½ƒtƒB[ƒ‹ƒh—p‚ÌƒAƒNƒ^[‚ğe‚Ìƒgƒ‰ƒ“ƒXƒtƒH[ƒ€ƒNƒ‰ƒX‚Æ‚µ‚Äİ’è
-			transform_.parent(&field_actor->transform());
-		}
-		// ’…’nó‘Ô‚ÌXV
-		on_ground();
-		is_ground_ = true;
-	}
-	else {
-		// ‹ó’†ó‘Ô‚ÌXV
-		on_air();
-		is_ground_ = false;
-	}
+        // åº§æ¨™ã‚’å¤‰æ›´ã™ã‚‹
+        transform_.position(position_head);
+        // é‡åŠ›ã‚’åˆæœŸåŒ–ã™ã‚‹
+        velocity_.y = 0.0f;
+    }
+
+    // åœ°é¢åˆ¤å®š
+    if (world_->get_field()->collide(foot_line, &intersect, nullptr, &field_actor)) {
+        // äº¤å·®ã—ãŸç‚¹ã‹ã‚‰yåº§æ¨™ã®ã¿è£œæ­£ã™ã‚‹
+        position_foot.y = intersect.y;
+        // åº§æ¨™ã‚’å¤‰æ›´ã™ã‚‹
+        transform_.position(position_foot);
+        // é‡åŠ›ã‚’åˆæœŸåŒ–ã™ã‚‹
+        velocity_.y = 0.0f;
+        // ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ç”¨ã®ã‚¢ã‚¯ã‚¿ãƒ¼ã‚¯ãƒ©ã‚¹ã¨è¡çªã—ãŸã‹
+        if (field_actor != nullptr) {
+            // è¡çªã—ãŸãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ç”¨ã®ã‚¢ã‚¯ã‚¿ãƒ¼ã‚’è¦ªã®ãƒˆãƒ©ãƒ³ã‚¹ãƒ•ã‚©ãƒ¼ãƒ ã‚¯ãƒ©ã‚¹ã¨ã—ã¦è¨­å®š
+            transform_.parent(&field_actor->transform());
+        }
+        // ç€åœ°çŠ¶æ…‹ã®æ›´æ–°
+        on_ground();
+        is_ground_ = true;
+    }
+    else {
+        // ç©ºä¸­çŠ¶æ…‹ã®æ›´æ–°
+        on_air();
+        is_ground_ = false;
+    }
 }
 
 void Pawn::collide_actor(Actor& other) {
-	// ©g‚Æ‘ÎÛ‚ÌÀ•W‚ğæ“¾
-	GSvector3 position = transform_.position();
-	position.y = 0.0f;
-	GSvector3 target = other.transform().position();
-	target.y = 0.0f;
-	// ‹——£‚ğ‹‚ß‚é
-	float distance = GSvector3::distance(position, target);
+    // è‡ªèº«ã¨å¯¾è±¡ã®åº§æ¨™ã‚’å–å¾—
+    GSvector3 position = transform_.position();
+    position.y = 0.0f;
+    GSvector3 target = other.transform().position();
+    target.y = 0.0f;
+    // è·é›¢ã‚’æ±‚ã‚ã‚‹
+    float distance = GSvector3::distance(position, target);
 
-	// Õ“Ë”»’è‹…‚Ì”¼Œa“¯m‚ğ‰Á‚¦‚½’·‚³‚ğæ“¾
-	float length = collider_.radius + other.collider().radius;
+    // è¡çªåˆ¤å®šçƒã®åŠå¾„åŒå£«ã‚’åŠ ãˆãŸé•·ã•ã‚’å–å¾—
+    float length = collider_.radius + other.collider().radius;
 
-	// Õ“Ë”»’è‚Ìd‚È‚Á‚Ä‚¢‚é’·‚³‚Ìæ“¾
-	float overlap = length - distance;
+    // è¡çªåˆ¤å®šã®é‡ãªã£ã¦ã„ã‚‹é•·ã•ã®å–å¾—
+    float overlap = length - distance;
 
-	// d‚È‚Á‚Ä‚¢‚é•”•ª‚Ì”¼•ª‚Ì‹——£‚¾‚¯—£‚ê‚é
-	GSvector3 v = (position - target).getNormalized() * overlap * 0.5f;
-	transform_.translate(v, GStransform::Space::World);
+    // é‡ãªã£ã¦ã„ã‚‹éƒ¨åˆ†ã®åŠåˆ†ã®è·é›¢ã ã‘é›¢ã‚Œã‚‹
+    GSvector3 v = (position - target).getNormalized() * overlap * 0.5f;
+    transform_.translate(v, GStransform::Space::World);
 
-	// ƒtƒB[ƒ‹ƒh‚Æ‚ÌÕ“Ë”»’è‚ğÄ“xs‚¤
-	collide_field();
+    // ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã¨ã®è¡çªåˆ¤å®šã‚’å†åº¦è¡Œã†
+    collide_field();
 }
