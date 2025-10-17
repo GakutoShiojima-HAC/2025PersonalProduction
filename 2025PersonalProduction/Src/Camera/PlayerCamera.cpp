@@ -4,17 +4,17 @@
 #include "Engine/Core/Actor/Pawn/Pawn.h"
 #include "Engine/Utils/Line.h"
 
-// ’‹“_(Šî“_‚©‚ç‚ÌƒIƒtƒZƒbƒg)
+// æ³¨è¦–ç‚¹(åŸºç‚¹ã‹ã‚‰ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆ)
 const GSvector3 LOOKAT_ORIGIN_TO_OFFSET{ 0.0f, 1.75f, 0.0f };
-// ’‹“_‚©‚ç‚ÌˆÊ’u
-const GSvector3 CAMERA_OFFSET{ 0.0f, 3.0f, -7.0f };
-// ‹“_ˆÚ“®‘¬“x
+// æ³¨è¦–ç‚¹ã‹ã‚‰ã®ä½ç½®
+const GSvector3 CAMERA_OFFSET{ 0.0f, 1.3f, -5.0f };
+// è¦–ç‚¹ç§»å‹•é€Ÿåº¦
 const float SENSITIVITY_X{ 0.095f };
 const float SENSITIVITY_Y{ 0.075f };
 
-// ƒXƒ€[ƒXƒ_ƒ“ƒv•âŠÔŠÔ
+// ã‚¹ãƒ ãƒ¼ã‚¹ãƒ€ãƒ³ãƒ—è£œé–“æ™‚é–“
 const float SMOOTH_TIME{ 2.0f };
-// ƒXƒ€[ƒXƒ_ƒ“ƒvˆÚ“®—Ê
+// ã‚¹ãƒ ãƒ¼ã‚¹ãƒ€ãƒ³ãƒ—ç§»å‹•é‡
 const float SMOOTH_MAX_SPEED{ 5.0f };
 
 PlayerCamera::PlayerCamera(IWorld* world) {
@@ -30,7 +30,7 @@ void PlayerCamera::update(float delta_time) {
 	exclusion(owner_);
 	exclusion(lockon_target_);
 
-	// ƒJƒƒ‰À•W‚ÌXV
+	// ã‚«ãƒ¡ãƒ©åº§æ¨™ã®æ›´æ–°
 	if (owner_ == nullptr) return;
 
 	GSvector3 pos;
@@ -39,39 +39,39 @@ void PlayerCamera::update(float delta_time) {
 		// TODO
 	}
 	else {
-		// ‹“_ˆÚ“®
+		// è¦–ç‚¹ç§»å‹•
 		GSvector2 input = input_.right_axis();
 		if (input_.is_pad()) input *= 15.0f;
 		yaw_ -= input.x * SENSITIVITY_X;
 		pitch_ -= input.y * SENSITIVITY_Y;
 		pitch_ = CLAMP(pitch_, -80.0f, 55.0f);
 
-		// ’‹“_‚ÌÀ•W‚ğ‹‚ß‚é
+		// æ³¨è¦–ç‚¹ã®åº§æ¨™ã‚’æ±‚ã‚ã‚‹
 		at = owner_->transform().position() + LOOKAT_ORIGIN_TO_OFFSET;
-		// ƒJƒƒ‰‚ÌÀ•W‚ğ‹‚ß‚é
+		// ã‚«ãƒ¡ãƒ©ã®åº§æ¨™ã‚’æ±‚ã‚ã‚‹
 		pos = at + GSquaternion::euler(pitch_, yaw_, 0.0f) * CAMERA_OFFSET;	
 	}
 
-	// ƒJƒƒ‰À•W‚©‚ç’‹“_ŠÔ‚ÉáŠQ•¨‚ª‚ ‚é‚©‚Ç‚¤‚©
+	// ã‚«ãƒ¡ãƒ©åº§æ¨™ã‹ã‚‰æ³¨è¦–ç‚¹é–“ã«éšœå®³ç‰©ãŒã‚ã‚‹ã‹ã©ã†ã‹
 	Line line{ at, pos };
 	GSvector3 intersect;
 	if (world_->get_field()->collide(line, &intersect)) {
-		// ˆÊ’u‚ğ•â³(‚±‚ê‚Å‚à“§‚¯‚é•Ç‚Í“§‚¯‚é)
+		// ä½ç½®ã‚’è£œæ­£(ã“ã‚Œã§ã‚‚é€ã‘ã‚‹å£ã¯é€ã‘ã‚‹)
 		pos = intersect;
 	}
 
-	// ƒXƒ€[ƒXƒ_ƒ“ƒv‚É‚æ‚éŠŠ‚ç‚©‚È•âŠÔ
-	GSvector3 tmp_velocity = GSvector3::zero();	// ‰¼ˆÚ“®—Ê
+	// ã‚¹ãƒ ãƒ¼ã‚¹ãƒ€ãƒ³ãƒ—ã«ã‚ˆã‚‹æ»‘ã‚‰ã‹ãªè£œé–“
+	GSvector3 tmp_velocity = GSvector3::zero();	// ä»®ç§»å‹•é‡
 	pos = GSvector3::smoothDamp(transform_.position(), pos, tmp_velocity, SMOOTH_TIME, SMOOTH_MAX_SPEED, delta_time);
 
-	// À•W‚Ìİ’è
+	// åº§æ¨™ã®è¨­å®š
 	transform_.position(pos);
-	// ’‹“_‚Ì•ûŒü‚ğŒ©‚é
+	// æ³¨è¦–ç‚¹ã®æ–¹å‘ã‚’è¦‹ã‚‹
 	transform_.lookAt(at);
 }
 
 void PlayerCamera::die() {
-	// ŠO•”‚©‚ç€–S”»’è‚É‚Å‚«‚È‚¢‚æ‚¤‚É‚·‚é
+	// å¤–éƒ¨ã‹ã‚‰æ­»äº¡åˆ¤å®šã«ã§ããªã„ã‚ˆã†ã«ã™ã‚‹
 }
 
 void PlayerCamera::set_owner(Pawn* owner) {

@@ -36,9 +36,9 @@ const float RADIUS{ 0.4f };
 // 移動時のカメラ向きへの回転角度
 const float TURN_SPEED{ 11.5f };
 // 通常移動速度
-const float MOVE_SPEED{ 0.1f };
+const float MOVE_SPEED{ 0.065f };
 // 疾走移動速度
-const float SPRINT_SPEED{ 0.15f };
+const float SPRINT_SPEED{ 0.085f };
 // 減速移動速度倍率
 const float DECELERATION_SPEED{ 0.75f };
 // 無敵時間(秒)
@@ -127,6 +127,9 @@ void Player::update(float delta_time) {
 	ImGui::Text("current state is %s.", state_string(PlayerStateType(state_.get_current_state())));
 	ImGui::Text("current motion is %d.", (int)motion_);
     ImGui::SliderInt("right hand bone", &right_hand_bone_, 0, 255);
+    int motion = motion_;
+    ImGui::SliderInt("motion",&motion, 0, 255);
+    motion_ = motion;
 	ImGui::End();
 
 	ImGui::Begin("App Window");
@@ -351,6 +354,7 @@ void Player::update_move_air(float delta_time) {
 
 void Player::to_move_state() {
 	change_state((GSuint)PlayerStateType::Move, (GSuint)Motion::Idle, true);
+    move_speed_ = 0.0f;
 }
 
 void Player::update_lockon_camera() {
@@ -572,22 +576,32 @@ void Player::add_attack_animation_event() {
 	
 	// for2 start // TODO ***仮でそのまま記述***
 	// 1段目
-	data.push_back(new WeaponManager::WeaponAnimationData(0, 20, GSvector3{ 0.0f, 1.0f, 1.0f }, 30.0f));
-	add_event(0, 20);
+	data.push_back(new WeaponManager::WeaponAnimationData(34, 20, GSvector3{ 0.0f, 1.0f, 1.0f }, 30.0f));
+	add_event(34, 20);
 	// 2段目
-	data.push_back(new WeaponManager::WeaponAnimationData(1, 15, GSvector3{ 0.0f, 1.0f, 1.0f }, 30.0f));
-	add_event(1, 15);
+	data.push_back(new WeaponManager::WeaponAnimationData(35, 15, GSvector3{ 0.0f, 1.0f, 1.0f }, 30.0f));
+	add_event(35, 15);
 	// 3段目
-	data.push_back(new WeaponManager::WeaponAnimationData(2, 15, GSvector3{ 0.0f, 1.0f, 1.0f }, 30.0f));
-	add_event(2, 15);
+	data.push_back(new WeaponManager::WeaponAnimationData(36, 15, GSvector3{ 0.0f, 1.0f, 1.0f }, 30.0f));
+	add_event(36, 15);
 	// 4段目
-	data.push_back(new WeaponManager::WeaponAnimationData(3, 15, GSvector3{ 0.0f, 1.0f, 1.0f }, 20.0f));
-	add_event(3, 15);
+	data.push_back(new WeaponManager::WeaponAnimationData(37, 15, GSvector3{ 0.0f, 1.0f, 1.0f }, 20.0f));
+	add_event(37, 15);
+    // 5段目
+    data.push_back(new WeaponManager::WeaponAnimationData(38, 15, GSvector3{ 0.0f, 1.0f, 1.0f }, 20.0f));
+    add_event(38, 15);
 	// for2 end
 
 	// 追加
 	weapon_manager_.add_weapon_parameter(type, data);
 	// for1 end
+}
+
+bool Player::is_root_motion_state() const {
+    return false;
+    //return MyLib::is_in(state_.get_current_state(),
+    //    (GSuint)PlayerStateType::Attack
+    //);
 }
 
 void Player::on_air() {
@@ -614,4 +628,13 @@ void Player::on_ground() {
 	)) return;
 
 	change_state((GSuint)PlayerStateType::Land, Motion::Land, false);
+}
+
+void Player::update_mesh(float delta_time) {
+    // メッシュのモーションを更新
+    mesh_.update(delta_time);
+    // ルートモーションを適用
+    if (is_root_motion_state()) mesh_.apply_root_motion(transform_);
+    // ワールド変換行列を設定
+    mesh_.transform(transform_.localToWorldMatrix());
 }
