@@ -24,44 +24,41 @@ public:
 
 public:
 	enum Motion {
-		Idle = 14,			// 待機
-		Jump = 17,          // ジャンプ
-		Fall = 16,          // 空中
-		Land = 15,			// 着地
-		Dead = 9,           // 死亡
+		Idle = 0,	
 
-		HurtF = 5,
-		HurtL = 6,
-		HurtR = 7,
-		HurtB = 4,
+        WalkF = 1,
+        WalkFL = 2,
+        WalkFR = 3,
+        WalkL = 4,
+        WalkR = 5,
+        WalkB = 6,
+        WalkBL = 7,
+        WalkBR = 8,
 
-		AvoidF = 11,
-		AvoidL = 12,
-		AvoidR = 13,
-		AvoidB = 10,
+        SprintF = 28,
+        SprintFL = 12,
+        SprintFR = 22,
+        SprintL = 23,
+        SprintR = 24,
+        SprintB = 25,
+        SprintBL = 26,
+        SprintBR = 27,
 
-		WalkF = 31,
-		WalkFL = 32,
-		WalkFR = 33,
-		WalkL = 34,
-		WalkR = 35,
-		WalkB = 28,
-		WalkBL = 29,
-		WalkBR = 30,
+		Jump = 9,  
+		Fall = 10,  
+		Land = 11,
 
-		SprintF = 21,
-		SprintFL = 22,
-		SprintFR = 23,
-		SprintL = 24,
-		SprintR = 25,
-		SprintB = 18,
-		SprintBL = 19,
-		SprintBR = 20,
+		Dead = 13,  
 
-		Attack1 = 0,
-		Attack2 = 1,
-		Attack3 = 2,
-		Attack4 = 3,
+        HurtF = 14,
+        HurtL = 15,
+        HurtR = 16,
+        HurtB = 17,
+
+		AvoidF = 18,
+		AvoidL = 19,
+		AvoidR = 20,
+		AvoidB = 21,
 
 		Skill = 101,          // TODO スキル
 	};
@@ -88,6 +85,8 @@ private:
 	void on_air() override;
 
 	void on_ground() override;
+
+    void update_mesh(float delta_time) override;
 
 public:
 	/// <summary>
@@ -182,6 +181,12 @@ private:
 	/// 攻撃アニメーションイベントを追加
 	/// </summary>
 	void add_attack_animation_event();
+
+    /// <summary>
+    /// ルートモーションを使う状態かどうか
+    /// </summary>
+    /// <returns>ルートモーションを使うなら真を返却</returns>
+    bool is_root_motion_state() const;
 
 private:
 	// プレイヤーカメラ
