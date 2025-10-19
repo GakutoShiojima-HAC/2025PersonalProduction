@@ -3,9 +3,9 @@
 //  Author        : Shiojima Gakuto
 //  Created       : 2025/07/10
 //  Updated       : 2025/07/10
-//  Description   : ƒXƒe[ƒgƒ}ƒV[ƒ“‚ğ‚Âƒ|[ƒ“‚Ìe
+//  Description   : ã‚¹ãƒ†ãƒ¼ãƒˆãƒã‚·ãƒ¼ãƒ³ã‚’æŒã¤ãƒãƒ¼ãƒ³ã®è¦ª
 //
-//  ’ˆÓF–{ƒ\[ƒXƒR[ƒh‚Ì–³’f“]ÚEƒR[ƒh‚ÌƒRƒs[E“\‚è•t‚¯‚É‚æ‚é—¬—pEÄ”z•z‚ğ‹Ö~‚µ‚Ü‚·B
+//  æ³¨æ„ï¼šæœ¬ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã®ç„¡æ–­è»¢è¼‰ãƒ»ã‚³ãƒ¼ãƒ‰ã®ã‚³ãƒ”ãƒ¼ãƒ»è²¼ã‚Šä»˜ã‘ã«ã‚ˆã‚‹æµç”¨ãƒ»å†é…å¸ƒã‚’ç¦æ­¢ã—ã¾ã™ã€‚
 // -----------------------------------------------------------------------------------------
 
 #ifndef CHARACTER_H_
@@ -22,35 +22,41 @@ public:
 
 public:
 	/// <summary>
-	/// ƒXƒe[ƒg‚Ì•ÏX
+	/// ã‚¹ãƒ†ãƒ¼ãƒˆã®å¤‰æ›´
 	/// </summary>
-	/// <param name="state_num">= ƒXƒe[ƒg”Ô†</param>
+	/// <param name="state_num">= ã‚¹ãƒ†ãƒ¼ãƒˆç•ªå·</param>
 	void change_state(const GSuint state_num);
 
 	/// <summary>
-	/// ƒXƒe[ƒg‚Ì•ÏX(ƒ‚[ƒVƒ‡ƒ“w’è‚ ‚è)
+	/// ã‚¹ãƒ†ãƒ¼ãƒˆã®å¤‰æ›´(ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³æŒ‡å®šã‚ã‚Š)
 	/// </summary>
-	/// <param name="state_num">= ƒXƒe[ƒg”Ô†</param>
-	/// <param name="motion_num">= ƒ‚[ƒVƒ‡ƒ“”Ô†</param>
-	/// <param name="loop">= ƒ‹[ƒv‚·‚é‚©‚Ç‚¤‚©</param>
+	/// <param name="state_num">= ã‚¹ãƒ†ãƒ¼ãƒˆç•ªå·</param>
+	/// <param name="motion_num">= ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ç•ªå·</param>
+	/// <param name="loop">= ãƒ«ãƒ¼ãƒ—ã™ã‚‹ã‹ã©ã†ã‹</param>
 	void change_state(const GSuint state_num, const GSuint motion_num, const bool loop);
+
+    /// <summary>
+    /// ç¾åœ¨ã®ã‚¹ãƒ†ãƒ¼ãƒˆã«å…¥ã£ã¦ã‹ã‚‰ã®çµŒéæ™‚é–“
+    /// </summary>
+    /// <returns>delta_time</returns>
+    float state_timer() const;
 
 protected:
 	/// <summary>
-	/// ƒXƒe[ƒg‚Ì’Ç‰Á
+	/// ã‚¹ãƒ†ãƒ¼ãƒˆã®è¿½åŠ 
 	/// </summary>
 	virtual void add_state() = 0;
 
 protected:
 	/// <summary>
-	/// ƒXƒe[ƒgƒ}ƒV[ƒ“‚ÌXV
+	/// ã‚¹ãƒ†ãƒ¼ãƒˆãƒã‚·ãƒ¼ãƒ³ã®æ›´æ–°
 	/// </summary>
 	void update_state(float delta_time);
 
 protected:
-	// ƒXƒe[ƒgƒ}ƒVƒ“
+	// ã‚¹ãƒ†ãƒ¼ãƒˆãƒã‚·ãƒ³
 	StateMachine state_;
-	// ó‘Ôƒ^ƒCƒ}[
+	// çŠ¶æ…‹ã‚¿ã‚¤ãƒãƒ¼
 	float state_timer_{ 0.0f };
 
 };

@@ -1,27 +1,31 @@
 #include "Engine/Core/Actor/Pawn/Character/Character.h"
 
 void Character::update_state(float delta_time) {
-	// ó‘Ô‚ÌXV
+	// çŠ¶æ…‹ã®æ›´æ–°
 	state_.update(delta_time);
-	// ó‘Ôƒ^ƒCƒ}[‚ÌXV
+	// çŠ¶æ…‹ã‚¿ã‚¤ãƒãƒ¼ã®æ›´æ–°
 	state_timer_ += delta_time;
 }
 
 void Character::change_state(const GSuint state_num) {
-	// ó‘Ô‚Ì•ÏX
+	// çŠ¶æ…‹ã®å¤‰æ›´
 	state_.change_state(state_num);
-	// ó‘Ôƒ^ƒCƒ}[‚Ì‰Šú‰»
+	// çŠ¶æ…‹ã‚¿ã‚¤ãƒãƒ¼ã®åˆæœŸåŒ–
 	state_timer_ = 0.0f;
 }
 
 void Character::change_state(const GSuint state_num, const GSuint motion_num, const bool loop) {
 	change_state(state_num);
 
-	// ƒ‚[ƒVƒ‡ƒ“”Ô†•ÏX
+	// ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ç•ªå·å¤‰æ›´
 	motion_ = motion_num;
-	// ƒ‚[ƒVƒ‡ƒ“‚Ìƒ‹[ƒvw’è
+	// ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ã®ãƒ«ãƒ¼ãƒ—æŒ‡å®š
 	motion_loop_ = loop;
-	// ƒ‚[ƒVƒ‡ƒ“‚Ì•ÏX
+	// ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ã®å¤‰æ›´
 	mesh_.change_motion(motion_num, loop);
+}
+
+float Character::state_timer() const {
+    return state_timer_;
 }
 
