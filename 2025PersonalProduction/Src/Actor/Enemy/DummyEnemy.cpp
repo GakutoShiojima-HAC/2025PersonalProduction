@@ -16,9 +16,9 @@
 #include "Engine/Utils/DebugMarker.h"
 #endif
 
-// Õ“Ë”»’è—p‚Ì”¼Œa
+// è¡çªåˆ¤å®šç”¨ã®åŠå¾„
 const float RADIUS{ 0.5f };
-// –³“GŠÔ(•b)
+// ç„¡æ•µæ™‚é–“(ç§’)
 const float INVINCIBLE_TIME{ 0.5f };
 
 DummyEnemy::DummyEnemy(IWorld* world, const GSvector3& position) {
@@ -30,7 +30,7 @@ DummyEnemy::DummyEnemy(IWorld* world, const GSvector3& position) {
 	head_offset_ = 2.0f;
 	foot_offset_ = 0.05f;
 
-	// Õ“Ë”»’è‹…‚ğ¶¬
+	// è¡çªåˆ¤å®šçƒã‚’ç”Ÿæˆ
 	collider_ = BoundingSphere{ RADIUS, GSvector3{ 0.0f, height_ / 2.0f, 0.0f } };
 
 	mesh_ = { (GSuint)MeshID::DummyEnemy, (GSuint)MeshID::DummyEnemy, (GSuint)MeshID::DummyEnemy };
@@ -41,10 +41,10 @@ DummyEnemy::DummyEnemy(IWorld* world, const GSvector3& position) {
 	collide_field();
 	mesh_.transform(transform_.localToWorldMatrix());
 
-	// ƒiƒrƒƒbƒVƒ…’Ç‰Á
+	// ãƒŠãƒ“ãƒ¡ãƒƒã‚·ãƒ¥è¿½åŠ 
 	navmesh_ = { this, world_->navmesh() };
 
-	// UŒ‚ƒAƒjƒ[ƒVƒ‡ƒ“ƒCƒxƒ“ƒg
+	// æ”»æ’ƒã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¤ãƒ™ãƒ³ãƒˆ
 	mesh_.add_animation_event(Motion::Attack, 35.0f, [=] {generate_attack_collider(); });
 }
 
@@ -84,6 +84,12 @@ void DummyEnemy::update(float delta_time) {
 	ImGui::DragFloat3("Rotation", rot, 5.0f);
 	transform_.eulerAngles(rot);
 
+    ImGui::Separator();
+    ImGui::Text("Status");
+    std::string toggle_damage = "Toggle Invincible: ";
+    toggle_damage += is_invincible_ ? "on" : "off";
+    if (ImGui::Button(toggle_damage.c_str())) is_invincible_ = !is_invincible_;
+
 	ImGui::Separator();
 	ImGui::Text("AttackCollider");
 
@@ -118,7 +124,7 @@ void DummyEnemy::take_damage(Actor& other, const int damage) {
 
 	invincible_timer_ = INVINCIBLE_TIME;
 
-	hp_ = CLAMP(hp_ - damage, 0, INT_MAX);
+	if (!is_invincible_) hp_ = CLAMP(hp_ - damage, 0, INT_MAX);
 
 	if (hp_ <= 0) {
 		change_state((GSuint)DummyEnemyStateType::Dead, Motion::Dead, false);
@@ -165,7 +171,7 @@ void DummyEnemy::generate_attack_collider() {
 void DummyEnemy::move_start() {
 	if (!navmesh_.found_path()) return;
 
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	navmesh_.reset_move();
 
 	change_state((GSuint)DummyEnemyStateType::Move, DummyEnemyMotion::Move, true);
