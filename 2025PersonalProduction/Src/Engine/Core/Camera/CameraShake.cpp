@@ -33,7 +33,7 @@ void CameraShake::shake(CameraShakeType type, float duration, float strength, bo
     }
 
     type_ = type;	// 揺れの種類を設定
-    strength_ = strength / 100.0f;
+    strength_ = strength / 10.0f;
     is_loop_ = loop;
     duration_ = loop ? 1.0f : duration;	// 時間を設定(ループでは使用しない)
     elapsed_ = 0.0f;	// 経過時間をリセット
