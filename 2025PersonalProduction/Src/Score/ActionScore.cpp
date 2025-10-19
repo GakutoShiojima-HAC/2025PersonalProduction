@@ -154,8 +154,8 @@ void ActionScore::add_score(int basic_score, float combo_time, float bonus_progr
     if (combo_bonus_progress_ >= 1.0f) {
         combo_bonus_progress_ -= 1.0f;
         combo_bonus_ += BONUS_UP;
-        combo_bonus_emphasis_timer_ = COMBO_BONUS_EMPHASIS_TIME;
         if (combo_bonus_ >= BONUS_MAX) combo_bonus_ = BONUS_MAX;
+        else combo_bonus_emphasis_timer_ = COMBO_BONUS_EMPHASIS_TIME;
     }
     // もしコンボ数が5の倍率ならテキスト描画
     //if (combo_count_ % 5 == 0) set_action_text(std::to_string(combo_count_) + "Combo!");
