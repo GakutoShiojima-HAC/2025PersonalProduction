@@ -254,6 +254,10 @@ void Player::on_hit_attack(AttackCollider& collider) {
         // 基礎スコア 基礎値 + コンボ数 * ボーナス値 
         const int score = 50 + (attack_count_ - 1) * 10;
         world_->action_score().add_score(score, mesh_.motion_end_time() * 1.25f, 0.125f); // 時間はモーション時間より少しだけ長めに
+
+        // カメラを揺らす
+        float strength = 2.5f + (0.5f * attack_count_ - 1);
+        world_->camera_shake(CameraShakeType::Shake, 0.075f, strength, false);
     }
 }
 
