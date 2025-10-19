@@ -98,6 +98,8 @@ void Player::update(float delta_time) {
 			}).on_complete([=] { world_->enable_avoid_effect() = false; });
 	}
 
+    printf("prev speed: %f\n", move_speed_);
+
 #ifdef _DEBUG
 	auto state_string = [](PlayerStateType s) {
 		switch (s) {
@@ -322,9 +324,15 @@ void Player::update_move(float delta_time) {
 		velocity.x = velocity_.x;
 		velocity.z = velocity_.z;
 		// 減速
-		if (velocity.magnitude() > 0.01f) velocity *= DECELERATION_SPEED * delta_time;	// delta_time後計算での多少の誤差は気にしないものとする
-		// 停止
-		else velocity = GSvector3{ 0.0f, 0.0f, 0.0f };
+        if (velocity.magnitude() > 0.01f) {
+            move_speed_ = move_speed_ * DECELERATION_SPEED;
+            velocity = velocity.normalized() * move_speed_ * delta_time;
+        }
+        // 停止
+        else {
+            move_speed_ = 0.0f;
+            velocity = GSvector3{ 0.0f, 0.0f, 0.0f };
+        }
 	}
 	// 移動量を更新
 	velocity_.x = velocity.x;
@@ -390,8 +398,8 @@ void Player::update_move_air(float delta_time) {
 }
 
 void Player::to_move_state() {
-	change_state((GSuint)PlayerStateType::Move, (GSuint)Motion::Idle, true);
     move_speed_ = 0.0f;
+	change_state((GSuint)PlayerStateType::Move, (GSuint)Motion::Idle, true);
 }
 
 bool Player::is_move_input() const {
