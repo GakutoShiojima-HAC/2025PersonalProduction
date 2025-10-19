@@ -181,6 +181,7 @@
     <ClCompile Include="Src\Engine\Core\Tween\ValueUnit.cpp" />
     <ClCompile Include="Src\Engine\Core\Tween\Vector2Unit.cpp" />
     <ClCompile Include="Src\Engine\Core\Tween\Vector3Unit.cpp" />
+    <ClCompile Include="Src\Engine\Core\Vibration\Vibration.cpp" />
     <ClCompile Include="Src\Engine\Graphics\Shader\GamePostEffect.cpp" />
     <ClCompile Include="Src\Engine\Graphics\Shader\GameShader.cpp" />
     <ClCompile Include="Src\Engine\Graphics\Shader\PostEffects\FogEffect.cpp" />
@@ -271,6 +272,7 @@
     <ClInclude Include="Src\Engine\Core\Tween\ValueUnit.h" />
     <ClInclude Include="Src\Engine\Core\Tween\Vector2Unit.h" />
     <ClInclude Include="Src\Engine\Core\Tween\Vector3Unit.h" />
+    <ClInclude Include="Src\Engine\Core\Vibration\Vibration.h" />
     <ClInclude Include="Src\Engine\Graphics\Shader\GamePostEffect.h" />
     <ClInclude Include="Src\Engine\Graphics\Shader\GameShader.h" />
     <ClInclude Include="Src\Engine\Graphics\Shader\PostEffects\FogEffect.h" />
