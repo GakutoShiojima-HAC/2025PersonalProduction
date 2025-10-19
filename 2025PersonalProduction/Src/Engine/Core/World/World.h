@@ -21,6 +21,7 @@
 #include "Engine/Graphics/Shader/GameShader.h"
 #include "Engine/Graphics/Shader/GamePostEffect.h"
 #include "SaveData/GameSaveData.h"
+#include "Score/ActionScore.h"
 
 class AttackColliderPool;
 
@@ -131,6 +132,8 @@ public:
 
     GameSaveData& game_save_data() override;
 
+    ActionScore& action_score() override;
+
 protected:
 	// フィールド
 	Field* field_{ nullptr };
@@ -156,6 +159,8 @@ protected:
     GamePostEffect& game_post_effect_ = GamePostEffect::get_instance();
     // ゲームセーブデータ
     GameSaveData game_save_data_;
+    // アクションスコア
+    ActionScore action_score_;
 
 };
 

@@ -65,6 +65,9 @@ void GameScene::start() {
 	glFogf(GL_FOG_END, fog_end);        // フォグの終了位置（視点からの距離）
 	glEnable(GL_FOG);                   // フォグを有効にする
 
+    // アクションスコアの初期化
+    world_.action_score().init();
+
 	world_.add_field(new Field{ (GSuint)OctreeID::Mesh, (GSuint)OctreeID::Collider, (GSuint)TextureID::Skybox });
 	Light* light = new Light{};
 	light->position() = GSvector3{ 0.0f, 100.0f, -200.0f };
