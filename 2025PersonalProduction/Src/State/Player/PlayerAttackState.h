@@ -2,10 +2,10 @@
 //  File          : PlayerAttackState.h
 //  Author        : Shiojima Gakuto
 //  Created       : 2025/08/08
-//  Updated       : 2025/08/08
-//  Description   : ƒvƒŒƒCƒ„[‚ÌUŒ‚”­“®ó‘Ô
+//  Updated       : 2025/10/20
+//  Description   : ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ”»æ’ƒç™ºå‹•çŠ¶æ…‹
 //
-//  ’ˆÓF–{ƒ\[ƒXƒR[ƒh‚Ì–³’f“]ÚEƒR[ƒh‚ÌƒRƒs[E“\‚è•t‚¯‚É‚æ‚é—¬—pEÄ”z•z‚ğ‹Ö~‚µ‚Ü‚·B
+//  æ³¨æ„ï¼šæœ¬ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã®ç„¡æ–­è»¢è¼‰ãƒ»ã‚³ãƒ¼ãƒ‰ã®ã‚³ãƒ”ãƒ¼ãƒ»è²¼ã‚Šä»˜ã‘ã«ã‚ˆã‚‹æµç”¨ãƒ»å†é…å¸ƒã‚’ç¦æ­¢ã—ã¾ã™ã€‚
 // -----------------------------------------------------------------------------------------
 
 #ifndef PLAYER_ATTACK_STATE_H_
@@ -22,16 +22,16 @@ private:
 
 	void update(float delta_time) override;
 
-	void draw() const override;
+    void draw() const override {};
 
-	void draw_gui() const override;
+    void draw_gui() const override {};
 
 	void exit() override;
 
 private:
-	// Ÿ‚Ì’i‚Ö‚Ì“ü—Í‚ª‚ ‚Á‚½‚©‚Ç‚¤‚©
+	// æ¬¡ã®æ®µã¸ã®å…¥åŠ›ãŒã‚ã£ãŸã‹ã©ã†ã‹
 	bool next_attack_input_{ false };
-	// Ÿ‚Ì’i‚Ö‚Ì‘JˆÚƒ^ƒCƒ}[
+	// æ¬¡ã®æ®µã¸ã®é·ç§»ã‚¿ã‚¤ãƒãƒ¼
 	float enter_next_attack_timer_{ 0.0f };
 
 };

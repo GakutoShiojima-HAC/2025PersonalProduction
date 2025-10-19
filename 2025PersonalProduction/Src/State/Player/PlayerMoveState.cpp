@@ -11,34 +11,40 @@ void PlayerMoveState::enter() {
 }
 
 void PlayerMoveState::update(float delta_time) {
+    // カメラ切り替えの更新
 	owner_.update_lockon_camera();
+    // 移動の更新
 	owner_.update_move(delta_time);
 
-	if (owner_.is_avoid()) {
+    // 回避入力があれば回避ステートへ遷移
+	if (owner_.is_action(InputAction::GAME_Avoid)) {
 		owner_.on_avoid();
 		owner_.change_state((GSuint)PlayerStateType::Avoid);
 		return;
 	}
 
-	if (owner_.is_skill()) {
+    // スキル入力があればスキルステートへ遷移
+	if (owner_.is_action(InputAction::GAME_Skill)) {
 		owner_.on_skill();
 		owner_.change_state((GSuint)PlayerStateType::Skill, owner_.get_skill_motion(), false);
 		return;
 	}
-	
-	if (owner_.is_attack()) {
-		owner_.on_attack();
+
+    // 攻撃入力があれば攻撃ステートへ遷移
+	if (owner_.is_action(InputAction::GAME_Attack)) {
+		owner_.attack_start();
 		owner_.change_state((GSuint)PlayerStateType::Attack, owner_.get_attack_motion(), false);
 		return;
 	}
 
-	if (owner_.is_jump()) {
+    // ジャンプ入力があればジャンプステートへ遷移
+	if (owner_.is_action(InputAction::GAME_Jump)) {
 		owner_.on_jump();
 		owner_.change_state((GSuint)PlayerStateType::Jump, (GSuint)PlayerMotion::Jump, false);
 		return;
 	}
 
-	// TODO �C���^���N�g�ł���Ȃ�C���^���N�g���邱��
+	// TODO インタラクトできるならインタラクトすること
 	/*if (owner_.is_interact()) {
 		owner_.change_state((GSuint)PlayerStateType::Interact, owner_.get_current_motion(), false);
 		owner_.on_interact();
