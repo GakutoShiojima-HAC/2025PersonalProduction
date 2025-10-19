@@ -53,6 +53,9 @@ public:
         Canvas::init();
         Setting::get_instance().load("tmp");
         MyRandom::set_seed(5);
+
+        // フォントを読み込む
+        AddFontResourceExA("Resource/Assets/Font/DelaSukoGothicOne-R.ttf", FR_PRIVATE, NULL);
     }
 
 private:
@@ -94,10 +97,15 @@ private:
         ClipCursor(NULL);
         // カーソルを表示
         gsShowMouseCursor();
+
         // ログを出力
         LogManager::get_instance().save("Log/");
+
         // シーン終了
         scene_manager_.clear();
+
+        // フォントを破棄
+        RemoveFontResourceExA("Resource/Assets/Font/DelaSukoGothicOne-R.ttf", FR_PRIVATE, NULL);
         // Tweenの破棄
         Tween::clear();
         // シェーダーの破棄
@@ -140,7 +148,7 @@ private:
 
 int main() {
 #ifdef _DEBUG
-    return MyGame(1920, 1080, false, cFPS).run();
+    return MyGame(1920, 1080, true, cFPS).run();
 #else
     return MyGame(1920, 1080, true, cFPS).run();
 #endif

@@ -46,10 +46,16 @@ public:
 	bool is_draw_fxaa() const;
 	bool& enable_draw_fxaa();
 
+    // デバッグ関係
+public:
+    bool is_draw_safearea() const;
+    bool& enable_draw_safearea();
+    
 private:
     bool enable_draw_ssao_{ true };
 	bool enable_draw_bloom_{ true };
 	bool enable_draw_fxaa_{ true };
+    bool enable_draw_safearea_{ false };
 
 public:
 	// コピー禁止

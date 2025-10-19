@@ -26,6 +26,7 @@ class Character;
 class TimelineManager;
 class NavMeshSurface;
 class GameSaveData;
+class ActionScore;
 
 struct GSvector3;
 
@@ -183,6 +184,12 @@ public:
     /// </summary>
     /// <returns>ゲームセーブデータ管理クラス</returns>
     virtual GameSaveData& game_save_data() = 0;
+
+    /// <summary>
+    /// アクションスコアの取得
+    /// </summary>
+    /// <returns>参照</returns>
+    virtual ActionScore& action_score() = 0;
 
 public:
 	// コピー禁止

@@ -212,6 +212,7 @@
     <ClCompile Include="Src\Scene\TimelineEditorScene.cpp" />
     <ClCompile Include="Src\Scene\TitleScene.cpp" />
     <ClCompile Include="Src\Engine\Core\Setting\Setting.cpp" />
+    <ClCompile Include="Src\Score\ActionScore.cpp" />
     <ClCompile Include="Src\State\DummyEnemy\DummyEnemyAttackState.cpp" />
     <ClCompile Include="Src\State\DummyEnemy\DummyEnemyDeadState.cpp" />
     <ClCompile Include="Src\State\DummyEnemy\DummyEnemyIdleState.cpp" />
@@ -329,6 +330,7 @@
     <ClInclude Include="Src\Scene\TimelineEditorScene.h" />
     <ClInclude Include="Src\Scene\TitleScene.h" />
     <ClInclude Include="Src\Engine\Core\Setting\Setting.h" />
+    <ClInclude Include="Src\Score\ActionScore.h" />
     <ClInclude Include="Src\State\DummyEnemy\DummyEnemyState.h" />
     <ClInclude Include="Src\State\DummyEnemy\DummyEnemyAttackState.h" />
     <ClInclude Include="Src\State\DummyEnemy\DummyEnemyDeadState.h" />

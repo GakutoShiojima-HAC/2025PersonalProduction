@@ -3,22 +3,27 @@
 //  Author        : Shiojima Gakuto
 //  Created       : 2025/07/10
 //  Updated       : 2025/07/10
-//  Description   : ƒQ[ƒ€\¬
+//  Description   : ã‚²ãƒ¼ãƒ æ§‹æˆ
 //
-//  ’ˆÓF–{ƒ\[ƒXƒR[ƒh‚Ì–³’f“]ÚEƒR[ƒh‚ÌƒRƒs[E“\‚è•t‚¯‚É‚æ‚é—¬—pEÄ”z•z‚ğ‹Ö~‚µ‚Ü‚·B
+//  æ³¨æ„ï¼šæœ¬ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã®ç„¡æ–­è»¢è¼‰ãƒ»ã‚³ãƒ¼ãƒ‰ã®ã‚³ãƒ”ãƒ¼ãƒ»è²¼ã‚Šä»˜ã‘ã«ã‚ˆã‚‹æµç”¨ãƒ»å†é…å¸ƒã‚’ç¦æ­¢ã—ã¾ã™ã€‚
 // -----------------------------------------------------------------------------------------
 
 #ifndef GAME_CONFIG_H_
 #define GAME_CONFIG_H_
 
+#include <string>
+
 // FPS
 const float cFPS{ 60.0f };
 
-// ‹–ìŠp
+// è¦–é‡è§’
 const float cFOV{ 45.0f };
-// ‹ßƒNƒŠƒbƒv
+// è¿‘ã‚¯ãƒªãƒƒãƒ—
 const float cNEAR{ 0.3f };
-// ‰“ƒNƒŠƒbƒv
+// é ã‚¯ãƒªãƒƒãƒ—
 const float cFAR{ 1000.0f };
+
+// å…±é€šãƒ•ã‚©ãƒ³ãƒˆ
+const std::string cFONT{ "DelaSuko Gothic One" };
 
 #endif

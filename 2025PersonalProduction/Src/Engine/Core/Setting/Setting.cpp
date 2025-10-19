@@ -17,6 +17,8 @@ void Setting::reset() {
     enable_draw_ssao_ = true;
 	enable_draw_bloom_ = true;
 	enable_draw_fxaa_ = true;
+    // デバッグ関係
+    enable_draw_safearea_ = false;
 }
 
 void Setting::save() {
@@ -34,3 +36,7 @@ bool& Setting::enable_draw_bloom() { return enable_draw_bloom_; }
 bool Setting::is_draw_fxaa() const { return enable_draw_fxaa_; }
 
 bool& Setting::enable_draw_fxaa() { return enable_draw_fxaa_; }
+
+bool Setting::is_draw_safearea() const { return enable_draw_safearea_; }
+
+bool& Setting::enable_draw_safearea() { return enable_draw_safearea_; }

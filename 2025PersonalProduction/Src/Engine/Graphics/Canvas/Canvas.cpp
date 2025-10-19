@@ -1,7 +1,7 @@
 #include "Engine/Graphics/Canvas/Canvas.h"
 #include "Engine/Core/Screen/Screen.h"
 
-// À‘Ì‰»
+// å®Ÿä½“åŒ–
 ScreenData* Canvas::screen_data_{ nullptr };
 
 void Canvas::init() {
@@ -18,7 +18,7 @@ void Canvas::draw_texture(
 	const GSfloat rotation, 
 	const Anchor anchor
 ) {
-	// Šî“_‚Æ·•ª‚©‚çƒXƒNƒŠ[ƒ“À•W‚ğ‹‚ß‚é
+	// åŸºç‚¹ã¨å·®åˆ†ã‹ã‚‰ã‚¹ã‚¯ãƒªãƒ¼ãƒ³åº§æ¨™ã‚’æ±‚ã‚ã‚‹
 	const GSvector2 final_position = get_anchor_position(anchor) + GSvector2{ position.x, position.y };
 
 	gsDrawSprite2D(id, &final_position, &rect, &center, &color, &scale, rotation);
@@ -30,16 +30,16 @@ void Canvas::draw_text(
 	const GSuint font_size,
 	const Anchor anchor
 ) {
-	// Šî“_‚Æ·•ª‚©‚çƒXƒNƒŠ[ƒ“À•W‚ğ‹‚ß‚é
+	// åŸºç‚¹ã¨å·®åˆ†ã‹ã‚‰ã‚¹ã‚¯ãƒªãƒ¼ãƒ³åº§æ¨™ã‚’æ±‚ã‚ã‚‹
 	const GSvector2 final_position = get_anchor_position(anchor) + position;
 
-	// À•W‚ğw’è
+	// åº§æ¨™ã‚’æŒ‡å®š
 	gsTextPos(final_position.x, final_position.y);
-	// ƒtƒHƒ“ƒg‚ÌƒXƒ^ƒCƒ‹‚ğw’è
-	gsFontParameter(0, font_size, "‚l‚r ƒSƒVƒbƒN");
-	// •¶š‚ğ•`‰æ
+	// ãƒ•ã‚©ãƒ³ãƒˆã®ã‚¹ã‚¿ã‚¤ãƒ«ã‚’æŒ‡å®š
+	gsFontParameter(0, font_size, "ï¼­ï¼³ ã‚´ã‚·ãƒƒã‚¯");
+	// æ–‡å­—ã‚’æç”»
 	gsDrawText(text.c_str());
-	// À•W‚ğƒŠƒZƒbƒg
+	// åº§æ¨™ã‚’ãƒªã‚»ãƒƒãƒˆ
 	gsTextPos(0.0f, 0.0f);
 }
 
@@ -48,25 +48,26 @@ void Canvas::draw_sprite_text(
 	const GSvector2& position,
 	const GSuint font_size,
 	const string& font_name,
+    const GSuint font_code,
 	const GScolor& color,
 	const Anchor anchor,
 	const Anchor text_anchor
 ) {
-	// ƒJƒXƒ^ƒ€ƒtƒHƒ“ƒg‚ÌƒXƒ^ƒCƒ‹‚ğw’è
-	gsSetSpriteFontStyle(GS_FONT_NORMAL, font_size, font_name.c_str());
-	// •¶šƒTƒCƒY‚ğæ“¾
+	// ã‚«ã‚¹ã‚¿ãƒ ãƒ•ã‚©ãƒ³ãƒˆã®ã‚¹ã‚¿ã‚¤ãƒ«ã‚’æŒ‡å®š
+	gsSetSpriteFontStyle(font_code, font_size, font_name.c_str());
+	// æ–‡å­—ã‚µã‚¤ã‚ºã‚’å–å¾—
 	GSvector2 text_size{ 0.0f, 0.0f };
 	gsGetSpriteFontSize(text.c_str(), &text_size);
 
-	// Šî“_‚Æ·•ª‚©‚çƒXƒNƒŠ[ƒ“À•W‚ğ‹‚ß‚é
+	// åŸºç‚¹ã¨å·®åˆ†ã‹ã‚‰ã‚¹ã‚¯ãƒªãƒ¼ãƒ³åº§æ¨™ã‚’æ±‚ã‚ã‚‹
 	const GSvector2 final_position = 
 		get_anchor_position(anchor) + position - 
 		get_anchor_position(text_anchor, GSrect{0.0f, 0.0f, text_size.x, text_size.y }
 	);
 
-	// ƒJƒ‰[w’è
+	// ã‚«ãƒ©ãƒ¼æŒ‡å®š
 	gsSetSpriteFontColor(&color);
-	// •¶š‚ğ•`‰æ
+	// æ–‡å­—ã‚’æç”»
 	gsDrawSpriteFont(&final_position, text.c_str());
 }
 

@@ -25,6 +25,8 @@ void World::update(float delta_time) {
 	character_.remove();
 	pawn_.remove();
 	actor_.remove();
+
+    action_score_.update(delta_time);
 }
 
 void World::draw() const {
@@ -63,6 +65,7 @@ void World::draw() const {
     game_post_effect_.draw(camera_.get_projection_matrix());
 
 	actor_.draw_gui();
+    action_score_.draw();
 }
 
 void World::clear() {
@@ -213,4 +216,8 @@ bool& World::enable_avoid_effect() {
 
 GameSaveData& World::game_save_data() {
     return game_save_data_;
+}
+
+ActionScore& World::action_score() {
+    return action_score_;
 }

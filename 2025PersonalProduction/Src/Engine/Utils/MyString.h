@@ -19,7 +19,7 @@ namespace MyString {
     /// </summary>
     /// <param name="value">= utf8の文字列</param>
     /// <returns>shiftjisの文字列</returns>
-    std::string utf8_to_shiftjis(const std::string& value) {
+    inline std::string utf8_to_shiftjis(const std::string& value) {
         // UTF-8をWide文字列に変換
         int wlen = MultiByteToWideChar(CP_UTF8, 0, value.c_str(), -1, nullptr, 0);
         std::vector<wchar_t> wide_text(wlen);
@@ -30,7 +30,7 @@ namespace MyString {
         std::vector<char> sjis_text(sjis);
         WideCharToMultiByte(932, 0, wide_text.data(), -1, sjis_text.data(), sjis, nullptr, nullptr);
 
-        return std::string(sjis_text.begin(), sjis_text.end());
+        return std::string(sjis_text.data());
     }
 }
 

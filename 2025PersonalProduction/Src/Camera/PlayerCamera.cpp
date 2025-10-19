@@ -5,9 +5,9 @@
 #include "Engine/Utils/Line.h"
 
 // 注視点(基点からのオフセット)
-const GSvector3 LOOKAT_ORIGIN_TO_OFFSET{ 0.0f, 1.75f, 0.0f };
+const GSvector3 LOOKAT_ORIGIN_TO_OFFSET{ 0.0f, 1.35f, 0.0f };
 // 注視点からの位置
-const GSvector3 CAMERA_OFFSET{ 0.0f, 1.3f, -5.0f };
+const GSvector3 CAMERA_OFFSET{ 0.0f, 1.3f, -4.0f };
 // 視点移動速度
 const float SENSITIVITY_X{ 0.095f };
 const float SENSITIVITY_Y{ 0.075f };

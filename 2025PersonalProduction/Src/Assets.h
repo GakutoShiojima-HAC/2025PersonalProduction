@@ -29,6 +29,8 @@
     X(TitleLogo) \
     X(MenuLogo) \
     X(TmpUI) \
+    X(SafeArea) \
+    X(BonusGauge) \
     X(MAX_SIZE) // 要素数
 
 // オクツリー
@@ -47,7 +49,7 @@
 // SE
 #define SE_ID_LIST \
     X(NONE) \
-    X(Click) \
+    X(AddScore) \
     X(MAX_SIZE) // 要素数
 
 // エフェクト

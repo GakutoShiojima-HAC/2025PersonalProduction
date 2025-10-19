@@ -3,9 +3,9 @@
 //  Author        : Shiojima Gakuto
 //  Created       : 2025/07/09
 //  Updated       : 2025/07/09
-//  Description   : ƒXƒNƒŠ[ƒ“‚É‰½‚©‚ğ•`‰æ‚·‚éƒLƒƒƒ“ƒoƒXƒNƒ‰ƒX
+//  Description   : ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ã«ä½•ã‹ã‚’æç”»ã™ã‚‹ã‚­ãƒ£ãƒ³ãƒã‚¹ã‚¯ãƒ©ã‚¹
 //
-//  ’ˆÓF–{ƒ\[ƒXƒR[ƒh‚Ì–³’f“]ÚEƒR[ƒh‚ÌƒRƒs[E“\‚è•t‚¯‚É‚æ‚é—¬—pEÄ”z•z‚ğ‹Ö~‚µ‚Ü‚·B
+//  æ³¨æ„ï¼šæœ¬ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã®ç„¡æ–­è»¢è¼‰ãƒ»ã‚³ãƒ¼ãƒ‰ã®ã‚³ãƒ”ãƒ¼ãƒ»è²¼ã‚Šä»˜ã‘ã«ã‚ˆã‚‹æµç”¨ãƒ»å†é…å¸ƒã‚’ç¦æ­¢ã—ã¾ã™ã€‚
 // -----------------------------------------------------------------------------------------
 
 
@@ -19,7 +19,7 @@ using namespace std;
 
 struct ScreenData;
 
-// Šî“_
+// åŸºç‚¹
 enum class Anchor {
 	TopLeft,		TopCenter,		TopRight,
 	CenterLeft,		Center,			CenterRight,
@@ -28,27 +28,27 @@ enum class Anchor {
 
 class Canvas {
 public:
-	// ƒCƒ“ƒXƒ^ƒ“ƒX¶¬‹Ö~
+	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ç”Ÿæˆç¦æ­¢
 	Canvas() = delete;
 
 public:
 	/// <summary>
-	/// ‰Šú‰»
+	/// åˆæœŸåŒ–
 	/// </summary>
 	static void init();
 
 public:
 	/// <summary>
-	/// ƒeƒNƒXƒ`ƒƒ‚ğƒXƒNƒŠ[ƒ“‚É•`‰æ‚·‚é
+	/// ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ã«æç”»ã™ã‚‹
 	/// </summary>
-	/// <param name="id">= ƒeƒNƒXƒ`ƒƒID</param>
-	/// <param name="position">= ƒXƒNƒŠ[ƒ“•`‰æˆÊ’u</param>
-	/// <param name="rect">= ƒeƒNƒXƒ`ƒƒ‚Ì‹éŒ`</param>
-	/// <param name="center">= ƒXƒvƒ‰ƒCƒg‚Ì’†SˆÊ’u</param>
-	/// <param name="color">= ƒJƒ‰[</param>
-	/// <param name="scale">= ƒXƒP[ƒ‹’l</param>
-	/// <param name="rotation">= ‰ñ“]Šp“x</param>
-	/// <param name="anchor">= Šî“_</param>
+	/// <param name="id">= ãƒ†ã‚¯ã‚¹ãƒãƒ£ID</param>
+	/// <param name="position">= ã‚¹ã‚¯ãƒªãƒ¼ãƒ³æç”»ä½ç½®</param>
+	/// <param name="rect">= ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®çŸ©å½¢</param>
+	/// <param name="center">= ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®ä¸­å¿ƒä½ç½®</param>
+	/// <param name="color">= ã‚«ãƒ©ãƒ¼</param>
+	/// <param name="scale">= ã‚¹ã‚±ãƒ¼ãƒ«å€¤</param>
+	/// <param name="rotation">= å›è»¢è§’åº¦</param>
+	/// <param name="anchor">= åŸºç‚¹</param>
 	static void draw_texture(
 		const GSuint id,
 		const GSvector2& position,
@@ -61,12 +61,12 @@ public:
 	);
 
 	/// <summary>
-	/// ƒeƒLƒXƒg‚ğƒXƒNƒŠ[ƒ“‚É•`‰æ‚·‚é
+	/// ãƒ†ã‚­ã‚¹ãƒˆã‚’ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ã«æç”»ã™ã‚‹
 	/// </summary>
-	/// <param name="text">= ƒeƒLƒXƒg</param>
-	/// <param name="position">= ƒXƒNƒŠ[ƒ“•`‰æˆÊ’u</param>
-	/// <param name="font_size">= ƒtƒHƒ“ƒgƒTƒCƒY</param>
-	/// <param name="anchor">= Šî“_</param>
+	/// <param name="text">= ãƒ†ã‚­ã‚¹ãƒˆ</param>
+	/// <param name="position">= ã‚¹ã‚¯ãƒªãƒ¼ãƒ³æç”»ä½ç½®</param>
+	/// <param name="font_size">= ãƒ•ã‚©ãƒ³ãƒˆã‚µã‚¤ã‚º</param>
+	/// <param name="anchor">= åŸºç‚¹</param>
 	static void draw_text(
 		const string& text,
 		const GSvector2& position,
@@ -75,20 +75,21 @@ public:
 	);
 
 	/// <summary>
-	/// ƒXƒvƒ‰ƒCƒgƒeƒLƒXƒg‚ğƒXƒNƒŠ[ƒ“‚É•`‰æ‚·‚é
+	/// ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆãƒ†ã‚­ã‚¹ãƒˆã‚’ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ã«æç”»ã™ã‚‹
 	/// </summary>
-	/// <param name="text">= ƒeƒLƒXƒg</param>
-	/// <param name="position">= ƒXƒNƒŠ[ƒ“•`‰æˆÊ’u</param>
-	/// <param name="font_size">= ƒtƒHƒ“ƒgƒTƒCƒY</param>
-	/// <param name="font_name">= ƒtƒHƒ“ƒg–¼</param>
-	/// <param name="color">= ƒeƒLƒXƒgƒJƒ‰[</param>
-	/// <param name="anchor">= Šî“_</param>
-	/// <param name="text_anchor">= ƒeƒLƒXƒg‚ÌŠî“_</param>
+	/// <param name="text">= ãƒ†ã‚­ã‚¹ãƒˆ</param>
+	/// <param name="position">= ã‚¹ã‚¯ãƒªãƒ¼ãƒ³æç”»ä½ç½®</param>
+	/// <param name="font_size">= ãƒ•ã‚©ãƒ³ãƒˆã‚µã‚¤ã‚º</param>
+	/// <param name="font_name">= ãƒ•ã‚©ãƒ³ãƒˆå</param>
+	/// <param name="color">= ãƒ†ã‚­ã‚¹ãƒˆã‚«ãƒ©ãƒ¼</param>
+	/// <param name="anchor">= åŸºç‚¹</param>
+	/// <param name="text_anchor">= ãƒ†ã‚­ã‚¹ãƒˆã®åŸºç‚¹</param>
 	static void draw_sprite_text(
 		const string& text,
 		const GSvector2& position,
 		const GSuint font_size = 20,
-		const string& font_name = "‚l‚r ƒSƒVƒbƒN",
+		const string& font_name = "ï¼­ï¼³ ã‚´ã‚·ãƒƒã‚¯",
+        const GSuint font_code = GS_FONT_NORMAL,
 		const GScolor& color = GScolor{ 1.0f, 1.0f, 1.0f, 1.0f },
 		const Anchor anchor = Anchor::TopLeft,
 		const Anchor text_anchor = Anchor::TopLeft
@@ -96,25 +97,25 @@ public:
 
 private:
 	/// <summary>
-	/// ‹éŒ`‚©‚çŠî“_‚ÌÀ•W‚ğæ“¾
+	/// çŸ©å½¢ã‹ã‚‰åŸºç‚¹ã®åº§æ¨™ã‚’å–å¾—
 	/// </summary>
-	/// <param name="anchor">= Šî“_</param>
-	/// <param name="rect">= ‹éŒ`</param>
-	/// <returns>À•W</returns>
+	/// <param name="anchor">= åŸºç‚¹</param>
+	/// <param name="rect">= çŸ©å½¢</param>
+	/// <returns>åº§æ¨™</returns>
 	static GSvector2 get_anchor_position(const Anchor anchor, const GSrect& rect);
 
 	/// <summary>
-	/// Šî“_‚ÌƒXƒNƒŠ[ƒ“À•W‚ğæ“¾
+	/// åŸºç‚¹ã®ã‚¹ã‚¯ãƒªãƒ¼ãƒ³åº§æ¨™ã‚’å–å¾—
 	/// </summary>
-	/// <param name="anchor">= Šî“_</param>
-	/// <returns>À•W</returns>
+	/// <param name="anchor">= åŸºç‚¹</param>
+	/// <returns>åº§æ¨™</returns>
 	static GSvector2 get_anchor_position(const Anchor anchor);
 
 private:
 	static ScreenData* screen_data_;
 
 public:
-	// ƒRƒs[‹Ö~
+	// ã‚³ãƒ”ãƒ¼ç¦æ­¢
 	Canvas(const Canvas& other) = delete;
 	Canvas& operator = (const Canvas& other) = delete;
 
