@@ -156,6 +156,18 @@ void World::camera_transition(Camera* from, Camera* to, float time) {
 	camera_.transition(from, to, time);
 }
 
+void World::camera_shake(CameraShakeType type, float duration, float strength, bool loop) {
+    camera_.shake(type, duration, strength, loop);
+}
+
+void World::camera_shake_end() {
+    camera_.shake_end();
+}
+
+bool& World::camera_enable_shake() {
+    return camera_.enable_shake();
+}
+
 NavMeshSurface* World::navmesh() {
 	return navmesh_;
 }

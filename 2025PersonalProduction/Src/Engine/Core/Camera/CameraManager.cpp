@@ -25,6 +25,7 @@ void CameraManager::update(float delta_time) {
 	}
 
 	remove();
+    camera_shake_.update(delta_time);
 }
 
 void CameraManager::draw() const {
@@ -121,6 +122,9 @@ void CameraManager::transition(Camera* from, Camera* to, float time) {
 	}
 	transition_timer_ = 0.0f;
 	transition_time_ = time;
+
+    // 揺れを停止
+    camera_shake_.end();
 }
 
 float& CameraManager::fov() {
@@ -129,6 +133,18 @@ float& CameraManager::fov() {
 
 GSmatrix4 CameraManager::get_projection_matrix() const {
     return GSmatrix4::perspective(fov_, (float)screen_data_->width_px / (float)screen_data_->height_px, cNEAR, cFAR);
+}
+
+void CameraManager::shake(CameraShakeType type, float duration, float strength, bool loop) {
+    camera_shake_.shake(type, duration, strength, loop);
+}
+
+void CameraManager::shake_end() {
+    camera_shake_.end();
+}
+
+bool& CameraManager::enable_shake() {
+    return camera_shake_.enable();
 }
 
 void CameraManager::remove() {
@@ -158,7 +174,7 @@ void CameraManager::draw_empty() const {
 void CameraManager::camera_lookat(GSvector3& pos, GSvector3& at, GSvector3& up) const {
 	// トランジションしていない
 	if (prev_ == nullptr) {
-		pos = current_->transform().position();
+		pos = current_->transform().transformPoint(camera_shake_.get_offset());
 		at = pos + current_->transform().forward();
 		up = current_->transform().up();
 		return;
@@ -166,7 +182,7 @@ void CameraManager::camera_lookat(GSvector3& pos, GSvector3& at, GSvector3& up) 
 	// 進捗率
 	const float progress = transition_timer_ / transition_time_;
 	// 線形補間する
-	pos = GSvector3::lerp(prev_->transform().position(), current_->transform().position(), progress);
+	pos = GSvector3::lerp(prev_->transform().transformPoint(camera_shake_.get_offset()), current_->transform().transformPoint(camera_shake_.get_offset()), progress);
 	at = pos + GSvector3::lerp(prev_->transform().forward(), current_->transform().forward(), progress);
 	up = GSvector3::lerp(prev_->transform().up(), current_->transform().up(), progress);
 }

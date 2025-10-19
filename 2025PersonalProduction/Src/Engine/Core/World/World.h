@@ -102,6 +102,12 @@ public:
 
 	void camera_transition(Camera* from, Camera* to, float time = 0) override;
 
+    void camera_shake(CameraShakeType type, float duration, float strength = 1.0f, bool loop = false) override;
+
+    void camera_shake_end() override;
+
+    bool& camera_enable_shake() override;
+
 	NavMeshSurface* navmesh() override;
 
     std::vector<Actor*> get_all_actor() const override;

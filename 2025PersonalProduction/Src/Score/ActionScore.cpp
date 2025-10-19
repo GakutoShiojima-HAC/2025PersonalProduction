@@ -48,7 +48,7 @@ void ActionScore::update(float delta_time) {
 
 void ActionScore::draw() const {
     // 総スコア
-    {
+    if (total_score_ > 0) {
         // 桁区切りの文字列を生成
         std::stringstream ss;
         ss.imbue(std::locale(""));
