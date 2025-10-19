@@ -52,6 +52,9 @@ const float AVOID_EFFECT_TIME{ 3.0f };
 // 回避演出の色
 const GScolor AVOID_EFFECT_COLOR{ 0.592f, 0.627f, 1.0f, 1.0f };
 
+// 右手のボーン番号
+const int RIGHT_HAND_BONE_NUM{ 114 };
+
 Player::Player(IWorld* world, const GSvector3& position, const GSvector3& lookat, PlayerCamera* camera) {
 	world_ = world;
 	tag_ = ActorTag::Player;
@@ -127,7 +130,6 @@ void Player::update(float delta_time) {
 	ImGui::Text("current position is X:%.3f Y:%.3f Z:%.3f", transform_.position().x, transform_.position().y, transform_.position().z);
 	ImGui::Text("current state is %s.", state_string(PlayerStateType(state_.get_current_state())));
 	ImGui::Text("current motion is %d.", (int)motion_);
-    ImGui::SliderInt("right hand bone", &right_hand_bone_, 0, 255);
     int motion = motion_;
     ImGui::SliderInt("motion",&motion, 0, 255);
     motion_ = motion;
@@ -178,7 +180,7 @@ void Player::draw() const {
     Inventory& inv = world_->game_save_data().inventory();
     if (!inv.weapon().is_empty()) {
         glPushMatrix();
-        glMultMatrixf(mesh_.bone_matrices(right_hand_bone_));   // 右手に持たせる
+        glMultMatrixf(mesh_.bone_matrices(RIGHT_HAND_BONE_NUM));   // 右手に持たせる
         gsDrawMesh(item_data_.get_weapon(inv.weapon().id).mesh);
         glPopMatrix();
     }
@@ -222,7 +224,7 @@ void Player::take_damage(Actor& other, const int damage) {
 		return;
 	}
 
-	//hp_ = CLAMP(hp_ - damage, 0, INT_MAX);
+	// TODO hp_ = CLAMP(hp_ - damage, 0, INT_MAX);
 
 	if (hp_ <= 0) {
 		change_state((GSuint)PlayerStateType::Dead, Motion::Dead, false);
@@ -262,7 +264,7 @@ void Player::on_hit_attack(AttackCollider& collider) {
 }
 
 bool Player::is_dead_state() const {
-	return MyLib::is_in(state_.get_current_state(), (GSuint)PlayerStateType::Dead);
+	return MyLib::is_in(state_.get_current_state(), (GSuint)PlayerStateType::Dead) || is_dead_;
 }
 
 void Player::react(Actor& other) {
@@ -384,35 +386,51 @@ void Player::to_move_state() {
     move_speed_ = 0.0f;
 }
 
-void Player::update_lockon_camera() {
-	// 指定の状態ではロックオン切り替えを使えない
-	if (MyLib::is_in(
-		state_.get_current_state(),
-		(GSuint)PlayerStateType::Idle,
-		(GSuint)PlayerStateType::Dead
-	)) return;
-	
-	// ロックオン入力があったら
-	if (input_.action(InputAction::GAME_Lockon)) {
-		// ロックオンターゲットがいるならロックオンを解除
-		if (camera_->is_lockon()) {
-			camera_->set_lockon_target(nullptr);
-			return;
-		}
-		// ロックオンターゲットがいなければ対象を探す
-		else {
-			Pawn* target = nullptr;
-			// TODO search
+bool Player::is_move_input() const {
+    return input_.left_axis().length() > 0.0f;
+}
 
-			if (target != nullptr) {
-				camera_->set_lockon_target(target);
-				return;
-			}
+void Player::update_lockon_camera() {
+	// ロックオン入力がなければ終了
+    if (!input_.action(InputAction::GAME_Lockon)) return;
+
+	// ロックオンターゲットがいるならロックオンを解除
+	if (camera_->is_lockon()) {
+		camera_->set_lockon_target(nullptr);
+		return;
+	}
+	// ロックオンターゲットがいなければ対象を探す
+	else {
+		Pawn* target = nullptr;
+		// TODO search
+
+		if (target != nullptr) {
+			camera_->set_lockon_target(target);
+			return;
 		}
 	}
 }
 
-void Player::on_attack() {
+bool Player::is_action(InputAction action) const {
+    switch (action) {
+    case InputAction::GAME_Attack:
+        // 入力があるかつ、攻撃段数が現在の武器最大攻撃可能数未満であれば真
+        return input_.action(InputAction::GAME_Attack) && attack_count_ < weapon_manager_.get_max_attack_count(world_->game_save_data().inventory().weapon().type);
+    case InputAction::GAME_Jump:
+        return input_.action(InputAction::GAME_Jump) && state_.get_current_state() != (GSuint)PlayerStateType::Jump;
+    case InputAction::GAME_Avoid:
+        return input_.action(InputAction::GAME_Avoid) && state_.get_current_state() != (GSuint)PlayerStateType::Avoid;
+    case InputAction::GAME_Skill:
+        return input_.action(InputAction::GAME_Skill) && state_.get_current_state() != (GSuint)PlayerStateType::Skill;
+    case InputAction::GAME_Interact:
+        return input_.action(InputAction::GAME_Interact);
+    default:
+        return false;
+    }
+    return false;
+}
+
+void Player::attack_start() {
 	// 攻撃段数を一段階目にセット
 	attack_count_ = 1;
 }
@@ -495,31 +513,11 @@ int& Player::attack_count() {
 	return attack_count_;
 }
 
-float Player::get_enter_next_attack_animation_time() {
+float Player::get_enter_next_attack_animation_time() const {
 	return weapon_manager_.get_enter_next_animation_time(world_->game_save_data().inventory().weapon().type, attack_count_);
 }
 
-bool Player::is_attack() {
-	return attack_count_ < weapon_manager_.get_max_attack_count(world_->game_save_data().inventory().weapon().type) && input_.action(InputAction::GAME_Attack);
-}
-
-bool Player::is_jump() const {
-	return state_.get_current_state() != (GSuint)PlayerStateType::Jump && input_.action(InputAction::GAME_Jump);
-}
-
-bool Player::is_avoid() const {
-	return state_.get_current_state() != (GSuint)PlayerStateType::Avoid && input_.action(InputAction::GAME_Avoid);
-}
-
-bool Player::is_skill() const {
-	return state_.get_current_state() != (GSuint)PlayerStateType::Skill && input_.action(InputAction::GAME_Skill);
-}
-
-bool Player::is_interact() const {
-	return input_.action(InputAction::GAME_Interact);
-}
-
-GSuint Player::get_attack_motion() {
+GSuint Player::get_attack_motion() const {
 	int motion = weapon_manager_.get_animation_num(world_->game_save_data().inventory().weapon().type, attack_count_);
 	return motion < 0 ? 99999 : motion;
 }
@@ -631,6 +629,15 @@ bool Player::is_root_motion_state() const {
     //);
 }
 
+void Player::update_mesh(float delta_time) {
+    // メッシュのモーションを更新
+    mesh_.update(delta_time);
+    // ルートモーションを適用
+    if (is_root_motion_state()) mesh_.apply_root_motion(transform_);
+    // ワールド変換行列を設定
+    mesh_.transform(transform_.localToWorldMatrix());
+}
+
 void Player::on_air() {
 	if (MyLib::is_in(
 		state_.get_current_state(),
@@ -657,11 +664,3 @@ void Player::on_ground() {
 	change_state((GSuint)PlayerStateType::Land, Motion::Land, false);
 }
 
-void Player::update_mesh(float delta_time) {
-    // メッシュのモーションを更新
-    mesh_.update(delta_time);
-    // ルートモーションを適用
-    if (is_root_motion_state()) mesh_.apply_root_motion(transform_);
-    // ワールド変換行列を設定
-    mesh_.transform(transform_.localToWorldMatrix());
-}

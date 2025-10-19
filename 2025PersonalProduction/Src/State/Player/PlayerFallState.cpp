@@ -6,22 +6,7 @@ PlayerFallState::PlayerFallState(Player& owner) :
 
 }
 
-void PlayerFallState::enter() {
-
-}
-
 void PlayerFallState::update(float delta_time) {
+    // 空中移動の更新
 	owner_.update_move_air(delta_time);
-}
-
-void PlayerFallState::draw() const {
-
-}
-
-void PlayerFallState::draw_gui() const {
-
-}
-
-void PlayerFallState::exit() {
-
 }

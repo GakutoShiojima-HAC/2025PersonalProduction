@@ -84,11 +84,11 @@ private:
 
 	void add_state() override;
 
+    void update_mesh(float delta_time) override;
+
 	void on_air() override;
 
 	void on_ground() override;
-
-    void update_mesh(float delta_time) override;
 
 public:
 	/// <summary>
@@ -106,15 +106,29 @@ public:
 	/// </summary>
 	void to_move_state();
 
+    /// <summary>
+    /// 移動入力を行っているかどうか
+    /// </summary>
+    /// <returns>行っていたら真を返却</returns>
+    bool is_move_input() const;
+
 	/// <summary>
 	/// 追従カメラの更新
 	/// </summary>
 	void update_lockon_camera();
 
+public:
+    /// <summary>
+    /// ステートが遷移条件に使えるアクションを行っているかどうか
+    /// </summary>
+    /// <param name="action">= アクション</param>
+    /// <returns>行っていたら真を返却</returns>
+    bool is_action(InputAction action) const;
+
 	/// <summary>
-	/// 攻撃処理
+	/// 通常攻撃の開始
 	/// </summary>
-	void on_attack();
+	void attack_start();
 
 	/// <summary>
 	/// 回避処理
@@ -132,7 +146,7 @@ public:
 	void on_interact();
 
 	/// <summary>
-	/// 攻撃段数
+	/// 現在の攻撃段数
 	/// </summary>
 	/// <returns>参照</returns>
 	int& attack_count();
@@ -141,23 +155,11 @@ public:
 	/// 攻撃から次の攻撃に入るまでの最短時間を取得
 	/// </summary>
 	/// <returns>時間</returns>
-	float get_enter_next_attack_animation_time();
-
-	/* アクションによって状態が変わるアクションの入力検知 */
-public:
-	bool is_attack();
-	
-	bool is_jump() const;
-
-	bool is_avoid() const;
-
-	bool is_skill() const;
-
-	bool is_interact() const;
+	float get_enter_next_attack_animation_time() const;
 
 	/* アクションのモーション番号を返却 */
 public:
-	GSuint get_attack_motion();
+	GSuint get_attack_motion() const;
 
 	GSuint get_skill_motion() const;
 
@@ -214,9 +216,6 @@ private:
 
 	// 回避演出のタイマー
 	float avoid_effect_timer_{ 0.0f };
-
-    // 右手ボーン
-    int right_hand_bone_{ 114 };
 };
 
 using PlayerMotion = Player::Motion;
