@@ -146,6 +146,7 @@
   <ItemGroup>
     <ClCompile Include="Src\Actor\ItemActor\ItemActor.cpp" />
     <ClCompile Include="Src\Engine\Core\Assets\AssetsLoader.cpp" />
+    <ClCompile Include="Src\Engine\Core\Camera\CameraShake.cpp" />
     <ClCompile Include="Src\Engine\Core\Collision\AttackCollider.cpp" />
     <ClCompile Include="Src\Engine\Core\Collision\AttackColliderPool.cpp" />
     <ClCompile Include="Src\Actor\Enemy\DummyEnemy.cpp" />
@@ -238,6 +239,8 @@
     <ClInclude Include="Src\Actor\ActorTag.h" />
     <ClInclude Include="Src\Actor\ItemActor\ItemActor.h" />
     <ClInclude Include="Src\Engine\Core\Assets\AssetsLoader.h" />
+    <ClInclude Include="Src\Engine\Core\Camera\CameraShake.h" />
+    <ClInclude Include="Src\Engine\Core\Camera\CameraShakeType.h" />
     <ClInclude Include="Src\Engine\Core\Collision\AttackCollider.h" />
     <ClInclude Include="Src\Engine\Core\Collision\AttackColliderPool.h" />
     <ClInclude Include="Src\Actor\Enemy\DummyEnemy.h" />
