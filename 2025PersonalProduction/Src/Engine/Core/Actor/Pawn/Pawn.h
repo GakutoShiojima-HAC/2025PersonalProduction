@@ -21,17 +21,6 @@ public:
 
 	virtual ~Pawn() = default;
 
-private:
-	/// <summary>
-	/// 空中
-	/// </summary>
-	virtual void on_air();
-
-	/// <summary>
-	/// 接地
-	/// </summary>
-	virtual void on_ground();
-
 public:
 	/// <summary>
 	/// ダメージ処理
@@ -105,6 +94,16 @@ protected:
 	/// アクターとの衝突判定
 	/// </summary>
 	virtual void collide_actor(Actor& other) override;
+
+    /// <summary>
+    /// 空中
+    /// </summary>
+    virtual void on_air();
+
+    /// <summary>
+    /// 接地
+    /// </summary>
+    virtual void on_ground();
 
 protected:
 	// アニメーションメッシュ
