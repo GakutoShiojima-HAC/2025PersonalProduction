@@ -190,6 +190,7 @@
     <ClCompile Include="Src\Engine\Graphics\Shader\PostEffects\BloomEffect.cpp" />
     <ClCompile Include="Src\Engine\Graphics\Shader\PostEffects\BlurEffect.cpp" />
     <ClCompile Include="Src\Engine\Graphics\Shader\PostEffects\SSAOEffect.cpp" />
+    <ClCompile Include="Src\GameTimer\GameTimer.cpp" />
     <ClCompile Include="Src\GUI\InteractUI.cpp" />
     <ClCompile Include="Src\Item\Inventory.cpp" />
     <ClCompile Include="Src\Item\ItemDataManager.cpp" />
@@ -253,6 +254,7 @@
     <ClInclude Include="Src\Camera\PlayerCamera.h" />
     <ClInclude Include="Src\Camera\TimelineCamera.h" />
     <ClInclude Include="Src\Engine\Core\Assets\AssetsManager.h" />
+    <ClInclude Include="Src\GameTimer\GameTimer.h" />
     <ClInclude Include="Src\Engine\Core\Input\Input.h" />
     <ClInclude Include="Src\Engine\Core\LogSystem\LogManager.h" />
     <ClInclude Include="Src\Engine\Core\LogSystem\SystemLog.h" />
