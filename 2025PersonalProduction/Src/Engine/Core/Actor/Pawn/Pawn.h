@@ -15,22 +15,13 @@
 #include "Engine/Core/Actor/Actor.h"
 #include "Engine/Graphics/AnimatedMesh/AnimatedMesh.h"
 
+class AttackCollider;
+
 class Pawn : public Actor {
 public:
 	Pawn() = default;
 
 	virtual ~Pawn() = default;
-
-private:
-	/// <summary>
-	/// 空中
-	/// </summary>
-	virtual void on_air();
-
-	/// <summary>
-	/// 接地
-	/// </summary>
-	virtual void on_ground();
 
 public:
 	/// <summary>
@@ -39,6 +30,13 @@ public:
 	/// <param name="other">= 与える側のポーン</param>
 	/// <param name="damage">= ダメージ値</param>
 	virtual void take_damage(Actor& other, const int damage);
+
+    /// <summary>
+    /// 攻撃ヒットコールバック処理
+    /// コライダーの寿命は呼ばれたフレームまで
+    /// </summary>
+    /// <param name="collider">= コライダー</param>
+    virtual void on_hit_attack(AttackCollider& collider);
 
 	/// <summary>
 	/// ジャンプ処理
@@ -105,6 +103,16 @@ protected:
 	/// アクターとの衝突判定
 	/// </summary>
 	virtual void collide_actor(Actor& other) override;
+
+    /// <summary>
+    /// 空中
+    /// </summary>
+    virtual void on_air();
+
+    /// <summary>
+    /// 接地
+    /// </summary>
+    virtual void on_ground();
 
 protected:
 	// アニメーションメッシュ

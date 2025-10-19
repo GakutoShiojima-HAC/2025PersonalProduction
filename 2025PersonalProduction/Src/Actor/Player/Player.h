@@ -75,6 +75,8 @@ public:
 public:
 	void take_damage(Actor& other, const int damage) override;
 
+    void on_hit_attack(AttackCollider& collider) override;
+
 	bool is_dead_state() const override;
 
 private:
@@ -163,9 +165,9 @@ public:
 
 private:
 	/// <summary>
-	/// 攻撃判定を生成
+	/// 通常攻撃判定を生成
 	/// </summary>
-	void generate_attack_collider();
+	void generate_normal_attack_collider();
 
     /// <summary>
     /// インタラクトを更新

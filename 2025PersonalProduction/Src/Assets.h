@@ -56,6 +56,7 @@
 #define EFFECT_ID_LIST \
     X(NONE) \
     X(Item) \
+    X(HitAttack) \
     X(MAX_SIZE) // 要素数
 #pragma endregion
 

@@ -4,16 +4,12 @@
 #include "Engine/Utils/Line.h"
 #include "GameConfig.h"
 
-void Pawn::on_air() {
-
-}
-
-void Pawn::on_ground() {
-
-}
-
 void Pawn::take_damage(Actor& other, const int damage) {
     hp_ = CLAMP(hp_ - damage, 0, INT_MAX);
+}
+
+void Pawn::on_hit_attack(AttackCollider& collider) {
+
 }
 
 void Pawn::on_jump() {
@@ -155,4 +151,12 @@ void Pawn::collide_actor(Actor& other) {
 
     // フィールドとの衝突判定を再度行う
     collide_field();
+}
+
+void Pawn::on_air() {
+
+}
+
+void Pawn::on_ground() {
+
 }

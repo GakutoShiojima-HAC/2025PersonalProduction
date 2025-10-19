@@ -165,7 +165,7 @@ bool DummyEnemy::is_generate_collider() const {
 
 void DummyEnemy::generate_attack_collider() {
 	GSvector3 position = local_to_world(generate_offset_, GSvector3::zero(), GSvector3::one()).position();
-	world_->generate_attack_collider(collider_radius_, position, this, collider_damage_, 10.0f, 0.0f);
+	world_->generate_attack_collider(collider_radius_, position, this, collider_damage_, "DummyEnemyCollider", 10.0f, 0.0f);
 }
 
 void DummyEnemy::move_start() {

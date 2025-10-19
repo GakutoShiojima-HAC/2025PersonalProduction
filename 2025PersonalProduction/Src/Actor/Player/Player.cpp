@@ -246,6 +246,17 @@ void Player::take_damage(Actor& other, const int damage) {
 	invincible_timer_ = INVINCIBLE_TIME;
 }
 
+void Player::on_hit_attack(AttackCollider& collider) {
+    std::string name = collider.name();
+
+    // 通常攻撃なら
+    if (name == "PlayerNormalAttack") {
+        // 基礎スコア 基礎値 + コンボ数 * ボーナス値 
+        const int score = 50 + (attack_count_ - 1) * 10;
+        world_->action_score().add_score(score, mesh_.motion_end_time() * 1.25f, 0.125f); // 時間はモーション時間より少しだけ長めに
+    }
+}
+
 bool Player::is_dead_state() const {
 	return MyLib::is_in(state_.get_current_state(), (GSuint)PlayerStateType::Dead);
 }
@@ -518,18 +529,14 @@ GSuint Player::get_current_motion() const {
 	return motion_;
 }
 
-void Player::generate_attack_collider() {
+void Player::generate_normal_attack_collider() {
 	GSvector3 local_pos = weapon_manager_.get_collider_offset(world_->game_save_data().inventory().weapon().type, attack_count_);
 	GSmatrix4 m = local_to_world(local_pos, GSvector3::zero(), GSvector3::one());
 
     WeaponData::Data weapon =  world_->game_save_data().inventory().weapon();
     int damage = weapon.is_empty() ? 0 : weapon.damage;
 
-	world_->generate_attack_collider(0.3f, m.position(), this, damage, 0.1f, 0.0f);
-
-    // 基礎スコア 基礎値 + コンボ数 * ボーナス値 
-    const int score = 50 + (attack_count_ - 1) * 10;
-    world_->action_score().add_score(score, mesh_.motion_end_time() * 1.25f, 0.125f); // 時間はモーション時間より少しだけ長めに
+	world_->generate_attack_collider(0.3f, m.position(), this, damage, "PlayerNormalAttack", 0.1f, 0.0f);
 }
 
 void Player::interact_update() {
@@ -583,7 +590,7 @@ void Player::add_attack_animation_event() {
 	// ]
 
 	auto add_event = [this](int num, float time) {
-		mesh_.add_animation_event(num, time, [=] {generate_attack_collider(); });
+		mesh_.add_animation_event(num, time, [=] { generate_normal_attack_collider(); });
 	};
 
 	// for1 start
