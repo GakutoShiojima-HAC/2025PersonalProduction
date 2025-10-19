@@ -22,6 +22,7 @@
 #include "Engine/Graphics/Shader/GamePostEffect.h"
 #include "SaveData/GameSaveData.h"
 #include "Score/ActionScore.h"
+#include "GameTimer/GameTimer.h"
 
 class AttackColliderPool;
 
@@ -86,6 +87,12 @@ public:
 	/// </summary>
 	/// <param name="pool">= 攻撃判定プール</param>
 	void add_attack_collider_pool(AttackColliderPool* pool);
+
+    /// <summary>
+    /// ゲーム時間を取得
+    /// </summary>
+    /// <returns>参照</returns>
+    GameTimer& time();
 
 public:
 	Field* get_field() override;
@@ -167,7 +174,8 @@ protected:
     GameSaveData game_save_data_;
     // アクションスコア
     ActionScore action_score_;
-
+    // ゲーム時間
+    GameTimer game_timer_;
 };
 
 #endif
