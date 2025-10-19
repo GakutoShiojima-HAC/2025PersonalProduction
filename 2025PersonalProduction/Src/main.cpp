@@ -23,6 +23,7 @@
 #include "Engine/Graphics/Shader/GameShader.h"
 #include "Engine/Graphics/Shader/GamePostEffect.h"
 #include "Engine/Core/LogSystem/LogManager.h"
+#include "Engine/Core/Vibration/Vibration.h"
 
 #include "Engine/Core/Scene/SceneManager.h"
 #include "Scene/LoadingScene.h"
@@ -84,6 +85,7 @@ private:
     void update(float delta_time) override {
         screen_.update();
         input_.update(delta_time);
+        vibration_.update(delta_time);
         Tween::update(delta_time);
         scene_manager_.update(delta_time);
     }
@@ -97,6 +99,8 @@ private:
         ClipCursor(NULL);
         // カーソルを表示
         gsShowMouseCursor();
+        // コントローラーの振動を停止
+        vibration_.end();
 
         // ログを出力
         LogManager::get_instance().save("Log/");
@@ -143,12 +147,14 @@ private:
     Screen& screen_ = Screen::get_instance();
     // インプット
     Input& input_ = Input::get_instance();
+    // コントローラ－の振動
+    Vibration& vibration_ = Vibration::get_instance();
 
 };
 
 int main() {
 #ifdef _DEBUG
-    return MyGame(1920, 1080, true, cFPS).run();
+    return MyGame(1920, 1080, false, cFPS).run();
 #else
     return MyGame(1920, 1080, true, cFPS).run();
 #endif
