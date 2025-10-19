@@ -50,12 +50,20 @@ public:
 public:
     bool is_draw_safearea() const;
     bool& enable_draw_safearea();
+
+    // デバイス関連
+public:
+    bool is_vibration() const;
+    bool& enable_vibration();
     
 private:
     bool enable_draw_ssao_{ true };
 	bool enable_draw_bloom_{ true };
 	bool enable_draw_fxaa_{ true };
+
     bool enable_draw_safearea_{ false };
+
+    bool enable_vibration_{ false };
 
 public:
 	// コピー禁止

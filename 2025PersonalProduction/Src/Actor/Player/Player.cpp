@@ -8,6 +8,7 @@
 #include "Engine/Utils/Calc.h"
 #include "Engine/Core/Tween/Tween.h"
 #include "GameConfig.h"
+#include "Engine/Core/Vibration/Vibration.h"
 
 #include "State/Player/PlayerAttackState.h"
 #include "State/Player/PlayerAvoidState.h"
@@ -161,6 +162,10 @@ void Player::update(float delta_time) {
     safearea += setting.is_draw_safearea() ? "on" : "off";
     if (ImGui::Button(safearea.c_str())) setting.enable_draw_safearea() = !setting.enable_draw_safearea();
 
+    std::string vibration = "vibration: ";
+    vibration += setting.is_vibration() ? "on" : "off";
+    if (ImGui::Button(vibration.c_str())) setting.enable_vibration() = !setting.enable_vibration();
+
 	ImGui::End();
 #endif
 
@@ -260,6 +265,9 @@ void Player::on_hit_attack(AttackCollider& collider) {
         // カメラを揺らす
         float strength = 2.5f + (0.5f * attack_count_ - 1);
         world_->camera_shake(CameraShakeType::Shake, 0.075f, strength, false);
+
+        // コントローラーを振動させる
+        if (input_.is_pad()) Vibration::get_instance().start(0.2f, 1.0f);
     }
 }
 
