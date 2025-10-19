@@ -10,9 +10,9 @@ AttackColliderPool::~AttackColliderPool() {
 	clear();
 }
 
-void AttackColliderPool::generate(float radius, const GSvector3& center, Actor* owner, int damage, float lifespan, float delay) {
+void AttackColliderPool::generate(float radius, const GSvector3& center, Actor* owner, int damage, const std::string& name, float lifespan, float delay) {
 	AttackCollider* collider = colliders_.get();
-	collider->reactivate(radius, center, owner, damage, lifespan, delay, true);
+	collider->reactivate(radius, center, owner, damage, name, lifespan, delay, true);
 	active_colliders_.push_back(collider);
 	world_->add_actor(collider);
 }
@@ -20,7 +20,7 @@ void AttackColliderPool::generate(float radius, const GSvector3& center, Actor* 
 void AttackColliderPool::remove() {
 	for (auto i = active_colliders_.begin(); i != active_colliders_.end();) {
 		if ((*i)->is_dead()) {
-			// ƒ}ƒl[ƒWƒƒ[‚©‚ç‚Ìƒƒ‚ƒŠ‰ð•ú‚ð–³Œø‰»‚µ‚Ä‚¢‚é‚È‚çƒv[ƒ‹ŠÇ—‰º‚É–ß‚·
+			// ãƒžãƒãƒ¼ã‚¸ãƒ£ãƒ¼ã‹ã‚‰ã®ãƒ¡ãƒ¢ãƒªè§£æ”¾ã‚’ç„¡åŠ¹åŒ–ã—ã¦ã„ã‚‹ãªã‚‰ãƒ—ãƒ¼ãƒ«ç®¡ç†ä¸‹ã«æˆ»ã™
 			if (!(*i)->is_clear()) colliders_.release(*i);
 			i = active_colliders_.erase(i);
 		}
@@ -32,7 +32,7 @@ void AttackColliderPool::remove() {
 
 void AttackColliderPool::clear() {
 	for (auto& collider : active_colliders_) {
-		// ƒ}ƒl[ƒWƒƒ[‚©‚ç‚Ìƒƒ‚ƒŠ‰ð•ú‚ð–³Œø‰»‚µ‚Ä‚¢‚é‚È‚çƒv[ƒ‹ŠÇ—‰º‚É–ß‚·
+		// ãƒžãƒãƒ¼ã‚¸ãƒ£ãƒ¼ã‹ã‚‰ã®ãƒ¡ãƒ¢ãƒªè§£æ”¾ã‚’ç„¡åŠ¹åŒ–ã—ã¦ã„ã‚‹ãªã‚‰ãƒ—ãƒ¼ãƒ«ç®¡ç†ä¸‹ã«æˆ»ã™
 		if (!collider->is_clear()) colliders_.release(collider);
 	}
 	active_colliders_.clear();

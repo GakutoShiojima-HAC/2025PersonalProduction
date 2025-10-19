@@ -8,6 +8,10 @@ void Pawn::take_damage(Actor& other, const int damage) {
     hp_ = CLAMP(hp_ - damage, 0, INT_MAX);
 }
 
+void Pawn::on_hit_attack(AttackCollider& collider) {
+
+}
+
 void Pawn::on_jump() {
     velocity_.y = jump_power_ * 0.1f + gravity_ * 0.1f / cFPS;	// 重力を加算することで初速を維持
 }

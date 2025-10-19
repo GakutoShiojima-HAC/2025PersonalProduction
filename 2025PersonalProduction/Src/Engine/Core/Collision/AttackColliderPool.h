@@ -3,10 +3,10 @@
 //  Author        : Shiojima Gakuto
 //  Created       : 2025/08/12
 //  Updated       : 2025/08/12
-//  Description   : UŒ‚”»’è‚Ìƒv[ƒ‹
-//					ƒƒ‚ƒŠ‰ğ•ú‚Íƒv[ƒ‹“à‚Ås‚Á‚Ä‚¢‚é‚½‚ß•s—v
+//  Description   : æ”»æ’ƒåˆ¤å®šã®ãƒ—ãƒ¼ãƒ«
+//					ãƒ¡ãƒ¢ãƒªè§£æ”¾ã¯ãƒ—ãƒ¼ãƒ«å†…ã§è¡Œã£ã¦ã„ã‚‹ãŸã‚ä¸è¦
 //
-//  ’ˆÓF–{ƒ\[ƒXƒR[ƒh‚Ì–³’f“]ÚEƒR[ƒh‚ÌƒRƒs[E“\‚è•t‚¯‚É‚æ‚é—¬—pEÄ”z•z‚ğ‹Ö~‚µ‚Ü‚·B
+//  æ³¨æ„ï¼šæœ¬ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã®ç„¡æ–­è»¢è¼‰ãƒ»ã‚³ãƒ¼ãƒ‰ã®ã‚³ãƒ”ãƒ¼ãƒ»è²¼ã‚Šä»˜ã‘ã«ã‚ˆã‚‹æµç”¨ãƒ»å†é…å¸ƒã‚’ç¦æ­¢ã—ã¾ã™ã€‚
 // -----------------------------------------------------------------------------------------
 
 #ifndef ATTACK_COLLIDER_POOL_H_
@@ -33,26 +33,26 @@ public:
 
 public:
 	/// <summary>
-	/// UŒ‚”»’è‚ğ¶¬
+	/// æ”»æ’ƒåˆ¤å®šã‚’ç”Ÿæˆ
 	/// </summary>
-	/// <param name="radius">= ”»’è‚Ì”¼Œa</param>
-	/// <param name="center">= ¶¬”»’è‹…‚Ì’†S</param>
-	/// <param name="owner">= ¶¬å</param>
-	/// <param name="damage">= ƒ_ƒ[ƒW’l</param>
-	/// <param name="lifespan">= ”»’è‚Ìõ–½</param>
-	/// <param name="delay">= ”»’è‚ª—LŒø‚É‚È‚é‚Ü‚Å‚Ì’x‰„</param>
-	void generate(float radius, const GSvector3& center, Actor* owner, int damage, float lifespan = 1.0f, float delay = 0.0f);
+	/// <param name="radius">= åˆ¤å®šã®åŠå¾„</param>
+	/// <param name="center">= ç”Ÿæˆåˆ¤å®šçƒã®ä¸­å¿ƒ</param>
+	/// <param name="owner">= ç”Ÿæˆä¸»</param>
+	/// <param name="damage">= ãƒ€ãƒ¡ãƒ¼ã‚¸å€¤</param>
+	/// <param name="lifespan">= åˆ¤å®šã®å¯¿å‘½</param>
+	/// <param name="delay">= åˆ¤å®šãŒæœ‰åŠ¹ã«ãªã‚‹ã¾ã§ã®é…å»¶</param>
+	void generate(float radius, const GSvector3& center, Actor* owner, int damage, const std::string& name, float lifespan = 1.0f, float delay = 0.0f);
 
 private:
 	World* world_{ nullptr };
 
-	// ƒRƒ‰ƒCƒ_[ƒv[ƒ‹
+	// ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ãƒ—ãƒ¼ãƒ«
 	ObjectPool<AttackCollider> colliders_;
-	// ƒAƒNƒeƒBƒu‚ÈƒRƒ‰ƒCƒ_[ƒŠƒXƒg
+	// ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ãªã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ãƒªã‚¹ãƒˆ
 	list<AttackCollider*> active_colliders_;
 
 public:
-	// ƒRƒs[‹Ö~
+	// ã‚³ãƒ”ãƒ¼ç¦æ­¢
 	AttackColliderPool(const AttackColliderPool& other) = delete;
 	AttackColliderPool& operator = (const AttackColliderPool& other) = delete;
 

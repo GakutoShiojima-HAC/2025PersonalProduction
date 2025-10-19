@@ -3,9 +3,9 @@
 //  Author        : Shiojima Gakuto
 //  Created       : 2025/08/12
 //  Updated       : 2025/08/12
-//  Description   : UŒ‚”»’è
+//  Description   : æ”»æ’ƒåˆ¤å®š
 //
-//  ’ˆÓF–{ƒ\[ƒXƒR[ƒh‚Ì–³’f“]ÚEƒR[ƒh‚ÌƒRƒs[E“\‚è•t‚¯‚É‚æ‚é—¬—pEÄ”z•z‚ğ‹Ö~‚µ‚Ü‚·B
+//  æ³¨æ„ï¼šæœ¬ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã®ç„¡æ–­è»¢è¼‰ãƒ»ã‚³ãƒ¼ãƒ‰ã®ã‚³ãƒ”ãƒ¼ãƒ»è²¼ã‚Šä»˜ã‘ã«ã‚ˆã‚‹æµç”¨ãƒ»å†é…å¸ƒã‚’ç¦æ­¢ã—ã¾ã™ã€‚
 // -----------------------------------------------------------------------------------------
 
 #ifndef ATTACK_COLLIDER_H_
@@ -15,7 +15,15 @@
 
 class AttackCollider : public Actor {
 public:
-	AttackCollider(float radius = 0.0f, const GSvector3& center = GSvector3{ 0.0f, 0.0f, 0.0f }, Actor* owner = nullptr, int damage = 0, float lifespan = 1.0f, float delay = 0.0f);
+	AttackCollider(
+        float radius = 0.0f,
+        const GSvector3& center = GSvector3{ 0.0f, 0.0f, 0.0f },
+        Actor* owner = nullptr,
+        int damage = 0,
+        const std::string& name = "AttackCollider",
+        float lifespan = 1.0f,
+        float delay = 0.0f
+    );
 
 public:
 	void update(float delta_time) override;
@@ -26,26 +34,36 @@ public:
 
 public:
 	/// <summary>
-	/// Ä“xg‚¦‚é‚æ‚¤‚É‚·‚é
+	/// å†åº¦ä½¿ãˆã‚‹ã‚ˆã†ã«ã™ã‚‹
 	/// </summary>
-	/// <param name="radius">= ”»’è‚Ì”¼Œa</param>
-	/// <param name="center">= ¶¬”»’è‹…‚Ì’†S</param>
-	/// <param name="owner">= ¶¬å</param>
-	/// <param name="damage">= ƒ_ƒ[ƒW’l</param>
-	/// <param name="lifespan">= ”»’è‚Ìõ–½</param>
-	/// <param name="delay">= ”»’è‚ª—LŒø‚É‚È‚é‚Ü‚Å‚Ì’x‰„</param>
-	/// <param name="disable_clear">= ƒ}ƒl[ƒWƒƒ[‚©‚ç‚Ìƒƒ‚ƒŠ‰ğ•ú‘ÎÛ‚©‚çœŠO‚·‚é‚©‚Ç‚¤‚©</param>
-	void reactivate(float radius, const GSvector3& center, Actor* owner, int damage, float lifespan = 1.0f, float delay = 0.0f, bool disable_clear = false);
+	/// <param name="radius">= åˆ¤å®šã®åŠå¾„</param>
+	/// <param name="center">= ç”Ÿæˆåˆ¤å®šçƒã®ä¸­å¿ƒ</param>
+	/// <param name="owner">= ç”Ÿæˆä¸»</param>
+	/// <param name="damage">= ãƒ€ãƒ¡ãƒ¼ã‚¸å€¤</param>
+    /// <param name="name">= è­˜åˆ¥å</param>
+	/// <param name="lifespan">= åˆ¤å®šã®å¯¿å‘½</param>
+	/// <param name="delay">= åˆ¤å®šãŒæœ‰åŠ¹ã«ãªã‚‹ã¾ã§ã®é…å»¶</param>
+	/// <param name="disable_clear">= ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼ã‹ã‚‰ã®ãƒ¡ãƒ¢ãƒªè§£æ”¾å¯¾è±¡ã‹ã‚‰é™¤å¤–ã™ã‚‹ã‹ã©ã†ã‹</param>
+	void reactivate(
+        float radius = 0.0f,
+        const GSvector3& center = GSvector3{ 0.0f, 0.0f, 0.0f },
+        Actor* owner = nullptr,
+        int damage = 0,
+        const std::string& name = "AttackCollider",
+        float lifespan = 1.0f,
+        float delay = 0.0f,
+        bool disable_clear = false
+    );
 
 private:
 	Actor* owner_{ nullptr };
 
-	// õ–½
+	// å¯¿å‘½
 	float lifespan_timer_{ 1.0f };
-	// ¶¬’x‰„
+	// ç”Ÿæˆé…å»¶
 	float delay_timer_{ 0.0f };
 
-	// ƒ_ƒ[ƒW
+	// ãƒ€ãƒ¡ãƒ¼ã‚¸
 	int damage_{ 0 };
 };
 

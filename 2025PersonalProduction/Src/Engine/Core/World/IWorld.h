@@ -165,7 +165,7 @@ public:
     /// <param name="damage">= ダメージ値</param>
     /// <param name="lifespan">= 判定の寿命</param>
     /// <param name="delay">= 判定が有効になるまでの遅延</param>
-    virtual void generate_attack_collider(float radius, const GSvector3& center, Actor* owner, int damage, float lifespan = 1.0f, float delay = 0.0f) = 0;
+    virtual void generate_attack_collider(float radius, const GSvector3& center, Actor* owner, int damage, const std::string& name, float lifespan = 1.0f, float delay = 0.0f) = 0;
 
     /// <summary>
     /// マスクエフェクトの色を設定

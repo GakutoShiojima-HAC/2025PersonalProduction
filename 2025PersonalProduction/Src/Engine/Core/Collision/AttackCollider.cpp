@@ -1,10 +1,9 @@
 #include "Engine/Core/Collision/AttackCollider.h"
 #include "Engine/Core/Actor/Pawn/Pawn.h"
 
-AttackCollider::AttackCollider(float radius, const GSvector3& center, Actor* owner, int damage, float lifespan, float delay) {
+AttackCollider::AttackCollider(float radius, const GSvector3& center, Actor* owner, int damage, const std::string& name, float lifespan, float delay) {
 	tag_ = ActorTag::Collider;
-	name_ = "AttackCollider";
-
+    name_ = name;
 	owner_ = owner;
 	damage_ = damage;
 
@@ -14,12 +13,12 @@ AttackCollider::AttackCollider(float radius, const GSvector3& center, Actor* own
 	collider_ = BoundingSphere{ radius };
 	transform_.position(center);
 
-	// Õ“Ë”»’è‚ğ–³Œø
+	// è¡çªåˆ¤å®šã‚’ç„¡åŠ¹
 	enable_collider_ = false;
 }
 
 void AttackCollider::update(float delta_time) {
-	// ’x‰„ˆ—‚Æíœˆ—
+	// é…å»¶å‡¦ç†ã¨å‰Šé™¤å‡¦ç†
 	if (delay_timer_ <= 0.0f) {
 		enable_collider_ = true;
 		if (lifespan_timer_ <= 0.0f) die();
@@ -33,18 +32,21 @@ void AttackCollider::draw() const {
 }
 
 void AttackCollider::react(Actor& other) {
-	// ©•ª©g‚Æå‚Æ‚ÍÕ“Ë‚µ‚È‚¢
+	// è‡ªåˆ†è‡ªèº«ã¨ä¸»ã¨ã¯è¡çªã—ãªã„
 	if (other.tag() == tag() || other.tag() == owner_->tag()) return;
-	// ƒ_ƒ[ƒW‚ğ—^‚¦‚é
+	// ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’ä¸ãˆã‚‹
 	Pawn* target = dynamic_cast<Pawn*>(&other);
 	if (target != nullptr) target->take_damage(*this, damage_);
-	// Õ“Ë‚µ‚½‚çíœ
+    // ç”Ÿæˆä¸»ã«ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯
+    Pawn* owner = dynamic_cast<Pawn*>(owner_);
+    if (owner != nullptr) owner->on_hit_attack(*this);
+	// è¡çªã—ãŸã‚‰å‰Šé™¤
 	die();
 }
 
-void AttackCollider::reactivate(float radius, const GSvector3& center, Actor* owner, int damage, float lifespan, float delay, bool disable_clear) {
+void AttackCollider::reactivate(float radius, const GSvector3& center, Actor* owner, int damage, const std::string& name, float lifespan, float delay, bool disable_clear) {
 	is_dead_ = false;
-
+    name_ = name;
 	owner_ = owner;
 	damage_ = damage;
 
@@ -54,9 +56,9 @@ void AttackCollider::reactivate(float radius, const GSvector3& center, Actor* ow
 	collider_ = BoundingSphere{ radius };
 	transform_.position(center);
 
-	// Õ“Ë”»’è‚ğ–³Œø
+	// è¡çªåˆ¤å®šã‚’ç„¡åŠ¹
 	enable_collider_ = false;
 
-	// ƒ}ƒl[ƒWƒƒ[‚©‚çƒƒ‚ƒŠ‰ğ•ú‚ğ–³Œø‰»‚·‚é‚©‚Ç‚¤‚©(true‚Åƒƒ‚ƒŠ‰ğ•ú‘ÎÛ‚È‚Ì‚Å”½“])
+	// ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼ã‹ã‚‰ãƒ¡ãƒ¢ãƒªè§£æ”¾ã‚’ç„¡åŠ¹åŒ–ã™ã‚‹ã‹ã©ã†ã‹(trueã§ãƒ¡ãƒ¢ãƒªè§£æ”¾å¯¾è±¡ãªã®ã§åè»¢)
 	is_clear_ = !disable_clear;
 }

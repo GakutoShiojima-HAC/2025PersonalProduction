@@ -124,7 +124,7 @@ public:
 
 	TimelineManager& timeline() override;
 
-	void generate_attack_collider(float radius, const GSvector3& center, Actor* owner, int damage, float lifespan = 1.0f, float delay = 0.0f) override;
+	void generate_attack_collider(float radius, const GSvector3& center, Actor* owner, int damage, const std::string& name, float lifespan = 1.0f, float delay = 0.0f) override;
 
     void set_mask_color(const GScolor& color) override;
 
