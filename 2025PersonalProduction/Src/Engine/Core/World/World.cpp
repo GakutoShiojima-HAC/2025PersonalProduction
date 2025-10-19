@@ -12,6 +12,8 @@ World::~World() {
 }
 
 void World::update(float delta_time) {
+    game_timer_.update(delta_time);
+
 	field_->update(delta_time);
 	if (navmesh_ != nullptr) navmesh_->update(delta_time);
 	actor_.update(delta_time);
@@ -66,6 +68,7 @@ void World::draw() const {
 
 	actor_.draw_gui();
     action_score_.draw();
+    game_timer_.draw();
 }
 
 void World::clear() {
@@ -126,6 +129,10 @@ void World::add_character(Character* character) {
 void World::add_attack_collider_pool(AttackColliderPool* pool) {
 	delete attack_collider_pool_;
 	attack_collider_pool_ = pool;
+}
+
+GameTimer& World::time() {
+    return game_timer_;
 }
 
 Field* World::get_field() {

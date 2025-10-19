@@ -67,6 +67,8 @@ void GameScene::start() {
 
     // アクションスコアの初期化
     world_.action_score().init();
+    // タイマーの初期化
+    world_.time().init();
 
 	world_.add_field(new Field{ (GSuint)OctreeID::Mesh, (GSuint)OctreeID::Collider, (GSuint)TextureID::Skybox });
 	Light* light = new Light{};
