@@ -15,6 +15,7 @@
 #include <vector>
 #include "Camera/CameraTag.h"
 #include "Actor/ActorTag.h"
+#include "Engine/Core/Camera/CameraShakeType.h"
 
 class Field;
 class FieldActor;
@@ -82,6 +83,27 @@ public:
     /// <param name="to">= 遷移先</param>
     /// <param name="time">= 遷移にかかる時間</param>
     virtual void camera_transition(Camera* from, Camera* to, float time = 0) = 0;
+
+    /// <summary>
+    /// カメラを揺らす
+    /// </summary>
+    /// <param name="type">= 揺れの種類</param>
+    /// <param name="duration">= 揺らす時間(秒)</param>
+    /// <param name="strength">= 揺れの強さ</param>
+    /// <param name="loop">= ループするかどうか(時間を無視する)</param>
+    virtual void camera_shake(CameraShakeType type, float duration, float strength = 1.0f, bool loop = false) = 0;
+
+    /// <summary>
+    /// 揺れを終了
+    /// </summary>
+    virtual void camera_shake_end() = 0;
+
+    /// <summary>
+    /// 揺れを有効にするかどうか
+    /// </summary>
+    /// <returns>参照</returns>
+    virtual bool& camera_enable_shake() = 0;
+
 
     /// <summary>
     /// ナビメッシュを取得
