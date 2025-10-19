@@ -1,5 +1,6 @@
 #include "Engine/Core/Collision/AttackCollider.h"
 #include "Engine/Core/Actor/Pawn/Pawn.h"
+#include "Assets.h"
 
 AttackCollider::AttackCollider(float radius, const GSvector3& center, Actor* owner, int damage, const std::string& name, float lifespan, float delay) {
 	tag_ = ActorTag::Collider;
@@ -36,10 +37,17 @@ void AttackCollider::react(Actor& other) {
 	if (other.tag() == tag() || other.tag() == owner_->tag()) return;
 	// ダメージを与える
 	Pawn* target = dynamic_cast<Pawn*>(&other);
-	if (target != nullptr) target->take_damage(*this, damage_);
-    // 生成主にコールバック
-    Pawn* owner = dynamic_cast<Pawn*>(owner_);
-    if (owner != nullptr) owner->on_hit_attack(*this);
+    if (target != nullptr && !target->is_dead_state()) {
+        target->take_damage(*this, damage_);
+
+        // 生成主にコールバック
+        Pawn* owner = dynamic_cast<Pawn*>(owner_);
+        if (owner != nullptr) owner->on_hit_attack(*this);
+
+        // エフェクトを衝突した相手との中点に生成
+        GSvector3 center = (other.collider().center - transform_.position()) / 2;
+        play_effect((GSuint)EffectID::HitAttack, center);
+    }
 	// 衝突したら削除
 	die();
 }
