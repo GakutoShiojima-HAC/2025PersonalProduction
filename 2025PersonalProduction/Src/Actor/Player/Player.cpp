@@ -30,6 +30,7 @@
 #include "Engine/Graphics/Canvas/Canvas.h"	// tmp
 
 #include "GUI/InteractUI.h"
+#include "Score/ActionScore.h"
 
 // 衝突判定用の半径
 const float RADIUS{ 0.4f };
@@ -154,6 +155,10 @@ void Player::update(float delta_time) {
     fxaa += setting.is_draw_fxaa() ? "on" : "off";
     if (ImGui::Button(fxaa.c_str())) setting.enable_draw_fxaa() = !setting.enable_draw_fxaa();
 
+    std::string safearea = "safearea: ";
+    safearea += setting.is_draw_safearea() ? "on" : "off";
+    if (ImGui::Button(safearea.c_str())) setting.enable_draw_safearea() = !setting.enable_draw_safearea();
+
 	ImGui::End();
 #endif
 
@@ -186,6 +191,13 @@ void Player::draw_gui() const {
 		const GSrect rect{ 0.0f, 0.0f, 77.0f, 80.0f };
 		Canvas::draw_texture((GSuint)TextureID::TmpUI, GSvector2{ 20.0f, 20.0f }, rect, GSvector2::zero(), GSvector2::one(), GScolor{ 1.0f, 1.0f, 1.0f, 1.0f }, 0.0f, Anchor::TopLeft);
 	}
+
+#ifdef _DEBUG
+    Setting& setting = Setting::get_instance();
+    if (setting.is_draw_safearea()) {
+        gsDrawSprite2D((GSuint)TextureID::SafeArea, NULL, NULL, NULL, NULL, NULL, 0);
+    }
+#endif
 
     // インタラクトUIの描画
     InteractUI::draw(interact_actors_, interact_target_index_);
@@ -514,6 +526,10 @@ void Player::generate_attack_collider() {
     int damage = weapon.is_empty() ? 0 : weapon.damage;
 
 	world_->generate_attack_collider(0.3f, m.position(), this, damage, 0.1f, 0.0f);
+
+    // 基礎スコア 基礎値 + コンボ数 * ボーナス値 
+    const int score = 50 + (attack_count_ - 1) * 10;
+    world_->action_score().add_score(score, mesh_.motion_end_time() * 1.25f, 0.125f); // 時間はモーション時間より少しだけ長めに
 }
 
 void Player::interact_update() {
@@ -576,20 +592,20 @@ void Player::add_attack_animation_event() {
 	
 	// for2 start // TODO ***仮でそのまま記述***
 	// 1段目
-	data.push_back(new WeaponManager::WeaponAnimationData(34, 20, GSvector3{ 0.0f, 1.0f, 1.0f }, 30.0f));
+	data.push_back(new WeaponManager::WeaponAnimationData(34, 20, GSvector3{ 0.0f, 1.0f, 1.0f }, 22.0f));
 	add_event(34, 20);
 	// 2段目
-	data.push_back(new WeaponManager::WeaponAnimationData(35, 15, GSvector3{ 0.0f, 1.0f, 1.0f }, 30.0f));
-	add_event(35, 15);
+	data.push_back(new WeaponManager::WeaponAnimationData(35, 22, GSvector3{ 0.0f, 1.0f, 1.0f }, 24.0f));
+	add_event(35, 22);
 	// 3段目
-	data.push_back(new WeaponManager::WeaponAnimationData(36, 15, GSvector3{ 0.0f, 1.0f, 1.0f }, 30.0f));
-	add_event(36, 15);
+	data.push_back(new WeaponManager::WeaponAnimationData(36, 22, GSvector3{ 0.0f, 1.0f, 1.0f }, 24.0f));
+	add_event(36, 22);
 	// 4段目
-	data.push_back(new WeaponManager::WeaponAnimationData(37, 15, GSvector3{ 0.0f, 1.0f, 1.0f }, 20.0f));
-	add_event(37, 15);
+	data.push_back(new WeaponManager::WeaponAnimationData(37, 28, GSvector3{ 0.0f, 1.0f, 1.0f }, 30.0f));
+	add_event(37, 28);
     // 5段目
-    data.push_back(new WeaponManager::WeaponAnimationData(38, 15, GSvector3{ 0.0f, 1.0f, 1.0f }, 20.0f));
-    add_event(38, 15);
+    data.push_back(new WeaponManager::WeaponAnimationData(38, 31, GSvector3{ 0.0f, 1.0f, 1.0f }, 33.0f));
+    add_event(38, 31);
 	// for2 end
 
 	// 追加
