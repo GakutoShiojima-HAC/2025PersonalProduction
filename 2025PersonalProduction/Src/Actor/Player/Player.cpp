@@ -98,8 +98,6 @@ void Player::update(float delta_time) {
 			}).on_complete([=] { world_->enable_avoid_effect() = false; });
 	}
 
-    printf("prev speed: %f\n", move_speed_);
-
 #ifdef _DEBUG
 	auto state_string = [](PlayerStateType s) {
 		switch (s) {
