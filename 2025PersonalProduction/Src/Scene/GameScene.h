@@ -2,7 +2,7 @@
 //  File          : GameScene.h
 //  Author        : Shiojima Gakuto
 //  Created       : 2025/07/09
-//  Updated       : 2025/07/09
+//  Updated       : 2025/10/20
 //  Description   : ゲームシーン
 //
 //  注意：本ソースコードの無断転載・コードのコピー・貼り付けによる流用・再配布を禁止します。
@@ -21,29 +21,39 @@ public:
 	~GameScene() = default;
 
 public:
-    void load() override;
+    virtual void load() override;
 
-	void start() override;
+    virtual void start() override;
 
-	void update(float delta_time) override;
+    virtual void update(float delta_time) override;
 
-	void draw() const override;
+    virtual void draw() const override;
 
-	void end() override;
+	virtual void end() override;
 
-	SceneTag scene_tag() const override;
+    virtual SceneTag scene_tag() const override;
 
-	bool is_application_end() const override;
+    virtual bool is_application_end() const override;
 
-	void reception_message(const std::string& message, std::any& param) override;
+    virtual void reception_message(const std::string& message, std::any& param) override;
 
-private:
+protected:
     /// <summary>
-    /// データロード用
+    /// ゲーム用データのロード
     /// </summary>
-    void load_data();
+    virtual void load_data();
 
-private:
+    /// <summary>
+    /// ゲームの開始処理
+    /// </summary>
+    virtual void game_start();
+
+    /// <summary>
+    /// ゲームの終了処理
+    /// </summary>
+    virtual void game_end();
+
+protected:
 	// ワールド
 	World world_;
 
