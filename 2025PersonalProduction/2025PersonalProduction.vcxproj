@@ -146,6 +146,8 @@
   <ItemGroup>
     <ClCompile Include="Src\Actor\ItemActor\ItemActor.cpp" />
     <ClCompile Include="Src\Engine\Core\Assets\AssetsLoader.cpp" />
+    <ClCompile Include="Src\Engine\Core\Button\Button.cpp" />
+    <ClCompile Include="Src\Engine\Core\Button\ButtonManager.cpp" />
     <ClCompile Include="Src\Engine\Core\Camera\CameraShake.cpp" />
     <ClCompile Include="Src\Engine\Core\Collision\AttackCollider.cpp" />
     <ClCompile Include="Src\Engine\Core\Collision\AttackColliderPool.cpp" />
@@ -170,6 +172,8 @@
     <ClCompile Include="Src\Engine\Core\NavMesh\NavMeshAgent.cpp" />
     <ClCompile Include="Src\Engine\Core\NavMesh\NavMeshDebugger.cpp" />
     <ClCompile Include="Src\Engine\Core\NavMesh\NavMeshSurface.cpp" />
+    <ClCompile Include="Src\Engine\Core\Scene\StandardScene.cpp" />
+    <ClCompile Include="Src\Engine\Core\Setting\SettingWindow.cpp" />
     <ClCompile Include="Src\Engine\Core\Timeline\Editor\CameraTimelineEditor.cpp" />
     <ClCompile Include="Src\Engine\Core\Timeline\Editor\TimelineEditor.cpp" />
     <ClCompile Include="Src\Engine\Core\Timeline\Parameters\CameraTimeline.cpp" />
@@ -191,6 +195,7 @@
     <ClCompile Include="Src\Engine\Graphics\Shader\PostEffects\BlurEffect.cpp" />
     <ClCompile Include="Src\Engine\Graphics\Shader\PostEffects\SSAOEffect.cpp" />
     <ClCompile Include="Src\GameTimer\GameTimer.cpp" />
+    <ClCompile Include="Src\GUI\Button\TextureFunctionButton.cpp" />
     <ClCompile Include="Src\GUI\InteractUI.cpp" />
     <ClCompile Include="Src\Item\Inventory.cpp" />
     <ClCompile Include="Src\Item\ItemDataManager.cpp" />
@@ -231,6 +236,10 @@
     <ClCompile Include="Src\State\Player\PlayerLandState.cpp" />
     <ClCompile Include="Src\State\Player\PlayerMoveState.cpp" />
     <ClCompile Include="Src\State\Player\PlayerSkillState.cpp" />
+    <ClCompile Include="Src\State\Scene\SceneGamePauseState.cpp" />
+    <ClCompile Include="Src\State\Scene\SceneGuideState.cpp" />
+    <ClCompile Include="Src\State\Scene\SceneOriginalState.cpp" />
+    <ClCompile Include="Src\State\Scene\SceneSettingState.cpp" />
     <ClCompile Include="Src\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -241,6 +250,8 @@
     <ClInclude Include="Src\Actor\ActorTag.h" />
     <ClInclude Include="Src\Actor\ItemActor\ItemActor.h" />
     <ClInclude Include="Src\Engine\Core\Assets\AssetsLoader.h" />
+    <ClInclude Include="Src\Engine\Core\Button\Button.h" />
+    <ClInclude Include="Src\Engine\Core\Button\ButtonManager.h" />
     <ClInclude Include="Src\Engine\Core\Camera\CameraShake.h" />
     <ClInclude Include="Src\Engine\Core\Camera\CameraShakeType.h" />
     <ClInclude Include="Src\Engine\Core\Collision\AttackCollider.h" />
@@ -254,6 +265,7 @@
     <ClInclude Include="Src\Camera\PlayerCamera.h" />
     <ClInclude Include="Src\Camera\TimelineCamera.h" />
     <ClInclude Include="Src\Engine\Core\Assets\AssetsManager.h" />
+    <ClInclude Include="Src\Engine\Core\Setting\SettingWindow.h" />
     <ClInclude Include="Src\GameTimer\GameTimer.h" />
     <ClInclude Include="Src\Engine\Core\Input\Input.h" />
     <ClInclude Include="Src\Engine\Core\LogSystem\LogManager.h" />
@@ -302,6 +314,7 @@
     <ClInclude Include="Src\Engine\Core\Camera\CameraManager.h" />
     <ClInclude Include="Src\Engine\Core\Collision\BoundingSphere.h" />
     <ClInclude Include="Src\Engine\Core\Field\Field.h" />
+    <ClInclude Include="Src\GUI\Button\TextureFunctionButton.h" />
     <ClInclude Include="Src\GUI\InteractUI.h" />
     <ClInclude Include="Src\Item\Inventory.h" />
     <ClInclude Include="Src\Item\ItemData.h" />
@@ -355,6 +368,11 @@
     <ClInclude Include="Src\State\Player\PlayerMoveState.h" />
     <ClInclude Include="Src\State\Player\PlayerSkillState.h" />
     <ClInclude Include="Src\State\Player\PlayerState.h" />
+    <ClInclude Include="Src\State\Scene\SceneGamePauseState.h" />
+    <ClInclude Include="Src\State\Scene\SceneGuideState.h" />
+    <ClInclude Include="Src\State\Scene\SceneOriginalState.h" />
+    <ClInclude Include="Src\State\Scene\SceneSettingState.h" />
+    <ClInclude Include="Src\State\Scene\SceneState.h" />
     <ClInclude Include="Src\stdafx.h" />
     <ClInclude Include="Src\Item\Weapon\WeaponData.h" />
     <ClInclude Include="Src\Weapon\WeaponManager.h" />
