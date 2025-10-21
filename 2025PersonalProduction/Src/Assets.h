@@ -25,6 +25,17 @@
 // テクスチャ 
 #define TEXTURE_ID_LIST \
     X(NONE) \
+    X(PauseWindowTexture) \
+    X(SettingWindowTexture) \
+    X(GameGuideWindowTexture) \
+    X(ButtonSelectMouseTexture) \
+    X(ButtonSelectGamePadTexture) \
+    X(ReturnGameButtonTexture) \
+    X(ToSettingButtonTexture) \
+    X(ToGuideButtonTexture) \
+    X(ReturnTitleButtonTexture) \
+    X(GearIconTexture) \
+    X(GamePadIconTexture) \
     X(Skybox) \
     X(TitleLogo) \
     X(MenuLogo) \

@@ -85,6 +85,9 @@ void TitleScene::load_data() {
     // 次のシーンのアセットを読み込み
     scene_manager_.load_scene(NEXT_SCENE);
 
+    // 共有アセットの読み込み
+    AssetsLoader::load_by_json("Resource/Private/LoadAsset/general.json", AssetsLoader::GENERAL_ASSET_NAME);
+
     // 終了
     is_end_ = true;
 }
