@@ -7,6 +7,22 @@ Setting& Setting::get_instance() {
 	return self;
 }
 
+void Setting::start() {
+    window_.start();
+}
+
+void Setting::update(float delta_time) {
+    window_.update(delta_time);
+}
+
+void Setting::draw() const {
+    window_.draw();
+}
+
+bool Setting::is_end() const {
+    return window_.is_end();
+}
+
 void Setting::load(const std::string& setting_path) {
 	// TODO 今はresetで値を適用しておく
 	reset();
