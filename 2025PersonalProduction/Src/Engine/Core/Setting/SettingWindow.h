@@ -31,6 +31,12 @@ public:
     bool is_end() const;
 
 private:
+    /// <summary>
+    /// 振動設定を有効にしたときのフィードバック処理
+    /// </summary>
+    void vibration_feedback();
+
+private:
     Setting& setting_;
 
     bool is_end_{ false };

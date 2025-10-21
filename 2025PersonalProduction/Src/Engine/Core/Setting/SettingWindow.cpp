@@ -5,14 +5,32 @@
 #include "Engine/Graphics/Canvas/Canvas.h"
 #include "GameConfig.h"
 #include "Assets.h"
-#include "GUI/Button/TextureFunctionButton.h"
+#include "GUI/Button/TextFunctionButton.h"
+#include "GUI/Button/ToggleButton.h"
+#include "Engine/Core/Vibration/Vibration.h"
 
-// Ê≠ØËªä„Ç¢„Ç§„Ç≥„É≥„ÅÆÂõûËª¢„Çπ„Éî„Éº„Éâ
+// éïé‘ÉAÉCÉRÉìÇÃâÒì]ÉXÉsÅ[Éh
 static const float GEAR_ROTATE_SPEED{ 1.0f };
 
 SettingWindow::SettingWindow(Setting& owner) :
     setting_{ owner } {
-    
+    // É{É^ÉìÇÃí«â¡
+    {
+        button_.add(new ToggleButton{ setting_.enable_draw_bloom(), GSvector2{ 1628.0f, 575.0f }, 38, Anchor::TopLeft, Anchor::CenterRight });
+    }
+    {
+        button_.add(new ToggleButton{ setting_.enable_draw_ssao(), GSvector2{ 1628.0f, 661.0f }, 38, Anchor::TopLeft, Anchor::CenterRight });
+    }
+    {
+        ToggleButton* button = new ToggleButton{ setting_.enable_vibration(), GSvector2{ 1628.0f, 779.0f }, 38, Anchor::TopLeft, Anchor::CenterRight };
+        button->on_input([=] { if (setting_.is_vibration()) Vibration::get_instance().start(0.2f, 1.0f); });
+        button_.add(button);
+    }
+    {
+        TextFunctionButton* button = new TextFunctionButton{ "ñﬂÇÈ", GSvector2{ 1588.0f, 908.0f }, 60, Anchor::TopLeft, Anchor::Center };
+        button->on_input([=] { is_end_ = true; });
+        button_.add(button);
+    }
 }
 
 void SettingWindow::start() {
@@ -25,7 +43,7 @@ void SettingWindow::start() {
 void SettingWindow::update(float delta_time) {
     Input& input = Input::get_instance();
 
-    // Âº∑Âà∂ÁµÇ‰∫Ü„Éú„Çø„É≥
+    // ã≠êßèIóπÉ{É^Éì
     if (input.action(InputAction::APP_Pause)) {
         is_end_ = true;
         return;
@@ -49,4 +67,8 @@ void SettingWindow::draw() const {
 
 bool SettingWindow::is_end() const {
     return is_end_;
+}
+
+void SettingWindow::vibration_feedback() {
+    
 }
