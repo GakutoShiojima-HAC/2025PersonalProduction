@@ -23,10 +23,6 @@ public:
 public:
 	void start() override;
 
-	void update(float delta_time) override;
-
-	void draw() const override;
-
 	void end() override;
 
 	SceneTag scene_tag() const override;
@@ -34,6 +30,10 @@ public:
 	bool is_application_end() const override;
 
 	void reception_message(const std::string& message, std::any& param) override;
+
+    virtual void original_update(float delta_time) override;
+
+    virtual void original_draw() const override;
 
 private:
 	// タイムラインエディタ

@@ -13,10 +13,11 @@
 
 #include "Engine/Core/Scene/StandardScene.h"
 #include "Engine/Core/World/World.h"
+#include "Engine/Core/Input/Input.h"
 
 class GameScene : public StandardScene {
 public:
-	GameScene() = default;
+	GameScene();
 
 	~GameScene() = default;
 
@@ -25,9 +26,9 @@ public:
 
     virtual void start() override;
 
-    virtual void update(float delta_time) override;
+    void update(float delta_time) override;
 
-    virtual void draw() const override;
+    void draw() const override;
 
 	virtual void end() override;
 
@@ -36,6 +37,19 @@ public:
     virtual bool is_application_end() const override;
 
     virtual void reception_message(const std::string& message, std::any& param) override;
+
+    void add_state() override;
+
+    virtual void original_update(float delta_time) override;
+
+    virtual void original_draw() const override;
+
+public:
+    /// <summary>
+    /// ゲームGUIの描画を行うかどうか
+    /// </summary>
+    /// <returns>参照</returns>
+    bool& enable_draw_game_gui();
 
 protected:
     /// <summary>
@@ -56,6 +70,8 @@ protected:
 protected:
 	// ワールド
 	World world_;
+    // インプットシステム
+    Input& input_ = Input::get_instance();
 
 };
 

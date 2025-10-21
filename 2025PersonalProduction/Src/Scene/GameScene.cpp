@@ -25,6 +25,16 @@
 #include "Camera/EditorCamera.h"
 #endif
 
+#include "State/Scene/SceneState.h"
+#include "State/Scene/SceneOriginalState.h"
+#include "State/Scene/SceneGamePauseState.h"
+#include "State/Scene/SceneSettingState.h"
+#include "State/Scene/SceneGuideState.h"
+
+GameScene::GameScene() {
+    add_state();
+}
+
 void GameScene::load() {
     // 初期化
     is_load_end_ = false;
@@ -44,29 +54,16 @@ void GameScene::start() {
     next_scene_tag_ = SceneTag::Menu;
 
     game_start();
+
+    change_state((GSuint)SceneStateType::Original);
 }
 
 void GameScene::update(float delta_time) {
-	// TODO 一時的なタイトルに戻る処理
-	if (gsGetKeyState(GKEY_LCONTROL) && gsGetKeyTrigger(GKEY_RETURN)) is_end_ = true;
-
-	world_.update(delta_time);
-
-	// TODO 一時的なゲーム終了処理
-	{
-		if (world_.count_actor_with_tag(ActorTag::Enemy) <= 0) {
-			is_end_ = true;
-			return;
-		}
-		if (world_.count_actor_with_tag(ActorTag::Player) <= 0) {
-			is_end_ = true;
-			return;
-		}
-	}
+    state_.update(delta_time);
 }
 
 void GameScene::draw() const {
-	world_.draw();	
+    state_.draw();
 }
 
 void GameScene::end() {
@@ -83,6 +80,49 @@ bool GameScene::is_application_end() const {
 
 void GameScene::reception_message(const std::string& message, std::any& param) {
 	// なにも受け取らない
+}
+
+void GameScene::add_state() {
+    state_.add_state((GSuint)SceneStateType::Original, make_shared<SceneOriginalState>(*this));
+    state_.add_state((GSuint)SceneStateType::GamePause, make_shared<SceneGamePauseState>(*this));
+    state_.add_state((GSuint)SceneStateType::Setting, make_shared<SceneSettingState>(*this, SceneStateType::GamePause));
+    state_.add_state((GSuint)SceneStateType::Guide, make_shared<SceneGuideState>(*this, SceneStateType::GamePause));
+}
+
+void GameScene::original_update(float delta_time) {
+    // TODO 一時的なタイトルに戻る処理
+    if (gsGetKeyState(GKEY_LCONTROL) && gsGetKeyTrigger(GKEY_RETURN)) {
+        is_end_ = true;
+        return;
+    }
+
+    // ポーズ
+    if (input_.action(InputAction::APP_Pause)) {
+        change_state((GSuint)SceneStateType::GamePause);
+        return;
+    }
+
+    world_.update(delta_time);
+
+    // TODO 一時的なゲーム終了処理
+    {
+        if (world_.count_actor_with_tag(ActorTag::Enemy) <= 0) {
+            is_end_ = true;
+            return;
+        }
+        if (world_.count_actor_with_tag(ActorTag::Player) <= 0) {
+            is_end_ = true;
+            return;
+        }
+    }
+}
+
+void GameScene::original_draw() const {
+    world_.draw();
+}
+
+bool& GameScene::enable_draw_game_gui() {
+    return world_.enable_draw_gui();
 }
 
 void GameScene::load_data() {
@@ -207,6 +247,9 @@ void GameScene::game_start() {
     GameShader::get_instance().start();
     // レンダーターゲットの作成
     GamePostEffect::get_instance().start();
+
+    // GUIの描画を有効化
+    world_.enable_draw_gui() = true;
 
     // 同期
     world_.update(0.0f);
