@@ -2,6 +2,9 @@
 #include <gslib.h>
 #include "GameConfig.h"
 
+static const GScolor DEFAULT_COLOR{ 1.0f, 1.0f, 1.0f, 1.0f };
+static const GScolor HIGHLIGHT_COLOR{ 1.0f, 0.85f, 0.0f, 1.0f };
+
 TextFunctionButton::TextFunctionButton(const std::string& text, const GSvector2& position, GSuint font_size, const Anchor anchor, const Anchor text_anchor) {
 	change_text(text);
 	position_ = position;
@@ -11,15 +14,13 @@ TextFunctionButton::TextFunctionButton(const std::string& text, const GSvector2&
 }
 
 void TextFunctionButton::draw() const {
-	const GScolor4 color = is_selected() ? GScolor{ 1.0f, 0.85f, 0.0f, 1.0f } : GScolor{ 1.0f, 1.0f, 1.0f, 1.0f };
-
 	Canvas::draw_sprite_text(
 		text_,
 		position_,
 		font_size_,
 		cFONT,
 		GS_FONT_NORMAL,
-		GScolor{ 1.0f, 1.0f, 1.0f, 1.0f },
+		is_selected() ? HIGHLIGHT_COLOR : DEFAULT_COLOR,
 		anchor_,
 		text_anchor_
 	);
