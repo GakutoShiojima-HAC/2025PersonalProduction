@@ -197,6 +197,7 @@
     <ClCompile Include="Src\GameTimer\GameTimer.cpp" />
     <ClCompile Include="Src\GUI\Button\TextFunctionButton.cpp" />
     <ClCompile Include="Src\GUI\Button\TextureFunctionButton.cpp" />
+    <ClCompile Include="Src\GUI\Button\ToggleButton.cpp" />
     <ClCompile Include="Src\GUI\InteractUI.cpp" />
     <ClCompile Include="Src\Item\Inventory.cpp" />
     <ClCompile Include="Src\Item\ItemDataManager.cpp" />
@@ -317,6 +318,7 @@
     <ClInclude Include="Src\Engine\Core\Field\Field.h" />
     <ClInclude Include="Src\GUI\Button\TextFunctionButton.h" />
     <ClInclude Include="Src\GUI\Button\TextureFunctionButton.h" />
+    <ClInclude Include="Src\GUI\Button\ToggleButton.h" />
     <ClInclude Include="Src\GUI\InteractUI.h" />
     <ClInclude Include="Src\Item\Inventory.h" />
     <ClInclude Include="Src\Item\ItemData.h" />
