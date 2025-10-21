@@ -106,11 +106,11 @@ bool Input::action(InputAction action) const {
 	case InputAction::APP_ForceEnd:
 		return gsGetKeyState(GKEY_ESCAPE) || (gsXBoxPadButtonState(USE_PAD_NUM, GS_XBOX_PAD_BACK) && gsXBoxPadButtonState(0, GS_XBOX_PAD_START));
 	case InputAction::MENU_Decision:
-		return is_pad_ ? gsXBoxPadButtonTrigger(USE_PAD_NUM, GS_XBOX_PAD_A) : (gsGetMouseButtonTrigger(GMOUSE_BUTTON_1) | gsGetKeyTrigger(GKEY_SPACE));
+		return is_pad_ ? gsXBoxPadButtonTrigger(USE_PAD_NUM, GS_XBOX_PAD_B) : (gsGetMouseButtonTrigger(GMOUSE_BUTTON_1) | gsGetKeyTrigger(GKEY_SPACE));
 	case InputAction::MENU_UP:
-		break;
+        return is_pad_ ? gsXBoxPadButtonTrigger(USE_PAD_NUM, GS_XBOX_PAD_UP) : gsGetKeyTrigger(GKEY_W);
 	case InputAction::MENU_DOWN:
-		break;
+        return is_pad_ ? gsXBoxPadButtonTrigger(USE_PAD_NUM, GS_XBOX_PAD_DOWN) : gsGetKeyTrigger(GKEY_S);
 	case InputAction::MENU_LEFT:
 		break;
 	case InputAction::MENU_RIGHT:
