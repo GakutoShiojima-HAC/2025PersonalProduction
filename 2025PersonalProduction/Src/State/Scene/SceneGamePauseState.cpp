@@ -16,17 +16,17 @@ SceneGamePauseState::SceneGamePauseState(GameScene& owner) :
     }
     {
         TextFunctionButton* button = new TextFunctionButton{ "ゲーム設定", GSvector2{ 416.0f, 458.0f }, 64, Anchor::TopLeft, Anchor::Center };
-        button->on_input([=] { to_setting(); });
+        button->on_input([=] { owner_.change_state((GSuint)SceneStateType::Setting); });
         button_.add(button);
     }
     {
         TextFunctionButton* button = new TextFunctionButton{ "操作説明", GSvector2{ 416.0f, 622.0f }, 64, Anchor::TopLeft, Anchor::Center };
-        button->on_input([=] { to_guide(); });
+        button->on_input([=] { owner_.change_state((GSuint)SceneStateType::Guide); });
         button_.add(button);
     }
     {
         TextFunctionButton* button = new TextFunctionButton{ "タイトルに戻る", GSvector2{ 416.0f, 786.0f }, 64, Anchor::TopLeft, Anchor::Center };
-        button->on_input([=] { return_title(); });
+        button->on_input([=] { return_game(); });
         button_.add(button);
     }
 }
@@ -68,15 +68,3 @@ void SceneGamePauseState::return_game() {
     owner_.change_state((GSuint)SceneStateType::Original);
 }
 
-void SceneGamePauseState::to_setting() {
-    owner_.change_state((GSuint)SceneStateType::Setting);
-}
-
-void SceneGamePauseState::to_guide() {
-    owner_.change_state((GSuint)SceneStateType::Guide);
-}
-
-void SceneGamePauseState::return_title() {
-    // TODO
-    return_game();
-}
