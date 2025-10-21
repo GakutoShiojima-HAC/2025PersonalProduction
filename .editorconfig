@@ -5,7 +5,7 @@ root = true
 [*]
 
 # 文字コード
-charset = utf-8
+#charset = utf-8 # c++制作では学科ライブラリとの競合が起きるためshiftjis保存する
 
 # インデントはスペース
 indent_style = space
