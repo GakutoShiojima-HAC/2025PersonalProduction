@@ -96,7 +96,7 @@ private:
 private:
     bool enable_draw_ssao_{ true };
 	bool enable_draw_bloom_{ true };
-	bool enable_draw_fxaa_{ true };
+	bool enable_draw_fxaa_{ false };
 
     bool enable_draw_safearea_{ false };
 
