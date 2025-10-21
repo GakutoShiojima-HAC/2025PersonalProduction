@@ -3,9 +3,9 @@
 //  Author      : Shiojima Gakuto
 //  Created     : 2025/06/25
 //  Updated     : 2025/06/25
-//  Description : ƒXƒe[ƒgƒ}ƒV[ƒ“‚É‚æ‚éó‘ÔŠÇ—ƒNƒ‰ƒX
+//  Description : ã‚¹ãƒ†ãƒ¼ãƒˆãƒã‚·ãƒ¼ãƒ³ã«ã‚ˆã‚‹çŠ¶æ…‹ç®¡ç†ã‚¯ãƒ©ã‚¹
 //
-//  ’ˆÓF–{ƒ\[ƒXƒR[ƒh‚Ì–³’f“]ÚEƒR[ƒh‚ÌƒRƒs[E“\‚è•t‚¯‚É‚æ‚é—¬—pEÄ”z•z‚ğ‹Ö~‚µ‚Ü‚·B
+//  æ³¨æ„ï¼šæœ¬ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã®ç„¡æ–­è»¢è¼‰ãƒ»ã‚³ãƒ¼ãƒ‰ã®ã‚³ãƒ”ãƒ¼ãƒ»è²¼ã‚Šä»˜ã‘ã«ã‚ˆã‚‹æµç”¨ãƒ»å†é…å¸ƒã‚’ç¦æ­¢ã—ã¾ã™ã€‚
 // -----------------------------------------------------------------------------------------
 
 #ifndef STATE_MACHINE_H_
@@ -36,57 +36,57 @@ public:
 
 public:
 	/// <summary>
-	/// ó‘Ô‚Ì’Ç‰Á
+	/// çŠ¶æ…‹ã®è¿½åŠ 
 	/// </summary>
-	/// <param name="state_num">= ó‘Ô”Ô†</param>
-	/// <param name="state">= ó‘Ô</param>
+	/// <param name="state_num">= çŠ¶æ…‹ç•ªå·</param>
+	/// <param name="state">= çŠ¶æ…‹</param>
 	void add_state(const GSuint state_num, shared_ptr<IState> state);
 	
 	/// <summary>
-	/// ó‘Ô‚ğ•ÏX
+	/// çŠ¶æ…‹ã‚’å¤‰æ›´
 	/// </summary>
-	/// <param name="state_num">= •ÏXæ‚Ìó‘Ô”Ô†</param>
+	/// <param name="state_num">= å¤‰æ›´å…ˆã®çŠ¶æ…‹ç•ªå·</param>
 	void change_state(const GSuint state_num);
 
 	/// <summary>
-	/// w’è‚µ‚½ó‘Ô‚ªŒ»İ‚Ìó‘Ô‚Æˆê’v‚·‚é‚©‚Ç‚¤‚©
+	/// æŒ‡å®šã—ãŸçŠ¶æ…‹ãŒç¾åœ¨ã®çŠ¶æ…‹ã¨ä¸€è‡´ã™ã‚‹ã‹ã©ã†ã‹
 	/// </summary>
-	/// <param name="state_num">= ó‘Ô”Ô†</param>
-	/// <returns>ˆê’v‚·‚é‚È‚ç^</returns>
+	/// <param name="state_num">= çŠ¶æ…‹ç•ªå·</param>
+	/// <returns>ä¸€è‡´ã™ã‚‹ãªã‚‰çœŸ</returns>
 	bool is_current_state(const GSuint state_num) const;
 
 	/// <summary>
-	/// Œ»İ‚Ìó‘Ô”Ô†‚ğ•Ô‹p
+	/// ç¾åœ¨ã®çŠ¶æ…‹ç•ªå·ã‚’è¿”å´
 	/// </summary>
-	/// <returns>ó‘Ô”Ô†</returns>
+	/// <returns>çŠ¶æ…‹ç•ªå·</returns>
 	GSuint get_current_state() const;
 
 	/// <summary>
-	/// w’è‚µ‚½ó‘Ô‚ğ•Ô‹p
+	/// æŒ‡å®šã—ãŸçŠ¶æ…‹ã‚’è¿”å´
 	/// </summary>
-	/// <param name="state_num">= ó‘Ô”Ô†</param>
-	/// <returns>Œ©‚Â‚©‚ê‚Îó‘Ô‚ğAŒ©‚Â‚©‚ç‚È‚¯‚ê‚Înullptr</returns>
+	/// <param name="state_num">= çŠ¶æ…‹ç•ªå·</param>
+	/// <returns>è¦‹ã¤ã‹ã‚Œã°çŠ¶æ…‹ã‚’ã€è¦‹ã¤ã‹ã‚‰ãªã‘ã‚Œã°nullptr</returns>
 	IState* get_state(const GSuint state_num) const;
 
 private:
 	/// <summary>
-	/// w’è‚µ‚½ó‘Ô‚ğŒŸõ
+	/// æŒ‡å®šã—ãŸçŠ¶æ…‹ã‚’æ¤œç´¢
 	/// </summary>
-	/// <returns>Œ©‚Â‚©‚ê‚Îó‘Ô‚ğAŒ©‚Â‚©‚ç‚È‚¯‚ê‚Înullptr</returns>
+	/// <returns>è¦‹ã¤ã‹ã‚Œã°çŠ¶æ…‹ã‚’ã€è¦‹ã¤ã‹ã‚‰ãªã‘ã‚Œã°nullptr</returns>
 	shared_ptr<IState> find(const GSuint state_num) const;
 
 private:
-	// ó‘Ô
+	// çŠ¶æ…‹
 	unordered_map<GSuint, shared_ptr<IState>> state_list_;
 
-	// Œ»İ‚Ìó‘Ô
+	// ç¾åœ¨ã®çŠ¶æ…‹
 	shared_ptr<IState> current_state_;
 
-	// Œ»İ‚Ìó‘Ô”Ô†
-	GSuint current_state_num_{ 0 };
+	// ç¾åœ¨ã®çŠ¶æ…‹ç•ªå·
+	GSuint current_state_num_{ 999999 };
 
 public:
-	// ƒRƒs[‹Ö~
+	// ã‚³ãƒ”ãƒ¼ç¦æ­¢
 	StateMachine(const StateMachine& other) = delete;
 	StateMachine& operator = (const StateMachine& other) = delete;
 
