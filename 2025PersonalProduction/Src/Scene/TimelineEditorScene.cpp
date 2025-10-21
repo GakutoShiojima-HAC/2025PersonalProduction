@@ -2,6 +2,8 @@
 #include <gslib.h>
 #include "Engine/Core/Timeline/Editor/CameraTimelineEditor.h"
 
+#include "State/Scene/SceneState.h"
+
 TimelineEditorScene::TimelineEditorScene() {
     next_scene_tag_ = SceneTag::Menu;
 }
@@ -12,20 +14,8 @@ void TimelineEditorScene::start() {
     game_start();
 
     editor_.add(new CameraTimelineEditor{ &world_ });
-}
 
-void TimelineEditorScene::update(float delta_time) {
-	// tmp scene end
-	if (gsGetKeyState(GKEY_LCONTROL) && gsGetKeyTrigger(GKEY_RETURN)) is_end_ = true;
-
-	world_.update(delta_time);
-	editor_.update(delta_time);
-}
-
-void TimelineEditorScene::draw() const {
-	world_.draw();
-
-	gsDrawText("timeline editor");
+    change_state((GSuint)SceneStateType::Original);
 }
 
 void TimelineEditorScene::end() {
@@ -45,4 +35,18 @@ bool TimelineEditorScene::is_application_end() const {
 
 void TimelineEditorScene::reception_message(const std::string& message, std::any& param) {
 	// なにも受け取らない
+}
+
+void TimelineEditorScene::original_update(float delta_time) {
+    // tmp scene end
+    if (gsGetKeyState(GKEY_LCONTROL) && gsGetKeyTrigger(GKEY_RETURN)) is_end_ = true;
+
+    world_.update(delta_time);
+    editor_.update(delta_time);
+}
+
+void TimelineEditorScene::original_draw() const {
+    world_.draw();
+
+    gsDrawText("timeline editor");
 }

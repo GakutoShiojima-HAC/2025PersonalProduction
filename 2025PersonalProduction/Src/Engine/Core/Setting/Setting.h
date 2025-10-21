@@ -1,7 +1,18 @@
+// -----------------------------------------------------------------------------------------
+//  File          : Setting.h
+//  Author        : Shiojima Gakuto
+//  Created       : 2025/XX/XX
+//  Updated       : 2025/10/20
+//  Description   : ゲーム内設定を管理するクラス
+//
+//  注意：本ソースコードの無断転載・コードのコピー・貼り付けによる流用・再配布を禁止します。
+// -----------------------------------------------------------------------------------------
+
 #ifndef SETTING_H_
 #define SETTING_H_
 
 #include <string>
+#include "Engine/Core/Setting/SettingWindow.h"
 
 class Setting {
 private:
@@ -17,6 +28,29 @@ public:
 	/// </summary>
 	/// <returns>インスタンス</returns>
 	static Setting& get_instance();
+
+public:
+    /// <summary>
+    /// 設定画面の開始
+    /// </summary>
+    void start();
+
+    /// <summary>
+    /// 設定画面の更新
+    /// </summary>
+    /// <param name="delta_time"></param>
+    void update(float delta_time);
+
+    /// <summary>
+    /// 設定画面の描画
+    /// </summary>
+    void draw() const;
+
+    /// <summary>
+    /// 設定画面の描画を終了するかどうか
+    /// </summary>
+    /// <returns>終了するなら真を返却</returns>
+    bool is_end() const;
 
 public:
 	/// <summary>
@@ -55,6 +89,9 @@ public:
 public:
     bool is_vibration() const;
     bool& enable_vibration();
+
+private:
+    SettingWindow window_{ *this };
     
 private:
     bool enable_draw_ssao_{ true };

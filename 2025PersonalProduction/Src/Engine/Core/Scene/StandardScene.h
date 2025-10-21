@@ -13,12 +13,26 @@
 
 #include "Engine/Core/Scene/StandardScene.h"
 #include "Engine/Core/Scene/SceneManager.h"
+#include "Engine/Core/StateMachine/StateMachine.h"
 
 class StandardScene : public IScene {
 public:
     StandardScene() = default;
 
     ~StandardScene() = default;
+
+public:
+    /// <summary>
+    /// ステートの変更
+    /// </summary>
+    /// <param name="state_num">= ステート番号</param>
+    void change_state(const GSuint state_num);
+
+protected:
+    /// <summary>
+    /// ステートの追加
+    /// </summary>
+    virtual void add_state() = 0;
 
 public:
     virtual void load() override {}
@@ -31,19 +45,30 @@ public:
 
     virtual void end() override {}
 
-    virtual bool is_end() const override { return is_end_; }
+    virtual bool is_end() const override;
 
-    virtual SceneTag scene_tag() const override { return SceneTag::Standard; }
+    virtual SceneTag scene_tag() const override;
 
-    virtual SceneTag next_scene_tag() const override { return SceneTag::Loading; }
+    virtual SceneTag next_scene_tag() const override;
 
-    virtual bool is_application_end() const override { return false; }
+    virtual bool is_application_end() const override;
 
     virtual void reception_message(const std::string& message, std::any& param) override {}
 
-    virtual bool is_load_end() const override { return is_load_end_; }
+    virtual bool is_load_end() const override;
 
-    virtual float load_progress() const override { return load_progress_; }
+    virtual float load_progress() const override;
+
+public:
+    /// <summary>
+    /// シーン独自の更新
+    /// </summary>
+    virtual void original_update(float delta_time) = 0;
+
+    /// <summary>
+    /// シーン独自の描画
+    /// </summary>
+    virtual void original_draw() const = 0;
 
 protected:
     // シーンマネージャー
@@ -56,6 +81,8 @@ protected:
     bool is_load_end_{ false };
     // ロード処理の進捗率
     float load_progress_{ 0.0f };
+    // ステートマシン
+    StateMachine state_;
 
 };
 

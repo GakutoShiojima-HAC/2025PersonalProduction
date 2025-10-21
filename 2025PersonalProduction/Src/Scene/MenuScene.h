@@ -15,7 +15,7 @@
 
 class MenuScene : public StandardScene {
 public:
-	MenuScene() = default;
+	MenuScene();
 
 	~MenuScene() = default;
 
@@ -35,6 +35,12 @@ public:
 	bool is_application_end() const override;
 
 	void reception_message(const std::string& message, std::any& param) override;
+
+    void add_state() override;
+
+    void original_update(float delta_time) override;
+
+    void original_draw() const override;
 
 private:
     /// <summary>

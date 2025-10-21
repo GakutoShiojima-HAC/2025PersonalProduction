@@ -1,0 +1,30 @@
+#include "Engine/Core/Scene/StandardScene.h"
+
+void StandardScene::change_state(const GSuint state_num) {
+    // 状態の変更
+    state_.change_state(state_num);
+}
+
+bool StandardScene::is_end() const {
+    return is_end_;
+}
+
+SceneTag StandardScene::scene_tag() const {
+    return SceneTag::Standard;
+}
+
+SceneTag StandardScene::next_scene_tag() const {
+    return SceneTag::Loading;
+}
+
+bool StandardScene::is_application_end() const {
+    return false;
+}
+
+bool StandardScene::is_load_end() const {
+    return is_load_end_;
+}
+
+float StandardScene::load_progress() const {
+    return load_progress_;;
+}

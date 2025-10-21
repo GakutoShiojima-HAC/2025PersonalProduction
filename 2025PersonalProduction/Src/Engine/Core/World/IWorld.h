@@ -38,6 +38,12 @@ public:
 	virtual ~IWorld() = default;
 
 public:
+    /// <summary>
+    /// GUIの描画を行うかどうか
+    /// </summary>
+    /// <returns>参照</returns>
+    virtual bool& enable_draw_gui() = 0;
+
 	/// <summary>
 	/// フィールドの取得
 	/// </summary>

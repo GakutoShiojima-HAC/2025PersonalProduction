@@ -128,7 +128,7 @@ private:
     GSvector2 right_axis_;
 
     // カーソル座標の更新を行うかどうか
-    bool is_update_cursor_position_{ false };
+    bool is_update_cursor_position_{ true };
     // カーソル座標
     GSvector2 cursor_position_;
     // PAD状態のカーソル移動速度

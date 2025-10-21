@@ -95,6 +95,8 @@ public:
     GameTimer& time();
 
 public:
+    bool& enable_draw_gui() override;
+
 	Field* get_field() override;
 
 	Light* get_light() override;
@@ -148,6 +150,9 @@ public:
     ActionScore& action_score() override;
 
 protected:
+    // GUIを描画するかどうか
+    bool enable_draw_gui_{ true };
+
 	// フィールド
 	Field* field_{ nullptr };
 	// ライト

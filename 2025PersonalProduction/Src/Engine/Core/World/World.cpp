@@ -66,6 +66,7 @@ void World::draw() const {
     // ポストエフェクトの結果を描画
     game_post_effect_.draw(camera_.get_projection_matrix());
 
+    if (!enable_draw_gui_) return;
 	actor_.draw_gui();
     action_score_.draw();
     game_timer_.draw();
@@ -133,6 +134,10 @@ void World::add_attack_collider_pool(AttackColliderPool* pool) {
 
 GameTimer& World::time() {
     return game_timer_;
+}
+
+bool& World::enable_draw_gui() {
+    return enable_draw_gui_;
 }
 
 Field* World::get_field() {

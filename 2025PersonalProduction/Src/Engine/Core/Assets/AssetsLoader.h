@@ -5,14 +5,16 @@
 
 namespace AssetsLoader {
 #pragma region [シーン用アセット管理ID]
+    // ゲーム共通アセットの識別名
+    const std::string GENERAL_ASSET_NAME{ "GENERAL_ASSET" };
     // タイトルシーン用アセットの識別名
-    const string TITLE_ASSET_NAME{ "TITLE_ASSET" };
+    const std::string TITLE_ASSET_NAME{ "TITLE_ASSET" };
     // メニューシーン用アセットの識別名
-    const string MENU_ASSET_NAME{ "MENU_ASSET" };
+    const std::string MENU_ASSET_NAME{ "MENU_ASSET" };
     // ゲームシーン用共通アセットの識別名
-    const string GAME_COMMON_ASSET_NAME{ "GAME_COMMON_ASSET" };
+    const std::string GAME_COMMON_ASSET_NAME{ "GAME_COMMON_ASSET" };
     // ゲームシーン用ステージ固有アセットの識別名
-    const string GAME_STAGE_ASSET_NAME{ "GAME_STAGE_ASSET" };
+    const std::string GAME_STAGE_ASSET_NAME{ "GAME_STAGE_ASSET" };
 #pragma endregion
 
     /// <summary>
