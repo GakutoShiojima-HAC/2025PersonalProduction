@@ -24,15 +24,15 @@ public:
         GSuint font_size, const Anchor anchor = Anchor::TopLeft, const Anchor text_anchor = Anchor::TopLeft);
 
 public:
-    void draw() const override;
+    virtual void draw() const override;
 
-    void select() override;
+    virtual void select() override;
 
-    void state(float delta_time) override;
+    virtual void state(float delta_time) override;
 
-    void input() override;
+    virtual void input() override;
 
-    void exit() override;
+    virtual void exit() override;
 
 public:
     /// <summary>
@@ -62,6 +62,7 @@ protected:
     Anchor anchor_{ Anchor::TopLeft };
     // テキストのどこを基点にするか
     Anchor text_anchor_{ Anchor::TopLeft };
+
 };
 
 #endif
