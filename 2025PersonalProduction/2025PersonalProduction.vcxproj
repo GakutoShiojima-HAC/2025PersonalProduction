@@ -195,6 +195,7 @@
     <ClCompile Include="Src\Engine\Graphics\Shader\PostEffects\BlurEffect.cpp" />
     <ClCompile Include="Src\Engine\Graphics\Shader\PostEffects\SSAOEffect.cpp" />
     <ClCompile Include="Src\GameTimer\GameTimer.cpp" />
+    <ClCompile Include="Src\GUI\Button\TextFunctionButton.cpp" />
     <ClCompile Include="Src\GUI\Button\TextureFunctionButton.cpp" />
     <ClCompile Include="Src\GUI\InteractUI.cpp" />
     <ClCompile Include="Src\Item\Inventory.cpp" />
@@ -314,6 +315,7 @@
     <ClInclude Include="Src\Engine\Core\Camera\CameraManager.h" />
     <ClInclude Include="Src\Engine\Core\Collision\BoundingSphere.h" />
     <ClInclude Include="Src\Engine\Core\Field\Field.h" />
+    <ClInclude Include="Src\GUI\Button\TextFunctionButton.h" />
     <ClInclude Include="Src\GUI\Button\TextureFunctionButton.h" />
     <ClInclude Include="Src\GUI\InteractUI.h" />
     <ClInclude Include="Src\Item\Inventory.h" />
