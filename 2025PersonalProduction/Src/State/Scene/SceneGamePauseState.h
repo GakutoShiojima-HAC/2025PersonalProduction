@@ -33,12 +33,6 @@ private:
 private:
     void return_game();
 
-    void to_setting();
-
-    void to_guide();
-
-    void return_title();
-
 private:
     GameScene& owner_;
 

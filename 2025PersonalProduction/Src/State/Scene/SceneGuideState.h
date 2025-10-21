@@ -13,6 +13,7 @@
 #define SCENE_GUIDE_STATE_H_
 
 #include "State/Scene/SceneState.h"
+#include "Engine/Core/Button/ButtonManager.h"
 
 class StandardScene;
 
@@ -36,6 +37,8 @@ private:
 
     // パッドアイコンの拡縮
     float scale_gamepad_{ 0.0f };
+
+    ButtonManager button_;
 
 };
 

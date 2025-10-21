@@ -32,7 +32,7 @@ void Setting::reset() {
 	// シーン描画関係
     enable_draw_ssao_ = true;
 	enable_draw_bloom_ = true;
-	enable_draw_fxaa_ = true;
+	enable_draw_fxaa_ = false;
     // デバッグ関係
     enable_draw_safearea_ = false;
     // デバイス関係

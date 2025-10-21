@@ -30,10 +30,6 @@
     X(GameGuideWindowTexture) \
     X(ButtonSelectMouseTexture) \
     X(ButtonSelectGamePadTexture) \
-    X(ReturnGameButtonTexture) \
-    X(ToSettingButtonTexture) \
-    X(ToGuideButtonTexture) \
-    X(ReturnTitleButtonTexture) \
     X(GearIconTexture) \
     X(GamePadIconTexture) \
     X(Skybox) \

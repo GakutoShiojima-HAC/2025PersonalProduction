@@ -95,7 +95,6 @@ public:
 		const Anchor text_anchor = Anchor::TopLeft
 	);
 
-private:
 	/// <summary>
 	/// 矩形から基点の座標を取得
 	/// </summary>

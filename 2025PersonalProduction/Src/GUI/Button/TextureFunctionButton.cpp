@@ -3,6 +3,9 @@
 #include "Engine/Graphics/Canvas/Canvas.h"
 #include "Assets.h"
 
+static const GScolor DEFAULT_COLOR{ 1.0f, 1.0f, 1.0f, 1.0f };
+static const GScolor HIGHLIGHT_COLOR{ 1.0f, 0.85f, 0.0f, 1.0f };
+
 TextureFunctionButton::TextureFunctionButton(GSuint texture, const GSvector2& position, const GSrect& rect) {
     texture_ = texture;
     position_ = position;
@@ -11,10 +14,8 @@ TextureFunctionButton::TextureFunctionButton(GSuint texture, const GSvector2& po
 }
 
 void TextureFunctionButton::draw() const {
-    const GScolor4 color = is_selected() ? GScolor{ 1.0f, 0.85f, 0.0f, 1.0f } : GScolor{ 1.0f, 1.0f, 1.0f, 1.0f };
-
     Canvas::draw_texture(texture_, position_, texture_rect_,
-        GSvector2::zero(), GSvector2::one(), color);
+        GSvector2::zero(), GSvector2::one(), is_selected() ? HIGHLIGHT_COLOR : DEFAULT_COLOR);
 }
 
 void TextureFunctionButton::select() {
