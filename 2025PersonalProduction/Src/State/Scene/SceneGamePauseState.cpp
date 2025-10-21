@@ -3,36 +3,36 @@
 #include "Engine/Core/Input/Input.h"
 #include "Engine/Graphics/Canvas/Canvas.h"
 #include "Assets.h"
-#include "GUI/Button/TextureFunctionButton.h"
+#include "GUI/Button/TextFunctionButton.h"
 
 SceneGamePauseState::SceneGamePauseState(GameScene& owner) :
     owner_{ owner } {
-    // ãƒœã‚¿ãƒ³ã®è¿½åŠ 
+    // ƒ{ƒ^ƒ“‚Ì’Ç‰Á
     const GSrect rect{ 0.0f, 0.0f, 450.0f, 110.0f };
     {
-        TextureFunctionButton* button = new TextureFunctionButton{ (GSuint)TextureID::ReturnGameButtonTexture, GSvector2{ 191.0f, 239.0f }, rect };
+        TextFunctionButton* button = new TextFunctionButton{ "ƒQ[ƒ€ÄŠJ", GSvector2{ 416.0f, 294.0f }, 64, Anchor::TopLeft, Anchor::Center };
         button->on_input([=] { return_game(); });
         button_.add(button);
     }
     {
-        TextureFunctionButton* button = new TextureFunctionButton{ (GSuint)TextureID::ToSettingButtonTexture, GSvector2{ 191.0f, 403.0f }, rect };
+        TextFunctionButton* button = new TextFunctionButton{ "ƒQ[ƒ€İ’è", GSvector2{ 416.0f, 458.0f }, 64, Anchor::TopLeft, Anchor::Center };
         button->on_input([=] { to_setting(); });
         button_.add(button);
     }
     {
-        TextureFunctionButton* button = new TextureFunctionButton{ (GSuint)TextureID::ToGuideButtonTexture , GSvector2{ 191.0f, 567.0f }, rect };
+        TextFunctionButton* button = new TextFunctionButton{ "‘€ìà–¾", GSvector2{ 416.0f, 622.0f }, 64, Anchor::TopLeft, Anchor::Center };
         button->on_input([=] { to_guide(); });
         button_.add(button);
     }
     {
-        TextureFunctionButton* button = new TextureFunctionButton{ (GSuint)TextureID::ReturnTitleButtonTexture, GSvector2{ 191.0f, 731.0f }, rect };
+        TextFunctionButton* button = new TextFunctionButton{ "ƒ^ƒCƒgƒ‹‚É–ß‚é", GSvector2{ 416.0f, 786.0f }, 64, Anchor::TopLeft, Anchor::Center };
         button->on_input([=] { return_title(); });
         button_.add(button);
     }
 }
 
 void SceneGamePauseState::enter() {
-    // ãƒãƒ¼ã‚ºä¸­ã¯GUIæç”»ã‚’è¡Œã‚ãªã„
+    // ƒ|[ƒY’†‚ÍGUI•`‰æ‚ğs‚í‚È‚¢
     owner_.enable_draw_game_gui() = false;
     button_.start();
 }
@@ -40,7 +40,7 @@ void SceneGamePauseState::enter() {
 void SceneGamePauseState::update(float delta_time) {
     Input& input = Input::get_instance();
 
-    // å†åº¦ãƒãƒ¼ã‚ºãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚ŒãŸã‚‰ã‚²ãƒ¼ãƒ ã«æˆ»ã‚‹
+    // Ä“xƒ|[ƒYƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½‚çƒQ[ƒ€‚É–ß‚é
     if (input.action(InputAction::APP_Pause)) {
         return_game();
         return;
@@ -50,7 +50,7 @@ void SceneGamePauseState::update(float delta_time) {
 }
 
 void SceneGamePauseState::draw() const {
-    // èƒŒæ™¯ã¨ã—ã¦ã‚²ãƒ¼ãƒ ç”»é¢ã‚’æç”»ã™ã‚‹
+    // ”wŒi‚Æ‚µ‚ÄƒQ[ƒ€‰æ–Ê‚ğ•`‰æ‚·‚é
     owner_.original_draw();
 
     Canvas::draw_texture((GSuint)TextureID::PauseWindowTexture, GSvector2{ 0.0f, 0.0f }, GSrect{ 0.0f, 0.0f, 1920.0f, 1080.0f });
@@ -63,7 +63,7 @@ void SceneGamePauseState::exit() {
 }
 
 void SceneGamePauseState::return_game() {
-    // GUIæç”»ã‚’å¾©æ´»
+    // GUI•`‰æ‚ğ•œŠˆ
     owner_.enable_draw_game_gui() = true;
     owner_.change_state((GSuint)SceneStateType::Original);
 }
