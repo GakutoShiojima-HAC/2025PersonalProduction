@@ -33,6 +33,7 @@
     X(GearIconTexture) \
     X(GamePadIconTexture) \
     X(ArrowIconTexture) \
+    X(DotIconTexture) \
     X(Skybox) \
     X(TitleLogo) \
     X(MenuLogo) \
