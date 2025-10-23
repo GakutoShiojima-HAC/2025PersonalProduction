@@ -18,7 +18,15 @@ typedef	unsigned int GSuint;
 
 class TextureFunctionButton : public Button {
 public:
-    TextureFunctionButton(GSuint texture, const GSvector2& position, const GSrect& rect);
+    enum class Angle {
+        Rotate0,  
+        Rotate90, 
+        Rotate180,
+        Rotate270 
+    };
+
+public:
+    TextureFunctionButton(GSuint texture, const GSvector2& position, const GSrect& rect, Angle angle = Angle::Rotate0);
 
 public:
     void draw() const override;
@@ -47,6 +55,8 @@ protected:
     GSvector2 position_{ 0.0f, 0.0f };
 
     GSrect texture_rect_{ 0.0f, 0.0f, 0.0f, 0.0f };
+
+    float angle_{ 0.0f };
 
 };
 

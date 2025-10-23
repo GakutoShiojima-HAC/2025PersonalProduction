@@ -102,7 +102,7 @@ bool Input::is_pad() const {
 bool Input::action(InputAction action) const {
 	switch (action) {
 	case InputAction::APP_Pause:
-		return gsXBoxPadButtonTrigger(USE_PAD_NUM, GS_XBOX_PAD_START) || gsGetKeyTrigger(GKEY_TAB);
+		return is_pad_ ? gsXBoxPadButtonTrigger(USE_PAD_NUM, GS_XBOX_PAD_START) : gsGetKeyTrigger(GKEY_TAB);
 	case InputAction::APP_ForceEnd:
 		return gsGetKeyState(GKEY_ESCAPE) || (gsXBoxPadButtonState(USE_PAD_NUM, GS_XBOX_PAD_BACK) && gsXBoxPadButtonState(0, GS_XBOX_PAD_START));
 	case InputAction::MENU_Decision:

@@ -32,6 +32,7 @@
     X(ButtonSelectGamePadTexture) \
     X(GearIconTexture) \
     X(GamePadIconTexture) \
+    X(ArrowIconTexture) \
     X(Skybox) \
     X(TitleLogo) \
     X(MenuLogo) \

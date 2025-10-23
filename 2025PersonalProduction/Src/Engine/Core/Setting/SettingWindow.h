@@ -32,9 +32,11 @@ public:
 
 private:
     /// <summary>
-    /// 振動設定を有効にしたときのフィードバック処理
+    /// 0.0~1.0で正規化されている割合の値をn%として取得する
     /// </summary>
-    void vibration_feedback();
+    /// <param name="value">= 正規化されている割合</param>
+    /// <returns>%で表せる割合</returns>
+    int get_ratio(float value) const;
 
 private:
     Setting& setting_;
