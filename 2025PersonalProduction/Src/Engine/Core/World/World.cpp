@@ -44,7 +44,9 @@ void World::draw() const {
 	if (navmesh_ != nullptr) navmesh_->draw();
 	actor_.draw();
 	actor_.draw_tranparent();
+    gsBeginRenderingEffect();
 	gsDrawEffect();
+    gsEndRenderingEffect();
 
     // ポストエフェクトの終了
     game_post_effect_.draw_end();
