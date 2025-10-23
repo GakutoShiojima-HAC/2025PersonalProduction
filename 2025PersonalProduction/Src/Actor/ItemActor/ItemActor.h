@@ -31,7 +31,7 @@ public:
     /// <param name="data">= アイテムデータ</param>
     ItemActor(IWorld* world, const GSvector3& position, ItemData::Data data);
 
-    virtual ~ItemActor() = default;
+    ~ItemActor();
 
 public:
     virtual void update(float delta_time) override;
@@ -67,7 +67,7 @@ protected:
     // インタラクトされたかどうか
     bool is_interact_{ false };
     // エフェクトハンドル
-    GSuint effect_handle_{ 0 };
+    int effect_handle_{ 0 };
 
 };
 

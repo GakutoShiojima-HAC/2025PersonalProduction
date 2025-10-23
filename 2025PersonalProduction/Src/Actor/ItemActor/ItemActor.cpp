@@ -24,6 +24,10 @@ ItemActor::ItemActor(IWorld* world, const GSvector3& position, ItemData::Data da
     init();
 }
 
+ItemActor::~ItemActor() {
+    gsStopEffect(effect_handle_);
+}
+
 void ItemActor::update(float delta_time) {
     // インタラクト済みなら死亡
     if (is_interact_) {
@@ -45,7 +49,6 @@ void ItemActor::draw() const {
 }
 
 void ItemActor::die() {
-    gsStopEffect(effect_handle_);
     is_dead_ = true;
 }
 
