@@ -62,12 +62,8 @@ public:
 private:
     void start() override {
         // 初期音量調整
-        float master = 0.75;
-        float se = 0.8;
-        float bgm = 0.8;
+        float master = 0.75f;
         gsSetPrimaryVolume(master);
-        gsSetVolumeBGM(bgm);
-        gsSetMasterVolumeSE(se);
 
         // シーンを追加
         scene_manager_.add(new LoadingScene{});
