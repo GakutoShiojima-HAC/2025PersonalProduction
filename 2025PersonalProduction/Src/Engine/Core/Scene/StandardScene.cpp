@@ -28,3 +28,7 @@ bool StandardScene::is_load_end() const {
 float StandardScene::load_progress() const {
     return load_progress_;;
 }
+
+void StandardScene::scene_end_request() {
+    is_end_ = true;
+}

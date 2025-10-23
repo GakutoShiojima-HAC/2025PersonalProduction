@@ -70,6 +70,11 @@ public:
     /// </summary>
     virtual void original_draw() const = 0;
 
+    /// <summary>
+    /// シーン終了をリクエストする
+    /// </summary>
+    void scene_end_request();
+
 protected:
     // シーンマネージャー
     SceneManager& scene_manager_ = SceneManager::get_instance();
