@@ -5,6 +5,11 @@
 #include "Assets.h"
 #include "GUI/Button/TextFunctionButton.h"
 
+// ポーズテキストのアニメーション速度
+static const float TEXT_ANIME_SPEED{ 0.08f };
+// ポーズテキストの最大アニメーション移動量
+static const float TEXT_ANIME_MAX_VELOCITY{ 11.0f };
+
 SceneGamePauseState::SceneGamePauseState(GameScene& owner) :
     owner_{ owner } {
     // ボタンの追加
@@ -26,7 +31,7 @@ SceneGamePauseState::SceneGamePauseState(GameScene& owner) :
     }
     {
         TextFunctionButton* button = new TextFunctionButton{ "タイトルに戻る", GSvector2{ 416.0f, 786.0f }, 64, Anchor::TopLeft, Anchor::Center };
-        button->on_input([=] { return_game(); });
+        button->on_input([=] { owner_.scene_end_request(); });
         button_.add(button);
     }
 }
@@ -35,6 +40,7 @@ void SceneGamePauseState::enter() {
     // ポーズ中はGUI描画を行わない
     owner_.enable_draw_game_gui() = false;
     button_.start();
+    pause_text_anime_ = 0.0f;
 }
 
 void SceneGamePauseState::update(float delta_time) {
@@ -47,6 +53,7 @@ void SceneGamePauseState::update(float delta_time) {
     }
 
     button_.update(delta_time);
+    pause_text_anime_ += delta_time * TEXT_ANIME_SPEED;
 }
 
 void SceneGamePauseState::draw() const {
@@ -56,6 +63,16 @@ void SceneGamePauseState::draw() const {
     Canvas::draw_texture((GSuint)TextureID::PauseWindowTexture, GSvector2{ 0.0f, 0.0f }, GSrect{ 0.0f, 0.0f, 1920.0f, 1080.0f });
 
     button_.draw();
+
+    auto draw_dot_texture = [](const GSvector2& position) {
+        Canvas::draw_texture((GSuint)TextureID::DotIconTexture,
+            position,
+            GSrect{ 0.0f, 0.0f, 11.0f, 11.0f });
+    };
+
+    draw_dot_texture(GSvector2{ 1591.0f, 912.0f - CLAMP(std::sin(pause_text_anime_), 0.0f, 1.0f) * TEXT_ANIME_MAX_VELOCITY });
+    draw_dot_texture(GSvector2{ 1604.0f, 912.0f - CLAMP(std::sin(pause_text_anime_ - 7.0f), 0.0f, 1.0f) * TEXT_ANIME_MAX_VELOCITY });
+    draw_dot_texture(GSvector2{ 1617.0f, 912.0f - CLAMP(std::sin(pause_text_anime_ - 14.0f), 0.0f, 1.0f) * TEXT_ANIME_MAX_VELOCITY });
 }
 
 void SceneGamePauseState::exit() {

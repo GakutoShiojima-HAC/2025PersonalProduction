@@ -38,6 +38,9 @@ private:
 
     ButtonManager button_;
 
+    // ポーズテキストのアニメーションタイマー
+    float pause_text_anime_{ 0.0f };
+
 };
 
 #endif
