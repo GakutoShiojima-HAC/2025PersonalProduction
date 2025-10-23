@@ -70,15 +70,15 @@ Player::Player(IWorld* world, const GSvector3& position, const GSvector3& lookat
 
 	mesh_ = { (GSuint)MeshID::Player, (GSuint)MeshID::Player, (GSuint)MeshID::Player };
 	add_state();
-	change_state((GSuint)PlayerStateType::Move, Motion::Idle, true);
 	
 	// 衝突判定球を生成
 	collider_ = BoundingSphere{ RADIUS, GSvector3{ 0.0f, height_ / 2.0f, 0.0f } };
 
 	transform_.position(position);
 	transform_.lookAt(lookat);
-	collide_field();
 	mesh_.transform(transform_.localToWorldMatrix());
+    collide_field();
+	change_state((GSuint)PlayerStateType::Move, Motion::Idle, true);
 
 	// 攻撃アニメーションイベント
 	add_attack_animation_event();
