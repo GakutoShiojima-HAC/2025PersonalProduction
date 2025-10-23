@@ -1,5 +1,6 @@
 #include "Engine/Core/Setting/SettingWindow.h"
 #include <gslib.h>
+#include <cmath>
 #include "Engine/Core/Setting/Setting.h"
 #include "Engine/Core/Input/Input.h"
 #include "Engine/Graphics/Canvas/Canvas.h"
@@ -7,6 +8,7 @@
 #include "Assets.h"
 #include "GUI/Button/TextFunctionButton.h"
 #include "GUI/Button/ToggleButton.h"
+#include "GUI/Button/TextureFunctionButton.h"
 #include "Engine/Core/Vibration/Vibration.h"
 
 // 歯車アイコンの回転スピード
@@ -15,6 +17,36 @@ static const float GEAR_ROTATE_SPEED{ 1.0f };
 SettingWindow::SettingWindow(Setting& owner) :
     setting_{ owner } {
     // ボタンの追加
+    {
+        //TextureFunctionButton* button = new TextureFunctionButton{ (GSuint)TextureID::ArrowIconTexture, GSvector2{ 1461.0f, 265.0f }, GSrect{ 0.0f, 0.0f, 27.0f, 27.0f }, TextureFunctionButton::Angle::Rotate180 };
+        //button->on_input([=] { ; });
+        //button_.add(button);
+    }
+    {
+        //TextureFunctionButton* button = new TextureFunctionButton{ (GSuint)TextureID::ArrowIconTexture, GSvector2{ 1605.0f, 239.0f }, GSrect{ 0.0f, 0.0f, 27.0f, 27.0f } };
+        //button->on_input([=] { ; });
+        //button_.add(button);
+    }
+    {
+        TextureFunctionButton* button = new TextureFunctionButton{ (GSuint)TextureID::ArrowIconTexture, GSvector2{ 1461.0f, 383.0f }, GSrect{ 0.0f, 0.0f, 27.0f, 27.0f }, TextureFunctionButton::Angle::Rotate180 };
+        button->on_input([=] { gsSetVolumeBGM(CLAMP(gsGetVolumeBGM() - 0.1f, 0.0f, 1.0f)); });
+        button_.add(button);
+    }
+    {
+        TextureFunctionButton* button = new TextureFunctionButton{ (GSuint)TextureID::ArrowIconTexture, GSvector2{ 1605.0f, 355.0f }, GSrect{ 0.0f, 0.0f, 27.0f, 27.0f } };
+        button->on_input([=] { gsSetVolumeBGM(CLAMP(gsGetVolumeBGM() + 0.1f, 0.0f, 1.0f)); });
+        button_.add(button);
+    }
+    {
+        TextureFunctionButton* button = new TextureFunctionButton{ (GSuint)TextureID::ArrowIconTexture, GSvector2{ 1461.0f, 469.0f }, GSrect{ 0.0f, 0.0f, 27.0f, 27.0f }, TextureFunctionButton::Angle::Rotate180 };
+        button->on_input([=] { gsSetMasterVolumeSE(CLAMP(gsGetMasterVolumeSE() - 0.1f, 0.0f, 1.0f)); });
+        button_.add(button);
+    }
+    {
+        TextureFunctionButton* button = new TextureFunctionButton{ (GSuint)TextureID::ArrowIconTexture, GSvector2{ 1605.0f, 443.0f }, GSrect{ 0.0f, 0.0f, 27.0f, 27.0f } };
+        button->on_input([=] { gsSetMasterVolumeSE(CLAMP(gsGetMasterVolumeSE() + 0.1f, 0.0f, 1.0f)); });
+        button_.add(button);
+    }
     {
         button_.add(new ToggleButton{ setting_.enable_draw_bloom(), GSvector2{ 1628.0f, 575.0f }, 38, Anchor::TopLeft, Anchor::CenterRight });
     }
@@ -54,13 +86,34 @@ void SettingWindow::update(float delta_time) {
 }
 
 void SettingWindow::draw() const {
+    const GScolor white{ 1.0f, 1.0f, 1.0f, 1.0f };
+
     Canvas::draw_texture((GSuint)TextureID::SettingWindowTexture, GSvector2{ 0.0f, 0.0f }, GSrect{ 0.0f, 0.0f, 1920.0f, 1080.0f });
 
     Canvas::draw_texture((GSuint)TextureID::GearIconTexture, GSvector2{ 272.0f, 188.0f }, GSrect{ 0.0f, 0.0f, 96.0f, 96.0f },
-        GSvector2{ 96.0f / 2.0f, 96.0f / 2.0f }, GSvector2::one(), GScolor{ 1.0f, 1.0f, 1.0f, 1.0f }, rotate_gear_);
+        GSvector2{ 96.0f / 2.0f, 96.0f / 2.0f }, GSvector2::one(), white, rotate_gear_);
 
     Canvas::draw_texture(Input::get_instance().is_pad() ? (GSuint)TextureID::ButtonSelectGamePadTexture : (GSuint)TextureID::ButtonSelectMouseTexture,
         GSvector2{ 284.0f, 877.0f }, GSrect{ 0.0f, 0.0f, 335.0f, 64.0f });
+
+    auto get_ratio_string = [&](float ratio) {
+        return std::to_string(get_ratio(ratio)) + "％";
+    };
+
+    auto draw_ratio = [get_ratio_string, white](float ratio, const GSvector2& position) {
+        Canvas::draw_sprite_text(
+            get_ratio_string(ratio),
+            position,
+            38,
+            cFONT,
+            GS_FONT_NORMAL,
+            white,
+            Anchor::TopLeft,
+            Anchor::Center
+        );
+    };
+    draw_ratio(gsGetVolumeBGM(), GSvector2{ 1534.0f, 370.0f });
+    draw_ratio(gsGetMasterVolumeSE(), GSvector2{ 1534.0f, 456.0f });
 
     button_.draw();
 }
@@ -69,6 +122,11 @@ bool SettingWindow::is_end() const {
     return is_end_;
 }
 
-void SettingWindow::vibration_feedback() {
-    
+int SettingWindow::get_ratio(float value) const {
+    float number = value;
+    number *= std::pow(10, 2.0);
+    number = std::round(number);
+    number /= std::pow(10, 2.0);
+
+    return number * 100;
 }
