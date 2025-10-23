@@ -14,6 +14,12 @@ void PlayerLandState::update(float delta_time) {
         return;
     }
 
+    // 移動入力があれば移動ステートに遷移
+    if (owner_.is_move_input()) {
+        owner_.to_move_state();
+        return;
+    }
+
     // モーションが終了したら移動ステートに遷移
 	if (owner_.is_motion_end()) {
 		owner_.to_move_state();
