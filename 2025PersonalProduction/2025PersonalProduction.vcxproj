@@ -144,7 +144,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Src\Actor\Enemy\SimpleEnemy.cpp" />
+    <ClCompile Include="Src\Actor\Enemy\SimpleEnemy\SimpleEnemy.cpp" />
+    <ClCompile Include="Src\Actor\Enemy\SimpleEnemy\SimpleEnemyGenerator.cpp" />
     <ClCompile Include="Src\Actor\ItemActor\ItemActor.cpp" />
     <ClCompile Include="Src\Engine\Core\Assets\AssetsLoader.cpp" />
     <ClCompile Include="Src\Engine\Core\Button\Button.cpp" />
@@ -224,6 +225,8 @@
     <ClCompile Include="Src\Scene\TitleScene.cpp" />
     <ClCompile Include="Src\Engine\Core\Setting\Setting.cpp" />
     <ClCompile Include="Src\Score\ActionScore.cpp" />
+    <ClCompile Include="Src\Engine\Core\Actor\ActorGenerator.cpp" />
+    <ClCompile Include="Src\Stage\StageData.cpp" />
     <ClCompile Include="Src\State\DummyEnemy\DummyEnemyAttackState.cpp" />
     <ClCompile Include="Src\State\DummyEnemy\DummyEnemyDeadState.cpp" />
     <ClCompile Include="Src\State\DummyEnemy\DummyEnemyIdleState.cpp" />
@@ -258,7 +261,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Actor\ActorTag.h" />
-    <ClInclude Include="Src\Actor\Enemy\SimpleEnemy.h" />
+    <ClInclude Include="Src\Actor\Enemy\SimpleEnemy\SimpleEnemy.h" />
+    <ClInclude Include="Src\Actor\Enemy\SimpleEnemy\SimpleEnemyGenerator.h" />
     <ClInclude Include="Src\Actor\ItemActor\ItemActor.h" />
     <ClInclude Include="Src\Engine\Core\Assets\AssetsLoader.h" />
     <ClInclude Include="Src\Engine\Core\Button\Button.h" />
@@ -365,6 +369,9 @@
     <ClInclude Include="Src\Scene\TitleScene.h" />
     <ClInclude Include="Src\Engine\Core\Setting\Setting.h" />
     <ClInclude Include="Src\Score\ActionScore.h" />
+    <ClInclude Include="Src\Engine\Core\Actor\ActorGenerator.h" />
+    <ClInclude Include="Src\Engine\Core\Actor\IActorGenerator.h" />
+    <ClInclude Include="Src\Stage\StageData.h" />
     <ClInclude Include="Src\State\DummyEnemy\DummyEnemyState.h" />
     <ClInclude Include="Src\State\DummyEnemy\DummyEnemyAttackState.h" />
     <ClInclude Include="Src\State\DummyEnemy\DummyEnemyDeadState.h" />
