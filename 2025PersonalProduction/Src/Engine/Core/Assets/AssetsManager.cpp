@@ -68,6 +68,8 @@ LoadedAssets* AssetsManager::load_asset(LoadAssets* data) {
 		gsLoadEffect(asset.first, asset.second.c_str());
 		result->effect.push_back(asset.first);
 	}
+    if (!data->light_map.empty()) gsLoadLightmap(0, data->light_map.c_str());
+    if (!data->reflection_probe.empty()) gsLoadReflectionProbe(0, data->reflection_probe.c_str());
 
 	assets_.push_back(result);  // 管理下に追加
 
