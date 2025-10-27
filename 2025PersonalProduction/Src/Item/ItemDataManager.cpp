@@ -1,6 +1,6 @@
 #include "Item/ItemDataManager.h"
 
-const std::string FOLDER_PATH{ "Resource/Private/Item" };
+const std::string FOLDER_PATH{ "Resource/Private/Behavior/Item" };
 
 ItemDataManager& ItemDataManager::get_instance() {
     // static変数のインスタンスは１つ
