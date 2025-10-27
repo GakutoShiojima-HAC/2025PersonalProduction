@@ -14,6 +14,8 @@
 #include "Engine/Core/Scene/StandardScene.h"
 #include "Engine/Core/World/World.h"
 #include "Engine/Core/Input/Input.h"
+#include "Engine/Core/Actor/ActorGenerator.h"
+#include "Stage/StageData.h"
 
 class GameScene : public StandardScene {
 public:
@@ -72,6 +74,10 @@ protected:
 	World world_;
     // インプットシステム
     Input& input_ = Input::get_instance();
+    // アクタージェネレーター
+    ActorGenerator actor_generator_;
+    // ステージデータ
+    StageData stage_data_;
 
 };
 

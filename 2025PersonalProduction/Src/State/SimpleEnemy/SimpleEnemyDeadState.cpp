@@ -1,5 +1,5 @@
 #include "State/SimpleEnemy/SimpleEnemyDeadState.h"
-#include "Actor/Enemy/SimpleEnemy.h"
+#include "Actor/Enemy/SimpleEnemy/SimpleEnemy.h"
 
 SimpleEnemyDeadState::SimpleEnemyDeadState(SimpleEnemy& owner) : SimpleEnemyState(owner) {
 

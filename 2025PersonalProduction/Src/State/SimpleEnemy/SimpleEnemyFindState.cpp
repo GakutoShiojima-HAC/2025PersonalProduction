@@ -1,5 +1,5 @@
 #include "State/SimpleEnemy/SimpleEnemyFindState.h"
-#include "Actor/Enemy/SimpleEnemy.h"
+#include "Actor/Enemy/SimpleEnemy/SimpleEnemy.h"
 #include "Engine/Utils/MyMath.h"
 
 SimpleEnemyFindState::SimpleEnemyFindState(SimpleEnemy& owner) : SimpleEnemyState(owner) {

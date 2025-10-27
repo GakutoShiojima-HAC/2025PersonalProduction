@@ -66,6 +66,18 @@ namespace MyJson {
             return json_object[object_name.c_str()].get<int>();
         return -1;
     };
+
+    /// <summary>
+    /// jsonオブジェクトからfloatを取り出す
+    /// </summary>
+    /// <param name="json_object">= jsonオブジェクト</param>
+    /// <param name="object_name">= オブジェクト名</param>
+    /// <returns>float</returns>
+    inline float get_float(const json& json_object, const std::string& object_name) {
+        if (json_object.contains(object_name.c_str()) && json_object[object_name.c_str()].is_number_float())
+            return json_object[object_name.c_str()].get<float>();
+        return -1.0f;
+    }
 }
 
 #endif
