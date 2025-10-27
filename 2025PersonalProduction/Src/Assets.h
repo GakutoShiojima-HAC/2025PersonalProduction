@@ -18,6 +18,7 @@
     X(NONE) \
     X(Player) \
     X(DummyEnemy) \
+    X(SlimeEnemy) \
     X(WeaponSword1) \
     X(WeaponSword3) \
     X(MAX_SIZE) // 要素数
