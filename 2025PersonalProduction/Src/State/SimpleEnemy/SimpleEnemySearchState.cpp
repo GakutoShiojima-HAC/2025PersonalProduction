@@ -1,5 +1,5 @@
 #include "State/SimpleEnemy/SimpleEnemySearchState.h"
-#include "Actor/Enemy/SimpleEnemy.h"
+#include "Actor/Enemy/SimpleEnemy/SimpleEnemy.h"
 #include "GameConfig.h"
 
 SimpleEnemySearchState::SimpleEnemySearchState(SimpleEnemy& owner) : SimpleEnemyState(owner) {
