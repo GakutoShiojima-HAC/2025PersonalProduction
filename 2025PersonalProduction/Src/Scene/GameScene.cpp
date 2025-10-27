@@ -132,26 +132,24 @@ void GameScene::load_data() {
 
     // 共通アセットの読み込み
     if (AssetsManager::get_instance().find(AssetsLoader::GAME_COMMON_ASSET_NAME));
-    else  AssetsLoader::load_by_json("Resource/Private/LoadAsset/game_common.json", AssetsLoader::GAME_COMMON_ASSET_NAME);
+    else  AssetsLoader::load_by_json("Resource/Private/Common/Assets/game.json", AssetsLoader::GAME_COMMON_ASSET_NAME);
     load_progress_ += progress;
+
+    // ステージデータの読み込み
+   
+    stage_data_.load("Resource/Private/Stage/1");
+    const std::string stage = stage_data_.folder();
 
     // ステージ固有アセットの読み込み
-    AssetsLoader::load_by_json("Resource/Private/LoadAsset/test_stage.json", AssetsLoader::GAME_STAGE_ASSET_NAME);
-    load_progress_ += progress;
-
-    // ライトマップの読み込み
-    gsLoadLightmap(0, "Resource/Assets/Octree/Stage1/Lightmap/Lightmap.txt");
-    load_progress_ += progress;
-    // リフレクションプローブの読み込み
-    gsLoadReflectionProbe(0, "Resource/Assets/Octree/Stage1/RefProbe/ReflectionProbe.txt");
+    AssetsLoader::load_by_json(stage + "/asset.json", AssetsLoader::GAME_STAGE_ASSET_NAME);
     load_progress_ += progress;
 
     // ナビメッシュデータの読み込み
-    world_.add_navmesh(new NavMeshSurface{ "Resource/Assets/Octree/Stage1/navmesh.txt" });
+    world_.add_navmesh(new NavMeshSurface{ stage + "/navmesh.txt" });
     load_progress_ += progress;
 
     // タイムラインデータの読み込み
-    world_.timeline().add(new CameraTimeline{ &world_, "Resource/Private/Timeline/Camera/List/world1.json" });
+    world_.timeline().add(new CameraTimeline{ &world_, stage + "/camera_timeline.json" });
     load_progress_ += progress;
 
     // アイテムデータの読み込み
@@ -160,6 +158,10 @@ void GameScene::load_data() {
 
     // セーブデータの読み込み
     world_.game_save_data().load("test");
+    load_progress_ += progress;
+
+    // アクターデータの読み込み
+    actor_generator_.load(&world_);
     load_progress_ += progress;
 }
 
@@ -239,9 +241,17 @@ void GameScene::game_start() {
     world_.add_actor(new ItemActor{ &world_, GSvector3{ 0.0f, 0.0f, -4.0f }, ItemData::Data{ ItemType::Weapon, 1 } });
     world_.add_actor(new ItemActor{ &world_, GSvector3{ 0.0f, 0.0f, -4.5f }, ItemData::Data{ ItemType::Weapon, 3 } });
 
+    // アクターの生成
+    actor_generator_.generate(stage_data_.folder() + "/generate.json");
+
     /*
      *  END
      */
+
+#ifndef _DEBUG
+    // エディタでの動的生成のためにデバッグ中はデータを残しておく
+    actor_generator_.clear();
+#endif
 
     // シェーダーの有効化
     GameShader::get_instance().start();
@@ -274,6 +284,11 @@ void GameScene::game_end() {
     AssetsManager::get_instance().delete_asset(AssetsLoader::GAME_STAGE_ASSET_NAME);
     // メニューに戻るなら共通アセットも開放
     if (next_scene_tag_ != SceneTag::Game) AssetsManager::get_instance().delete_asset(AssetsLoader::GAME_COMMON_ASSET_NAME);
+
+#ifdef _DEBUG
+    // シーン中データを残していた分ここで破棄
+    actor_generator_.clear();
+#endif
 
     // 次のシーンの情報を渡す
     std::any data = next_scene_tag_;
