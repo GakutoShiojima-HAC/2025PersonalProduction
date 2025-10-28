@@ -5,6 +5,9 @@
 
 # Assets files
 /2025PersonalProduction/Resource/Assets/
+# Local files
+/2025PersonalProduction/SaveData/
+/2025PersonalProduction/Log/
 
 # VC++ Project files
 *.vcxproj.filters
