@@ -70,6 +70,9 @@ public:
     // 名前を設定する
     TweenUnit& name(const std::string& name);
 
+    // キャンセルする
+    void cancel();
+
     // コピー禁止
     TweenUnit(const TweenUnit& other) = delete;
     TweenUnit& operator = (const TweenUnit& other) = delete;
@@ -97,6 +100,8 @@ private:
     float delay_{ 0.0f };   // 開始遅延時間
 
     std::string name_{};    // 名前（キャンセル処理に使う）
+
+    bool is_canceled_{ false };     // キャンセルされたか
 
 };
 

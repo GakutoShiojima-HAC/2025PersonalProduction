@@ -39,7 +39,7 @@ void TweenUnit::update(float delta_time) {
 }
 
 bool TweenUnit::is_finished() const {
-    return is_finished_;
+    return is_finished_ || is_canceled_;
 }
 
 TweenUnit& TweenUnit::ease(EaseType ease_type) {
@@ -69,6 +69,10 @@ const std::string& TweenUnit::name() const {
 TweenUnit& TweenUnit::name(const std::string& name) {
     name_ = name;
     return *this;
+}
+
+void TweenUnit::cancel() {
+    is_canceled_ = true;
 }
 
 float TweenUnit::apply_ease(float value, EaseType ease_type, float overshoot) {

@@ -13,6 +13,7 @@ void Tween::add(TweenUnit* unit) {
 void Tween::update(float delta_time) {
     // 全てのTweenUnitの更新処理を呼び出す
     for (TweenUnit* unit : units_) {
+        if (unit->is_finished()) continue;
         unit->update(delta_time);
     }
 
@@ -69,14 +70,8 @@ TweenUnit& Tween::delay_call(float delay_time, std::function<void()> callback) {
 }
 
 void Tween::cancel(const std::string& name) {
-    // 全ての項目を走査して、名前が一致したものを削除する
-    for (auto itr = units_.begin(); itr != units_.end(); ) {
-        if ((*itr)->name() == name) {
-            delete* itr;
-            itr = units_.erase(itr);
-        }
-        else {
-            ++itr;
-        }
+    // 全ての項目を走査して、名前が一致したものをキャンセル対象にする
+    for (const auto& unit : units_) {
+        if (unit->name() == name) unit->cancel();
     }
 }
