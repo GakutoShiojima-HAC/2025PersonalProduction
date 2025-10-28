@@ -48,7 +48,6 @@ void ActorGenerator::generate(const std::string& json_file) {
     for (const auto& item : j["Actor"]) {
         // キーを取得
         const std::string key = MyJson::get_string(item, "Name");
-        printf("generate: %s\n", key.c_str());
         
         // 共通パラメータを取得
         const GSvector3 position = GSvector3{ item["Position"][0], item["Position"][1], item["Position"][2] };
