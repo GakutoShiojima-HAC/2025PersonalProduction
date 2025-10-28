@@ -4,7 +4,7 @@ ToggleButton::ToggleButton(bool& toggle, const GSvector2& position, GSuint font_
     toggle_{ toggle },
     TextFunctionButton("Toggle", position, font_size, anchor, text_anchor)
 {
-    change_text(!toggle_ ? "ON" : "OFF");   // なぜか反転しないと正しいテキストにならない
+    change_text(toggle ? "ON" : "OFF");
 }
 
 void ToggleButton::select() {
