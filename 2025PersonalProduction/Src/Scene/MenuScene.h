@@ -32,8 +32,6 @@ public:
 
 	SceneTag scene_tag() const override;
 
-	bool is_application_end() const override;
-
 	void reception_message(const std::string& message, std::any& param) override;
 
     void add_state() override;
