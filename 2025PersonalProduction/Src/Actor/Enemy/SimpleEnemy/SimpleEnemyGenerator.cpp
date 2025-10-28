@@ -1,5 +1,4 @@
-#include "Actor/Enemy/SimpleEnemy/SimpleEnemy.h"
-#include "SimpleEnemyGenerator.h"
+#include "Actor/Enemy/SimpleEnemy/SimpleEnemyGenerator.h"
 #include "Engine/Core/World/World.h"
 #include "Assets.h"
 

@@ -147,6 +147,7 @@
     <ClCompile Include="Src\Actor\Enemy\SimpleEnemy\SimpleEnemy.cpp" />
     <ClCompile Include="Src\Actor\Enemy\SimpleEnemy\SimpleEnemyGenerator.cpp" />
     <ClCompile Include="Src\Actor\ItemActor\ItemActor.cpp" />
+    <ClCompile Include="Src\Actor\Player\PlayerGenerator.cpp" />
     <ClCompile Include="Src\Engine\Core\Assets\AssetsLoader.cpp" />
     <ClCompile Include="Src\Engine\Core\Button\Button.cpp" />
     <ClCompile Include="Src\Engine\Core\Button\ButtonManager.cpp" />
@@ -264,6 +265,7 @@
     <ClInclude Include="Src\Actor\Enemy\SimpleEnemy\SimpleEnemy.h" />
     <ClInclude Include="Src\Actor\Enemy\SimpleEnemy\SimpleEnemyGenerator.h" />
     <ClInclude Include="Src\Actor\ItemActor\ItemActor.h" />
+    <ClInclude Include="Src\Actor\Player\PlayerGenerator.h" />
     <ClInclude Include="Src\Engine\Core\Assets\AssetsLoader.h" />
     <ClInclude Include="Src\Engine\Core\Button\Button.h" />
     <ClInclude Include="Src\Engine\Core\Button\ButtonManager.h" />

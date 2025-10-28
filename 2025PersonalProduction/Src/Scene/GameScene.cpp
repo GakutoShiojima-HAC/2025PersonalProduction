@@ -17,7 +17,6 @@
 // 一時的 ローダーやマネージャーを作ったら不要
 #include <gslib.h>	// シーン終了用
 #include "Engine/Core/Timeline/Parameters/CameraTimeline.h"	// タイムラインローダーを作るべし
-#include "Actor/Player/Player.h"	// アクターローダーを作るべし
 #include "Actor/Enemy/DummyEnemy.h"	// アクターローダーを作るべし
 #include "Actor/ItemActor/ItemActor.h"  //アクターローダーを作るべし
 
@@ -225,10 +224,6 @@ void GameScene::game_start() {
     /*
      *  TODO ローダーにする
      */
-
-    // プレイヤーの追加
-    // TODO 位置と回転を外部から取得
-    world_.add_character(new Player{ &world_, GSvector3{ 0.0f, 0.0f, 0.0f }, GSvector3{ 0.0f, 1.0f, 0.0f }, player_camera });
 
     // ダミーの追加
     // TODO 生成を外部から行う

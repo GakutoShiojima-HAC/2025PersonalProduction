@@ -2,7 +2,7 @@
 //  File          : Player.h
 //  Author        : Shiojima Gakuto
 //  Created       : 2025/08/11
-//  Updated       : 2025/08/11
+//  Updated       : 2025/10/28
 //  Description   : プレイヤー
 //
 //  注意：本ソースコードの無断転載・コードのコピー・貼り付けによる流用・再配布を禁止します。
@@ -18,13 +18,51 @@
 
 class PlayerCamera;
 
+/// <summary>
+/// 攻撃判定作成アニメーションイベント登録用構造体
+/// </summary>
+struct PlayerGenerateAttackColliderEvent {
+    GSvector3 offset{ 0.0f, 0.0f, 0.0f };   // 生成位置
+    float radius{ 1.0f };                   // 半径
+    float time{ 0.0f };                     // タイミング
+};
+
+/// <summary>
+/// 通常攻撃のパラメータ
+/// </summary>
+struct PlayerAttackParam {
+    int damage{ 0 };            // ダメージ
+    float next_start{ 0.0f };   // 次の攻撃が発動できる時間
+    float next_end{ 0.0f };     // 次の攻撃が発動できなくなる時間
+};
+
+/// <summary>
+/// 外部データ管理用情報引き渡し構造体
+/// </summary>
+struct PlayerInfo {
+    std::vector<std::vector<PlayerGenerateAttackColliderEvent>> attack_event;
+    std::vector<PlayerAttackParam> attack_param;
+
+    std::vector<PlayerGenerateAttackColliderEvent> skill_event;
+    int skill_damage{ 0 };
+
+    std::vector<PlayerGenerateAttackColliderEvent> avoid_attack_event;
+    int avoid_attack_damage{ 0 };
+
+    std::vector<PlayerGenerateAttackColliderEvent> avoid_success_attack_event;
+    int avoid_success_attack_damage{ 0 };
+
+    std::vector<PlayerGenerateAttackColliderEvent> avoid_success_skill_event;
+    int avoid_success_skill_damage{ 0 };
+};
+
 class Player : public Character {
 public:
-	Player(IWorld* world, const GSvector3& position, const GSvector3& lookat, PlayerCamera* camera);
+	Player(IWorld* world, const GSvector3& position, const GSvector3& lookat, PlayerCamera* camera, const PlayerInfo& info);
 
 public:
-	enum Motion {
-		Idle = 0,	
+    enum Motion {
+        Idle = 0,
 
         WalkF = 1,
         WalkFL = 2,
@@ -44,23 +82,32 @@ public:
         SprintBL = 26,
         SprintBR = 27,
 
-		Jump = 9,  
-		Fall = 10,  
-		Land = 11,
+        Jump = 9,
+        Fall = 10,
+        Land = 11,
 
-		Dead = 13,  
+        Dead = 13,
 
         HurtF = 14,
         HurtL = 15,
         HurtR = 16,
         HurtB = 17,
 
-		AvoidF = 18,
-		AvoidL = 19,
-		AvoidR = 20,
-		AvoidB = 21,
+        AvoidF = 18,
+        AvoidL = 19,
+        AvoidR = 20,
+        AvoidB = 21,
 
-		Skill = 101,          // TODO スキル
+        Attack1 = 30,
+        Attack2 = 31,
+        Attack3 = 32,
+        Attack4 = 33,
+        Attack5 = 34,
+
+        Skill = 101,          // TODO スキル
+        AvoidAttack = 102,
+        AvoidSuccessAttack = 103,
+        AvoidSuccessSkill = 104,
 	};
 
 public:
@@ -166,10 +213,14 @@ public:
 	GSuint get_current_motion() const;
 
 private:
-	/// <summary>
-	/// 通常攻撃判定を生成
-	/// </summary>
-	void generate_normal_attack_collider();
+    /// <summary>
+    /// 攻撃判定を作成
+    /// </summary>
+    /// <param name="offset">= オフセット</param>
+    /// <param name="radius">= 半径</param>
+    /// <param name="damage">= ダメージ</param>
+    /// <param name="name">= 識別名</param>
+    void generate_attack_collider(const GSvector3& offset, float radius, int damage, const std::string& name);
 
     /// <summary>
     /// インタラクトを更新
@@ -181,10 +232,11 @@ private:
     /// </summary>
     void get_interact_actor_list();
 
-    /// <summary>
+	/// <summary>
 	/// 攻撃アニメーションイベントを追加
 	/// </summary>
-	void add_attack_animation_event();
+	/// <param name="info">= 生成情報</param>
+	void add_attack_animation_event(const PlayerInfo& info);
 
     /// <summary>
     /// ルートモーションを使う状態かどうか
@@ -210,9 +262,12 @@ private:
     GSint interact_target_index_{ 0 };
 
 	// 武器管理
-	WeaponManager weapon_manager_;
-	// 攻撃段数
+	WeaponManager weapon_manager_;  // TODO iranai
+
+	// 通常攻撃段数
 	int attack_count_{ 0 };
+    // 通常攻撃のパラメータ
+    std::vector<PlayerAttackParam> attack_param_;
 
 	// 回避演出のタイマー
 	float avoid_effect_timer_{ 0.0f };

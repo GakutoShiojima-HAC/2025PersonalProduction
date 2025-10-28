@@ -56,7 +56,17 @@ const GScolor AVOID_EFFECT_COLOR{ 0.592f, 0.627f, 1.0f, 1.0f };
 // 右手のボーン番号
 const int RIGHT_HAND_BONE_NUM{ 114 };
 
-Player::Player(IWorld* world, const GSvector3& position, const GSvector3& lookat, PlayerCamera* camera) {
+// 攻撃モーション
+constexpr GSuint ATTACK_MOTION_MAX = 5;
+constexpr GSuint ATTACK_MOTION[] = {
+    Player::Motion::Attack1,
+    Player::Motion::Attack2,
+    Player::Motion::Attack3,
+    Player::Motion::Attack4,
+    Player::Motion::Attack5
+};
+
+Player::Player(IWorld* world, const GSvector3& position, const GSvector3& lookat, PlayerCamera* camera, const PlayerInfo& info) {
 	world_ = world;
 	tag_ = ActorTag::Player;
 	name_ = "Player";
@@ -80,8 +90,11 @@ Player::Player(IWorld* world, const GSvector3& position, const GSvector3& lookat
     collide_field();
 	change_state((GSuint)PlayerStateType::Move, Motion::Idle, true);
 
-	// 攻撃アニメーションイベント
-	add_attack_animation_event();
+    // 情報を保持
+    attack_param_ = info.attack_param;
+
+	// 攻撃アニメーションイベントを追加
+	add_attack_animation_event(info);
 }
 
 void Player::update(float delta_time) {
@@ -256,6 +269,7 @@ void Player::take_damage(Actor& other, const int damage) {
 void Player::on_hit_attack(AttackCollider& collider) {
     std::string name = collider.name();
 
+
     // 通常攻撃なら
     if (name == "PlayerNormalAttack") {
         // 基礎スコア 基礎値 + コンボ数 * ボーナス値 
@@ -429,7 +443,7 @@ bool Player::is_action(InputAction action) const {
     switch (action) {
     case InputAction::GAME_Attack:
         // 入力があるかつ、攻撃段数が現在の武器最大攻撃可能数未満であれば真
-        return input_.action(InputAction::GAME_Attack) && attack_count_ < weapon_manager_.get_max_attack_count(world_->game_save_data().inventory().weapon().type);
+        return input_.action(InputAction::GAME_Attack) && attack_count_ < ATTACK_MOTION_MAX;
     case InputAction::GAME_Jump:
         return input_.action(InputAction::GAME_Jump) && state_.get_current_state() != (GSuint)PlayerStateType::Jump;
     case InputAction::GAME_Avoid:
@@ -446,7 +460,7 @@ bool Player::is_action(InputAction action) const {
 
 void Player::attack_start() {
 	// 攻撃段数を一段階目にセット
-	attack_count_ = 1;
+	attack_count_ = 0;
 }
 
 void Player::on_avoid() {
@@ -528,16 +542,16 @@ int& Player::attack_count() {
 }
 
 float Player::get_enter_next_attack_animation_time() const {
-	return weapon_manager_.get_enter_next_animation_time(world_->game_save_data().inventory().weapon().type, attack_count_);
+    if (attack_count_ >= attack_param_.size()) return 99999.0f;
+    return attack_param_[attack_count_].next_start;
 }
 
 GSuint Player::get_attack_motion() const {
-	int motion = weapon_manager_.get_animation_num(world_->game_save_data().inventory().weapon().type, attack_count_);
-	return motion < 0 ? 99999 : motion;
+    return attack_count_ < ATTACK_MOTION_MAX ? ATTACK_MOTION[attack_count_] : 99999;
 }
 
 GSuint Player::get_skill_motion() const {
-	return (GSuint)Motion::Skill;
+	return Motion::Skill;
 	// TODO weapon num
 }
 
@@ -545,14 +559,14 @@ GSuint Player::get_current_motion() const {
 	return motion_;
 }
 
-void Player::generate_normal_attack_collider() {
-	GSvector3 local_pos = weapon_manager_.get_collider_offset(world_->game_save_data().inventory().weapon().type, attack_count_);
-	GSmatrix4 m = local_to_world(local_pos, GSvector3::zero(), GSvector3::one());
+void Player::generate_attack_collider(const GSvector3& offset, float radius, int damage, const std::string& name) {
+    GSmatrix4 m = local_to_world(offset, GSvector3::zero(), GSvector3::one());
 
-    WeaponData::Data weapon =  world_->game_save_data().inventory().weapon();
-    int damage = weapon.is_empty() ? 0 : weapon.damage;
+    // TODO 基礎ダメージ(damage)にプレイヤーの現在のステータスを加算しよう
+    WeaponData::Data weapon = world_->game_save_data().inventory().weapon();
+    int dmg = (weapon.is_empty() ? 0 : weapon.damage) + damage;
 
-	world_->generate_attack_collider(0.3f, m.position(), this, damage, "PlayerNormalAttack", 0.1f, 0.0f);
+    world_->generate_attack_collider(radius, m.position(), this, dmg, name, 0.1f, 0.0f);
 }
 
 void Player::interact_update() {
@@ -594,46 +608,59 @@ void Player::get_interact_actor_list() {
     }
 }
 
-void Player::add_attack_animation_event() {
-	// TODO 外部ファイル読み込みにする player_weapon_data.json ?
-
-	// mabye key = weapon type
-	// value = [
-	//	   {	"animation num": 0,
-	//			"key_frame": 20,
-	//			"offset": [0.0, 0.0, 1.0]
-	//     }
-	// ]
-
-	auto add_event = [this](int num, float time) {
-		mesh_.add_animation_event(num, time, [=] { generate_normal_attack_collider(); });
-	};
-
-	// for1 start
-	WeaponType type = WeaponType::Sword;
-	std::vector<WeaponManager::WeaponAnimationData*> data;
-	
-	// for2 start // TODO ***仮でそのまま記述***
-	// 1段目
-	data.push_back(new WeaponManager::WeaponAnimationData(34, 20, GSvector3{ 0.0f, 1.0f, 1.0f }, 22.0f));
-	add_event(34, 20);
-	// 2段目
-	data.push_back(new WeaponManager::WeaponAnimationData(35, 22, GSvector3{ 0.0f, 1.0f, 1.0f }, 24.0f));
-	add_event(35, 22);
-	// 3段目
-	data.push_back(new WeaponManager::WeaponAnimationData(36, 22, GSvector3{ 0.0f, 1.0f, 1.0f }, 24.0f));
-	add_event(36, 22);
-	// 4段目
-	data.push_back(new WeaponManager::WeaponAnimationData(37, 28, GSvector3{ 0.0f, 1.0f, 1.0f }, 30.0f));
-	add_event(37, 28);
-    // 5段目
-    data.push_back(new WeaponManager::WeaponAnimationData(38, 31, GSvector3{ 0.0f, 1.0f, 1.0f }, 33.0f));
-    add_event(38, 31);
-	// for2 end
-
-	// 追加
-	weapon_manager_.add_weapon_parameter(type, data);
-	// for1 end
+void Player::add_attack_animation_event(const PlayerInfo& info) {
+    // 通常攻撃のアニメーションイベントを追加
+    for (GSuint i = 0; i < ATTACK_MOTION_MAX; ++i) {
+        if (info.attack_event.size() <= i) break;
+        GSuint motion = ATTACK_MOTION[i];
+        // 対象のモーションのときに生成する判定
+        for (const auto& param : info.attack_event[i]) {
+            // イベントを登録
+            mesh_.add_animation_event(motion, param.time, [=] { generate_attack_collider(
+                param.offset, param.radius, i < info.attack_param.size() ? info.attack_param[i].damage : 0, "PlayerNormalAttack"
+            ); });
+        }
+    }
+    // スキルのアニメーションイベントを追加
+    {
+        // 対象のモーションのときに生成する判定
+        for (const auto& param : info.skill_event) {
+            // イベントを登録
+            mesh_.add_animation_event(Motion::Skill, param.time, [=] { generate_attack_collider(
+                param.offset, param.radius, info.skill_damage, "PlayerNormalSkill"
+            ); });
+        }
+    }
+    // 回避攻撃のアニメーションイベントを追加
+    {
+        // 対象のモーションのときに生成する判定
+        for (const auto& param : info.avoid_attack_event) {
+            // イベントを登録
+            mesh_.add_animation_event(Motion::AvoidAttack, param.time, [=] { generate_attack_collider(
+                param.offset, param.radius, info.avoid_attack_damage, "PlayerAvoidAttack"
+            ); });
+        }
+    }
+    // 回避成功攻撃のアニメーションイベントを追加
+    {
+        // 対象のモーションのときに生成する判定
+        for (const auto& param : info.avoid_success_attack_event) {
+            // イベントを登録
+            mesh_.add_animation_event(Motion::AvoidSuccessAttack, param.time, [=] { generate_attack_collider(
+                param.offset, param.radius, info.avoid_success_attack_damage, "PlayerAvoidSuccessAttack"
+            ); });
+        }
+    }
+    // 回避成功スキルのアニメーションイベントを追加
+    {
+        // 対象のモーションのときに生成する判定
+        for (const auto& param : info.avoid_success_skill_event) {
+            // イベントを登録
+            mesh_.add_animation_event(Motion::AvoidSuccessSkill, param.time, [=] { generate_attack_collider(
+                param.offset, param.radius, info.avoid_success_skill_damage, "PlayerSuccessSkill"
+            ); });
+        }
+    }
 }
 
 bool Player::is_root_motion_state() const {
