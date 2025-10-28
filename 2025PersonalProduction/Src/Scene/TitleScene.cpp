@@ -17,14 +17,10 @@ static const float TEXT_BLINK_SPEED{ 0.04f };
 void TitleScene::start() {
 	is_end_ = false;
     is_load_end_ = false;
-
     text_blink_timer_ = -1.0f;
 
     // タイトル用アセットの読み込み
-    LoadAssets* asset = new LoadAssets{};
-    asset->name = "Title";
-    asset->texture.push_back({ (GSuint)TextureID::TitleLogo, "Resource/Assets/Texture/titlelogo_test.png" });
-    AssetsManager::get_instance().load_asset(asset);
+    AssetsLoader::load_by_json("Resource/Private/Common/Assets/title.json", AssetsLoader::TITLE_ASSET_NAME);
 
     // 別スレッドで読み込み処理を行う
     gslib::Game::run_thread([=] {
@@ -72,7 +68,7 @@ void TitleScene::end() {
 	Tween::clear();
 
 	// アセットの開放
-	AssetsManager::get_instance().delete_asset("Title");
+	AssetsManager::get_instance().delete_asset(AssetsLoader::TITLE_ASSET_NAME);
 }
 
 bool TitleScene::is_end() const {
