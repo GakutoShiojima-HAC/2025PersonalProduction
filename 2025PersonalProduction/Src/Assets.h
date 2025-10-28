@@ -2,7 +2,7 @@
 //  File          : Assets.h
 //  Author        : Shiojima Gakuto
 //  Created       : 2025/07/07
-//  Updated       : 2025/09/30
+//  Updated       : 2025/10/29
 //  Description   : アセット番号の定義、文字列変換クラス
 //					定義した文字列をそのままenumに変換するので、mapを作らず定義できる
 //
@@ -27,6 +27,7 @@
 // テクスチャ 
 #define TEXTURE_ID_LIST \
     X(NONE) \
+    X(MenuWindowTexture) \
     X(PauseWindowTexture) \
     X(SettingWindowTexture) \
     X(GameGuideWindowTexture) \
