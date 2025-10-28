@@ -17,10 +17,10 @@
 class Setting {
 private:
 	// コンストラクタ（外部からのインスタンスを禁止）
-	Setting() = default;
+	Setting();
 
 public:
-	~Setting() = default;
+	~Setting();
 
 public:
 	/// <summary>
@@ -91,7 +91,7 @@ public:
     bool& enable_vibration();
 
 private:
-    SettingWindow window_{ *this };
+    SettingWindow* window_{ nullptr };
     
 private:
     bool enable_draw_ssao_{ true };
