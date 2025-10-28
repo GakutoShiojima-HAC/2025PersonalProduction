@@ -11,7 +11,7 @@ PlayerGenerator::PlayerGenerator(const json& j, World* world) {
         // 発生タイミング分回す
         for (const auto& obj : json_object) {
             PlayerGenerateAttackColliderEvent event;
-            event.offset = GSvector3{ obj["AttackOffset"][0], obj["AttackOffset"][1], obj["AttackOffset"][2] };
+            event.offset = GSvector3{ obj["Offset"][0], obj["Offset"][1], obj["Offset"][2] };
             event.radius = MyJson::get_float(obj, "Radius");
             event.time = MyJson::get_float(obj, "Time");
             events.push_back(event);
@@ -21,47 +21,44 @@ PlayerGenerator::PlayerGenerator(const json& j, World* world) {
     };
 
     // 通常攻撃を取得
-    if (MyJson::is_object(j, "Attack")) {
-        // n段ループ
-        for (const auto& obj : j["Attack"]) {
-            // パラメータを取得
-            PlayerAttackParam param;
-            param.damage = MyJson::get_int(obj, "Damage");
-            param.next_start = MyJson::get_int(obj, "NextInputStart");
-            param.next_end = MyJson::get_int(obj, "NextInputEnd");
-            info_.attack_param.push_back(param);
-
-            // モーションを取得
-            if (MyJson::is_object(obj, "GenerateCollider")) info_.attack_event.push_back(get_motion(obj["GenerateCollider"]));
-        }
+    for (const auto& obj : j["Attack"]) {
+        // パラメータを取得
+        PlayerAttackParam param;
+        param.damage = MyJson::get_int(obj, "Damage");
+        param.next_start = MyJson::get_int(obj, "NextInputStart");
+        param.next_end = MyJson::get_int(obj, "NextInputEnd");
+        info_.attack_param.push_back(param);
+        // モーションを取得
+        info_.attack_event.push_back(get_motion(obj["GenerateCollider"]));
     }
+    
     // スキルを取得
-    if (MyJson::is_object(j, "Skill")) {
+    {
         const auto& obj = j["Skill"];
         info_.skill_damage = MyJson::get_int(obj, "Damage");
         // モーションを取得
-        if (MyJson::is_object(obj, "GenerateCollider")) info_.skill_event = get_motion(obj["GenerateCollider"]);
+        info_.skill_event = get_motion(obj["GenerateCollider"]);
     }
     // 回避攻撃を取得
-    if (MyJson::is_object(j, "AvoidAttack")) {
+    {
         const auto& obj = j["AvoidAttack"];
         info_.avoid_attack_damage = MyJson::get_int(obj, "Damage");
         // モーションを取得
-        if (MyJson::is_object(obj, "GenerateCollider")) info_.avoid_attack_event = get_motion(obj["GenerateCollider"]);
+        info_.avoid_attack_event = get_motion(obj["GenerateCollider"]);
     }
     // 回避成功攻撃を取得
-    if (MyJson::is_object(j, "AvoidSuccessAttack")) {
+    {
         const auto& obj = j["AvoidSuccessAttack"];
         info_.avoid_success_attack_damage = MyJson::get_int(obj, "Damage");
         // モーションを取得
-        if (MyJson::is_object(obj, "GenerateCollider")) info_.avoid_success_attack_event = get_motion(obj["GenerateCollider"]);
+        info_.avoid_success_attack_event = get_motion(obj["GenerateCollider"]);
     }
     // 回避成功スキルを取得
-    if (MyJson::is_object(j, "AvoidSuccessSkill")) {
+    {
         const auto& obj = j["AvoidSuccessSkill"];
         info_.avoid_success_skill_damage = MyJson::get_int(obj, "Damage");
         // モーションを取得
-        if (MyJson::is_object(obj, "GenerateCollider")) info_.avoid_success_skill_event = get_motion(obj["GenerateCollider"]);
+        info_.avoid_success_skill_event = get_motion(obj["GenerateCollider"]);
     }
 }
 
