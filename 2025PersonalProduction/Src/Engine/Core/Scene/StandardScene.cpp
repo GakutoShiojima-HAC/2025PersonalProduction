@@ -18,7 +18,7 @@ SceneTag StandardScene::next_scene_tag() const {
 }
 
 bool StandardScene::is_application_end() const {
-    return false;
+    return is_app_end_;
 }
 
 bool StandardScene::is_load_end() const {
@@ -31,4 +31,8 @@ float StandardScene::load_progress() const {
 
 void StandardScene::scene_end_request() {
     is_end_ = true;
+}
+
+void StandardScene::app_end_request() {
+    is_app_end_ = true;
 }
