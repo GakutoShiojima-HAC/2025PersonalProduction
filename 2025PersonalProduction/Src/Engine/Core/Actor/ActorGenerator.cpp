@@ -3,6 +3,7 @@
 #include <experimental/filesystem>
 #include "Engine/Utils/MyJson.h"
 
+#include "Actor/Player/PlayerGenerator.h"
 #include "Actor/Enemy/SimpleEnemy/SimpleEnemyGenerator.h"
 
 namespace fs = std::experimental::filesystem;
@@ -35,7 +36,8 @@ void ActorGenerator::load(World* world) {
 
         // 10/27 下手にenumやmap作るより"else if"連打の方が見やすく、ソースファイル1つの編集で
         // 追加が完結するため、このままでいきます
-        if (key == SimpleEnemyGeneratorKey) data_[name] = new SimpleEnemyGenerator(j, world);
+        if (key == PlayerGeneratorKey) data_[name] = new PlayerGenerator(j, world);
+        else if (key == SimpleEnemyGeneratorKey) data_[name] = new SimpleEnemyGenerator(j, world);
     }
 }
 
