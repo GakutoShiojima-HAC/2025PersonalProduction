@@ -135,7 +135,6 @@ void GameScene::load_data() {
     load_progress_ += progress;
 
     // ステージデータの読み込み
-   
     stage_data_.load("Resource/Private/Stage/1");
     const std::string stage = stage_data_.folder();
 

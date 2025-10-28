@@ -2,7 +2,7 @@
 //  File          : TitleScene.h
 //  Author        : Shiojima Gakuto
 //  Created       : 2025/07/09
-//  Updated       : 2025/07/09
+//  Updated       : 2025/10/29
 //  Description   : タイトルシーン
 //
 //  注意：本ソースコードの無断転載・コードのコピー・貼り付けによる流用・再配布を禁止します。
@@ -56,6 +56,11 @@ private:
     SceneManager& scene_manager_ = SceneManager::get_instance();
     // シーンが終了したかどうか
     bool is_end_{ false };
+    // アセット読み込みが完了したかどうか
+    bool is_load_end_{ false };
+
+    // テキストの点滅タイマー
+    float text_blink_timer_{ 0.0f };
 
 };
 

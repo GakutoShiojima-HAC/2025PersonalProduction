@@ -75,11 +75,18 @@ public:
     /// </summary>
     void scene_end_request();
 
+    /// <summary>
+    /// アプリケーション終了をリクエストする
+    /// </summary>
+    void app_end_request();
+
 protected:
     // シーンマネージャー
     SceneManager& scene_manager_ = SceneManager::get_instance();
     // シーンが終了したかどうか
     bool is_end_{ false };
+    // アプリケーション終了するかどうか
+    bool is_app_end_{ false };
     // 次のシーン
     SceneTag next_scene_tag_{ SceneTag::Null };
     // ロード処理が終了したかどうか

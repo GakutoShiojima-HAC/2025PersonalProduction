@@ -21,6 +21,8 @@ public:
     enum class State {
         Original,       // シーン独自の画面
 
+        MenuScene,      // メニューシーン用画面
+
         GamePause,      // ゲーム中のポーズ画面
 
         Setting,        // 設定画面

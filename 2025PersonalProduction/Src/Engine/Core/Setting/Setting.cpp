@@ -1,5 +1,14 @@
 #include "Engine/Core/Setting/Setting.h"
 
+Setting::Setting() {
+    window_ = new SettingWindow{ *this };
+}
+
+Setting::~Setting() {
+    delete window_;
+    window_ = nullptr;
+}
+
 Setting& Setting::get_instance() {
 	// static変数のインスタンスは１つ
 	// インスタンス化も１回のみ
@@ -8,24 +17,27 @@ Setting& Setting::get_instance() {
 }
 
 void Setting::start() {
-    window_.start();
+    window_->start();
 }
 
 void Setting::update(float delta_time) {
-    window_.update(delta_time);
+    window_->update(delta_time);
 }
 
 void Setting::draw() const {
-    window_.draw();
+    window_->draw();
 }
 
 bool Setting::is_end() const {
-    return window_.is_end();
+    return window_->is_end();
 }
 
 void Setting::load(const std::string& setting_path) {
-	// TODO 今はresetで値を適用しておく
-	reset();
+    // 再構築
+    delete window_;
+    window_ = new SettingWindow{ *this };
+
+    // TODO
 }
 
 void Setting::reset() {

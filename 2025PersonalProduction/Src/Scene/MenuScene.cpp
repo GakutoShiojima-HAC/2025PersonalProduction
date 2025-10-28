@@ -1,11 +1,9 @@
 #include "Scene/MenuScene.h"
 #include "Engine/Core/Assets/AssetsManager.h"
 #include "Engine/Core/Assets/AssetsLoader.h"
+#include "Assets.h"
 #include "Engine/Graphics/Canvas/Canvas.h"
 #include "Engine/Core/Tween/Tween.h"
-
-#include <gslib.h>	// tmp
-#include "Assets.h"	// tmp
 
 #ifdef _DEBUG
 #include <imgui/imgui.h>
@@ -13,31 +11,44 @@
 
 #include "State/Scene/SceneState.h"
 #include "State/Scene/SceneOriginalState.h"
+#include "State/Scene/SceneSettingState.h"
+#include "State/Scene/SceneMenuState.h"
 
 MenuScene::MenuScene() {
     add_state();
 }
 
 void MenuScene::load() {
-    // åˆæœŸåŒ–
+    // ‰Šú‰»
     is_load_end_ = false;
     load_progress_ = 0.0f;
 
     load_data();
 
-    // çµ‚äº†
+    // I—¹
     is_load_end_ = true;
     load_progress_ = 1.0f;
 }
 
 void MenuScene::start() {
 	is_end_ = false;
+    is_app_end_ = false;
+    next_scene_tag_ = SceneTag::Game;
 
-    change_state((GSuint)SceneStateType::Original);
+    change_state((GSuint)SceneStateType::MenuScene);
 }
 
 void MenuScene::update(float delta_time) {
     state_.update(delta_time);
+
+#ifdef _DEBUG
+    ImGui::Begin("Scene Select Window");
+    if (ImGui::Button("TimelineEditorScene")) {
+        is_end_ = true;
+        next_scene_tag_ = SceneTag::TimelineEditor;
+    }
+    ImGui::End();
+#endif
 }
 
 void MenuScene::draw() const {
@@ -45,17 +56,17 @@ void MenuScene::draw() const {
 }
 
 void MenuScene::end() {
-	// Tweenã®çµ‚äº†
+	// Tween‚ÌI—¹
 	Tween::clear();
 
-	// ã‚¢ã‚»ãƒƒãƒˆã®é–‹æ”¾
-	AssetsManager::get_instance().delete_asset("Menu");
+	// ƒAƒZƒbƒg‚ÌŠJ•ú
+	AssetsManager::get_instance().delete_asset(AssetsLoader::MENU_ASSET_NAME);
 
-    // åˆæœŸåŒ–
+    // ‰Šú‰»
     is_load_end_ = false;
     load_progress_ = 0.0f;
 
-    // æ¬¡ã®ã‚·ãƒ¼ãƒ³ã®æƒ…å ±ã‚’æ¸¡ã™
+    // Ÿ‚ÌƒV[ƒ“‚Ìî•ñ‚ğ“n‚·
     std::any data = next_scene_tag_;
     scene_manager_.send_message(SceneTag::Loading, "NextSceneTag", data);
 }
@@ -64,52 +75,31 @@ SceneTag MenuScene::scene_tag() const {
 	return SceneTag::Menu;
 }
 
-bool MenuScene::is_application_end() const {
-	return false;
-}
-
 void MenuScene::reception_message(const std::string& message, std::any& param) {
-	// ãªã«ã‚‚å—ã‘å–ã‚‰ãªã„
+	// ‚È‚É‚àó‚¯æ‚ç‚È‚¢
 }
 
 void MenuScene::add_state() {
     state_.add_state((GSuint)SceneStateType::Original, make_shared<SceneOriginalState>(*this));
+    state_.add_state((GSuint)SceneStateType::Setting, make_shared<SceneSettingState>(*this, SceneStateType::MenuScene));
+    state_.add_state((GSuint)SceneStateType::MenuScene, make_shared<SceneMenuState>(*this));
 }
 
 void MenuScene::original_update(float delta_time) {
-    ImGui::Begin("Scene Select Window");
-    if (ImGui::Button("GameScene")) {
-        is_end_ = true;
-        next_scene_tag_ = SceneTag::Game;
-    }
-    if (ImGui::Button("TimelineEditorScene")) {
-        is_end_ = true;
-        next_scene_tag_ = SceneTag::TimelineEditor;
-    }
-
-    ImGui::End();
+    // ƒƒjƒ…[ƒV[ƒ“‚Å‚ÍƒIƒŠƒWƒiƒ‹ƒXƒe[ƒg‚ğg‚í‚È‚¢‚Ì‚Å‘JˆÚ
+    if (state_.get_current_state() == (GSuint)SceneStateType::Original) change_state((GSuint)SceneStateType::MenuScene);
 }
 
 void MenuScene::original_draw() const {
-    gsDrawText("menu");
-
-    // ä»®ãƒ­ã‚´æç”»
-    {
-        const GSrect rect{ 0.0f, 0.0f, 340.0f, 76.0f };
-        const GSvector2 center{ rect.right / 2.0f, rect.bottom / 2.0f };
-        Canvas::draw_texture((GSuint)TextureID::MenuLogo, GSvector2::zero(), rect, center, GSvector2::one(), GScolor{ 1.0f, 1.0f, 1.0f, 1.0f }, 0.0f, Anchor::Center);
-    }
+    // TODO ”wŒi
 }
 
 void MenuScene::load_data() {
-    // èª­ã¿è¾¼ã¿å‡¦ç†ã®æ•°ã‹ã‚‰ä¸€ã¤ã®å‡¦ç†åˆ†ã®é€²æ—ç‡ã‚’è¨ˆç®—
+    // “Ç‚İ‚İˆ—‚Ì”‚©‚çˆê‚Â‚Ìˆ—•ª‚Ìi’»—¦‚ğŒvZ
     const int count = 1;
     const float progress = 1.0f / (float)count;
 
-    // ã‚¢ã‚»ãƒƒãƒˆã®èª­ã¿è¾¼ã¿
-    LoadAssets* asset = new LoadAssets{};
-    asset->name = "Menu";
-    asset->texture.push_back({ (GSuint)TextureID::MenuLogo, "Resource/Assets/Texture/menu_test.png" });
-    AssetsManager::get_instance().load_asset(asset);
+    // ƒAƒZƒbƒg‚Ì“Ç‚İ‚İ
+    AssetsLoader::load_by_json("Resource/Private/Common/Assets/menu.json", AssetsLoader::MENU_ASSET_NAME);
     load_progress_ += progress;
 }

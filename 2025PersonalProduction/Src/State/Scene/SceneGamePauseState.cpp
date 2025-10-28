@@ -13,7 +13,6 @@ static const float TEXT_ANIME_MAX_VELOCITY{ 11.0f };
 SceneGamePauseState::SceneGamePauseState(GameScene& owner) :
     owner_{ owner } {
     // ボタンの追加
-    const GSrect rect{ 0.0f, 0.0f, 450.0f, 110.0f };
     {
         TextFunctionButton* button = new TextFunctionButton{ "ゲーム再開", GSvector2{ 416.0f, 294.0f }, 64, Anchor::TopLeft, Anchor::Center };
         button->on_input([=] { return_game(); });
