@@ -16,8 +16,6 @@
 #include "Engine/Core/Camera/Camera.h"
 #include "Engine/Core/Input/Input.h"
 
-class ITimeline;
-
 class EditorCamera : public Camera {
 public:
 	EditorCamera(IWorld* world);
@@ -46,8 +44,6 @@ private:
 
 	// 元のカメラ
 	Camera* prev_{ nullptr };
-	// カメラタイムライン
-	ITimeline* timeline_{ nullptr };
 
 	// エディタカメラを使えるかどうか
 	bool is_active_{ false };

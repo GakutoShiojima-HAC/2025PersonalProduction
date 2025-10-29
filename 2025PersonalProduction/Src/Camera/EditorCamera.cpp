@@ -1,8 +1,6 @@
 #include "Camera/EditorCamera.h"
 #include <imgui/imgui.h>
 #include "Engine/Core/World/IWorld.h"
-#include "Engine/Core/Timeline/TimelineManager.h"
-#include "Engine/Core/Timeline/Parameters/CameraTimeline.h"
 
 // カメラの移動速度
 const float MOVE_SPEED{ 0.225f };
@@ -15,9 +13,6 @@ EditorCamera::EditorCamera(IWorld* world) {
 
 	transform_.position(GSvector3{ 0.0f, 0.0f, 0.0f });
 	transform_.lookAt(GSvector3{ 0.0f, 0.0f, 0.0f });
-
-	// カメラタイムラインを取得
-	timeline_ = world_->timeline().camera_timeline();
 
 	// もし使用中なら
 	if (is_using_) is_active_ = true;
@@ -97,8 +92,7 @@ void EditorCamera::die() {
 }
 
 bool EditorCamera::is_play_timeline() const {
-	if (timeline_ == nullptr) return false;
-	return timeline_->is_playing();
+    return world_->is_playing_timeline();
 }
 
 void EditorCamera::toggle_camera() {

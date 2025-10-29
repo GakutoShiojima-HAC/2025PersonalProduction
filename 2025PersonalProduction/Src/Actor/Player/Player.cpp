@@ -184,7 +184,7 @@ void Player::update(float delta_time) {
 #endif
 
     if (gsGetKeyTrigger(GKEY_7)) {
-        world_->game_save_data().inventory().add(ItemType::Weapon, 1, 1);
+        world_->play_timeline("test");
     }
 }
 
