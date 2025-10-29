@@ -24,7 +24,6 @@ class Camera;
 class Actor;
 class Pawn;
 class Character;
-class TimelineManager;
 class NavMeshSurface;
 class GameSaveData;
 class ActionScore;
@@ -179,10 +178,25 @@ public:
     virtual std::vector<Character*> find_character_with_tag(const ActorTag tag) const = 0;
 
     /// <summary>
-    /// タイムラインマネージャーを取得
+    /// タイムラインを再生
     /// </summary>
-    /// <returns>タイムラインマネージャー</returns>
-    virtual TimelineManager& timeline() = 0;
+
+    /// <summary>
+    /// タイムラインの再生を開始
+    /// </summary>
+    /// <param name="name">= 再生時の名前</param>
+    virtual void play_timeline(const std::string& name) = 0;
+
+    /// <summary>
+    /// タイムラインの再生を停止
+    /// </summary>
+    virtual void stop_timeline() = 0;
+
+    /// <summary>
+    /// タイムラインが再生中かどうか
+    /// </summary>
+    /// <returns></returns>
+    virtual bool is_playing_timeline() const = 0;
 
     /// <summary>
     /// 攻撃判定を生成
