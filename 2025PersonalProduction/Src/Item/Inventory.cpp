@@ -8,15 +8,15 @@
 const std::string FILE_PATH{ "/inventory.json" };
 
 void Inventory::load(const std::string& folder_path) {
-    // jsonファイルがなければその時点で終了
+    ItemDataManager& item_data = ItemDataManager::get_instance();
+
+    // jsonファイルがなければ初期装備にして終了
     json j;
     if (!MyJson::is_json(folder_path + FILE_PATH, j)) return;
 
-    ItemDataManager& item_data_ = ItemDataManager::get_instance();
-
     // インベントリを展開
-    if (MyJson::is_object(j, "inventory")) {
-        const auto& inventory_obj = j["inventory"];
+    if (MyJson::is_object(j, "Inventory")) {
+        const auto& inventory_obj = j["Inventory"];
         for (const auto& type_obj : inventory_obj.items()) {
             const std::string& type_name = type_obj.key();
             const ItemType type = ItemData::to_type(type_name);
@@ -31,7 +31,7 @@ void Inventory::load(const std::string& folder_path) {
                 // 値がなければスキップ
                 if (row.size() < 2) continue;
                 // IDが見つからなければスキップ
-                if (item_data_.is_empty(ItemData::Data{ type, row[0] })) continue;
+                if (item_data.is_empty(ItemData::Data{ type, row[0] })) continue;
                 // 追加
                 inventory_[type].push_back(InventorySlot{ row[0], row[1] });
             }
@@ -41,8 +41,8 @@ void Inventory::load(const std::string& folder_path) {
     // TODO 武器データのバージョンが一致していなかったら...？
     
     // 現在の武器
-    int weapon_id = MyJson::get_int(j, "current_weapon");
-    current_weapon_ = ItemDataManager::get_instance().get_weapon(weapon_id);
+    int weapon_id = MyJson::get_int(j, "CurrentWeaponID");
+    current_weapon_ = item_data.get_weapon(weapon_id);
 }
 
 void Inventory::save(const std::string& folder_path) {
@@ -51,7 +51,7 @@ void Inventory::save(const std::string& folder_path) {
     // 武器データのバージョン
     j["weapon_version"] = ItemDataManager::get_instance().weapon_version();
     // 使っていた武器
-    j["current_weapon"] = current_weapon_.id;
+    j["CurrentWeaponID"] = current_weapon_.id;
 
     // 全体の持ち物
     for (const auto& item : inventory_) {
@@ -66,7 +66,7 @@ void Inventory::save(const std::string& folder_path) {
         for (const auto& v : item.second) {
             data[type_string].push_back({ v.id, v.count }); // 0がID 1が個数
         }
-        j["inventory"] = data;
+        j["Inventory"] = data;
     }
 
     // ファイル保存
@@ -82,6 +82,11 @@ void Inventory::clear() {
 bool Inventory::add(ItemType type, int id, int count) {
     if (MyLib::is_in(type, ItemType::NONE, ItemType::MAX_SIZE)) return false;
     if (!is_in_id(type, id)) return false;
+
+    // もし武器を持っていなく、武器だったら自動装備
+    if (type == ItemType::Weapon && current_weapon_.is_empty()) {
+        current_weapon_ = ItemDataManager::get_instance().get_weapon(id);
+    }
 
     // 種類がなければ新しく追加
     if (inventory_.find(type) == inventory_.end()) {
