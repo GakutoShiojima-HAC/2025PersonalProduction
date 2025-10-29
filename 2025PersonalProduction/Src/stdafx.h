@@ -80,14 +80,7 @@
 #include "Engine/Core/StateMachine/NullState.h"
 #include "Engine/Core/StateMachine/StateMachine.h"
 
-#include "Engine/Core/Timeline/Editor/CameraTimelineEditor.h"
-#include "Engine/Core/Timeline/Editor/TimelineEditor.h"
-
-#include "Engine/Core/Timeline/Parameters/CameraTimeline.h"
-
-#include "Engine/Core/Timeline/ITimeline.h"
-#include "Engine/Core/Timeline/TimelineManager.h"
-#include "Engine/Core/Timeline/TimelineEditorManager.h"
+#include "Engine/Core/Timeline/Timeline.h"
 
 #include "Engine/Core/Tween/ColorUnit.h"
 #include "Engine/Core/Tween/Tween.h"
