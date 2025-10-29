@@ -273,7 +273,7 @@ void Player::on_hit_attack(AttackCollider& collider) {
     // 通常攻撃なら
     if (name == "PlayerNormalAttack") {
         // 基礎スコア 基礎値 + コンボ数 * ボーナス値 
-        const int score = 50 + (attack_count_ - 1) * 10;
+        const int score = 50 + attack_count_ * 10;
         world_->action_score().add_score(score, mesh_.motion_end_time() * 1.25f, 0.125f); // 時間はモーション時間より少しだけ長めに
 
         // カメラを揺らす
@@ -574,16 +574,17 @@ void Player::generate_attack_collider(const GSvector3& offset, float radius, int
 }
 
 void Player::interact_update() {
-    // インタラクトできないステート
+    // インタラクトさせないステート
     if (MyLib::is_in(
         state_.get_current_state(),
         (GSuint)PlayerStateType::Idle,
         (GSuint)PlayerStateType::Avoid,
-        (GSuint)PlayerStateType::Hurt,
         (GSuint)PlayerStateType::Dead,
         (GSuint)PlayerStateType::Jump,
-        (GSuint)PlayerStateType::Fall
+        (GSuint)PlayerStateType::Fall,
+        (GSuint)PlayerStateType::Skill
     )) {
+        // クリアだけして終了
         interact_actors_.clear();
         return;
     }
@@ -600,6 +601,12 @@ void Player::interact_update() {
     if (input_.action(InputAction::GAME_Interact_Up)) --target_index;
     else if (input_.action(InputAction::GAME_Interact_Down)) ++target_index;
     interact_target_index_ = CLAMP(target_index, 0, interact_actors_.size() - 1);
+
+    // インタラクトできないステート
+    if (MyLib::is_in(
+        state_.get_current_state(),
+        (GSuint)PlayerStateType::Attack
+    ))  return;
 
     // インタラクト
     if(input_.action(InputAction::GAME_Interact)) {
