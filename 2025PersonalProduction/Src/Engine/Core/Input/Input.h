@@ -127,6 +127,8 @@ private:
     GSvector2 left_axis_;
     // PADの右スティック・PCのマウス情報
     GSvector2 right_axis_;
+    // マウスのスクロール情報
+    int scroll_{ 0 };
 
     // カーソル座標の更新を行うかどうか
     bool is_update_cursor_position_{ true };
