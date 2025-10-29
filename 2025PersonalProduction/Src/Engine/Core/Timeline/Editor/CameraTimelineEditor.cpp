@@ -66,11 +66,13 @@ void CameraTimelineEditor::update_select_keyframe() {
         Camera* camera = parameter_.get_world()->get_camera();
         Actor* target = parameter_.get_world()->find_actor(key_frame->target);
         if (camera != nullptr) {
-            GSvector3 position = camera->transform().position();
             // ターゲットが存在するなら相対座標を入力
+            GSvector3 position = camera->transform().position();
+            GSvector3 lookat = camera->transform().forward();
             if (target != nullptr) position = target->transform().inverseTransformPoint(position);
+            if (target != nullptr) lookat = target->transform().inverseTransformPoint(lookat);
             key_frame->position = position;
-            key_frame->lookat = position + camera->transform().forward();
+            key_frame->lookat = lookat;
             key_frame->angle = get_tilt_angle(camera->transform().rotation());
         }
     }
