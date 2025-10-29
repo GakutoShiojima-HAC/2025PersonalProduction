@@ -48,7 +48,7 @@ void Setting::reset() {
     // デバッグ関係
     enable_draw_safearea_ = false;
     // デバイス関係
-    enable_vibration_ = false;
+    enable_vibration_ = true;
 }
 
 void Setting::save() {

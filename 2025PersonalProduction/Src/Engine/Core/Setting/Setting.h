@@ -100,7 +100,7 @@ private:
 
     bool enable_draw_safearea_{ false };
 
-    bool enable_vibration_{ false };
+    bool enable_vibration_{ true };
 
 public:
 	// コピー禁止
