@@ -16,7 +16,6 @@
 
 // 一時的 ローダーやマネージャーを作ったら不要
 #include <gslib.h>	// シーン終了用
-#include "Engine/Core/Timeline/Parameters/CameraTimeline.h"	// タイムラインローダーを作るべし
 #include "Actor/Enemy/DummyEnemy.h"	// アクターローダーを作るべし
 #include "Actor/ItemActor/ItemActor.h"  //アクターローダーを作るべし
 
@@ -147,7 +146,8 @@ void GameScene::load_data() {
     load_progress_ += progress;
 
     // タイムラインデータの読み込み
-    world_.timeline().add(new CameraTimeline{ &world_, stage + "/camera_timeline.json" });
+    world_.timeline().init(&world_, true);
+    world_.timeline().load(stage + "/timeline.json");
     load_progress_ += progress;
 
     // アイテムデータの読み込み

@@ -16,7 +16,7 @@
 #include "Engine/Core/Actor/Pawn/PawnManager.h"
 #include "Engine/Core/Actor/Pawn/Character/CharacterManager.h"
 #include "Engine/Core/Camera/CameraManager.h"
-#include "Engine/Core/Timeline/TimelineManager.h"
+#include "Engine/Core/Timeline/Timeline.h"
 #include "Engine/Core/NavMesh/NavMeshSurface.h"
 #include "Engine/Graphics/Shader/GameShader.h"
 #include "Engine/Graphics/Shader/GamePostEffect.h"
@@ -94,6 +94,12 @@ public:
     /// <returns>参照</returns>
     GameTimer& time();
 
+    /// <summary>
+    /// タイムラインを取得
+    /// </summary>
+    /// <returns>参照</returns>
+    Timeline& timeline();
+
 public:
     bool& enable_draw_gui() override;
 
@@ -137,7 +143,11 @@ public:
 
     std::vector<Character*> find_character_with_tag(const ActorTag tag) const override;
 
-	TimelineManager& timeline() override;
+    void play_timeline(const std::string& name) override;
+
+    void stop_timeline() override;
+
+    bool is_playing_timeline() const override;
 
 	void generate_attack_collider(float radius, const GSvector3& center, Actor* owner, int damage, const std::string& name, float lifespan = 1.0f, float delay = 0.0f) override;
 
@@ -167,8 +177,8 @@ protected:
 	CharacterManager character_;
 	// カメラマネージャー
 	CameraManager camera_;
-	// タイムラインマネージャー
-	TimelineManager timeline_;
+	// タイムライン
+	Timeline timeline_;
 	// 攻撃判定プール
 	AttackColliderPool* attack_collider_pool_{ nullptr };
 	// ゲームシェーダー

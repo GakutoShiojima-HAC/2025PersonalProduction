@@ -137,6 +137,10 @@ GameTimer& World::time() {
     return game_timer_;
 }
 
+Timeline& World::timeline() {
+    return timeline_;
+}
+
 bool& World::enable_draw_gui() {
     return enable_draw_gui_;
 }
@@ -221,8 +225,16 @@ vector<Character*> World::find_character_with_tag(const ActorTag tag) const {
 	return character_.find_with_tag(tag);
 }
 
-TimelineManager& World::timeline() {
-	return timeline_;
+void World::play_timeline(const std::string& name) {
+    timeline_.play(name);
+}
+
+void World::stop_timeline() {
+    timeline_.stop();
+}
+
+bool World::is_playing_timeline() const {
+	return false;
 }
 
 void World::generate_attack_collider(float radius, const GSvector3& center, Actor* owner, int damage, const std::string& name, float lifespan, float delay) {
