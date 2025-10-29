@@ -46,7 +46,7 @@ const float DECELERATION_SPEED{ 0.75f };
 // 無敵時間(秒)
 const float INVINCIBLE_TIME{ 0.5f };
 // 回避移動速度
-const float AVOID_SPEED{ 12.0f };
+const float AVOID_SPEED{ 9.0f };
 
 // 回避演出の時間
 const float AVOID_EFFECT_TIME{ 3.0f };
@@ -232,13 +232,13 @@ void Player::take_damage(Actor& other, const int damage) {
 		(GSuint)PlayerStateType::Dead,
 		(GSuint)PlayerStateType::Skill	// スキル中も無敵
 	)) return;
-	if (invincible_timer() > 0.0f) {
-		// 回避演出
-		if (state_.get_current_state() == (GSuint)PlayerStateType::Avoid) {
-			world_->enable_avoid_effect() = true;
-			world_->set_mask_color(AVOID_EFFECT_COLOR);
-			avoid_effect_timer_ = AVOID_EFFECT_TIME;
-		}
+    // 回避演出中は無敵とする
+    if (avoid_effect_timer_ > 0.0f) return;
+	// 回避演出
+	if (invincible_timer() > 0.0f && state_.get_current_state() == (GSuint)PlayerStateType::Avoid) {
+		world_->enable_avoid_effect() = true;
+		world_->set_mask_color(AVOID_EFFECT_COLOR);
+		avoid_effect_timer_ = AVOID_EFFECT_TIME;
 		return;
 	}
 
@@ -269,19 +269,34 @@ void Player::take_damage(Actor& other, const int damage) {
 void Player::on_hit_attack(AttackCollider& collider) {
     std::string name = collider.name();
 
-
     // 通常攻撃なら
     if (name == "PlayerNormalAttack") {
         // 基礎スコア 基礎値 + コンボ数 * ボーナス値 
         const int score = 50 + attack_count_ * 10;
         world_->action_score().add_score(score, mesh_.motion_end_time() * 1.25f, 0.125f); // 時間はモーション時間より少しだけ長めに
-
         // カメラを揺らす
-        float strength = 2.5f + (0.5f * attack_count_ - 1);
+        float strength = 2.5f + (0.5f * attack_count_);
         world_->camera_shake(CameraShakeType::Shake, 0.075f, strength, false);
-
         // コントローラーを振動させる
         if (input_.is_pad()) Vibration::get_instance().start(0.2f, 1.0f);
+    }
+
+    // 回避攻撃なら
+    if (name == "PlayerAvoidAttack") {
+        world_->action_score().add_score(100, mesh_.motion_end_time() * 2.0f, 0.5f);
+        // カメラを揺らす
+        world_->camera_shake(CameraShakeType::Shake, 0.125f, 4.0f, false);
+        // コントローラーを振動させる
+        if (input_.is_pad()) Vibration::get_instance().start(0.25f, 1.0f);
+    }
+
+    // 回避成功攻撃なら
+    if (name == "PlayerAvoidSuccessAttack") {
+        world_->action_score().add_score(250, mesh_.motion_end_time() * 5.0f, 3.0f);
+        // カメラを揺らす
+        world_->camera_shake(CameraShakeType::Shake, 0.15f, 5.0f, false);
+        // コントローラーを振動させる
+        if (input_.is_pad()) Vibration::get_instance().start(0.25f, 1.0f);
     }
 }
 
@@ -322,7 +337,7 @@ void Player::update_move(float delta_time) {
 	velocity += forward * input.y;
 	
 	// 歩行か疾走かを取得
-	const bool is_walk = input_.action(InputAction::GAME_Sprint);
+	bool is_walk = input_.action(InputAction::GAME_Sprint);
 
 	// ロックオン中かどうかを取得
 	const bool is_lockon = camera_->is_lockon();
@@ -443,6 +458,28 @@ void Player::update_lockon_camera() {
 	}
 }
 
+void Player::look_target() {
+    // 一番近い敵を探す
+    float min_length{ 3.0f };
+    Pawn* target{ nullptr };
+    const GSvector3 position = transform_.position();
+    for (const auto& pawn : world_->find_pawn_with_tag(ActorTag::Enemy)) {
+        // 死亡していたらスキップ
+        if (pawn->is_dead_state()) continue;
+        float length = (pawn->transform().position() - position).magnitude();
+        // 一番近ければ対象を更新
+        if (length < min_length) {
+            min_length = length;
+            target = pawn;
+        }
+    }
+    if (target == nullptr) return;
+
+    GSvector3 target_position = target->transform().position();
+    target_position.y = position.y; // 向かせるだけなのでy座標は同じ
+    transform_.lookAt(target_position);
+}
+
 bool Player::is_action(InputAction action) const {
     switch (action) {
     case InputAction::GAME_Attack:
@@ -496,8 +533,8 @@ void Player::on_avoid() {
 		avoid_velocity += right * input.x;
 		avoid_velocity += forward * input.y;
 	}
-	// 入力が無ければ後退とする
-	if (avoid_velocity.magnitude() < 0.01f) avoid_velocity += forward * -1.0f;
+	// 入力が無ければ前へ
+	if (avoid_velocity.magnitude() < 0.01f) avoid_velocity += forward * 1.0f;
 
 	// モーションを設定
 	GSuint motion = Motion::AvoidB;
@@ -533,7 +570,21 @@ void Player::on_avoid() {
 	velocity_.z = 0.0f;
 }
 
+void Player::on_avoid_attack() {
+    look_target();
+    // 回避が成功していたら回避成功攻撃とする
+    if (avoid_effect_timer_ > 0.0f) {
+        change_state((GSuint)PlayerStateType::Skill, Motion::AvoidSuccessAttack, false);
+        // TODO camera timeline
+    }
+    else {
+        change_state((GSuint)PlayerStateType::Skill, Motion::AvoidAttack, false);
+        // TODO camera timeline
+    }
+}
+
 void Player::on_skill() {
+    look_target();
 	// TODO
 }
 
@@ -694,6 +745,10 @@ void Player::add_attack_animation_event(const PlayerInfo& info) {
 
 bool Player::is_root_motion_state() const {
     return false;
+    return MyLib::is_in(
+        get_current_motion(),
+        (GSuint)Motion::AvoidSuccessAttack
+    );
     //return MyLib::is_in(state_.get_current_state(),
     //    (GSuint)PlayerStateType::Attack
     //);
@@ -709,14 +764,15 @@ void Player::update_mesh(float delta_time) {
 }
 
 void Player::on_air() {
-	if (MyLib::is_in(
-		state_.get_current_state(),
-		(GSuint)PlayerStateType::Idle,
+    if (MyLib::is_in(
+        state_.get_current_state(),
+        (GSuint)PlayerStateType::Idle,
         (GSuint)PlayerStateType::Avoid,
-		(GSuint)PlayerStateType::Hurt,
-		(GSuint)PlayerStateType::Dead,
-		(GSuint)PlayerStateType::Jump,
-		(GSuint)PlayerStateType::Fall
+        (GSuint)PlayerStateType::Hurt,
+        (GSuint)PlayerStateType::Dead,
+        (GSuint)PlayerStateType::Jump,
+        (GSuint)PlayerStateType::Fall,
+        (GSuint)PlayerStateType::Skill
 	)) return;
 
 	change_state((GSuint)PlayerStateType::Fall, Motion::Fall, true);
@@ -730,7 +786,8 @@ void Player::on_ground() {
         (GSuint)PlayerStateType::Avoid,
 		(GSuint)PlayerStateType::Hurt,
 		(GSuint)PlayerStateType::Dead,
-		(GSuint)PlayerStateType::Land
+		(GSuint)PlayerStateType::Land,
+        (GSuint)PlayerStateType::Skill
 	)) return;
 
 	change_state((GSuint)PlayerStateType::Land, Motion::Land, false);

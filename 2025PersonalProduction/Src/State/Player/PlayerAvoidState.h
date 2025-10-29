@@ -18,7 +18,7 @@ public:
 	PlayerAvoidState(Player& owner);
 
 private:
-    void enter() override {};
+    void enter() override;
 
 	void update(float delta_time) override;
 
@@ -28,6 +28,11 @@ private:
 
 	void exit() override {};
 
+private:
+    // 回避攻撃の入力があったかどうか
+    bool avoid_attack_input_{ false };
+    // 回避スキルの入力があったかどうか
+    bool avoid_skill_input_{ false };
 };
 
 #endif

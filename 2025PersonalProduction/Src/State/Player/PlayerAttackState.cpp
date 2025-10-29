@@ -37,6 +37,7 @@ void PlayerAttackState::update(float delta_time) {
 
     // 次の段に進める時間かつ、入力が既にあれば
 	if (owner_.state_timer() >= enter_next_attack_min_timer_ && next_attack_input_) {
+        owner_.look_target();
         // 次もこのステートなので値をリセット
 		next_attack_input_ = false;
         // 段を加算(is_action内で次に進めるときのみ真を返すためチェック不要)
