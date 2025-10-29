@@ -9,7 +9,8 @@ PlayerAttackState::PlayerAttackState(Player& owner) :
 void PlayerAttackState::enter() {
 	next_attack_input_ = false;
 
-	enter_next_attack_timer_ = owner_.get_enter_next_attack_animation_time();
+	enter_next_attack_min_timer_ = owner_.get_enter_next_attack_min_time();
+    enter_next_attack_max_timer_ = owner_.get_enter_next_attack_max_time();
 }
 
 void PlayerAttackState::update(float delta_time) {
@@ -27,23 +28,32 @@ void PlayerAttackState::update(float delta_time) {
         return;
     }
 
-	enter_next_attack_timer_ -= delta_time;
-
-    // 次の段に進む入力を検知
-	if (enter_next_attack_timer_ / 1.5f <= 0.0f && owner_.is_action(InputAction::GAME_Attack)) next_attack_input_ = true;
+    // 次の段に進む入力を検知 (/1,5fは少し早めに押せるようにしてある)
+    if (
+        owner_.state_timer() >= enter_next_attack_min_timer_ / 1.5f &&
+        owner_.state_timer() <= enter_next_attack_max_timer_ &&
+        owner_.is_action(InputAction::GAME_Attack)
+        ) next_attack_input_ = true;
 
     // 次の段に進める時間かつ、入力が既にあれば
-	if (next_attack_input_ && enter_next_attack_timer_ <= 0.0f) {
+	if (owner_.state_timer() >= enter_next_attack_min_timer_ && next_attack_input_) {
         // 次もこのステートなので値をリセット
 		next_attack_input_ = false;
         // 段を加算(is_action内で次に進めるときのみ真を返すためチェック不要)
 		owner_.attack_count() += 1;
         // 次の段に進める時間を更新
-		enter_next_attack_timer_ = owner_.get_enter_next_attack_animation_time();
+        enter_next_attack_min_timer_ = owner_.get_enter_next_attack_min_time();
+        enter_next_attack_max_timer_ = owner_.get_enter_next_attack_max_time();
         // モーション更新のために呼び出す
 		owner_.change_state((GSuint)PlayerStateType::Attack, owner_.get_attack_motion(), false);
 		return;
 	}
+
+    // 次の段に進めないかつ、移動入力があれば移動ステートに遷移
+    if (owner_.state_timer() > enter_next_attack_max_timer_ && owner_.is_move_input()) {
+        owner_.to_move_state();
+        return;
+    }
 
     // モーションが終了したら移動ステートに遷移
 	if (owner_.is_motion_end()) {
@@ -54,5 +64,4 @@ void PlayerAttackState::update(float delta_time) {
 
 void PlayerAttackState::exit() {
 	owner_.attack_count() = 0;
-	enter_next_attack_timer_ = 0.0f;
 }
