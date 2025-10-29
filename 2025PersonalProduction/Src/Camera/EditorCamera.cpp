@@ -3,9 +3,9 @@
 #include "Engine/Core/World/IWorld.h"
 
 // カメラの移動速度
-const float MOVE_SPEED{ 0.225f };
+const float MOVE_SPEED{ 0.025f };
 // カメラの視点移動速度
-const float SENSITIVITY{ 0.075f };
+const float SENSITIVITY{ 0.05f };
 
 EditorCamera::EditorCamera(IWorld* world) {
 	world_ = world;

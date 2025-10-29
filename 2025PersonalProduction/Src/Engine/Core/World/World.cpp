@@ -234,7 +234,7 @@ void World::stop_timeline() {
 }
 
 bool World::is_playing_timeline() const {
-	return false;
+	return timeline_.is_playing();
 }
 
 void World::generate_attack_collider(float radius, const GSvector3& center, Actor* owner, int damage, const std::string& name, float lifespan, float delay) {

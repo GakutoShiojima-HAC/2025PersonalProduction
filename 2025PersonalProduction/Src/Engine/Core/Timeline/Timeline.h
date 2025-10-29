@@ -54,6 +54,12 @@ public:
     /// </summary>
     void stop();
 
+    /// <summary>
+    /// 再生中かどうか
+    /// </summary>
+    /// <returns></returns>
+    bool is_playing() const;
+
 private:
     /// <summary>
     /// タイムラインパラメータを検索

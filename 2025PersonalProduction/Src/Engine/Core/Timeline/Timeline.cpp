@@ -75,6 +75,13 @@ void Timeline::stop() {
     }
 }
 
+bool Timeline::is_playing() const {
+    for (auto& param : timelines_) {
+        if (param->is_playing()) return true;
+    }
+    return false;
+}
+
 ITimelineParameter* Timeline::find(const std::string& name) {
     for (auto& param : timelines_) {
         if (param->name() == name) return param;
