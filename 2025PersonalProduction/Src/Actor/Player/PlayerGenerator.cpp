@@ -25,8 +25,8 @@ PlayerGenerator::PlayerGenerator(const json& j, World* world) {
         // パラメータを取得
         PlayerAttackParam param;
         param.damage = MyJson::get_int(obj, "Damage");
-        param.next_start = MyJson::get_int(obj, "NextInputStart");
-        param.next_end = MyJson::get_int(obj, "NextInputEnd");
+        param.next_start = MyJson::get_float(obj, "NextInputStart");
+        param.next_end = MyJson::get_float(obj, "NextInputEnd");
         info_.attack_param.push_back(param);
         // モーションを取得
         info_.attack_event.push_back(get_motion(obj["GenerateCollider"]));
