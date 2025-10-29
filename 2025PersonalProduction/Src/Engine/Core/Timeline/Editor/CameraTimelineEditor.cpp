@@ -114,9 +114,14 @@ void CameraTimelineEditor::draw_current_keyframe() {
     // 現在のカメラパラメータを適用
     if (ImGui::Button("Apply Current Camera Location")) {
         Camera* camera = world_->get_camera();
+        Actor* target = world_->find_actor(target_);
         if (camera != nullptr) {
-            key_frame->position = camera->transform().position();
-            key_frame->lookat = camera->transform().position() + camera->transform().forward();
+            GSvector3 position = camera->transform().position();
+            // ターゲットが存在するなら相対座標を入力
+            if (target != nullptr) position = target->transform().inverseTransformPoint(position);
+
+            key_frame->position = position;
+            key_frame->lookat = position + camera->transform().forward();
             key_frame->angle = get_tilt_angle(camera->transform().rotation());
         }
     }
