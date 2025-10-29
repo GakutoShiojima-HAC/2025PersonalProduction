@@ -28,6 +28,7 @@ void PlayerInteractState::update(float delta_time) {
 
     // 攻撃入力があれば攻撃ステートへ遷移
     if (owner_.is_action(InputAction::GAME_Attack)) {
+        owner_.look_target();
         owner_.attack_start();
         owner_.change_state((GSuint)PlayerStateType::Attack, owner_.get_attack_motion(), false);
         return;
