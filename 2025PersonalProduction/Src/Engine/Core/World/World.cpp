@@ -84,9 +84,9 @@ void World::clear() {
 	attack_collider_pool_ = nullptr;
 	character_.clear();
 	pawn_.clear();
+	timeline_.clear();
 	actor_.clear();
 	camera_.clear();
-	timeline_.clear();
 }
 
 void World::shadow_map_callback(void* param, const GSmatrix4* view, const GSmatrix4* projection) {
