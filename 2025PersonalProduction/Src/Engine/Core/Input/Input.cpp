@@ -20,6 +20,7 @@ void Input::update(float delta_time) {
 		gsXBoxPadGetLeftAxis(USE_PAD_NUM, &left_axis_);
 		// 右軸
 		gsXBoxPadGetRightAxis(USE_PAD_NUM, &right_axis_);
+        scroll_ = 0;
 
 		// カーソルは左スティックで移動とする
 		if (!is_update_cursor_position_) return;
@@ -36,7 +37,7 @@ void Input::update(float delta_time) {
 		if (gsGetKeyState(GKEY_A)) left_axis_.x += -1;
 		// 右軸
 		int x, y;
-		gsGetMouseVelocity(&x, &y, nullptr);
+		gsGetMouseVelocity(&x, &y, &scroll_);
 		right_axis_.x = x;
 		right_axis_.y = -y;
 
@@ -136,11 +137,11 @@ bool Input::action(InputAction action) const {
 	case InputAction::GAME_Sprint:
 		break;
 	case InputAction::GAME_Interact:
-		break;
+		return is_pad_ ? gsXBoxPadButtonTrigger(USE_PAD_NUM, GS_XBOX_PAD_X) : gsGetKeyTrigger(GKEY_E);
     case InputAction::GAME_Interact_Up:
-        return gsXBoxPadButtonTrigger(USE_PAD_NUM, GS_XBOX_PAD_UP);
+        return is_pad_ ? gsXBoxPadButtonTrigger(USE_PAD_NUM, GS_XBOX_PAD_UP) : scroll_ > 0;
     case InputAction::GAME_Interact_Down:
-        return gsXBoxPadButtonTrigger(USE_PAD_NUM, GS_XBOX_PAD_DOWN);
+        return is_pad_ ? gsXBoxPadButtonTrigger(USE_PAD_NUM, GS_XBOX_PAD_DOWN) : scroll_ < 0;
     case InputAction::GAME_Inventory:
 		break;
 	case InputAction::DEBUG_CameraActive:

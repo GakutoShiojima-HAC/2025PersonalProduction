@@ -31,9 +31,10 @@ private:
 private:
 	// 次の段への入力があったかどうか
 	bool next_attack_input_{ false };
-	// 次の段への遷移タイマー
-	float enter_next_attack_timer_{ 0.0f };
-
+	// 次の段への最小遷移タイマー
+	float enter_next_attack_min_timer_{ 0.0f };
+    // 次の段への最大遷移タイマー
+    float enter_next_attack_max_timer_{ 0.0f };
 };
 
 #endif

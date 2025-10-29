@@ -14,9 +14,9 @@
 #include "Engine/Core/Actor/Pawn/Character/Character.h"
 #include "Engine/Core/Input/Input.h"
 #include "Item/ItemDataManager.h"
-#include "Weapon/WeaponManager.h"
 
 class PlayerCamera;
+class Inventory;
 
 /// <summary>
 /// 攻撃判定作成アニメーションイベント登録用構造体
@@ -85,7 +85,7 @@ public:
         Jump = 9,
         Fall = 10,
         Land = 11,
-
+        Interact = 999, // TODO 
         Dead = 13,
 
         HurtF = 14,
@@ -154,6 +154,11 @@ public:
 	void to_move_state();
 
     /// <summary>
+    /// 移動速度をリセットする
+    /// </summary>
+    void reset_move_speed();
+
+    /// <summary>
     /// 移動入力を行っているかどうか
     /// </summary>
     /// <returns>行っていたら真を返却</returns>
@@ -188,11 +193,6 @@ public:
 	void on_skill();
 
 	/// <summary>
-	/// インタラクト処理
-	/// </summary>
-	void on_interact();
-
-	/// <summary>
 	/// 現在の攻撃段数
 	/// </summary>
 	/// <returns>参照</returns>
@@ -201,8 +201,14 @@ public:
 	/// <summary>
 	/// 攻撃から次の攻撃に入るまでの最短時間を取得
 	/// </summary>
-	/// <returns>時間</returns>
-	float get_enter_next_attack_animation_time() const;
+	/// <returns>delta_time</returns>
+	float get_enter_next_attack_min_time() const;
+
+    /// <summary>
+    /// 攻撃から次の攻撃に入るまでの最短時間を取得
+    /// </summary>
+    /// <returns>delta_time</returns>
+    float get_enter_next_attack_max_time() const;
 
 	/* アクションのモーション番号を返却 */
 public:
@@ -256,13 +262,12 @@ private:
 
     // アイテムデータ
     ItemDataManager& item_data_ = ItemDataManager::get_instance();
+    // インベントリ
+    Inventory& inventory_;
     // インタラクト対象のアクター
     std::vector<Actor*> interact_actors_;
     // インタラクトしているアクターのインデックス
     GSint interact_target_index_{ 0 };
-
-	// 武器管理
-	WeaponManager weapon_manager_;  // TODO iranai
 
 	// 通常攻撃段数
 	int attack_count_{ 0 };

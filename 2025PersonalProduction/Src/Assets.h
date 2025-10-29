@@ -21,7 +21,7 @@
     X(EnemySlimeToxic) \
     X(EnemySlimeManToxic) \
     X(WeaponSword1) \
-    X(WeaponSword3) \
+    X(WeaponSword2) \
     X(MAX_SIZE) // 要素数
 
 // テクスチャ 
