@@ -182,10 +182,6 @@ void Player::update(float delta_time) {
 
 	ImGui::End();
 #endif
-
-    if (gsGetKeyTrigger(GKEY_7)) {
-        world_->play_timeline("test");
-    }
 }
 
 void Player::late_update(float delta_time) {
@@ -480,6 +476,10 @@ void Player::look_target() {
     transform_.lookAt(target_position);
 }
 
+void Player::stop_timeline() {
+    world_->stop_timeline();
+}
+
 bool Player::is_action(InputAction action) const {
     switch (action) {
     case InputAction::GAME_Attack:
@@ -575,11 +575,11 @@ void Player::on_avoid_attack() {
     // ‰ñ”ð‚ª¬Œ÷‚µ‚Ä‚¢‚½‚ç‰ñ”ð¬Œ÷UŒ‚‚Æ‚·‚é
     if (avoid_effect_timer_ > 0.0f) {
         change_state((GSuint)PlayerStateType::Skill, Motion::AvoidSuccessAttack, false);
-        // TODO camera timeline
+        world_->play_timeline("AvoidSuccessAttack");
     }
     else {
         change_state((GSuint)PlayerStateType::Skill, Motion::AvoidAttack, false);
-        // TODO camera timeline
+        world_->play_timeline("AvoidAttack");
     }
 }
 
