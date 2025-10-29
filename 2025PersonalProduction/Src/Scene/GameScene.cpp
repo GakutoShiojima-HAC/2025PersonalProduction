@@ -231,9 +231,9 @@ void GameScene::game_start() {
     // アイテムの生成
     // TODO 生成を外部から行う
     world_.add_actor(new ItemActor{ &world_, GSvector3{ 0.0f, 0.0f, -3.0f }, ItemData::Data{ ItemType::Weapon, 1 } });
-    world_.add_actor(new ItemActor{ &world_, GSvector3{ 0.0f, 0.0f, -3.5f }, ItemData::Data{ ItemType::Weapon, 3 } });
+    world_.add_actor(new ItemActor{ &world_, GSvector3{ 0.0f, 0.0f, -3.5f }, ItemData::Data{ ItemType::Weapon, 2 } });
     world_.add_actor(new ItemActor{ &world_, GSvector3{ 0.0f, 0.0f, -4.0f }, ItemData::Data{ ItemType::Weapon, 1 } });
-    world_.add_actor(new ItemActor{ &world_, GSvector3{ 0.0f, 0.0f, -4.5f }, ItemData::Data{ ItemType::Weapon, 3 } });
+    world_.add_actor(new ItemActor{ &world_, GSvector3{ 0.0f, 0.0f, -4.5f }, ItemData::Data{ ItemType::Weapon, 2 } });
 
     // アクターの生成
     actor_generator_.generate(stage_data_.folder() + "/generate.json");
