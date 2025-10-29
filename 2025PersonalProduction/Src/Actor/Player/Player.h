@@ -105,9 +105,9 @@ public:
         Attack5 = 34,
 
         Skill = 101,          // TODO スキル
-        AvoidAttack = 102,
-        AvoidSuccessAttack = 103,
-        AvoidSuccessSkill = 104,
+        AvoidAttack = 36,
+        AvoidSuccessAttack = 29,
+        AvoidSuccessSkill = 35,
 	};
 
 public:
@@ -169,6 +169,11 @@ public:
 	/// </summary>
 	void update_lockon_camera();
 
+    /// <summary>
+    /// 一番近くの敵を向く
+    /// </summary>
+    void look_target();
+
 public:
     /// <summary>
     /// ステートが遷移条件に使えるアクションを行っているかどうか
@@ -186,6 +191,11 @@ public:
 	/// 回避処理
 	/// </summary>
 	void on_avoid();
+
+    /// <summary>
+    /// 回避攻撃処理
+    /// </summary>
+    void on_avoid_attack();
 
 	/// <summary>
 	/// スキル処理
