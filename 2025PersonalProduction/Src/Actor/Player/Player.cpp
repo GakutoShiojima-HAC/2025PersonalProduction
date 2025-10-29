@@ -66,7 +66,8 @@ constexpr GSuint ATTACK_MOTION[] = {
     Player::Motion::Attack5
 };
 
-Player::Player(IWorld* world, const GSvector3& position, const GSvector3& lookat, PlayerCamera* camera, const PlayerInfo& info) {
+Player::Player(IWorld* world, const GSvector3& position, const GSvector3& lookat, PlayerCamera* camera, const PlayerInfo& info) :
+    inventory_{ world->game_save_data().inventory() } {
 	world_ = world;
 	tag_ = ActorTag::Player;
 	name_ = "Player";
@@ -195,11 +196,10 @@ void Player::draw() const {
 	mesh_.draw();
 
     // 武器の描画
-    Inventory& inv = world_->game_save_data().inventory();
-    if (!inv.weapon().is_empty()) {
+    if (!inventory_.weapon().is_empty()) {
         glPushMatrix();
         glMultMatrixf(mesh_.bone_matrices(RIGHT_HAND_BONE_NUM));   // 右手に持たせる
-        gsDrawMesh(item_data_.get_weapon(inv.weapon().id).mesh);
+        gsDrawMesh(item_data_.get_weapon(inventory_.weapon().id).mesh);
         glPopMatrix();
     }
 
@@ -410,8 +410,12 @@ void Player::update_move_air(float delta_time) {
 }
 
 void Player::to_move_state() {
-    move_speed_ = 0.0f;
+    reset_move_speed();
 	change_state((GSuint)PlayerStateType::Move, (GSuint)Motion::Idle, true);
+}
+
+void Player::reset_move_speed() {
+    move_speed_ = 0.0f;
 }
 
 bool Player::is_move_input() const {
@@ -443,7 +447,7 @@ bool Player::is_action(InputAction action) const {
     switch (action) {
     case InputAction::GAME_Attack:
         // 入力があるかつ、攻撃段数が現在の武器最大攻撃可能数未満であれば真
-        return input_.action(InputAction::GAME_Attack) && attack_count_ < ATTACK_MOTION_MAX;
+        return input_.action(InputAction::GAME_Attack) && attack_count_ < ATTACK_MOTION_MAX && !inventory_.weapon().is_empty();
     case InputAction::GAME_Jump:
         return input_.action(InputAction::GAME_Jump) && state_.get_current_state() != (GSuint)PlayerStateType::Jump;
     case InputAction::GAME_Avoid:
@@ -533,17 +537,18 @@ void Player::on_skill() {
 	// TODO
 }
 
-void Player::on_interact() {
-	// TODO
-}
-
 int& Player::attack_count() {
 	return attack_count_;
 }
 
-float Player::get_enter_next_attack_animation_time() const {
-    if (attack_count_ >= attack_param_.size()) return 99999.0f;
+float Player::get_enter_next_attack_min_time() const {
+    if (attack_count_ >= attack_param_.size() - 1) return 99999.0f;
     return attack_param_[attack_count_].next_start;
+}
+
+float Player::get_enter_next_attack_max_time() const {
+    if (attack_count_ >= attack_param_.size() - 1) return 99999.0f;
+    return attack_param_[attack_count_].next_end;
 }
 
 GSuint Player::get_attack_motion() const {
@@ -562,7 +567,6 @@ GSuint Player::get_current_motion() const {
 void Player::generate_attack_collider(const GSvector3& offset, float radius, int damage, const std::string& name) {
     GSmatrix4 m = local_to_world(offset, GSvector3::zero(), GSvector3::one());
 
-    // TODO 基礎ダメージ(damage)にプレイヤーの現在のステータスを加算しよう
     WeaponData::Data weapon = world_->game_save_data().inventory().weapon();
     int dmg = (weapon.is_empty() ? 0 : weapon.damage) + damage;
 
@@ -570,6 +574,20 @@ void Player::generate_attack_collider(const GSvector3& offset, float radius, int
 }
 
 void Player::interact_update() {
+    // インタラクトできないステート
+    if (MyLib::is_in(
+        state_.get_current_state(),
+        (GSuint)PlayerStateType::Idle,
+        (GSuint)PlayerStateType::Avoid,
+        (GSuint)PlayerStateType::Hurt,
+        (GSuint)PlayerStateType::Dead,
+        (GSuint)PlayerStateType::Jump,
+        (GSuint)PlayerStateType::Fall
+    )) {
+        interact_actors_.clear();
+        return;
+    }
+
     // インタラクトできるアクターを集める
     get_interact_actor_list();
 
@@ -585,9 +603,13 @@ void Player::interact_update() {
 
     // インタラクト
     if(input_.action(InputAction::GAME_Interact)) {
-        if (interact_target_index_ <= 0) return;
         std::any data = this;
         interact_actors_[interact_target_index_]->message("PlayerInteract", data);
+
+        // アニメーション時間を適当なモーションを挟んでリセット
+        mesh_.change_motion(Motion::Idle, false);
+        change_state((GSuint)PlayerStateType::Interact, Motion::Interact, false);
+        return;
     }
 }
 
