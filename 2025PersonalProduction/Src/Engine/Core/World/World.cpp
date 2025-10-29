@@ -84,9 +84,9 @@ void World::clear() {
 	attack_collider_pool_ = nullptr;
 	character_.clear();
 	pawn_.clear();
+	timeline_.clear();
 	actor_.clear();
 	camera_.clear();
-	timeline_.clear();
 }
 
 void World::shadow_map_callback(void* param, const GSmatrix4* view, const GSmatrix4* projection) {
@@ -135,6 +135,10 @@ void World::add_attack_collider_pool(AttackColliderPool* pool) {
 
 GameTimer& World::time() {
     return game_timer_;
+}
+
+Timeline& World::timeline() {
+    return timeline_;
 }
 
 bool& World::enable_draw_gui() {
@@ -221,8 +225,16 @@ vector<Character*> World::find_character_with_tag(const ActorTag tag) const {
 	return character_.find_with_tag(tag);
 }
 
-TimelineManager& World::timeline() {
-	return timeline_;
+void World::play_timeline(const std::string& name) {
+    timeline_.play(name);
+}
+
+void World::stop_timeline() {
+    timeline_.stop();
+}
+
+bool World::is_playing_timeline() const {
+	return timeline_.is_playing();
 }
 
 void World::generate_attack_collider(float radius, const GSvector3& center, Actor* owner, int damage, const std::string& name, float lifespan, float delay) {

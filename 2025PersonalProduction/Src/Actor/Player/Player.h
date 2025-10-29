@@ -174,6 +174,11 @@ public:
     /// </summary>
     void look_target();
 
+    /// <summary>
+    /// タイムラインを停止させる
+    /// </summary>
+    void stop_timeline();
+
 public:
     /// <summary>
     /// ステートが遷移条件に使えるアクションを行っているかどうか

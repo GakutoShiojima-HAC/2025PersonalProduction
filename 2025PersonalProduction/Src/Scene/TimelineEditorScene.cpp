@@ -1,6 +1,5 @@
 #include "Scene/TimelineEditorScene.h"
 #include <gslib.h>
-#include "Engine/Core/Timeline/Editor/CameraTimelineEditor.h"
 
 #include "State/Scene/SceneState.h"
 
@@ -13,16 +12,13 @@ void TimelineEditorScene::start() {
 
     game_start();
 
-    editor_.add(new CameraTimelineEditor{ &world_ });
+    //editor_.add(new CameraTimelineEditor{ &world_ });
 
     change_state((GSuint)SceneStateType::Original);
 }
 
 void TimelineEditorScene::end() {
     game_end();
-
-    // タイムラインエディタクリア
-	editor_.clear();
 }
 
 SceneTag TimelineEditorScene::scene_tag() const {
@@ -42,7 +38,6 @@ void TimelineEditorScene::original_update(float delta_time) {
     if (gsGetKeyState(GKEY_LCONTROL) && gsGetKeyTrigger(GKEY_RETURN)) is_end_ = true;
 
     world_.update(delta_time);
-    editor_.update(delta_time);
 }
 
 void TimelineEditorScene::original_draw() const {

@@ -1,215 +1,151 @@
-ï»¿#include "Engine/Core/Timeline/Editor/CameraTimelineEditor.h"
-#include "Engine/Utils/Check.h"
-#include "Engine/Core/Camera/Camera.h"
-#include "Lib/json.hpp"
-#include "Engine/Utils/Folder.h"
+#include "CameraTimelineEditor.h"
 
-using json = nlohmann::json;
-using ordered_json = nlohmann::ordered_json;
+// QÆ•Ô‚µ‚ÌƒGƒ‰[‰ñ”ğ—p
+static float EMPTY_TIME{ 0.0f };
 
-const string PATH{ "Resource/Private/Timeline/Camera/" };
+CameraTimelineEditor::CameraTimelineEditor(CameraTimelineParameter& parameter) :
+    parameter_{ parameter } {
 
-CameraTimelineEditor::CameraTimelineEditor(World* world) {
-	world_ = world;
-
-    timeline_ = new CameraTimelineData{ vector<CameraKeyFrame*>(), 0.0f, 0.0f };
 }
 
 CameraTimelineEditor::~CameraTimelineEditor() {
-	clear();
-}
-
-void CameraTimelineEditor::update(float delta_time) {
-    ImGui::Begin("Camera KeyFrame Inspector Window");
-
-    const bool is_empty = timeline_ == nullptr || timeline_->get().empty();
-    draw_main_gui(is_empty, PATH);
-    draw_add_keyframe();
-    draw_timeline(is_empty, is_empty ? 0 : timeline_->get().size());
-    draw_current_keyframe();
-
-    ImGui::End();
+    clear();
 }
 
 void CameraTimelineEditor::clear() {
-    if (timeline_ != nullptr) timeline_->clear();
-    delete timeline_;
-    timeline_ = nullptr;
+    if (data_ != nullptr) data_->clear();
+    delete data_;
+    data_ = nullptr;
+    edit_keyframe_index_ = 0;
 }
 
-void CameraTimelineEditor::draw_add_keyframe() {
-    if (timeline_ == nullptr) return;
-
-    // ã‚«ãƒ¡ãƒ©é–‹å§‹ã®é·ç§»æ™‚é–“ã®è¨­å®š
-    ImGui::Separator();
-    ImGui::PushItemWidth(80);
-    ImGui::InputFloat("start transition time", &timeline_->start_transition_time());
-    ImGui::PopItemWidth();
-
-    // ã‚«ãƒ¡ãƒ©çµ‚äº†ã®é·ç§»æ™‚é–“ã®è¨­å®š
-    ImGui::SameLine();
-    ImGui::PushItemWidth(80);
-    ImGui::InputFloat("end transition time", &timeline_->end_transition_time());
-    ImGui::PopItemWidth();
-
-    // ã‚­ãƒ¼ãƒ•ãƒ¬ãƒ¼ãƒ è¿½åŠ 
-    vector<CameraKeyFrame*>& timeline = timeline_->get();
-    if (ImGui::Button("Add KeyFrame")) {
-        Camera* camera = world_->get_camera();
-        add_key_frame(
-            time_,
-            target_,
-            camera->transform().position(),
-            camera->transform().position() + camera->transform().forward(),
-            get_tilt_angle(camera->transform().rotation())
-
-        );
-        set_keyframe(1, timeline.size());
-    }
-
-    // ã‚¿ãƒ¼ã‚²ãƒƒãƒˆåã®ãƒªã‚»ãƒƒãƒˆ
-    ImGui::SameLine();
-    if (ImGui::Button("Reset Target")) target_ = "";
-
-    // ã‚­ãƒ¼ãƒ•ãƒ¬ãƒ¼ãƒ æ™‚é–“ã®è¨­å®š
-    ImGui::PushItemWidth(80);
-    ImGui::InputFloat("time##1", &time_);
-    ImGui::PopItemWidth();
-
-    // åŸç‚¹ã¨ã™ã‚‹ã‚¿ãƒ¼ã‚²ãƒƒãƒˆåã®è¨­å®š
-    ImGui::SameLine();
-    ImGui::PushItemWidth(200);
-    ImGui::InputText("origin target##1", &target_);
-    ImGui::PopItemWidth();    
-}
-
-void CameraTimelineEditor::draw_current_keyframe() {
-    if (timeline_ == nullptr) return;
-    vector<CameraKeyFrame*>& timeline = timeline_->get();
+void CameraTimelineEditor::update_select_keyframe() {
+    if (data_ == nullptr) return;
+    vector<CameraTimelineKeyFrame*>& timeline = data_->get();
     if (timeline.empty()) return;
-    CameraKeyFrame* key_frame = timeline[current_edit_keyframe_];
+    CameraTimelineKeyFrame* key_frame = timeline[edit_keyframe_index_];
     if (key_frame == nullptr) return;
 
-    // ã‚­ãƒ¼ãƒ•ãƒ¬ãƒ¼ãƒ æ™‚é–“ã®è¨­å®š
-    ImGui::Separator();
+    // ƒJƒƒ‰—LŒø‰»‚Æ–³Œø‰»‚Ì‘JˆÚŠÔ‚ğİ’è
+    ImGui::PushItemWidth(80);
+    ImGui::InputFloat("start transition time", &data_->start_transition_time());
+    ImGui::PopItemWidth();
+
+    // ƒJƒƒ‰I—¹‚Ì‘JˆÚŠÔ‚Ìİ’è
+    ImGui::SameLine();
+    ImGui::PushItemWidth(80);
+    ImGui::InputFloat("end transition time", &data_->end_transition_time());
+    ImGui::PopItemWidth();
+
+    // ŠÔ‚ğ•ÒW
     ImGui::PushItemWidth(80);
     if (ImGui::InputFloat("time##2", &key_frame->time)) {
         sort_timeline();
         auto it = find(timeline.begin(), timeline.end(), key_frame);
-        if (it != timeline.end()) current_edit_keyframe_ = distance(timeline.begin(), it);
+        if (it != timeline.end()) edit_keyframe_index_ = distance(timeline.begin(), it);
     }
     ImGui::PopItemWidth();
 
-    // åŸç‚¹ã¨ã™ã‚‹ã‚¿ãƒ¼ã‚²ãƒƒãƒˆåã®è¨­å®š
+    // ƒ^[ƒQƒbƒg‚ğ•ÒW
     ImGui::SameLine();
     ImGui::PushItemWidth(200);
     ImGui::InputText("origin target##2", &key_frame->target);
+    ImGui::PopItemWidth();
 
-    // ã‚«ãƒ¡ãƒ©ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã®è¨­å®š
+    // À•W‚ğ•ÒW
+    ImGui::PushItemWidth(200);
     ImGui::DragFloat3("position", key_frame->position, 0.1f);
+    // ’‹“_•ûŒü‚ğ•ÒW
     ImGui::DragFloat3("lookat", key_frame->lookat, 0.1f);
+    // ŒX‚«‚ğ•ÒW
     ImGui::DragFloat("angle", &key_frame->angle, 0.1f);
     ImGui::PopItemWidth();
 
-    // ç¾åœ¨ã®ã‚«ãƒ¡ãƒ©ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’é©ç”¨
+    // Œ»İ‚ÌƒJƒƒ‰‚ÌÀ•W‚ğ“K—p
     if (ImGui::Button("Apply Current Camera Location")) {
-        Camera* camera = world_->get_camera();
-        Actor* target = world_->find_actor(target_);
+        Camera* camera = parameter_.get_world()->get_camera();
+        Actor* target = parameter_.get_world()->find_actor(key_frame->target);
         if (camera != nullptr) {
+            // ƒ^[ƒQƒbƒg‚ª‘¶İ‚·‚é‚È‚ç‘Š‘ÎÀ•W‚ğ“ü—Í
             GSvector3 position = camera->transform().position();
-            // ã‚¿ãƒ¼ã‚²ãƒƒãƒˆãŒå­˜åœ¨ã™ã‚‹ãªã‚‰ç›¸å¯¾åº§æ¨™ã‚’å…¥åŠ›
+            GSvector3 lookat = camera->transform().forward();
             if (target != nullptr) position = target->transform().inverseTransformPoint(position);
-
+            if (target != nullptr) lookat = target->transform().inverseTransformPoint(lookat);
             key_frame->position = position;
-            key_frame->lookat = position + camera->transform().forward();
+            key_frame->lookat = lookat;
             key_frame->angle = get_tilt_angle(camera->transform().rotation());
         }
     }
 
-    // ã‚­ãƒ¼ãƒ•ãƒ¬ãƒ¼ãƒ ã‚’å‰Šé™¤
+    // ƒL[ƒtƒŒ[ƒ€‚ğíœ
     ImGui::SameLine();
-    if (ImGui::Button("Delete KeyFrame")) remove_key_frame(current_edit_keyframe_);
+    if (ImGui::Button("Delete KeyFrame")) remove_keyframe(edit_keyframe_index_);
 }
 
-void CameraTimelineEditor::play() {
-    // ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼ã‚’å–å¾—
-    CameraTimeline* camera_timeline = world_->timeline().camera_timeline();
-    if (camera_timeline == nullptr) return;
-
-    camera_timeline->play_data(timeline_);
+std::string CameraTimelineEditor::name() const {
+    return parameter_.name();
 }
 
-void CameraTimelineEditor::save() {
-    if (timeline_ == nullptr) return;
-    vector<CameraKeyFrame*>& timeline = timeline_->get();
-    if (timeline.empty()) return;
-
-    sort_timeline();
-    ordered_json j;
-    j["start"] = timeline_->start_transition_time();
-    j["end"] = timeline_->end_transition_time();
-
-    for (const auto* kf : timeline) {
-        ordered_json item;
-        item["time"] = kf->time;
-        item["target"] = kf->target;
-        item["position"] = { kf->position.x, kf->position.y, kf->position.z };
-        item["lookat"] = { kf->lookat.x, kf->lookat.y, kf->lookat.z };
-        item["angle"] = kf->angle;
-        j["timeline"].push_back(item);
-    }
-
-    // ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹
-    const string root{ "Resource/Private/Timeline/Camera" };
-    // ä¸Šæ›¸ãä¿å­˜
-    MyLib::create_folder(root);
-    MyLib::write_to_file(root + "/" + save_filename_ + ".json", j);
-    // ä¿å­˜ã—ãŸã®ã§ã‚¨ãƒ‡ã‚£ã‚¿ä¸Šã¯ç ´æ£„
-    reset();
+bool CameraTimelineEditor::is_empty() const {
+    if (data_ == nullptr) return true;
+    return data_->get().empty();
 }
 
-void CameraTimelineEditor::load() {
-    // ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼ã‚’å–å¾—
-    CameraTimeline* camera_timeline = world_->timeline().camera_timeline();
-    if (camera_timeline == nullptr) return;
-
-    // ãƒ‡ãƒ¼ã‚¿ã‚’ç”Ÿæˆ
-    CameraTimelineData* data = camera_timeline->load("Resource/Private/Timeline/Camera/" + load_filename_ + ".json");
-    load_filename_ = "";
-    if (data == nullptr) return;
-
-    clear();
-    timeline_ = data;
-    target_ = "";
-    save_filename_ = "";
-    time_ = timeline_->get().empty() ? 0.0f : timeline_->get()[timeline_->get().size() - 1]->time;
-    current_edit_keyframe_ = 0;
+unsigned int CameraTimelineEditor::count_keyframe() const {
+    if (data_ == nullptr) return 0;
+    return data_->get().size();
 }
 
-void CameraTimelineEditor::reset() {
-    timeline_->clear();
-    timeline_->start_transition_time() = 0.0f;
-    timeline_->end_transition_time() = 0.0f;
-    save_filename_ = "";
-    target_ = "";
-    time_ = 0.0f;
-    timeline_start_time_ = 0.0f;
-    current_edit_keyframe_ = 0;
+float& CameraTimelineEditor::get_keyframe_time(unsigned int index) {
+    if (data_ == nullptr) return EMPTY_TIME;
+    std::vector<CameraTimelineKeyFrame*>& data = data_->get();
+    if (data.empty() || index >= data.size()) return EMPTY_TIME;
+    return data[index]->time;
 }
 
 void CameraTimelineEditor::sort_timeline() {
-    if (timeline_ == nullptr) return;
-    vector<CameraKeyFrame*>& timeline = timeline_->get();
+    if (data_ == nullptr) return;
+    vector<CameraTimelineKeyFrame*>& timeline = data_->get();
     if (timeline.empty()) return;
 
-    sort(timeline.begin(), timeline.end(), [](const CameraKeyFrame* a, const CameraKeyFrame* b) {
-        return a->time < b->time;  // æ˜‡é †ã«ã‚½ãƒ¼ãƒˆ
+    sort(timeline.begin(), timeline.end(), [](const CameraTimelineKeyFrame* a, const CameraTimelineKeyFrame* b) {
+        return a->time < b->time;  // ¸‡‚Éƒ\[ƒg
     });
 }
 
-void CameraTimelineEditor::remove_key_frame(GSuint index) {
-    if (timeline_ == nullptr) return;
-    vector<CameraKeyFrame*>& timeline = timeline_->get();
+void CameraTimelineEditor::add_keyframe(float time) {
+    // ƒL[ƒtƒŒ[ƒ€‚ğì¬
+    CameraTimelineKeyFrame* keyframe = new CameraTimelineKeyFrame{ time, "", GSvector3{ 0.0f, 0.0f, 0.0f }, GSvector3{ 0.0f, 0.0f, 0.0f }, 0.0f };
+
+    // ƒf[ƒ^‚ª–³‚¯‚ê‚Îì¬
+    if (data_ == nullptr) {
+        std::vector<CameraTimelineKeyFrame*> timeline;
+        data_ = new CameraTimelineParameter::CameraTimelineData(timeline, 0.0f, 0.0f);
+    }
+
+    vector<CameraTimelineKeyFrame*>& timeline = data_->get();
+    if (timeline.empty()) {
+        timeline.push_back(keyframe);
+        edit_keyframe_index_ = 0;
+        return;
+    }
+
+    auto it = lower_bound(
+        timeline.begin(),
+        timeline.end(),
+        keyframe,
+        [](
+            const CameraTimelineKeyFrame* lhs,
+            const CameraTimelineKeyFrame* rhs) {
+                return lhs->time < rhs->time;
+        }
+    );
+    timeline.insert(it, keyframe);
+}
+
+void CameraTimelineEditor::remove_keyframe(unsigned int index) {
+    if (data_ == nullptr) return;
+    vector<CameraTimelineKeyFrame*>& timeline = data_->get();
 
     if (index < timeline.size()) {
         delete timeline[index];
@@ -218,52 +154,47 @@ void CameraTimelineEditor::remove_key_frame(GSuint index) {
     if (timeline.size() == 0) {
         timeline.clear();
     }
-    if (current_edit_keyframe_ >= timeline.size()) {
-        current_edit_keyframe_ = timeline.size() - 1;
+    if (edit_keyframe_index_ >= timeline.size()) {
+        int index = CLAMP(timeline.size() - 1, 0, INT_MAX);
+        edit_keyframe_index_ = index;
     }
 }
 
-void CameraTimelineEditor::add_key_frame(float time, const string& target, const GSvector3& position, const GSvector3& lookat, float angle) {
-    if (timeline_ == nullptr) return;
-    
-    CameraKeyFrame* key_frame = new CameraKeyFrame{ time, target, position, lookat, angle };
+ordered_json CameraTimelineEditor::save_data() {
+    ordered_json data;
+    data["start"] = data_->start_transition_time();
+    data["end"] = data_->end_transition_time();
 
-    vector<CameraKeyFrame*>& timeline = timeline_->get();
-    if (timeline.empty()) {
-        timeline.push_back(key_frame);
-        return;
+    for (const auto* kf : data_->get()) {
+        ordered_json item;
+        item["time"] = kf->time;
+        item["target"] = kf->target;
+        item["position"] = { kf->position.x, kf->position.y, kf->position.z };
+        item["lookat"] = { kf->lookat.x, kf->lookat.y, kf->lookat.z };
+        item["angle"] = kf->angle;
+        data["timeline"].push_back(item);
     }
+    return data;
+}
 
-    auto it = lower_bound(
-        timeline.begin(),
-        timeline.end(),
-        key_frame,
-        [](
-            const CameraKeyFrame* lhs,
-            const CameraKeyFrame* rhs) {
-                return lhs->time < rhs->time;
-        }
-    );
-    timeline.insert(it, key_frame);
+void CameraTimelineEditor::load(const json& j) {
+    clear();
+    data_ = parameter_.create_data(j);
+}
+
+void CameraTimelineEditor::play() {
+    if (data_ == nullptr) return;
+    parameter_.play(data_);
 }
 
 float CameraTimelineEditor::get_tilt_angle(const GSquaternion& rotation) const {
-    GSvector3 up = rotation * GSvector3::up();  // ã‚«ãƒ¡ãƒ©ã®ä¸Šæ–¹å‘
-    GSvector3 forward = rotation * GSvector3::forward(); // ã‚«ãƒ¡ãƒ©ã®å‰æ–¹å‘
+    GSvector3 up = rotation * GSvector3::up();              // ƒJƒƒ‰‚Ìã•ûŒü
+    GSvector3 forward = rotation * GSvector3::forward();    // ƒJƒƒ‰‚Ì‘O•ûŒü
 
-    GSvector3 right = GSvector3::cross(GSvector3::up(), forward).normalized(); // åŸºæº–å³
-    GSvector3 base_up = GSvector3::cross(forward, right); // åŸºæº–ä¸Š
-    
-    // ã‚«ãƒ¡ãƒ©ã¨åŸºæº–ã‚’æŠ•å½±å¹³é¢ä¸Šã§è¨ˆç®—
-    float angle = std::atan2(GSvector3::dot(GSvector3::cross(base_up, up), forward),GSvector3::dot(base_up, up));
+    GSvector3 right = GSvector3::cross(GSvector3::up(), forward).normalized();  // Šî€‰E
+    GSvector3 base_up = GSvector3::cross(forward, right);                       // Šî€ã
+
+    // ƒJƒƒ‰‚ÆŠî€‚ğ“Š‰e•½–Êã‚ÅŒvZ
+    float angle = std::atan2(GSvector3::dot(GSvector3::cross(base_up, up), forward), GSvector3::dot(base_up, up));
     return angle * (180.0f / GS_PI);
-}
-
-float& CameraTimelineEditor::get_time(int index) {
-    float tmp{ 0.0f };
-    if (timeline_ == nullptr) return tmp;
-    vector<CameraKeyFrame*>& timeline = timeline_->get();
-    if (timeline.empty() || index >= (int)timeline.size()) return tmp;
-
-    return timeline[index]->time;
 }

@@ -12,7 +12,6 @@
 #define TIMELINE_EDITOR_SCENE_H_
 
 #include "Scene/GameScene.h"
-#include "Engine/Core/Timeline/TimelineEditorManager.h"
 
 class TimelineEditorScene : public GameScene {
 public:
@@ -34,10 +33,6 @@ public:
     virtual void original_update(float delta_time) override;
 
     virtual void original_draw() const override;
-
-private:
-	// タイムラインエディタ
-	TimelineEditorManager editor_;
 
 };
 

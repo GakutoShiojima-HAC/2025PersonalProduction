@@ -26,7 +26,7 @@ private:
 
     void draw_gui() const override {};
 
-    void exit() override {};
+    void exit() override;
 
 };
 
