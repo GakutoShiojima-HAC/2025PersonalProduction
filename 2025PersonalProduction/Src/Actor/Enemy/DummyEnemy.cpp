@@ -154,8 +154,8 @@ bool DummyEnemy::is_move_end() const {
 void DummyEnemy::update_move(float delta_time) {
 	if (is_move_end()) return;
 
-	const float MOVE_SPEED{ 0.085f };
-	const float ROTATE_ANGLE{ 2.0f };
+	const float MOVE_SPEED{ 0.025f };
+	const float ROTATE_ANGLE{ 10.0f };
 	navmesh_.update_move(delta_time, MOVE_SPEED, ROTATE_ANGLE);
 }
 

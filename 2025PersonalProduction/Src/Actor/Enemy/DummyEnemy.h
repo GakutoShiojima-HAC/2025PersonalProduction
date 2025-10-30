@@ -85,7 +85,7 @@ private:
 	// ナビメッシュ
 	NavMeshAgent navmesh_{};
 	// 移動先
-	GSvector3 move_to_{ -1.0f, 0.0f, 0.0f };
+	GSvector3 move_to_{ 0.0f, 0.0f, 0.0f };
 
 };
 

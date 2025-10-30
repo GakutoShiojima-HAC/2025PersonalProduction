@@ -43,9 +43,8 @@ public:
 	/// </summary>
 	/// <param name="start">= 開始地点</param>
 	/// <param name="end">= 終了地点</param>
-    /// <param name="offset_ratio">= 壁からどれだけ離すか 0.0~1.0で指定</param>
 	/// <returns>探索に成功したら真を返却</returns>
-	bool find_path(const GSvector3& start, const GSvector3& end, float offset_ratio = 1.0f);
+	bool find_path(const GSvector3& start, const GSvector3& end);
 
 	/// <summary>
 	/// 経路が見つかっているか
@@ -70,6 +69,18 @@ public:
 	/// </summary>
 	void reset_move();
 
+    /// <summary>
+    /// 壁からどれだけ離すかを設定する
+    /// </summary>
+    /// <returns>参照 0.0~1.0で指定</returns>
+    float& offset_ratio();
+
+private:
+    /// <summary>
+    /// 移動進捗をリセットする
+    /// </summary>
+    void reset_progress();
+
 private:
 	// ナビメッシュ
 	NavMeshSurface* navmesh_{ nullptr };
@@ -81,7 +92,8 @@ private:
     float re_find_timer_{ 0.0f };
     // ゴール地点
     GSvector3 goal_position_{ 0.0f, 0.0f, 0.0f };
-
+    // 壁からどれだけ離すか 0.0~1.0で指定
+    float offset_ratio_{ 0.0f };
 	// 移動対象のアクター
 	Actor* target_{ nullptr };
 

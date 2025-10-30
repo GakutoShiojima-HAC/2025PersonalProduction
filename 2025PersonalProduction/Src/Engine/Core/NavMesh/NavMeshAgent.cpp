@@ -14,6 +14,7 @@ NavMeshAgent::NavMeshAgent(Actor* target, NavMeshSurface* navmesh) {
 	navmesh_ = navmesh;
 	path_index_ = 0;
     re_find_timer_ = 0.0f;
+    offset_ratio_ = 0.25f;
 }
 
 NavMeshAgent::~NavMeshAgent() {
@@ -30,7 +31,17 @@ void NavMeshAgent::update_move(float delta_time, float move_speed, float rotate_
     re_find_timer_ += delta_time / cFPS;
     if (re_find_timer_ >= RE_FIND_TIME) {
         re_find_timer_ = 0.0f;
-        find_path(target_->transform().position(), goal_position_);
+
+        // Œo˜H’Tõ‚É¬Œ÷‚µ‚½‚ç(‚æ‚è—Ç‚¢“¹‚ğŒ©‚Â‚¯‚½‚ç)
+        if (navmesh_ != nullptr) {
+            vector<GSvector3> path;
+            navmesh_->find(target_->transform().position(), goal_position_, path, offset_ratio_);
+            if (!path.empty()) {
+                // XV
+                path_ = path;
+                path_index_ = 0;
+            }
+        }
     }
     if (!found_path()) return;
 
@@ -78,7 +89,8 @@ void NavMeshAgent::draw_path() const {
 	if (!found_path()) return;
 
 	for (int i = 0; i < (int)path_.size(); ++i) {
-		const GSvector3& pos = path_[i];
+		GSvector3 pos = path_[i];
+        pos.y += 0.2f;  // ­‚µã‚°‚È‚¢‚ÆNavMeshSurface‚Æ”í‚é
 		float radius = i == path_index_ ? 0.1 : 0.05;
 		MyLib::draw_sphere(pos, radius, GScolor{ 1.0f, 1.0f, 1.0f, 1.0f });
 
@@ -88,13 +100,12 @@ void NavMeshAgent::draw_path() const {
 	}
 }
 
-bool NavMeshAgent::find_path(const GSvector3& start, const GSvector3& end, float offset_ratio) {
+bool NavMeshAgent::find_path(const GSvector3& start, const GSvector3& end) {
 	if (navmesh_ == nullptr) return false;
 
-	path_index_ = 0;
-    re_find_timer_ = 0.0f;
+    reset_progress();
     goal_position_ = end;
-	navmesh_->find(start, end, path_, offset_ratio);
+	navmesh_->find(start, end, path_, offset_ratio_);
 	return found_path();
 }
 
@@ -112,7 +123,15 @@ const vector<GSvector3>& NavMeshAgent::path() {
 }
 
 void NavMeshAgent::reset_move() {
-	path_index_ = 0;
-    re_find_timer_ = 0.0f;
+    reset_progress();
 	if (found_path()) target_->transform().position(path_[0]);
+}
+
+float& NavMeshAgent::offset_ratio() {
+    return offset_ratio_;
+}
+
+void NavMeshAgent::reset_progress() {
+    path_index_ = 0;
+    re_find_timer_ = 0.0f;
 }
