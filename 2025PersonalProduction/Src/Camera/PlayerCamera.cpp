@@ -56,13 +56,15 @@ void PlayerCamera::update(float delta_time) {
 	// カメラ座標から注視点間に障害物があるかどうか
 	Line line{ at, pos };
 	GSvector3 intersect;
-	if (world_->get_field()->collide(line, &intersect)) {
-		// 位置を補正(これでも透ける壁は透ける)
-		pos = intersect;
+    GSplane plane;
+	if (world_->get_field()->collide(line, &intersect, &plane)) {
+		pos = intersect + plane.normal * 0.1f;  // 障害物から押し返す
 	}
 
 	// スムースダンプによる滑らかな補間
-	pos = GSvector3::smoothDamp(transform_.position(), pos, vecocity_, SMOOTH_TIME, SMOOTH_MAX_SPEED, delta_time);
+	pos = GSvector3::smoothDamp(transform_.position(), pos, vecocity_pos_, SMOOTH_TIME, SMOOTH_MAX_SPEED, delta_time);
+    at = GSvector3::smoothDamp(prev_at_, at, vecocity_at_, SMOOTH_TIME, SMOOTH_MAX_SPEED, delta_time);
+    prev_at_ = at;
 
 	// 座標の設定
 	transform_.position(pos);

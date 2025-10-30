@@ -59,7 +59,9 @@ private:
 	Pawn* lockon_target_{ nullptr };
 
     // •âŠÔ—p
-    GSvector3 vecocity_{ 0.0f, 0.0f, 0.0f };
+    GSvector3 vecocity_pos_{ 0.0f, 0.0f, 0.0f };
+    GSvector3 vecocity_at_{ 0.0f, 0.0f, 0.0f };
+    GSvector3 prev_at_{ 0.0f, 0.0f, 0.0f };
 
 	// yŽ²Žü‚è‚Ì‰ñ“]Šp“x
 	float yaw_{ 0.0f };
