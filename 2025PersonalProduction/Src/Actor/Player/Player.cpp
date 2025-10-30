@@ -744,9 +744,10 @@ void Player::add_attack_animation_event(const PlayerInfo& info) {
 }
 
 bool Player::is_root_motion_state() const {
-    return false;
+    //return false;
     return MyLib::is_in(
         get_current_motion(),
+        (GSuint)Motion::AvoidAttack,
         (GSuint)Motion::AvoidSuccessAttack
     );
     //return MyLib::is_in(state_.get_current_state(),
@@ -758,7 +759,10 @@ void Player::update_mesh(float delta_time) {
     // メッシュのモーションを更新
     mesh_.update(delta_time);
     // ルートモーションを適用
-    if (is_root_motion_state()) mesh_.apply_root_motion(transform_);
+    if (is_root_motion_state()) {
+        mesh_.apply_root_motion(transform_);
+        collide_field();
+    }
     // ワールド変換行列を設定
     mesh_.transform(transform_.localToWorldMatrix());
 }
