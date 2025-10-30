@@ -23,7 +23,7 @@ void InteractUI::draw(const std::vector<Actor*>& actors, int target_index) {
         // テキストを描画
         Canvas::draw_text(
             text,                                       // テキスト
-            GSvector2{ 50.0f, 50.0f + (20.0f * i) },    // 描画位置
+            GSvector2{ 1200.0f, 700.0f + (20.0f * i) },    // 描画位置
             18.0f                                       // フォントサイズ
         );
     }
