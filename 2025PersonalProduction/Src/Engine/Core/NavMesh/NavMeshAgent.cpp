@@ -1,14 +1,19 @@
 #include "Engine/Core/NavMesh/NavMeshAgent.h"
 #include "Engine/Core/NavMesh/NavMeshSurface.h"
+#include "GameConfig.h"
 
 #ifdef _DEBUG
 #include "Engine/Utils/DebugMarker.h"
 #endif
 
+// 再探索の時間
+constexpr float RE_FIND_TIME{ 1.0f };
+
 NavMeshAgent::NavMeshAgent(Actor* target, NavMeshSurface* navmesh) {
 	target_ = target;
 	navmesh_ = navmesh;
 	path_index_ = 0;
+    re_find_timer_ = 0.0f;
 }
 
 NavMeshAgent::~NavMeshAgent() {
@@ -16,10 +21,18 @@ NavMeshAgent::~NavMeshAgent() {
 }
 
 void NavMeshAgent::update_move(float delta_time, float move_speed, float rotate_angle) {
-	if (!found_path() || target_ == nullptr) return;
+	if (target_ == nullptr) return;
 
 	// たどり着いている
 	if (path_index_ >= path_.size()) return;
+
+    // 再探索を更新
+    re_find_timer_ += delta_time / cFPS;
+    if (re_find_timer_ >= RE_FIND_TIME) {
+        re_find_timer_ = 0.0f;
+        find_path(target_->transform().position(), goal_position_);
+    }
+    if (!found_path()) return;
 
 	// 次の行き先を取得
 	const GSvector3& target = path_[path_index_];
@@ -55,7 +68,6 @@ void NavMeshAgent::update_move(float delta_time, float move_speed, float rotate_
 		target_->transform().position(target);
 		// 次の行き先へ
 		++path_index_;
-
 		return;
 	}
 
@@ -67,7 +79,7 @@ void NavMeshAgent::draw_path() const {
 
 	for (int i = 0; i < (int)path_.size(); ++i) {
 		const GSvector3& pos = path_[i];
-		float radius = i == path_index_ ? 0.075 : 0.05;
+		float radius = i == path_index_ ? 0.1 : 0.05;
 		MyLib::draw_sphere(pos, radius, GScolor{ 1.0f, 1.0f, 1.0f, 1.0f });
 
 		if (i >= (int)path_.size() - 1) continue;
@@ -76,34 +88,13 @@ void NavMeshAgent::draw_path() const {
 	}
 }
 
-void NavMeshAgent::draw_line_path() const {
-#ifdef _DEBUG
-	if (navmesh_ == nullptr || line_path_.empty()) return;
-
-	for (int i = 0; i < (int)line_path_.size(); ++i) {
-		const GSvector3& pos = line_path_[i];
-		float radius = i == path_index_ + 1 ? 0.075 : 0.05;
-		MyLib::draw_sphere(pos, radius, GScolor{ 1.0f, 1.0f, 1.0f, 1.0f });
-
-		if (i >= (int)line_path_.size() - 1) continue;
-		const GSvector3& end = line_path_[i + 1];
-		MyLib::draw_line(pos, end, GScolor{ 1.0f, 1.0f, 1.0f, 1.0f });
-	}
-#endif
-}
-
-bool NavMeshAgent::find_path(const GSvector3& start, const GSvector3& end) {
+bool NavMeshAgent::find_path(const GSvector3& start, const GSvector3& end, float offset_ratio) {
 	if (navmesh_ == nullptr) return false;
 
-	vector<int> path = navmesh_->find_path(start, end);
-
 	path_index_ = 0;
-	path_ = navmesh_->create_smooth_path(path, start, end);
-
-#ifdef _DEBUG
-	line_path_ = navmesh_->create_line_path(path);
-#endif
-
+    re_find_timer_ = 0.0f;
+    goal_position_ = end;
+	navmesh_->find(start, end, path_, offset_ratio);
 	return found_path();
 }
 
@@ -122,5 +113,6 @@ const vector<GSvector3>& NavMeshAgent::path() {
 
 void NavMeshAgent::reset_move() {
 	path_index_ = 0;
+    re_find_timer_ = 0.0f;
 	if (found_path()) target_->transform().position(path_[0]);
 }

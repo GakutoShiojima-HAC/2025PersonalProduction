@@ -2,7 +2,7 @@
 //  File          : NavMeshAgent.h
 //  Author        : Shiojima Gakuto
 //  Created       : 2025/08/05
-//  Updated       : 2025/08/06
+//  Updated       : 2025/10/30
 //  Description   : アクターをナビメッシュに沿って移動させる機能クラス
 //
 //  注意：本ソースコードの無断転載・コードのコピー・貼り付けによる流用・再配布を禁止します。
@@ -39,17 +39,13 @@ public:
 	void draw_path() const;
 
 	/// <summary>
-	/// 直線的な経路を描画
-	/// </summary>
-	void draw_line_path() const;
-
-	/// <summary>
 	/// 経路探索
 	/// </summary>
 	/// <param name="start">= 開始地点</param>
 	/// <param name="end">= 終了地点</param>
+    /// <param name="offset_ratio">= 壁からどれだけ離すか 0.0~1.0で指定</param>
 	/// <returns>探索に成功したら真を返却</returns>
-	bool find_path(const GSvector3& start, const GSvector3& end);
+	bool find_path(const GSvector3& start, const GSvector3& end, float offset_ratio = 1.0f);
 
 	/// <summary>
 	/// 経路が見つかっているか
@@ -81,14 +77,13 @@ private:
 	vector<GSvector3> path_;
 	// どこまで進んだか
 	GSuint path_index_{ 0 };
+    // 再探索タイマー
+    float re_find_timer_{ 0.0f };
+    // ゴール地点
+    GSvector3 goal_position_{ 0.0f, 0.0f, 0.0f };
 
 	// 移動対象のアクター
 	Actor* target_{ nullptr };
-
-#ifdef _DEBUG
-	// 直線的な経路
-	vector<GSvector3> line_path_;
-#endif 
 
 };
 
