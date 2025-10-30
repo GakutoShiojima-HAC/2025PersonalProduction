@@ -5,6 +5,10 @@ SimpleEnemyMoveState::SimpleEnemyMoveState(SimpleEnemy& owner) : SimpleEnemyStat
 
 }
 
+void SimpleEnemyMoveState::enter() {
+    owner_.start_move();
+}
+
 void SimpleEnemyMoveState::update(float delta_time) {
     // ターゲットがいなかったらサーチに戻る
     if (!owner_.search_target()) {
@@ -20,6 +24,9 @@ void SimpleEnemyMoveState::update(float delta_time) {
         return;
     }
 
-    GSvector3 velocity = to_target.normalized() * delta_time * owner_.get_info().move_speed * 0.1f;
-    owner_.move(velocity, &to_target, 10.0f);
+    owner_.update_move(delta_time);
+}
+
+void SimpleEnemyMoveState::exit() {
+    owner_.end_move();
 }

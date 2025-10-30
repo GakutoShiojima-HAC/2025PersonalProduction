@@ -18,7 +18,7 @@ public:
     SimpleEnemyMoveState(SimpleEnemy& owner);
 
 public:
-    void enter() override {};
+    void enter() override;
 
     void update(float delta_time) override;
 
@@ -26,7 +26,7 @@ public:
 
     void draw_gui() const override {};
 
-    void exit() override {};
+    void exit() override;
 
 };
 

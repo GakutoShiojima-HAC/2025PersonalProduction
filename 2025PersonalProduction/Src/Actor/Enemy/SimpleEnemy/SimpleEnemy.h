@@ -14,6 +14,7 @@
 #include "Engine/Core/Actor/Pawn/Character/Character.h"
 #include "State/SimpleEnemy/SimpleEnemyState.h"
 #include <string>
+#include "Engine/Core/NavMesh/NavMeshAgent.h"
 
 struct SimpleEnemyInfo {
     float height{ 2.0f };           // 高さ
@@ -117,12 +118,19 @@ public:
     Character* target();
 
     /// <summary>
-    /// 移動
+    /// 移動開始
     /// </summary>
-    /// <param name="velocity">= 移動量</param>
-    /// <param name="foward">= 前方向</param>
-    /// <param name="trun_angle">= 回転量</param>
-    void move(const GSvector3& velocity, GSvector3* foward, float trun_angle);
+    void start_move();
+
+    /// <summary>
+    /// 移動の更新
+    /// </summary>
+    void update_move(float delta_time);
+
+    /// <summary>
+    /// 移動終了
+    /// </summary>
+    void end_move();
 
 private:
     /// <summary>
@@ -142,6 +150,8 @@ private:
     GSuint prev_state_num_{ 0 };
 
     Character* target_{ nullptr };
+
+    NavMeshAgent navmesh_{};
 
 };
 
