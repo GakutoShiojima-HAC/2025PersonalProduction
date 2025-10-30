@@ -23,7 +23,7 @@ uniform vec2 u_ScreenSize;
 const int KERNEL_SIZE = 64;
 const float RADIUS = 0.2;   // 影の広がり
 const float BIAS = 0.02;    // セルフシャドウイング防止
-const float CONTRAST = 0.7; // 影の濃さ
+const float CONTRAST = 0.8; // 影の濃さ
 
 // 深度値とUV座標から、ビュー空間のポジションを復元
 vec3 ReconstructPositionFromDepth(vec2 texCoord, float depth) {
