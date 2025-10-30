@@ -173,8 +173,8 @@ void GameScene::game_start() {
     gsSetShadowMapDistance(60.0f);
     // カスケードシャドウのシャドウマップの分割位置を調整
     gsSetShadowMapCascadeLamda(0.7f);
-    // シャドウによる光の減衰率を設定(0.0:減衰～1.0:減衰しない)
-    gsSetShadowMapAttenuation(0.0f);
+    // シャドウの濃さを設定(0.0:濃い～1.0:薄い)
+    gsSetShadowMapAttenuation(0.25f);
     // シャドウマップのポリゴンオフセットを設定する
     gsEnableShadowMapPolygonOffset();
     gsSetShadowMapPolygonOffset(2.5f, 1.0f);
@@ -197,11 +197,8 @@ void GameScene::game_start() {
 
     // フィールドの追加
     world_.add_field(new Field{ (GSuint)OctreeID::Mesh, (GSuint)OctreeID::Collider, (GSuint)TextureID::Skybox });
-    // ライトの設定
-    Light* light = new Light{};
-    light->position() = GSvector3{ 0.0f, 100.0f, -200.0f };
     // ライトの追加
-    world_.add_light(light);
+    world_.add_light(new Light{ GSvector3{ 55.0f, -180.0f, 0.0f } });
 
     // アタックコライダーのプールを追加
     world_.add_attack_collider_pool(new AttackColliderPool{ &world_ });
@@ -226,14 +223,13 @@ void GameScene::game_start() {
 
     // ダミーの追加
     // TODO 生成を外部から行う
+#ifdef _DEBUG
     world_.add_character(new DummyEnemy{ &world_, GSvector3{ 0.0f, 0.0f, 2.0f } });
+#endif
 
     // アイテムの生成
     // TODO 生成を外部から行う
-    world_.add_actor(new ItemActor{ &world_, GSvector3{ 0.0f, 0.0f, -3.0f }, ItemData::Data{ ItemType::Weapon, 1 } });
-    world_.add_actor(new ItemActor{ &world_, GSvector3{ 0.0f, 0.0f, -3.5f }, ItemData::Data{ ItemType::Weapon, 2 } });
-    world_.add_actor(new ItemActor{ &world_, GSvector3{ 0.0f, 0.0f, -4.0f }, ItemData::Data{ ItemType::Weapon, 1 } });
-    world_.add_actor(new ItemActor{ &world_, GSvector3{ 0.0f, 0.0f, -4.5f }, ItemData::Data{ ItemType::Weapon, 2 } });
+    world_.add_actor(new ItemActor{ &world_, GSvector3{ 0.0f, 0.0f, 3.0f }, ItemData::Data{ ItemType::Weapon, 1 } });
 
     // アクターの生成
     actor_generator_.generate(stage_data_.folder() + "/generate.json");

@@ -1,11 +1,23 @@
 #include "Engine/Core/World/Light.h"
 #include <gslib.h>
 
-Light::Light(GSvector4 ambient, GSvector4 diffuse, GSvector4 specular, GSvector3 position) {
+constexpr float DISTANCE = 200.0f;
+
+Light::Light(const GSvector3& angle, const GSvector4& ambient, const GSvector4& diffuse, const GSvector4& specular) {
 	ambient_ = ambient;
 	diffuse_ - diffuse;
 	specular_ = specular;
-	position_ = position;
+
+    const float x_rad = angle.x * (GS_PI / 180.0f);
+    const float y_rad = angle.y * (GS_PI / 180.0f);
+    const float sinx = std::sin(x_rad);
+    const float cosx = std::cos(x_rad);
+    const float siny = std::sin(y_rad);
+    const float cosy = std::cos(y_rad);
+
+    position_.x = -siny * cosy * DISTANCE;
+    position_.y = sinx * DISTANCE;
+    position_.z = cosy * cosx * DISTANCE;
 }
 
 void Light::draw() const {
