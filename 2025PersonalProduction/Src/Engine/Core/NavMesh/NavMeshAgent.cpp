@@ -1,5 +1,6 @@
 #include "Engine/Core/NavMesh/NavMeshAgent.h"
 #include "Engine/Core/NavMesh/NavMeshSurface.h"
+#include "Engine/Core/Actor/Actor.h"
 #include "GameConfig.h"
 
 #ifdef _DEBUG
@@ -18,71 +19,87 @@ NavMeshAgent::NavMeshAgent(Actor* target, NavMeshSurface* navmesh) {
 }
 
 NavMeshAgent::~NavMeshAgent() {
-
+    goal_actor_ = nullptr;
 }
 
 void NavMeshAgent::update_move(float delta_time, float move_speed, float rotate_angle) {
+    // 移動させる対象がいない
 	if (target_ == nullptr) return;
-
 	// たどり着いている
-	if (path_index_ >= path_.size()) return;
+	if (goal_actor_ == nullptr && is_end_move()) return;
 
     // 再探索を更新
-    re_find_timer_ += delta_time / cFPS;
-    if (re_find_timer_ >= RE_FIND_TIME) {
-        re_find_timer_ = 0.0f;
+    {
+        re_find_timer_ += delta_time / cFPS;
+        if (re_find_timer_ >= RE_FIND_TIME) {
+            re_find_timer_ = 0.0f;
 
-        // 経路探索に成功したら(より良い道を見つけたら)
-        if (navmesh_ != nullptr) {
-            vector<GSvector3> path;
-            navmesh_->find(target_->transform().position(), goal_position_, path, offset_ratio_);
-            if (!path.empty()) {
-                // 更新
-                path_ = path;
-                path_index_ = 0;
+            // 再探索防止
+            if (goal_actor_ != nullptr && goal_actor_->is_dead()) {
+                end();
+                return;
+            }
+            // ゴール地点
+            const GSvector3 goal = goal_actor_ == nullptr ? goal_position_ : goal_actor_->transform().position();
+
+            // 経路探索に成功したら(より良い道を見つけたら)
+            if (navmesh_ != nullptr) {
+                vector<GSvector3> path;
+                navmesh_->find(target_->transform().position(), goal, path, offset_ratio_);
+                if (!path.empty()) {
+                    // 更新
+                    path_ = path;
+                    path_index_ = 0;
+                }
             }
         }
     }
-    if (!found_path()) return;
 
-	// 次の行き先を取得
-	const GSvector3& target = path_[path_index_];
+    // 経路がない
+    if (!found_path() || is_end_move()) return;
 
-	// 行き先までの方向を計算
-	GSvector3 direction = target - target_->transform().position();
-	direction.y = 0.0f;
-	const float direction_distance = direction.magnitude();
-	direction.normalize();
+    // 移動
+    {
+        // 次の行き先を取得
+        const GSvector3& target = path_[path_index_];
+        // 行き先までの方向を計算
+        GSvector3 direction = target - target_->transform().position();
+        direction.y = 0.0f;
+        const float direction_distance = direction.magnitude();
+        direction.normalize();
 
-	// 移動していたら向きの補間をする
-	if (direction.magnitude() > 0.01f) {
-		// 向きの補間
-		GSquaternion rotation =
-			GSquaternion::rotateTowards(
-				target_->transform().rotation(),
-				GSquaternion::lookRotation(direction), rotate_angle * delta_time);
+        // 移動していたら向きの補間をする
+        if (direction.magnitude() > 0.01f) {
+            // 向きの補間
+            GSquaternion rotation =
+                GSquaternion::rotateTowards(
+                    target_->transform().rotation(),
+                    GSquaternion::lookRotation(direction), rotate_angle * delta_time);
 
-		target_->transform().rotation(rotation);
-	}
+            target_->transform().rotation(rotation);
+        }
+        // 全体の移動量を計算
+        GSvector3& velocity = target_->velocity();
+        velocity = direction * move_speed * delta_time;
 
-	// 全体の移動量を計算
-	GSvector3& velocity = target_->velocity();
-	velocity = direction * move_speed * delta_time;
+        // もし移動量が行き先までの長さを超えていたら
+        if (velocity.magnitude() >= direction_distance) {
+            // 移動量を補正
+            velocity = velocity.normalize();
+            velocity *= direction_distance;
 
-	// もし移動量が行き先までの長さを超えていたら
-	if (velocity.magnitude() >= direction_distance) {
-		// 移動量を補正
-		velocity = velocity.normalize();
-		velocity *= direction_distance;
+            // 絶対値とする
+            target_->transform().position(target);
+            // 次の行き先へ
+            ++path_index_;
+            return;
+        }
+        // 歩ける場所を歩いているはずなので衝突判定は行わない
+        target_->transform().translate(velocity, GStransform::Space::World);
+    }
 
-		// 絶対値とする
-		target_->transform().position(target);
-		// 次の行き先へ
-		++path_index_;
-		return;
-	}
-
-	target_->transform().translate(velocity, GStransform::Space::World);
+    // 移動が終了していたら終了
+    if (goal_actor_ == nullptr && is_end_move()) end();
 }
 
 void NavMeshAgent::draw_path() const {
@@ -100,13 +117,26 @@ void NavMeshAgent::draw_path() const {
 	}
 }
 
-bool NavMeshAgent::find_path(const GSvector3& start, const GSvector3& end) {
-	if (navmesh_ == nullptr) return false;
+bool NavMeshAgent::find_path(const GSvector3& end) {
+	if (navmesh_ == nullptr || target_ == nullptr) return false;
 
-    reset_progress();
+    path_index_ = 0;
+    re_find_timer_ = 0.0f;
+    goal_actor_ = nullptr;
     goal_position_ = end;
-	navmesh_->find(start, end, path_, offset_ratio_);
+	navmesh_->find(target_->transform().position(), end, path_, offset_ratio_);
 	return found_path();
+}
+
+bool NavMeshAgent::find_path(Actor* goal) {
+    if (navmesh_ == nullptr || target_ == nullptr || goal == nullptr) return false;
+
+    path_index_ = 0;
+    re_find_timer_ = 0.0f;
+    goal_actor_ = goal;
+    goal_position_ = goal_actor_->transform().position();
+    navmesh_->find(target_->transform().position(), goal_actor_->transform().position(), path_, offset_ratio_);
+    return found_path();
 }
 
 bool NavMeshAgent::found_path() const {
@@ -114,7 +144,7 @@ bool NavMeshAgent::found_path() const {
 	return !path_.empty();
 }
 
-bool NavMeshAgent::end_move() const {
+bool NavMeshAgent::is_end_move() const {
 	return path_index_ >= path_.size();
 }
 
@@ -122,16 +152,13 @@ const vector<GSvector3>& NavMeshAgent::path() {
 	return path_;
 }
 
-void NavMeshAgent::reset_move() {
-    reset_progress();
-	if (found_path()) target_->transform().position(path_[0]);
+void NavMeshAgent::end() {
+    path_.clear();
+    path_index_ = 0;
+    re_find_timer_ = 0.0f;
+    goal_actor_ = nullptr;
 }
 
 float& NavMeshAgent::offset_ratio() {
     return offset_ratio_;
-}
-
-void NavMeshAgent::reset_progress() {
-    path_index_ = 0;
-    re_find_timer_ = 0.0f;
 }

@@ -13,11 +13,11 @@
 
 #include <vector>
 #include <gslib.h>
-#include "Engine/Core/Actor/Actor.h"
 
 using namespace std;
 
 class NavMeshSurface;
+class Actor;
 
 class NavMeshAgent {
 public:
@@ -39,13 +39,20 @@ public:
 	void draw_path() const;
 
 	/// <summary>
-	/// 経路探索
+	/// 経路探索(座標から)
 	/// </summary>
-	/// <param name="start">= 開始地点</param>
 	/// <param name="end">= 終了地点</param>
 	/// <returns>探索に成功したら真を返却</returns>
-	bool find_path(const GSvector3& start, const GSvector3& end);
+	bool find_path(const GSvector3& end);
 
+    /// <summary>
+    /// 経路探索(アクターから)
+    /// </summary>
+    /// <param name="goal">= ゴールとするアクター</param>
+    /// <returns>探索に成功したら真を返却</returns>
+    bool find_path(Actor* goal);
+
+public:
 	/// <summary>
 	/// 経路が見つかっているか
 	/// </summary>
@@ -56,7 +63,7 @@ public:
 	/// 移動が終了しているかどうか
 	/// </summary>
 	/// <returns>終了していたら真を返却</returns>
-	bool end_move() const;
+	bool is_end_move() const;
 
 	/// <summary>
 	/// 経路
@@ -64,10 +71,10 @@ public:
 	/// <returns>経路</returns>
 	const vector<GSvector3>& path();
 
-	/// <summary>
-	/// 移動をリセットする
-	/// </summary>
-	void reset_move();
+    /// <summary>
+    /// 経路探索結果を破棄して終了する
+    /// </summary>
+    void end();
 
     /// <summary>
     /// 壁からどれだけ離すかを設定する
@@ -76,26 +83,22 @@ public:
     float& offset_ratio();
 
 private:
-    /// <summary>
-    /// 移動進捗をリセットする
-    /// </summary>
-    void reset_progress();
-
-private:
 	// ナビメッシュ
 	NavMeshSurface* navmesh_{ nullptr };
+    // 移動対象のアクター
+    Actor* target_{ nullptr };
 	// 経路
 	vector<GSvector3> path_;
 	// どこまで進んだか
 	GSuint path_index_{ 0 };
-    // 再探索タイマー
-    float re_find_timer_{ 0.0f };
     // ゴール地点
     GSvector3 goal_position_{ 0.0f, 0.0f, 0.0f };
+    // ゴール地点とするアクター
+    Actor* goal_actor_{ nullptr };
+    // 再探索タイマー
+    float re_find_timer_{ 0.0f };
     // 壁からどれだけ離すか 0.0~1.0で指定
     float offset_ratio_{ 0.0f };
-	// 移動対象のアクター
-	Actor* target_{ nullptr };
 
 };
 

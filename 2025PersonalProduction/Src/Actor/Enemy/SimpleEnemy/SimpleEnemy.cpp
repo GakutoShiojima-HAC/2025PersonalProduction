@@ -22,6 +22,10 @@ SimpleEnemy::SimpleEnemy(IWorld* world, const GSvector3& position, const GSvecto
     head_offset_ = height_;
     foot_offset_ = info.foot_offset;
 
+    // ナビメッシュ追加
+    navmesh_ = { this, world_->navmesh() };
+    navmesh_.offset_ratio() = 0.25f;
+
     mesh_ = { info.skinmesh, info.skinmesh, info.skinmesh };
     add_state();
 
@@ -181,8 +185,17 @@ Character* SimpleEnemy::target() {
     return target_;
 }
 
-void SimpleEnemy::move(const GSvector3& velocity, GSvector3* foward, float trun_angle) {
-    non_penetrating_move(velocity, foward, trun_angle);
+void SimpleEnemy::start_move() {
+    if (target_ == nullptr) return;
+    navmesh_.find_path(target_);
+}
+
+void SimpleEnemy::update_move(float delta_time) {
+    navmesh_.update_move(delta_time, info_.move_speed, 12.0f);
+}
+
+void SimpleEnemy::end_move() {
+    navmesh_.end();
 }
 
 bool SimpleEnemy::is_root_motion_state() const {

@@ -21,7 +21,7 @@ void NavMeshDebugger::update(float delta_time) {
 
 	ImGui::Text("NavMesh Debugger Option");
 
-	if (ImGui::Button("Search Path")) navmesh_.find_path(start_, end_);
+	if (ImGui::Button("Search Path")) navmesh_.find_path(end_);
 	
 	ImGui::SameLine();
 	if (ImGui::Button("Move Start")) move_start();
@@ -65,7 +65,6 @@ void NavMeshDebugger::move_start() {
 	if (!navmesh_.found_path()) return;
 
 	// èâä˙âª
-	navmesh_.reset_move();
 	is_move_waiting_ = false;
 }
 
@@ -76,5 +75,5 @@ void NavMeshDebugger::update_move(float delta_time) {
 	const float ROTATE_ANGLE{ 2.0f };
 	navmesh_.update_move(delta_time, MOVE_SPEED, ROTATE_ANGLE);
 
-	if (navmesh_.end_move()) is_move_waiting_ = true;
+	if (navmesh_.is_end_move()) is_move_waiting_ = true;
 }

@@ -104,7 +104,7 @@ void DummyEnemy::update(float delta_time) {
 
 	ImGui::DragFloat3("move to", move_to_, 0.1f);
 
-	if (ImGui::Button("Search Path")) navmesh_.find_path(transform_.position(), move_to_);
+	if (ImGui::Button("Search Path")) navmesh_.find_path(move_to_);
 	if (ImGui::Button("Move Start")) move_start();
 
 	ImGui::End();
@@ -148,7 +148,7 @@ void DummyEnemy::add_state() {
 }
 
 bool DummyEnemy::is_move_end() const {
-	return navmesh_.end_move();
+	return navmesh_.is_end_move();
 }
 
 void DummyEnemy::update_move(float delta_time) {
@@ -170,9 +170,6 @@ void DummyEnemy::generate_attack_collider() {
 
 void DummyEnemy::move_start() {
 	if (!navmesh_.found_path()) return;
-
-	// 初期化
-	navmesh_.reset_move();
 
 	change_state((GSuint)DummyEnemyStateType::Move, DummyEnemyMotion::Move, true);
 }
