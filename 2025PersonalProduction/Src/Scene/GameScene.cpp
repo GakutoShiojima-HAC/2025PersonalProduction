@@ -146,7 +146,11 @@ void GameScene::load_data() {
     load_progress_ += progress;
 
     // タイムラインデータの読み込み
+#ifdef _DEBUG
     world_.timeline().init(&world_, true);
+#else
+    world_.timeline().init(&world_, false);
+#endif
     world_.timeline().load(stage + "/timeline.json");
     load_progress_ += progress;
 

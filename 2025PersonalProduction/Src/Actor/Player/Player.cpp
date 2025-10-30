@@ -205,11 +205,6 @@ void Player::draw() const {
 }
 
 void Player::draw_gui() const {
-	{
-		const GSrect rect{ 0.0f, 0.0f, 77.0f, 80.0f };
-		Canvas::draw_texture((GSuint)TextureID::TmpUI, GSvector2{ 20.0f, 20.0f }, rect, GSvector2::zero(), GSvector2::one(), GScolor{ 1.0f, 1.0f, 1.0f, 1.0f }, 0.0f, Anchor::TopLeft);
-	}
-
 #ifdef _DEBUG
     Setting& setting = Setting::get_instance();
     if (setting.is_draw_safearea()) {

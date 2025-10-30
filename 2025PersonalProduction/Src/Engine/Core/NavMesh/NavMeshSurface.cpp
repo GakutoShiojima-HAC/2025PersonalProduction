@@ -39,9 +39,10 @@ void NavMeshSurface::update(float delta_time) {
 }
 
 void NavMeshSurface::draw() const {
-    if (vertices_.empty() || polygons_.empty() || !draw_navmesh_) return;
+    if (vertices_.empty() || polygons_.empty()) return;
 
 #ifdef _DEBUG
+    if (!draw_navmesh_) return;
     // ライティングを無効化
     glDisable(GL_LIGHTING);
     // 色を設定
