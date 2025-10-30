@@ -68,7 +68,7 @@ void CameraTimelineEditor::update_select_keyframe() {
         if (camera != nullptr) {
             // ターゲットが存在するなら相対座標を入力
             GSvector3 position = camera->transform().position();
-            GSvector3 lookat = camera->transform().forward();
+            GSvector3 lookat = position + camera->transform().forward();
             if (target != nullptr) position = target->transform().inverseTransformPoint(position);
             if (target != nullptr) lookat = target->transform().inverseTransformPoint(lookat);
             key_frame->position = position;
