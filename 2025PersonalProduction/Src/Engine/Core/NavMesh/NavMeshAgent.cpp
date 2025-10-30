@@ -1,14 +1,20 @@
 #include "Engine/Core/NavMesh/NavMeshAgent.h"
 #include "Engine/Core/NavMesh/NavMeshSurface.h"
+#include "GameConfig.h"
 
 #ifdef _DEBUG
 #include "Engine/Utils/DebugMarker.h"
 #endif
 
+// Ä’Tõ‚ÌŠÔ
+constexpr float RE_FIND_TIME{ 1.0f };
+
 NavMeshAgent::NavMeshAgent(Actor* target, NavMeshSurface* navmesh) {
 	target_ = target;
 	navmesh_ = navmesh;
 	path_index_ = 0;
+    re_find_timer_ = 0.0f;
+    offset_ratio_ = 0.25f;
 }
 
 NavMeshAgent::~NavMeshAgent() {
@@ -16,10 +22,28 @@ NavMeshAgent::~NavMeshAgent() {
 }
 
 void NavMeshAgent::update_move(float delta_time, float move_speed, float rotate_angle) {
-	if (!found_path() || target_ == nullptr) return;
+	if (target_ == nullptr) return;
 
 	// ‚½‚Ç‚è’…‚¢‚Ä‚¢‚é
 	if (path_index_ >= path_.size()) return;
+
+    // Ä’Tõ‚ğXV
+    re_find_timer_ += delta_time / cFPS;
+    if (re_find_timer_ >= RE_FIND_TIME) {
+        re_find_timer_ = 0.0f;
+
+        // Œo˜H’Tõ‚É¬Œ÷‚µ‚½‚ç(‚æ‚è—Ç‚¢“¹‚ğŒ©‚Â‚¯‚½‚ç)
+        if (navmesh_ != nullptr) {
+            vector<GSvector3> path;
+            navmesh_->find(target_->transform().position(), goal_position_, path, offset_ratio_);
+            if (!path.empty()) {
+                // XV
+                path_ = path;
+                path_index_ = 0;
+            }
+        }
+    }
+    if (!found_path()) return;
 
 	// Ÿ‚Ìs‚«æ‚ğæ“¾
 	const GSvector3& target = path_[path_index_];
@@ -55,7 +79,6 @@ void NavMeshAgent::update_move(float delta_time, float move_speed, float rotate_
 		target_->transform().position(target);
 		// Ÿ‚Ìs‚«æ‚Ö
 		++path_index_;
-
 		return;
 	}
 
@@ -66,8 +89,9 @@ void NavMeshAgent::draw_path() const {
 	if (!found_path()) return;
 
 	for (int i = 0; i < (int)path_.size(); ++i) {
-		const GSvector3& pos = path_[i];
-		float radius = i == path_index_ ? 0.075 : 0.05;
+		GSvector3 pos = path_[i];
+        pos.y += 0.2f;  // ­‚µã‚°‚È‚¢‚ÆNavMeshSurface‚Æ”í‚é
+		float radius = i == path_index_ ? 0.1 : 0.05;
 		MyLib::draw_sphere(pos, radius, GScolor{ 1.0f, 1.0f, 1.0f, 1.0f });
 
 		if (i >= (int)path_.size() - 1) continue;
@@ -76,34 +100,12 @@ void NavMeshAgent::draw_path() const {
 	}
 }
 
-void NavMeshAgent::draw_line_path() const {
-#ifdef _DEBUG
-	if (navmesh_ == nullptr || line_path_.empty()) return;
-
-	for (int i = 0; i < (int)line_path_.size(); ++i) {
-		const GSvector3& pos = line_path_[i];
-		float radius = i == path_index_ + 1 ? 0.075 : 0.05;
-		MyLib::draw_sphere(pos, radius, GScolor{ 1.0f, 1.0f, 1.0f, 1.0f });
-
-		if (i >= (int)line_path_.size() - 1) continue;
-		const GSvector3& end = line_path_[i + 1];
-		MyLib::draw_line(pos, end, GScolor{ 1.0f, 1.0f, 1.0f, 1.0f });
-	}
-#endif
-}
-
 bool NavMeshAgent::find_path(const GSvector3& start, const GSvector3& end) {
 	if (navmesh_ == nullptr) return false;
 
-	vector<int> path = navmesh_->find_path(start, end);
-
-	path_index_ = 0;
-	path_ = navmesh_->create_smooth_path(path, start, end);
-
-#ifdef _DEBUG
-	line_path_ = navmesh_->create_line_path(path);
-#endif
-
+    reset_progress();
+    goal_position_ = end;
+	navmesh_->find(start, end, path_, offset_ratio_);
 	return found_path();
 }
 
@@ -121,6 +123,15 @@ const vector<GSvector3>& NavMeshAgent::path() {
 }
 
 void NavMeshAgent::reset_move() {
-	path_index_ = 0;
+    reset_progress();
 	if (found_path()) target_->transform().position(path_[0]);
+}
+
+float& NavMeshAgent::offset_ratio() {
+    return offset_ratio_;
+}
+
+void NavMeshAgent::reset_progress() {
+    path_index_ = 0;
+    re_find_timer_ = 0.0f;
 }

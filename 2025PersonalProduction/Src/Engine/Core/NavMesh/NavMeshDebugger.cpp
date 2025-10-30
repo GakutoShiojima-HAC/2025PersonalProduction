@@ -45,12 +45,7 @@ void NavMeshDebugger::update(float delta_time) {
 }
 
 void NavMeshDebugger::draw() const {
-#ifdef _DEBUG
-	if (draw_line_path_) navmesh_.draw_line_path();
-	else navmesh_.draw_path();
-#else
 	navmesh_.draw_path();
-#endif
 
 	// Œo˜H’Tõ‚ÌŒ‹‰Ê‚ÅF‚ğ•Ï‚¦‚é
 	const GScolor color = navmesh_.found_path() ? GScolor{ 1.0f, 1.0f, 1.0f, 1.0f } : GScolor{ 1.0f, 0.0f, 0.0f, 1.0f };
