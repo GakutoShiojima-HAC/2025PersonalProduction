@@ -20,6 +20,7 @@
     X(DummyEnemy) \
     X(EnemySlimeToxic) \
     X(EnemySlimeManToxic) \
+    X(EnemyRockGolemMud) \
     X(WeaponSword1) \
     X(WeaponSword2) \
     X(MAX_SIZE) // 要素数
@@ -40,7 +41,6 @@
     X(Skybox) \
     X(TitleLogo) \
     X(MenuLogo) \
-    X(TmpUI) \
     X(SafeArea) \
     X(BonusGauge) \
     X(MAX_SIZE) // 要素数
