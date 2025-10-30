@@ -40,9 +40,9 @@ private:
 	NavMeshAgent navmesh_{};
 
 	// 開始地点
-	GSvector3 start_{ 1.0f, 0.5f, 0.0f };
+	GSvector3 start_{ 1.0f, 0.0f, 0.0f };
 	// 終了地点
-	GSvector3 end_{ -1.0f, 0.5f, 0.0f };
+	GSvector3 end_{ -1.0f, 0.0f, 0.0f };
 
 	// 移動待機中かどうか
 	bool is_move_waiting_{ true };
