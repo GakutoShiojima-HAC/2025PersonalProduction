@@ -58,6 +58,11 @@ private:
 	// ロックオンターゲットとするポーン
 	Pawn* lockon_target_{ nullptr };
 
+    // 補間用
+    GSvector3 vecocity_pos_{ 0.0f, 0.0f, 0.0f };
+    GSvector3 vecocity_at_{ 0.0f, 0.0f, 0.0f };
+    GSvector3 prev_at_{ 0.0f, 0.0f, 0.0f };
+
 	// y軸周りの回転角度
 	float yaw_{ 0.0f };
 	// x軸周りの回転角度

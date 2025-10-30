@@ -13,9 +13,9 @@ const float SENSITIVITY_X{ 0.095f };
 const float SENSITIVITY_Y{ 0.075f };
 
 // スムースダンプ補間時間
-const float SMOOTH_TIME{ 2.0f };
+const float SMOOTH_TIME{ 6.0f };
 // スムースダンプ移動量
-const float SMOOTH_MAX_SPEED{ 5.0f };
+const float SMOOTH_MAX_SPEED{ 1.0f };
 
 PlayerCamera::PlayerCamera(IWorld* world) {
 	world_ = world;
@@ -48,6 +48,7 @@ void PlayerCamera::update(float delta_time) {
 
 		// 注視点の座標を求める
 		at = owner_->transform().position() + LOOKAT_ORIGIN_TO_OFFSET;
+
 		// カメラの座標を求める
 		pos = at + GSquaternion::euler(pitch_, yaw_, 0.0f) * CAMERA_OFFSET;	
 	}
@@ -55,14 +56,15 @@ void PlayerCamera::update(float delta_time) {
 	// カメラ座標から注視点間に障害物があるかどうか
 	Line line{ at, pos };
 	GSvector3 intersect;
-	if (world_->get_field()->collide(line, &intersect)) {
-		// 位置を補正(これでも透ける壁は透ける)
-		pos = intersect;
+    GSplane plane;
+	if (world_->get_field()->collide(line, &intersect, &plane)) {
+		pos = intersect + plane.normal * 0.1f;  // 障害物から押し返す
 	}
 
 	// スムースダンプによる滑らかな補間
-	GSvector3 tmp_velocity = GSvector3::zero();	// 仮移動量
-	pos = GSvector3::smoothDamp(transform_.position(), pos, tmp_velocity, SMOOTH_TIME, SMOOTH_MAX_SPEED, delta_time);
+	pos = GSvector3::smoothDamp(transform_.position(), pos, vecocity_pos_, SMOOTH_TIME, SMOOTH_MAX_SPEED, delta_time);
+    at = GSvector3::smoothDamp(prev_at_, at, vecocity_at_, SMOOTH_TIME, SMOOTH_MAX_SPEED, delta_time);
+    prev_at_ = at;
 
 	// 座標の設定
 	transform_.position(pos);
