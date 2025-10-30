@@ -79,6 +79,8 @@ Player::Player(IWorld* world, const GSvector3& position, const GSvector3& lookat
 	head_offset_ = height_;
 	foot_offset_ = 0.05f;
 
+    hp_ = 10;
+
 	mesh_ = { (GSuint)MeshID::Player, (GSuint)MeshID::Player, (GSuint)MeshID::Player };
 	add_state();
 	
@@ -238,7 +240,7 @@ void Player::take_damage(Actor& other, const int damage) {
 		return;
 	}
 
-	// TODO hp_ = CLAMP(hp_ - damage, 0, INT_MAX);
+	hp_ = CLAMP(hp_ - damage, 0, INT_MAX);
 
 	if (hp_ <= 0) {
 		change_state((GSuint)PlayerStateType::Dead, Motion::Dead, false);
