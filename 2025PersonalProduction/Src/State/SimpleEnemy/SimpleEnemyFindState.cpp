@@ -18,7 +18,7 @@ void SimpleEnemyFindState::update(float delta_time) {
     GSquaternion rotation = GSquaternion::rotateTowards(
         owner_.transform().rotation(),
         GSquaternion::lookRotation(to_target),
-        3.0f
+        3.0f * delta_time
     );
     owner_.transform().rotation(rotation);
 

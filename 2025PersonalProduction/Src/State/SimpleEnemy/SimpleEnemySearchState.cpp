@@ -29,7 +29,7 @@ void SimpleEnemySearchState::update(float delta_time) {
     GSquaternion rotation = GSquaternion::rotateTowards(
         owner_.transform().rotation(),
         GSquaternion::lookRotation(rotate_foward_),
-        3.0f
+        3.0f * delta_time
     );
     owner_.transform().rotation(rotation);
 }

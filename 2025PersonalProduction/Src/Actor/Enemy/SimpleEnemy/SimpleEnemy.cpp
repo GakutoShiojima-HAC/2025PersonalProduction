@@ -191,7 +191,7 @@ void SimpleEnemy::start_move() {
 }
 
 void SimpleEnemy::update_move(float delta_time) {
-    navmesh_.update_move(delta_time, info_.move_speed, 12.0f);
+    navmesh_.update_move(delta_time, info_.move_speed, 3.0f);
 }
 
 void SimpleEnemy::end_move() {
