@@ -29,6 +29,8 @@ void TitleScene::start() {
 }
 
 void TitleScene::update(float delta_time) {
+    Tween::update(delta_time);
+
     // ロードが終了して何かのボタンを押したら遷移(シーン処理が少ないかつ、たまにしか来ないシーンのため毎回取得)
     if (is_load_end_ && Input::get_instance().action(InputAction::MENU_ANY)) {
         is_end_ = true;

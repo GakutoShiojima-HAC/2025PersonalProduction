@@ -159,6 +159,8 @@ public:
 
     ActionScore& action_score() override;
 
+    float& timescale() override;
+
 protected:
     // GUIを描画するかどうか
     bool enable_draw_gui_{ true };
@@ -191,6 +193,9 @@ protected:
     ActionScore action_score_;
     // ゲーム時間
     GameTimer game_timer_;
+    // タイムスケール
+    float timescale_{ 1.0f };
+
 };
 
 #endif

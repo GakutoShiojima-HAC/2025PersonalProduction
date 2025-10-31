@@ -82,7 +82,6 @@ private:
         screen_.update();
         input_.update(delta_time);
         vibration_.update(delta_time);
-        Tween::update(delta_time);
         scene_manager_.update(delta_time);
     }
 

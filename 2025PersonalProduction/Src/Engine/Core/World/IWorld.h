@@ -233,6 +233,12 @@ public:
     /// <returns>参照</returns>
     virtual ActionScore& action_score() = 0;
 
+    /// <summary>
+    /// タイムスケールの取得
+    /// </summary>
+    /// <returns>参照</returns>
+    virtual float& timescale() = 0;
+
 public:
 	// コピー禁止
 	IWorld(const IWorld& other) = delete;

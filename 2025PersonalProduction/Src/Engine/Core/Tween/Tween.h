@@ -15,6 +15,9 @@ public:
     // 管理下のTweenUnitの更新処理を呼び出す
     static void update(float delta_time);
 
+    // 管理下のTweenUnitの更新処理を呼び出す タイムスケール効果あり
+    static void update(float delta_time, float scale_time);
+
     // 管理下のTweenUnitを全て削除する
     static void clear();
 

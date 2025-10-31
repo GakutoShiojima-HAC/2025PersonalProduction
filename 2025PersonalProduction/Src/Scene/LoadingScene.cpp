@@ -1,6 +1,7 @@
 #include "Scene/LoadingScene.h"
 #include "Engine/Graphics/Canvas/Canvas.h"
 #include <gslib.h>
+#include "Engine/Core/Tween/Tween.h"
 
 void LoadingScene::start() {
     is_end_ = false;
@@ -14,6 +15,7 @@ void LoadingScene::start() {
 }
 
 void LoadingScene::update(float delta_time) {
+    Tween::update(delta_time);
     // 次のシーンのロード処理が終了したらシーンを終了する
     if (scene_manager_.is_load_end(next_scene_tag_)) is_end_ = true;
 }
@@ -25,7 +27,7 @@ void LoadingScene::draw() const {
 }
 
 void LoadingScene::end() {
-    // TODO loading image asset delete
+    Tween::clear();
 
 }
 

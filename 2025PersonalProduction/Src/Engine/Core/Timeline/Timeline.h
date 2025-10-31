@@ -25,7 +25,7 @@ public:
     ~Timeline();
 
 public:
-    void update(float delta_time);
+    void update(float delta_time, float scale_time);
 
     void clear();
 

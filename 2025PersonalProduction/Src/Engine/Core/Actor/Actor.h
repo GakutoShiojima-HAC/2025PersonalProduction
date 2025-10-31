@@ -160,6 +160,12 @@ public:
     /// <returns>インタラクト時に表示する文字列</returns>
     virtual std::string interact_text() const;
 
+    /// <summary>
+    /// タイムスケールを受けるかどうか
+    /// </summary>
+    /// <returns>受けるなら真を返却</returns>
+    bool is_enable_timescale() const;
+
 protected:
 	/// <summary>
 	/// 地形との衝突判定
@@ -213,6 +219,9 @@ protected:
 	bool enable_collider_{ true };
 	// 球体衝突判定
 	BoundingSphere collider_;
+
+    // タイムスケールを受けるかどうか
+    bool enable_timescale_{ true };
 
 public:
 	// コピー禁止

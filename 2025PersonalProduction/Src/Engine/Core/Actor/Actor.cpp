@@ -105,6 +105,10 @@ std::string Actor::interact_text() const {
     return "";
 }
 
+bool Actor::is_enable_timescale() const {
+	return enable_timescale_;
+}
+
 void Actor::collide_field() {
 
 }

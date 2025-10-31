@@ -57,14 +57,20 @@ public:
     /// <summary>
     /// タイムラインを再生中かどうか
     /// </summary>
-    /// <returns></returns>
-    virtual bool is_playing() const { return is_playing_; };
+    /// <returns>再生中なら真を返却</returns>
+    virtual bool is_playing() const { return is_playing_; }
 
     /// <summary>
     /// ワールドを取得
     /// </summary>
-    /// <returns></returns>
+    /// <returns>エディタ用 IWorldで返す</returns>
     virtual IWorld* get_world() { return world_; }
+
+    /// <summary>
+    /// タイムスケールを受けるかどうか
+    /// </summary>
+    /// <returns>受けるなら真を返却</returns>
+    bool is_enable_timescale() { return enable_timescale_; }
 
 protected:
     // ワールド
@@ -75,6 +81,8 @@ protected:
     float timer_{ 0.0f };
     // 現在のキーフレーム
     GSuint key_frame_{ 0 };
+    // タイムスケールを受けるかどうか
+    bool enable_timescale_{ false };
 
 public:
     // コピー禁止

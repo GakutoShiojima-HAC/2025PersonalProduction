@@ -13,9 +13,9 @@ void ActorManager::add(Actor* actor) {
 	actors_.push_back(actor);
 }
 
-void ActorManager::update(float delta_time) {
+void ActorManager::update(float delta_time, float scale_time) {
 	for (const auto& actor : actors_) {
-		actor->update(delta_time);
+		actor->update(actor->is_enable_timescale() ? scale_time : delta_time);
 	}
 
 #ifdef _DEBUG
@@ -26,9 +26,9 @@ void ActorManager::update(float delta_time) {
 #endif
 }
 
-void ActorManager::late_update(float delta_time) {
+void ActorManager::late_update(float delta_time, float scale_time) {
 	for (const auto& actor : actors_) {
-		actor->late_update(delta_time);
+		actor->late_update(actor->is_enable_timescale() ? scale_time : delta_time);
 	}
 }
 

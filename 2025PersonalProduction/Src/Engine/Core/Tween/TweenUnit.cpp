@@ -75,6 +75,15 @@ void TweenUnit::cancel() {
     is_canceled_ = true;
 }
 
+bool TweenUnit::is_enable_timescale() const {
+    return enable_timescale_;
+}
+
+TweenUnit& TweenUnit::enable_timescale(bool enable) {
+    enable_timescale_ = enable;
+    return *this;
+}
+
 float TweenUnit::apply_ease(float value, EaseType ease_type, float overshoot) {
     switch (ease_type) {
     case EaseType::Linear:         return value;

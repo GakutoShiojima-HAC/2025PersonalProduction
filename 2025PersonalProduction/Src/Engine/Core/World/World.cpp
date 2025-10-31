@@ -12,16 +12,18 @@ World::~World() {
 }
 
 void World::update(float delta_time) {
+    const float scale_time = delta_time * timescale_;
+
     game_timer_.update(delta_time);
 
-	field_->update(delta_time);
-	if (navmesh_ != nullptr) navmesh_->update(delta_time);
-	actor_.update(delta_time);
+	field_->update(delta_time, scale_time);
+	if (navmesh_ != nullptr) navmesh_->update(scale_time);
+	actor_.update(delta_time, scale_time);
 	actor_.collide();
-	actor_.late_update(delta_time);
-	timeline_.update(delta_time);
+	actor_.late_update(delta_time, scale_time);
+	timeline_.update(delta_time, scale_time);
 	camera_.update(delta_time);
-	gsUpdateEffect(delta_time);
+	gsUpdateEffect(scale_time); // ハンドル指定で計算で戻せる gsSetEffectSpeed
 
 	if (attack_collider_pool_ != nullptr) attack_collider_pool_->remove();
 	character_.remove();
@@ -257,4 +259,8 @@ GameSaveData& World::game_save_data() {
 
 ActionScore& World::action_score() {
     return action_score_;
+}
+
+float& World::timescale() {
+    return timescale_;
 }
