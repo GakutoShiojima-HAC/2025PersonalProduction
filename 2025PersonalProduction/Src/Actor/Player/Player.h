@@ -3,9 +3,9 @@
 //  Author        : Shiojima Gakuto
 //  Created       : 2025/08/11
 //  Updated       : 2025/10/28
-//  Description   : ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼
+//  Description   : ƒvƒŒƒCƒ„[
 //
-//  æ³¨æ„ï¼šæœ¬ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã®ç„¡æ–­è»¢è¼‰ãƒ»ã‚³ãƒ¼ãƒ‰ã®ã‚³ãƒ”ãƒ¼ãƒ»è²¼ã‚Šä»˜ã‘ã«ã‚ˆã‚‹æµç”¨ãƒ»å†é…å¸ƒã‚’ç¦æ­¢ã—ã¾ã™ã€‚
+//  ’ˆÓF–{ƒ\[ƒXƒR[ƒh‚Ì–³’f“]ÚEƒR[ƒh‚ÌƒRƒs[E“\‚è•t‚¯‚É‚æ‚é—¬—pEÄ”z•z‚ğ‹Ö~‚µ‚Ü‚·B
 // -----------------------------------------------------------------------------------------
 
 #ifndef PLAYER_H_
@@ -19,25 +19,25 @@ class PlayerCamera;
 class Inventory;
 
 /// <summary>
-/// æ”»æ’ƒåˆ¤å®šä½œæˆã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¤ãƒ™ãƒ³ãƒˆç™»éŒ²ç”¨æ§‹é€ ä½“
+/// UŒ‚”»’èì¬ƒAƒjƒ[ƒVƒ‡ƒ“ƒCƒxƒ“ƒg“o˜^—p\‘¢‘Ì
 /// </summary>
 struct PlayerGenerateAttackColliderEvent {
-    GSvector3 offset{ 0.0f, 0.0f, 0.0f };   // ç”Ÿæˆä½ç½®
-    float radius{ 1.0f };                   // åŠå¾„
-    float time{ 0.0f };                     // ã‚¿ã‚¤ãƒŸãƒ³ã‚°
+    GSvector3 offset{ 0.0f, 0.0f, 0.0f };   // ¶¬ˆÊ’u
+    float radius{ 1.0f };                   // ”¼Œa
+    float time{ 0.0f };                     // ƒ^ƒCƒ~ƒ“ƒO
 };
 
 /// <summary>
-/// é€šå¸¸æ”»æ’ƒã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
+/// ’ÊíUŒ‚‚Ìƒpƒ‰ƒ[ƒ^
 /// </summary>
 struct PlayerAttackParam {
-    int damage{ 0 };            // ãƒ€ãƒ¡ãƒ¼ã‚¸
-    float next_start{ 0.0f };   // æ¬¡ã®æ”»æ’ƒãŒç™ºå‹•ã§ãã‚‹æ™‚é–“
-    float next_end{ 0.0f };     // æ¬¡ã®æ”»æ’ƒãŒç™ºå‹•ã§ããªããªã‚‹æ™‚é–“
+    int damage{ 0 };            // ƒ_ƒ[ƒW
+    float next_start{ 0.0f };   // Ÿ‚ÌUŒ‚‚ª”­“®‚Å‚«‚éŠÔ
+    float next_end{ 0.0f };     // Ÿ‚ÌUŒ‚‚ª”­“®‚Å‚«‚È‚­‚È‚éŠÔ
 };
 
 /// <summary>
-/// å¤–éƒ¨ãƒ‡ãƒ¼ã‚¿ç®¡ç†ç”¨æƒ…å ±å¼•ãæ¸¡ã—æ§‹é€ ä½“
+/// ŠO•”ƒf[ƒ^ŠÇ——pî•ñˆø‚«“n‚µ\‘¢‘Ì
 /// </summary>
 struct PlayerInfo {
     std::vector<std::vector<PlayerGenerateAttackColliderEvent>> attack_event;
@@ -104,7 +104,7 @@ public:
         Attack4 = 33,
         Attack5 = 34,
 
-        Skill = 101,          // TODO ã‚¹ã‚­ãƒ«
+        Skill = 101,          // TODO ƒXƒLƒ‹
         AvoidAttack = 36,
         AvoidSuccessAttack = 29,
         AvoidSuccessSkill = 35,
@@ -139,93 +139,99 @@ private:
 
 public:
 	/// <summary>
-	/// ç§»å‹•ã®æ›´æ–°
+	/// ˆÚ“®‚ÌXV
 	/// </summary>
 	void update_move(float delta_time);
 
 	/// <summary>
-	/// ç©ºä¸­ã§ã®ç§»å‹•ã®æ›´æ–°
+	/// ‹ó’†‚Å‚ÌˆÚ“®‚ÌXV
 	/// </summary>
 	void update_move_air(float delta_time);
 
 	/// <summary>
-	/// ç§»å‹•ã‚¹ãƒ†ãƒ¼ãƒˆã«é·ç§»(åŒä¸€å‡¦ç†ãŒå¤šã„ãŸã‚ãƒ©ãƒƒãƒ—)
+	/// ˆÚ“®ƒXƒe[ƒg‚É‘JˆÚ(“¯ˆêˆ—‚ª‘½‚¢‚½‚ßƒ‰ƒbƒv)
 	/// </summary>
 	void to_move_state();
 
     /// <summary>
-    /// ç§»å‹•é€Ÿåº¦ã‚’ãƒªã‚»ãƒƒãƒˆã™ã‚‹
+    /// ˆÚ“®‘¬“x‚ğƒŠƒZƒbƒg‚·‚é
     /// </summary>
     void reset_move_speed();
 
     /// <summary>
-    /// ç§»å‹•å…¥åŠ›ã‚’è¡Œã£ã¦ã„ã‚‹ã‹ã©ã†ã‹
+    /// ˆÚ“®“ü—Í‚ğs‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚©
     /// </summary>
-    /// <returns>è¡Œã£ã¦ã„ãŸã‚‰çœŸã‚’è¿”å´</returns>
+    /// <returns>s‚Á‚Ä‚¢‚½‚ç^‚ğ•Ô‹p</returns>
     bool is_move_input() const;
 
 	/// <summary>
-	/// è¿½å¾“ã‚«ãƒ¡ãƒ©ã®æ›´æ–°
+	/// ’Ç]ƒJƒƒ‰‚ÌXV
 	/// </summary>
 	void update_lockon_camera();
 
     /// <summary>
-    /// ä¸€ç•ªè¿‘ãã®æ•µã‚’å‘ã
+    /// ˆê”Ô‹ß‚­‚Ì“G‚ğŒü‚­
     /// </summary>
     void look_target();
 
     /// <summary>
-    /// ã‚¿ã‚¤ãƒ ãƒ©ã‚¤ãƒ³ã‚’åœæ­¢ã•ã›ã‚‹
+    /// ƒ^ƒCƒ€ƒ‰ƒCƒ“‚ğ’â~‚³‚¹‚é
     /// </summary>
     void stop_timeline();
 
 public:
     /// <summary>
-    /// ã‚¹ãƒ†ãƒ¼ãƒˆãŒé·ç§»æ¡ä»¶ã«ä½¿ãˆã‚‹ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ã‚’è¡Œã£ã¦ã„ã‚‹ã‹ã©ã†ã‹
+    /// ƒXƒe[ƒg‚ª‘JˆÚğŒ‚Ég‚¦‚éƒAƒNƒVƒ‡ƒ“‚ğs‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚©
     /// </summary>
-    /// <param name="action">= ã‚¢ã‚¯ã‚·ãƒ§ãƒ³</param>
-    /// <returns>è¡Œã£ã¦ã„ãŸã‚‰çœŸã‚’è¿”å´</returns>
+    /// <param name="action">= ƒAƒNƒVƒ‡ƒ“</param>
+    /// <returns>s‚Á‚Ä‚¢‚½‚ç^‚ğ•Ô‹p</returns>
     bool is_action(InputAction action) const;
 
 	/// <summary>
-	/// é€šå¸¸æ”»æ’ƒã®é–‹å§‹
+	/// ’ÊíUŒ‚‚ÌŠJn
 	/// </summary>
 	void attack_start();
 
 	/// <summary>
-	/// å›é¿å‡¦ç†
+	/// ‰ñ”ğˆ—
 	/// </summary>
 	void on_avoid();
 
     /// <summary>
-    /// å›é¿æ”»æ’ƒå‡¦ç†
+    /// ‰ñ”ğUŒ‚ˆ—
     /// </summary>
     void on_avoid_attack();
 
 	/// <summary>
-	/// ã‚¹ã‚­ãƒ«å‡¦ç†
+	/// ƒXƒLƒ‹ˆ—
 	/// </summary>
 	void on_skill();
 
 	/// <summary>
-	/// ç¾åœ¨ã®æ”»æ’ƒæ®µæ•°
+	/// Œ»İ‚ÌUŒ‚’i”
 	/// </summary>
-	/// <returns>å‚ç…§</returns>
+	/// <returns>QÆ</returns>
 	int& attack_count();
 
 	/// <summary>
-	/// æ”»æ’ƒã‹ã‚‰æ¬¡ã®æ”»æ’ƒã«å…¥ã‚‹ã¾ã§ã®æœ€çŸ­æ™‚é–“ã‚’å–å¾—
+	/// UŒ‚‚©‚çŸ‚ÌUŒ‚‚É“ü‚é‚Ü‚Å‚ÌÅ’ZŠÔ‚ğæ“¾
 	/// </summary>
 	/// <returns>delta_time</returns>
 	float get_enter_next_attack_min_time() const;
 
     /// <summary>
-    /// æ”»æ’ƒã‹ã‚‰æ¬¡ã®æ”»æ’ƒã«å…¥ã‚‹ã¾ã§ã®æœ€çŸ­æ™‚é–“ã‚’å–å¾—
+    /// UŒ‚‚©‚çŸ‚ÌUŒ‚‚É“ü‚é‚Ü‚Å‚ÌÅ’ZŠÔ‚ğæ“¾
     /// </summary>
     /// <returns>delta_time</returns>
     float get_enter_next_attack_max_time() const;
 
-	/* ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ã®ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ç•ªå·ã‚’è¿”å´ */
+    /// <summary>
+    /// ƒ^ƒCƒ€ƒXƒP[ƒ‹‚ğó‚¯‚é‚©‚Ç‚¤‚©
+    /// </summary>
+    /// <returns>QÆ</returns>
+    bool& enable_timescale();
+
+    /* ƒAƒNƒVƒ‡ƒ“‚Ìƒ‚[ƒVƒ‡ƒ“”Ô†‚ğ•Ô‹p */
 public:
 	GSuint get_attack_motion() const;
 
@@ -235,61 +241,61 @@ public:
 
 private:
     /// <summary>
-    /// æ”»æ’ƒåˆ¤å®šã‚’ä½œæˆ
+    /// UŒ‚”»’è‚ğì¬
     /// </summary>
-    /// <param name="offset">= ã‚ªãƒ•ã‚»ãƒƒãƒˆ</param>
-    /// <param name="radius">= åŠå¾„</param>
-    /// <param name="damage">= ãƒ€ãƒ¡ãƒ¼ã‚¸</param>
-    /// <param name="name">= è­˜åˆ¥å</param>
+    /// <param name="offset">= ƒIƒtƒZƒbƒg</param>
+    /// <param name="radius">= ”¼Œa</param>
+    /// <param name="damage">= ƒ_ƒ[ƒW</param>
+    /// <param name="name">= ¯•Ê–¼</param>
     void generate_attack_collider(const GSvector3& offset, float radius, int damage, const std::string& name);
 
     /// <summary>
-    /// ã‚¤ãƒ³ã‚¿ãƒ©ã‚¯ãƒˆã‚’æ›´æ–°
+    /// ƒCƒ“ƒ^ƒ‰ƒNƒg‚ğXV
     /// </summary>
     void interact_update();
 
     /// <summary>
-    /// ã‚¤ãƒ³ã‚¿ãƒ©ã‚¯ãƒˆã§ãã‚‹ã‚¢ã‚¯ã‚¿ãƒ¼ã‚’é›†ã‚ã‚‹
+    /// ƒCƒ“ƒ^ƒ‰ƒNƒg‚Å‚«‚éƒAƒNƒ^[‚ğW‚ß‚é
     /// </summary>
     void get_interact_actor_list();
 
 	/// <summary>
-	/// æ”»æ’ƒã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¤ãƒ™ãƒ³ãƒˆã‚’è¿½åŠ 
+	/// UŒ‚ƒAƒjƒ[ƒVƒ‡ƒ“ƒCƒxƒ“ƒg‚ğ’Ç‰Á
 	/// </summary>
-	/// <param name="info">= ç”Ÿæˆæƒ…å ±</param>
+	/// <param name="info">= ¶¬î•ñ</param>
 	void add_attack_animation_event(const PlayerInfo& info);
 
     /// <summary>
-    /// ãƒ«ãƒ¼ãƒˆãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ã‚’ä½¿ã†çŠ¶æ…‹ã‹ã©ã†ã‹
+    /// ƒ‹[ƒgƒ‚[ƒVƒ‡ƒ“‚ğg‚¤ó‘Ô‚©‚Ç‚¤‚©
     /// </summary>
-    /// <returns>ãƒ«ãƒ¼ãƒˆãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ã‚’ä½¿ã†ãªã‚‰çœŸã‚’è¿”å´</returns>
+    /// <returns>ƒ‹[ƒgƒ‚[ƒVƒ‡ƒ“‚ğg‚¤‚È‚ç^‚ğ•Ô‹p</returns>
     bool is_root_motion_state() const;
 
 private:
-	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚«ãƒ¡ãƒ©
+	// ƒvƒŒƒCƒ„[ƒJƒƒ‰
 	PlayerCamera* camera_{ nullptr };
 
-	// æœ€å¾Œã®ç§»å‹•é€Ÿåº¦
+	// ÅŒã‚ÌˆÚ“®‘¬“x
 	float move_speed_{ 0.0f };
 
 private:
 	Input& input_ = Input::get_instance();
 
-    // ã‚¢ã‚¤ãƒ†ãƒ ãƒ‡ãƒ¼ã‚¿
+    // ƒAƒCƒeƒ€ƒf[ƒ^
     ItemDataManager& item_data_ = ItemDataManager::get_instance();
-    // ã‚¤ãƒ³ãƒ™ãƒ³ãƒˆãƒª
+    // ƒCƒ“ƒxƒ“ƒgƒŠ
     Inventory& inventory_;
-    // ã‚¤ãƒ³ã‚¿ãƒ©ã‚¯ãƒˆå¯¾è±¡ã®ã‚¢ã‚¯ã‚¿ãƒ¼
+    // ƒCƒ“ƒ^ƒ‰ƒNƒg‘ÎÛ‚ÌƒAƒNƒ^[
     std::vector<Actor*> interact_actors_;
-    // ã‚¤ãƒ³ã‚¿ãƒ©ã‚¯ãƒˆã—ã¦ã„ã‚‹ã‚¢ã‚¯ã‚¿ãƒ¼ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
+    // ƒCƒ“ƒ^ƒ‰ƒNƒg‚µ‚Ä‚¢‚éƒAƒNƒ^[‚ÌƒCƒ“ƒfƒbƒNƒX
     GSint interact_target_index_{ 0 };
 
-	// é€šå¸¸æ”»æ’ƒæ®µæ•°
+	// ’ÊíUŒ‚’i”
 	int attack_count_{ 0 };
-    // é€šå¸¸æ”»æ’ƒã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
+    // ’ÊíUŒ‚‚Ìƒpƒ‰ƒ[ƒ^
     std::vector<PlayerAttackParam> attack_param_;
 
-	// å›é¿æ¼”å‡ºã®ã‚¿ã‚¤ãƒãƒ¼
+	// ‰ñ”ğ‰‰o‚Ìƒ^ƒCƒ}[
 	float avoid_effect_timer_{ 0.0f };
 };
 

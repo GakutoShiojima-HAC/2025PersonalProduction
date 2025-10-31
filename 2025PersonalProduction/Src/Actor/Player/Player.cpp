@@ -87,8 +87,8 @@ Player::Player(IWorld* world, const GSvector3& position, const GSvector3& lookat
 	mesh_ = { (GSuint)MeshID::Player, (GSuint)MeshID::Player, (GSuint)MeshID::Player };
 	add_state();
 	
-	// 衝突判定球を生成
-	collider_ = BoundingSphere{ RADIUS, GSvector3{ 0.0f, height_ / 2.0f, 0.0f } };
+    // 衝突判定球を生成
+    collider_ = BoundingSphere{ RADIUS, GSvector3{ 0.0f, height_ / 2.0f, 0.0f } };
 
 	transform_.position(position);
 	transform_.lookAt(lookat);
@@ -112,9 +112,13 @@ void Player::update(float delta_time) {
 	// 回避演出タイマーの更新
 	if (avoid_effect_timer_ > 0.0f) {
 		avoid_effect_timer_ -= delta_time / cFPS;
-		if (avoid_effect_timer_ <= 0.0f) Tween::color(AVOID_EFFECT_COLOR, GScolor{1.0f, 1.0f, 1.0f, 1.0f }, 0.5f * cFPS, [=](GScolor color) {
-				world_->set_mask_color(color);
-			}).on_complete([=] { world_->enable_avoid_effect() = false; });
+        if (avoid_effect_timer_ <= 0.0f) {
+            // スケールを変更
+            world_->set_timescale(1.0f, 0.5f);
+            Tween::color(AVOID_EFFECT_COLOR, GScolor{ 1.0f, 1.0f, 1.0f, 1.0f }, 0.5f * cFPS, [=](GScolor color) {
+                world_->set_mask_color(color);
+                }).on_complete([=] { world_->enable_avoid_effect() = false; });
+        }
 	}
 
 #ifdef _DEBUG
@@ -236,6 +240,9 @@ void Player::take_damage(Actor& other, const int damage) {
 		world_->enable_avoid_effect() = true;
 		world_->set_mask_color(AVOID_EFFECT_COLOR);
 		avoid_effect_timer_ = AVOID_EFFECT_TIME;
+        // スケールを変更
+        world_->set_timescale(0.25f);
+        enable_timescale_ = false;
 		return;
 	}
 
@@ -555,6 +562,14 @@ void Player::on_avoid() {
 		motion = Motion::AvoidF;
 	}
 
+    // 負傷中ならタイムスケールを変更
+    bool enable_timescale = state_.get_current_state() == (GSuint)PlayerStateType::Hurt && avoid_effect_timer_ <= 0.0f;
+    if (enable_timescale) {
+        enable_timescale_ = true;   // 自分も受ける
+        world_->set_timescale(0.25f);
+        world_->set_timescale(1.0f, mesh_.motion_end_time());
+    }
+
 	// 移動先を決定
 	avoid_velocity = avoid_velocity.normalized() * AVOID_SPEED * 1.0f / cFPS;
 	// モーションを適用
@@ -563,7 +578,7 @@ void Player::on_avoid() {
 	// 移動
 	float move_time = mesh_.motion_end_time();
 	Tween::vector3(avoid_velocity, GSvector3::zero(), move_time, [&](GSvector3 pos) {
-		non_penetrating_move(pos); }).ease(EaseType::EaseOutCubic).name("PlayerAvoid");
+		non_penetrating_move(pos); }).ease(EaseType::EaseOutCubic).name("PlayerAvoid").enable_timescale(enable_timescale);
 	// 強制回転
 	transform_.lookAt(transform_.position() + (is_lockon ? forward : avoid_velocity));
 
@@ -601,6 +616,10 @@ float Player::get_enter_next_attack_min_time() const {
 float Player::get_enter_next_attack_max_time() const {
     if (attack_count_ >= attack_param_.size() - 1) return 99999.0f;
     return attack_param_[attack_count_].next_end;
+}
+
+bool& Player::enable_timescale() {
+    return enable_timescale_;
 }
 
 GSuint Player::get_attack_motion() const {
