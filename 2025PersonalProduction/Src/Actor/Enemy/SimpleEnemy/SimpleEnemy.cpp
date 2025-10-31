@@ -210,6 +210,10 @@ void SimpleEnemy::update_look_target(float delta_time) {
     transform_.rotation(rotation);
 }
 
+void SimpleEnemy::release_target() {
+    target_ = nullptr;
+}
+
 bool SimpleEnemy::is_root_motion_state() const {
     return false;
 }
