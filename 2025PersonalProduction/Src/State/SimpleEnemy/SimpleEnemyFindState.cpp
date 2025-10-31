@@ -13,16 +13,10 @@ void SimpleEnemyFindState::update(float delta_time) {
         return;
     }
 
-    // ’Tõs“®‚Ì‰ñ“]
-    GSvector3 to_target = owner_.target()->transform().position() - owner_.transform().position();
-    GSquaternion rotation = GSquaternion::rotateTowards(
-        owner_.transform().rotation(),
-        GSquaternion::lookRotation(to_target),
-        3.0f * delta_time
-    );
-    owner_.transform().rotation(rotation);
+    owner_.update_look_target(delta_time);
 
-    if (MyMath::to_target_angle(owner_.collider().center, owner_.transform().forward(), owner_.target()->collider().center) <= 5.0f) {
+    // ƒ^[ƒQƒbƒg‚ªŒ©‚¦‚éˆÊ’u‚É“ü‚Á‚½‚ç‘JˆÚ
+    if (MyMath::to_target_angle(owner_.transform().position(), owner_.transform().forward(), owner_.target()->transform().position()) <= 10.0f) {
         owner_.change_state((GSuint)SimpleEnemyStateType::Move, owner_.get_motion(SimpleEnemyStateType::Move), true);
         return;
     }

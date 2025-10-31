@@ -198,6 +198,18 @@ void SimpleEnemy::end_move() {
     navmesh_.end();
 }
 
+void SimpleEnemy::update_look_target(float delta_time) {
+    if (target_ == nullptr) return;
+
+    GSvector3 to_target = target()->transform().position() - transform_.position();
+    GSquaternion rotation = GSquaternion::rotateTowards(
+        transform_.rotation(),
+        GSquaternion::lookRotation(to_target),
+        3.0f * delta_time
+    );
+    transform_.rotation(rotation);
+}
+
 bool SimpleEnemy::is_root_motion_state() const {
     return false;
 }
