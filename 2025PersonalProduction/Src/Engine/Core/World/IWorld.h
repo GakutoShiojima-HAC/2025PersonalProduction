@@ -239,6 +239,13 @@ public:
     /// <returns>参照</returns>
     virtual float& timescale() = 0;
 
+    /// <summary>
+    /// タイムスケールを変更
+    /// </summary>
+    /// <param name="scale">= スケール デフォルトは1.0</param>
+    /// <param name="time">= 元のスケールから指定したスケールになるまでにかかる時間(delta_time)</param>
+    virtual void set_timescale(float scale= 1.0f, float time = 0.0f) = 0;
+
 public:
 	// コピー禁止
 	IWorld(const IWorld& other) = delete;

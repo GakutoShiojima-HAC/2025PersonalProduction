@@ -161,6 +161,8 @@ public:
 
     float& timescale() override;
 
+    void set_timescale(float scale = 1.0f, float time = 0.0f) override;
+
 protected:
     // GUIを描画するかどうか
     bool enable_draw_gui_{ true };

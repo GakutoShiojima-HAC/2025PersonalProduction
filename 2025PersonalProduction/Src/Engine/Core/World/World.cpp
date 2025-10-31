@@ -6,6 +6,7 @@
 #include "Engine/Core/Actor/Pawn/Character/Character.h"
 #include "Engine/Core/Collision/AttackColliderPool.h"
 #include "Engine/Core/Collision/AttackCollider.h"
+#include "Engine/Core/Tween/Tween.h"
 
 World::~World() {
 	clear();
@@ -263,4 +264,10 @@ ActionScore& World::action_score() {
 
 float& World::timescale() {
     return timescale_;
+}
+
+void World::set_timescale(float scale, float time) {
+    Tween::cancel("WorldTimeScale");
+    if (time <= 0.0f) timescale_ = scale;
+    else Tween::value(timescale_, scale, time, [&](float current) { timescale() = current; }).name("WorldTimeScale").ease(EaseType::EaseOutQuad);
 }
