@@ -9,9 +9,9 @@ FieldActorManager::~FieldActorManager() {
     clear();
 }
 
-void FieldActorManager::update(float delta_time, float time_scale) {
+void FieldActorManager::update(float delta_time, float scale_time) {
     for (const auto& actor : actors_) {
-        actor->update(delta_time);
+        actor->update(actor->is_enable_timescale() ? scale_time : delta_time);
     }
 }
 
