@@ -79,6 +79,9 @@ Player::Player(IWorld* world, const GSvector3& position, const GSvector3& lookat
 	head_offset_ = height_;
 	foot_offset_ = 0.05f;
 
+    // タイムスケールを受けない
+    enable_timescale_ = false;
+
     hp_ = 10;
 
 	mesh_ = { (GSuint)MeshID::Player, (GSuint)MeshID::Player, (GSuint)MeshID::Player };
@@ -150,6 +153,7 @@ void Player::update(float delta_time) {
     int motion = motion_;
     ImGui::SliderInt("motion",&motion, 0, 255);
     motion_ = motion;
+    ImGui::InputFloat("timescale", &world_->timescale(), 0.1f);
 	ImGui::End();
 
 	ImGui::Begin("App Window");
