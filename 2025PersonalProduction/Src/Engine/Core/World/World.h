@@ -143,7 +143,7 @@ public:
 
     std::vector<Character*> find_character_with_tag(const ActorTag tag) const override;
 
-    void play_timeline(const std::string& name) override;
+    void play_timeline(const std::string& name, bool enable_timescale) override;
 
     void stop_timeline() override;
 
@@ -160,6 +160,8 @@ public:
     ActionScore& action_score() override;
 
     float& timescale() override;
+
+    void set_timescale(float scale = 1.0f, float time = 0.0f) override;
 
 protected:
     // GUIを描画するかどうか

@@ -178,14 +178,11 @@ public:
     virtual std::vector<Character*> find_character_with_tag(const ActorTag tag) const = 0;
 
     /// <summary>
-    /// タイムラインを再生
-    /// </summary>
-
-    /// <summary>
     /// タイムラインの再生を開始
     /// </summary>
     /// <param name="name">= 再生時の名前</param>
-    virtual void play_timeline(const std::string& name) = 0;
+    /// <param name="enable_timescale">= タイムスケールを受けるかどうか</param>
+    virtual void play_timeline(const std::string& name, bool enable_timescale = false) = 0;
 
     /// <summary>
     /// タイムラインの再生を停止
@@ -238,6 +235,13 @@ public:
     /// </summary>
     /// <returns>参照</returns>
     virtual float& timescale() = 0;
+
+    /// <summary>
+    /// タイムスケールを変更
+    /// </summary>
+    /// <param name="scale">= スケール デフォルトは1.0</param>
+    /// <param name="time">= 元のスケールから指定したスケールになるまでにかかる時間(delta_time)</param>
+    virtual void set_timescale(float scale= 1.0f, float time = 0.0f) = 0;
 
 public:
 	// コピー禁止
