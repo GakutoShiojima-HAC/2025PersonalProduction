@@ -11,8 +11,9 @@ Timeline::~Timeline() {
 }
 
 void Timeline::update(float delta_time, float scale_time) {
+    const float time = enable_timescale_ ? scale_time : delta_time;
     for (auto& param : timelines_) {
-        param->update(param->is_enable_timescale() ? scale_time : delta_time);
+        param->update(time);
     }
     editor_.update(delta_time);
 }
@@ -63,10 +64,11 @@ void Timeline::load(const std::string& json_file) {
     }
 }
 
-void Timeline::play(const std::string& name) {
+void Timeline::play(const std::string& name, bool enable_timescale) {
     for (auto& param : timelines_) {
         param->play(name);
     }
+    enable_timescale_ = enable_timescale;
 }
 
 void Timeline::stop() {

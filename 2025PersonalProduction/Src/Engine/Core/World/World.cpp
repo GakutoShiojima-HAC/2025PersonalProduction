@@ -228,8 +228,8 @@ vector<Character*> World::find_character_with_tag(const ActorTag tag) const {
 	return character_.find_with_tag(tag);
 }
 
-void World::play_timeline(const std::string& name) {
-    timeline_.play(name);
+void World::play_timeline(const std::string& name, bool enable_timescale) {
+    timeline_.play(name, enable_timescale);
 }
 
 void World::stop_timeline() {

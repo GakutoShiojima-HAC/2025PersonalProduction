@@ -47,7 +47,8 @@ public:
     /// 再生
     /// </summary>
     /// <param name="name">= 再生時の名前</param>
-    void play(const std::string& name);
+    /// <param name="enable_timescale">= タイムスケールを受けるかどうか</param>
+    void play(const std::string& name, bool enable_timescale = false);
 
     /// <summary>
     /// 停止
@@ -72,6 +73,9 @@ private:
     std::vector<ITimelineParameter*> timelines_;
 
     TimelineEditor editor_;
+
+    // タイムスケールを受けるかどうか
+    bool enable_timescale_{ false };
 
 public:
     // コピー禁止

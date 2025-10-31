@@ -66,12 +66,6 @@ public:
     /// <returns>エディタ用 IWorldで返す</returns>
     virtual IWorld* get_world() { return world_; }
 
-    /// <summary>
-    /// タイムスケールを受けるかどうか
-    /// </summary>
-    /// <returns>受けるなら真を返却</returns>
-    bool is_enable_timescale() { return enable_timescale_; }
-
 protected:
     // ワールド
     World* world_{ nullptr };
@@ -81,8 +75,6 @@ protected:
     float timer_{ 0.0f };
     // 現在のキーフレーム
     GSuint key_frame_{ 0 };
-    // タイムスケールを受けるかどうか
-    bool enable_timescale_{ false };
 
 public:
     // コピー禁止
