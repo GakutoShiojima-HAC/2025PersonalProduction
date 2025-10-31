@@ -12,7 +12,7 @@ Timeline::~Timeline() {
 
 void Timeline::update(float delta_time, float scale_time) {
     for (auto& param : timelines_) {
-        param->update(delta_time);
+        param->update(param->is_enable_timescale() ? scale_time : delta_time);
     }
     editor_.update(delta_time);
 }
