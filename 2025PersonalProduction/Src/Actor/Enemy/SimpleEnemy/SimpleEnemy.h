@@ -132,6 +132,16 @@ public:
     /// </summary>
     void end_move();
 
+    /// <summary>
+    /// ターゲットを見る
+    /// </summary>
+    void update_look_target(float delta_time);
+
+    /// <summary>
+    /// ターゲットを解除
+    /// </summary>
+    void release_target();
+
 private:
     /// <summary>
     /// ルートモーションを使う状態かどうか
