@@ -39,6 +39,7 @@ void MenuScene::start() {
 }
 
 void MenuScene::update(float delta_time) {
+    Tween::update(delta_time);
     state_.update(delta_time);
 
 #ifdef _DEBUG
