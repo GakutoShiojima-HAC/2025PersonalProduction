@@ -31,6 +31,27 @@ void Tween::update(float delta_time) {
     }
 }
 
+void Tween::update(float delta_time, float scale_time) {
+    // 全てのTweenUnitの更新処理を呼び出す
+    for (TweenUnit* unit : units_) {
+        if (unit->is_finished()) continue;
+        unit->update(unit->is_enable_timescale() ? scale_time : delta_time);
+    }
+
+    // 終了したTweenUnitは削除する
+    for (auto itr = units_.begin(); itr != units_.end(); ) {
+        if ((*itr)->is_finished()) {
+            // 中身のTweenUnitをdeleteしてから
+            delete* itr;
+            // リストの要素を削除する
+            itr = units_.erase(itr);
+        }
+        else {
+            ++itr;
+        }
+    }
+}
+
 void Tween::clear() {
     for (TweenUnit* tween : units_) {
         delete tween;

@@ -32,7 +32,7 @@ public:
     /// <summary>
     /// フィールドアクターの更新
     /// </summary>
-    void update(float delta_time) override;
+    void update(float delta_time, float time_scale) override;
 
 public:
     /// <summary>

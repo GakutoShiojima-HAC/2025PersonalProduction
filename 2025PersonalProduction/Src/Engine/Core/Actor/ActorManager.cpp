@@ -13,7 +13,7 @@ void ActorManager::add(Actor* actor) {
 	actors_.push_back(actor);
 }
 
-void ActorManager::update(float delta_time) {
+void ActorManager::update(float delta_time, float scale_time) {
 	for (const auto& actor : actors_) {
 		actor->update(delta_time);
 	}
@@ -26,7 +26,7 @@ void ActorManager::update(float delta_time) {
 #endif
 }
 
-void ActorManager::late_update(float delta_time) {
+void ActorManager::late_update(float delta_time, float scale_time) {
 	for (const auto& actor : actors_) {
 		actor->late_update(delta_time);
 	}

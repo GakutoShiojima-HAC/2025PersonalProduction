@@ -73,6 +73,12 @@ public:
     // キャンセルする
     void cancel();
 
+    // タイムスケールを受けるかどうか
+    bool is_enable_timescale() const;
+
+    // タイムスケールを受けるかどうか設定する
+    TweenUnit& enable_timescale(bool enable);
+
     // コピー禁止
     TweenUnit(const TweenUnit& other) = delete;
     TweenUnit& operator = (const TweenUnit& other) = delete;
@@ -102,6 +108,8 @@ private:
     std::string name_{};    // 名前（キャンセル処理に使う）
 
     bool is_canceled_{ false };     // キャンセルされたか
+
+    bool enable_timescale_{ false };    // タイムスケールを受けるかどうか
 
 };
 

@@ -18,8 +18,8 @@ Field::~Field() {
 	clear();
 }
 
-void Field::update(float delta_time) {
-	actors_.update(delta_time);
+void Field::update(float delta_time, float scale_time) {
+	actors_.update(delta_time, scale_time);
 	actors_.remove();
 
 #ifdef _DEBUG

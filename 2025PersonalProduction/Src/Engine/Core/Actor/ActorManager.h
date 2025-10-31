@@ -34,12 +34,12 @@ public:
     /// <summary>
     /// アクターの更新
     /// </summary>
-    virtual void update(float delta_time);
+    virtual void update(float delta_time, float scale_time);
 
     /// <summary>
     /// アクターの更新 updateとcollideの後に呼ばれる
     /// </summary>
-    void late_update(float delta_time);
+    void late_update(float delta_time, float scale_time);
 
     /// <summary>
     /// アクターの描画

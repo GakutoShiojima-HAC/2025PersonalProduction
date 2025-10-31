@@ -10,7 +10,7 @@ Timeline::~Timeline() {
     clear();
 }
 
-void Timeline::update(float delta_time) {
+void Timeline::update(float delta_time, float scale_time) {
     for (auto& param : timelines_) {
         param->update(delta_time);
     }

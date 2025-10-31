@@ -57,6 +57,10 @@ void GameScene::start() {
 }
 
 void GameScene::update(float delta_time) {
+    // タイムスケールを考慮した値渡し
+    if (state_.get_current_state() == (GSuint)SceneStateType::Original) Tween::update(delta_time, delta_time * world_.timescale());
+    else Tween::update(delta_time);
+
     state_.update(delta_time);
 }
 
@@ -254,6 +258,9 @@ void GameScene::game_start() {
 
     // GUIの描画を有効化
     world_.enable_draw_gui() = true;
+
+    // タイムスケールを初期化
+    world_.timescale() = 1.0f;
 
     // 同期
     world_.update(0.0f);

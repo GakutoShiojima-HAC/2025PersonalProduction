@@ -9,7 +9,7 @@ FieldActorManager::~FieldActorManager() {
     clear();
 }
 
-void FieldActorManager::update(float delta_time) {
+void FieldActorManager::update(float delta_time, float time_scale) {
     for (const auto& actor : actors_) {
         actor->update(delta_time);
     }
