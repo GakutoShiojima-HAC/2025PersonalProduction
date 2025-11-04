@@ -62,6 +62,9 @@ void World::draw() const {
         if (game_post_effect_.is_draw_avoid_effect()) {
             actor_.draw();
             actor_.draw_tranparent();
+            gsBeginRenderingEffect();
+            gsDrawEffect();
+            gsEndRenderingEffect();
         }
 
         game_post_effect_.draw_mask_end();
