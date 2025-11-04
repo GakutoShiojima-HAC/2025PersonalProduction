@@ -233,7 +233,7 @@ void Player::take_damage(Actor& other, const int damage) {
 		(GSuint)PlayerStateType::Dead,
 		(GSuint)PlayerStateType::Skill	// スキル中も無敵
 	)) return;
-    // 回避演出中は無敵とする
+    // 回避演出中は無敵とし、延長不可
     if (avoid_effect_timer_ > 0.0f) return;
 	// 回避演出
 	if (invincible_timer() > 0.0f && state_.get_current_state() == (GSuint)PlayerStateType::Avoid) {
@@ -247,27 +247,25 @@ void Player::take_damage(Actor& other, const int damage) {
 	}
 
 	hp_ = CLAMP(hp_ - damage, 0, INT_MAX);
+	invincible_timer_ = INVINCIBLE_TIME;
 
 	if (hp_ <= 0) {
 		change_state((GSuint)PlayerStateType::Dead, Motion::Dead, false);
+        return;
 	}
-	else {
-		// コライダーの位置から負傷モーションを取得
-		const GSvector3 other_dir = other.transform().position() - transform().position();
-		const int dir = MyLib::get_direction(GSvector2{ other_dir.x, other_dir.z }, GSvector2{ transform().forward().x, transform().forward().z}, 4);
-		GSuint motion = Motion::HurtF;
-		switch (dir) {
-		case 0: motion = Motion::HurtF; break;
-		case 1: motion = Motion::HurtR; break;
-		case 2: motion = Motion::HurtB; break;
-		case 3: motion = Motion::HurtL; break;
-		default: break;
-		}
-
-		change_state((GSuint)PlayerStateType::Hurt, motion, false);
+	// コライダーの位置から負傷モーションを取得
+	const GSvector3 other_dir = other.transform().position() - transform().position();
+	const int dir = MyLib::get_direction(GSvector2{ other_dir.x, other_dir.z }, GSvector2{ transform().forward().x, transform().forward().z}, 4);
+	GSuint motion = Motion::HurtF;
+	switch (dir) {
+	case 0: motion = Motion::HurtF; break;
+	case 1: motion = Motion::HurtR; break;
+	case 2: motion = Motion::HurtB; break;
+	case 3: motion = Motion::HurtL; break;
+	default: break;
 	}
 
-	invincible_timer_ = INVINCIBLE_TIME;
+	change_state((GSuint)PlayerStateType::Hurt, motion, false);
 }
 
 void Player::on_hit_attack(AttackCollider& collider) {
