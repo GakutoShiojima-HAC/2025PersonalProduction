@@ -124,7 +124,7 @@ void ActionScore::draw() const {
     // アクションテキスト
     if (action_text_timer_ > 0.0f) {
         Canvas::draw_sprite_text(
-            MyString::utf8_to_shiftjis(action_text_),
+            action_text_,
             GSvector2{ 550.0f, 284.0f },
             60,
             cFONT,
@@ -150,10 +150,12 @@ void ActionScore::add_score(int basic_score, float combo_time, float bonus_progr
     combo_bonus_progress_ += bonus_progress;
     // SE
     play_add_score_se_ = true;
+
     // 上昇分を満たせていたら倍率を上昇
-    if (combo_bonus_progress_ >= 1.0f) {
-        combo_bonus_progress_ -= 1.0f;
-        combo_bonus_ += BONUS_UP;
+    const int up = combo_bonus_progress_ / 1.0f;
+    if (up > 0) {
+        combo_bonus_progress_ -= up * BONUS_UP;
+        combo_bonus_ += up * BONUS_UP;
         if (combo_bonus_ >= BONUS_MAX) combo_bonus_ = BONUS_MAX;
         else combo_bonus_emphasis_timer_ = COMBO_BONUS_EMPHASIS_TIME;
     }
