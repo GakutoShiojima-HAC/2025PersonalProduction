@@ -234,6 +234,12 @@ void Player::take_damage(Actor& other, const int damage) {
         world_->set_timescale(0.25f);
         enable_timescale_ = false;
         gsSetEffectSpeed(avoid_effect_handle_, 1.0f / 0.25f); // タイムスケールを受けないようにする
+
+        // ボーナス
+        world_->action_score().add_score(250, mesh_.motion_end_time() * 5.0f, 2.0f);
+        world_->action_score().set_action_text("回避成功！");
+        // コントローラーを振動させる
+        if (input_.is_pad()) Vibration::get_instance().start(0.25f, 1.0f);
 		return;
 	}
 
@@ -285,7 +291,7 @@ void Player::on_hit_attack(AttackCollider& collider) {
 
     // 回避成功攻撃なら
     if (name == "PlayerAvoidSuccessAttack") {
-        world_->action_score().add_score(250, mesh_.motion_end_time() * 5.0f, 3.0f);
+        world_->action_score().add_score(250, mesh_.motion_end_time() * 5.0f, 1.5f);
         // カメラを揺らす
         world_->camera_shake(CameraShakeType::Shake, 0.15f, 5.0f, false);
         // コントローラーを振動させる
@@ -551,12 +557,17 @@ void Player::on_avoid() {
 		motion = Motion::AvoidF;
 	}
 
-    // 負傷中ならタイムスケールを変更
+    // 負傷中なら
     bool enable_timescale = state_.get_current_state() == (GSuint)PlayerStateType::Hurt && avoid_effect_timer_ <= 0.0f;
     if (enable_timescale) {
+        // タイムスケールを少し遅く
         world_->set_timescale(0.25f);
         world_->set_timescale(1.0f, mesh_.motion_end_time());
         enable_timescale_ = true;   // 自分も受ける
+
+        // ボーナス
+        world_->action_score().add_score(100, mesh_.motion_end_time() * 5.0f, 0.5f);
+        world_->action_score().set_action_text("緊急回避！");
     }
 
 	// 移動先を決定
