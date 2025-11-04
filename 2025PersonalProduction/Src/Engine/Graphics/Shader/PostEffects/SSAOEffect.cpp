@@ -107,7 +107,7 @@ void PostEffect::SSAO::create_sample_kernel(std::vector<GSvector3>& sample_kerne
     }
 }
 
-void PostEffect::SSAO::create_noise_texture(int& texture) {
+void PostEffect::SSAO::create_noise_texture(GSuint& texture) {
     std::vector<GSvector3> noise_data;
 
     for (int i = 0; i < 16; ++i) {

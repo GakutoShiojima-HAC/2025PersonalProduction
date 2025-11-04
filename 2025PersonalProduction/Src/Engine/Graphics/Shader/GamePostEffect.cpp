@@ -109,7 +109,8 @@ void GamePostEffect::start() {
 void GamePostEffect::end() {
     // SSAO用データをクリア
     ssao_sample_kernel_.clear();
-
+    glDeleteTextures(1, &ssao_noise_texture_);
+    ssao_noise_texture_ = 0;
     // レンダーターゲットの削除
     gsDeleteRenderTarget(Rt_Base);
     gsDeleteRenderTarget(Rt_SSAO);
