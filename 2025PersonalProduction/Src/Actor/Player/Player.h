@@ -241,6 +241,11 @@ public:
 
 private:
     /// <summary>
+    /// 回避演出の更新
+    /// </summary>
+    void update_avoid_effect(float delta_time);
+
+    /// <summary>
     /// 攻撃判定を作成
     /// </summary>
     /// <param name="offset">= オフセット</param>
@@ -297,6 +302,8 @@ private:
 
 	// 回避演出のタイマー
 	float avoid_effect_timer_{ 0.0f };
+    // 回避演出ハンドル
+    int avoid_effect_handle_{ 0 };
 };
 
 using PlayerMotion = Player::Motion;
