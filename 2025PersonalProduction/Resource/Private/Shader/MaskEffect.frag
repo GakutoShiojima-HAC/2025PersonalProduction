@@ -18,7 +18,7 @@ void main() {
     float brightness = dot(maskColor, LUMA_VEC);
 
     // ほぼ黒なら
-    if (brightness < 0.01)  {
+    if (brightness < 0.15)  {
         // 背景の場合だけ、紫にする処理
         float luma = dot(sceneColor, LUMA_VEC);
         vec3 grayscale = vec3(luma);
@@ -26,7 +26,6 @@ void main() {
         vec3 finalColor = desaturated * u_Color;
         out_FragColor = vec4(finalColor, 1.0);
     }
-    // 0.5以上 = 白
     else {
         // 元のシーンの色をそのまま出力
         out_FragColor = vec4(sceneColor, 1.0);
