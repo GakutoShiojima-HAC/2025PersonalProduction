@@ -30,11 +30,11 @@ void CameraManager::update(float delta_time) {
     camera_shake_.update(delta_time);
 
     // エフェクトをカメラの位置に持ってくる
-    if (camera_effect_.empty()) return;
-    GSvector3 pos, at, up;
-    camera_lookat(pos, at, up);
+    update_effect(delta_time);
+    if (current_ == nullptr) return;
+    const GSvector3 effect_position = current_->transform().position() + current_->transform().forward();
     for (const auto& effect : camera_effect_) {
-        gsSetEffectPosition(effect.first, &at);
+        gsSetEffectPosition(effect.second.handle, &effect_position);
     }
 }
 
@@ -161,13 +161,12 @@ int CameraManager::play_effect(GSuint id, float time) {
     auto it = camera_effect_.find(id);
     if (it != camera_effect_.end()) {
         // すでに存在するなら再生停止
-        gsStopEffect(it->second.first);
+        gsStopEffect(it->second.handle);
     }
 
-    const GSvector3 position{ 0.0f, 0.0f, 0.0f };
-    int handle = gsPlayEffect(id, &position);
-    camera_effect_[id].first = handle;
-    camera_effect_[id].second = time;
+    int handle = gsPlayEffect(id, nullptr);
+    camera_effect_[id].handle = handle;
+    camera_effect_[id].time = time;
     return handle;
 }
 
@@ -216,13 +215,13 @@ void CameraManager::update_effect(float delta_time) {
 
     // エフェクトの更新
     for (auto& effect : camera_effect_) {
-        effect.second.second -= delta_time / cFPS;
-        if (effect.second.second <= 0.0f) gsStopEffect(effect.second.first);
+        effect.second.time -= delta_time / cFPS;
+        if (effect.second.time <= 0.0f) gsStopEffect(effect.second.handle);
     }
 
     // 再生していない種類は削除
     for (auto it = camera_effect_.begin(); it != camera_effect_.end();) {
-        if (it->second.second <= 0.0f) {
+        if (it->second.time <= 0.0f) {
             it = camera_effect_.erase(it);  // erase は削除した次のイテレータを返す
         }
         else {

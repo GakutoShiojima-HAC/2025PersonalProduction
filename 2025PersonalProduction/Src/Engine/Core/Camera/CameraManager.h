@@ -12,7 +12,6 @@
 #define CAMERA_MANAGER_H_
 
 #include <unordered_map>
-#include <utility>
 #include "Camera/CameraTag.h"
 #include "Engine/Core/Camera/CameraShake.h"
 
@@ -163,8 +162,13 @@ private:
     CameraShake camera_shake_;
 
 private:
-    // カメラ演出エフェクト(ID, ハンドル, 時間)
-    unordered_map<GSuint, std::pair<int, float>> camera_effect_;
+    struct CameraEffect {
+        int handle{ 0 };
+        float time{ 0.0f };
+    };
+
+    // カメラ演出エフェクト
+    unordered_map<GSuint, CameraEffect> camera_effect_;
 
 public:
 	// コピー禁止
