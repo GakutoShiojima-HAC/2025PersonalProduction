@@ -72,6 +72,8 @@ void SceneGamePauseState::draw() const {
     draw_dot_texture(GSvector2{ 1591.0f, 912.0f - CLAMP(std::sin(pause_text_anime_), 0.0f, 1.0f) * TEXT_ANIME_MAX_VELOCITY });
     draw_dot_texture(GSvector2{ 1604.0f, 912.0f - CLAMP(std::sin(pause_text_anime_ - 7.0f), 0.0f, 1.0f) * TEXT_ANIME_MAX_VELOCITY });
     draw_dot_texture(GSvector2{ 1617.0f, 912.0f - CLAMP(std::sin(pause_text_anime_ - 14.0f), 0.0f, 1.0f) * TEXT_ANIME_MAX_VELOCITY });
+
+    Input::get_instance().draw_cursor();
 }
 
 void SceneGamePauseState::exit() {

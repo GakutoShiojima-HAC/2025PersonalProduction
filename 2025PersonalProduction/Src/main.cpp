@@ -55,16 +55,19 @@ public:
         Setting::get_instance().load("tmp");
         MyRandom::set_seed(5);
 
+#ifndef _DEBUG
+        // マウスカーソルを非表示
+        gsHideMouseCursor();
+#endif
+        // 初期音量調整
+        gsSetPrimaryVolume(0.75f);
+
         // フォントを読み込む
         AddFontResourceExA("Resource/Assets/Font/DelaSukoGothicOne-R.ttf", FR_PRIVATE, NULL);
     }
 
 private:
     void start() override {
-        // 初期音量調整
-        float master = 0.75f;
-        gsSetPrimaryVolume(master);
-
         // シーンを追加
         scene_manager_.add(new LoadingScene{});
         scene_manager_.add(new TitleScene{});

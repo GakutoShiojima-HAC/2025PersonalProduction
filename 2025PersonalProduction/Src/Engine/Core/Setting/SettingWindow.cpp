@@ -116,6 +116,7 @@ void SettingWindow::draw() const {
     draw_ratio(gsGetMasterVolumeSE(), GSvector2{ 1534.0f, 456.0f });
 
     button_.draw();
+    Input::get_instance().draw_cursor();
 }
 
 bool SettingWindow::is_end() const {

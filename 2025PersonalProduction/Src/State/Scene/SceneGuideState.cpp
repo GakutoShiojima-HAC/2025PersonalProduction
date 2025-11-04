@@ -50,4 +50,5 @@ void SceneGuideState::draw() const {
         GSvector2{ 96.0f / 2.0f, 96.0f / 2.0f }, GSvector2::one() + GSvector2::one() * scale);
 
     button_.draw();
+    Input::get_instance().draw_cursor();
 }
