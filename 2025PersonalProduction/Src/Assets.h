@@ -67,6 +67,7 @@
 // エフェクト
 #define EFFECT_ID_LIST \
     X(NONE) \
+    X(Avoid) \
     X(Item) \
     X(HitAttack) \
     X(MAX_SIZE) // 要素数
