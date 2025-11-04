@@ -188,6 +188,10 @@ bool& World::camera_enable_shake() {
     return camera_.enable_shake();
 }
 
+int World::camera_effect_play_foward(GSuint id, float time) {
+	return camera_.play_effect(id, time);
+}
+
 NavMeshSurface* World::navmesh() {
 	return navmesh_;
 }

@@ -108,18 +108,7 @@ void Player::update(float delta_time) {
 	update_state(delta_time);
 	update_gravity(delta_time);
 	update_mesh(delta_time);
-
-	// 回避演出タイマーの更新
-	if (avoid_effect_timer_ > 0.0f) {
-		avoid_effect_timer_ -= delta_time / cFPS;
-        if (avoid_effect_timer_ <= 0.0f) {
-            // スケールを変更
-            world_->set_timescale(1.0f, 0.5f);
-            Tween::color(AVOID_EFFECT_COLOR, GScolor{ 1.0f, 1.0f, 1.0f, 1.0f }, 0.5f * cFPS, [=](GScolor color) {
-                world_->set_mask_color(color);
-                }).on_complete([=] { world_->enable_avoid_effect() = false; });
-        }
-	}
+    update_avoid_effect(delta_time);
 
 #ifdef _DEBUG
 	auto state_string = [](PlayerStateType s) {
@@ -233,41 +222,41 @@ void Player::take_damage(Actor& other, const int damage) {
 		(GSuint)PlayerStateType::Dead,
 		(GSuint)PlayerStateType::Skill	// スキル中も無敵
 	)) return;
-    // 回避演出中は無敵とする
+    // 回避演出中は無敵とし、延長不可
     if (avoid_effect_timer_ > 0.0f) return;
 	// 回避演出
 	if (invincible_timer() > 0.0f && state_.get_current_state() == (GSuint)PlayerStateType::Avoid) {
+        // 回避演出のマスクを適用
 		world_->enable_avoid_effect() = true;
 		world_->set_mask_color(AVOID_EFFECT_COLOR);
 		avoid_effect_timer_ = AVOID_EFFECT_TIME;
-        // スケールを変更
+        // タイムスケールを変更
         world_->set_timescale(0.25f);
         enable_timescale_ = false;
+        gsSetEffectSpeed(avoid_effect_handle_, 1.0f / 0.25f); // タイムスケールを受けないようにする
 		return;
 	}
 
 	hp_ = CLAMP(hp_ - damage, 0, INT_MAX);
+	invincible_timer_ = INVINCIBLE_TIME;
 
 	if (hp_ <= 0) {
 		change_state((GSuint)PlayerStateType::Dead, Motion::Dead, false);
+        return;
 	}
-	else {
-		// コライダーの位置から負傷モーションを取得
-		const GSvector3 other_dir = other.transform().position() - transform().position();
-		const int dir = MyLib::get_direction(GSvector2{ other_dir.x, other_dir.z }, GSvector2{ transform().forward().x, transform().forward().z}, 4);
-		GSuint motion = Motion::HurtF;
-		switch (dir) {
-		case 0: motion = Motion::HurtF; break;
-		case 1: motion = Motion::HurtR; break;
-		case 2: motion = Motion::HurtB; break;
-		case 3: motion = Motion::HurtL; break;
-		default: break;
-		}
-
-		change_state((GSuint)PlayerStateType::Hurt, motion, false);
+	// コライダーの位置から負傷モーションを取得
+	const GSvector3 other_dir = other.transform().position() - transform().position();
+	const int dir = MyLib::get_direction(GSvector2{ other_dir.x, other_dir.z }, GSvector2{ transform().forward().x, transform().forward().z}, 4);
+	GSuint motion = Motion::HurtF;
+	switch (dir) {
+	case 0: motion = Motion::HurtF; break;
+	case 1: motion = Motion::HurtR; break;
+	case 2: motion = Motion::HurtB; break;
+	case 3: motion = Motion::HurtL; break;
+	default: break;
 	}
 
-	invincible_timer_ = INVINCIBLE_TIME;
+	change_state((GSuint)PlayerStateType::Hurt, motion, false);
 }
 
 void Player::on_hit_attack(AttackCollider& collider) {
@@ -565,9 +554,9 @@ void Player::on_avoid() {
     // 負傷中ならタイムスケールを変更
     bool enable_timescale = state_.get_current_state() == (GSuint)PlayerStateType::Hurt && avoid_effect_timer_ <= 0.0f;
     if (enable_timescale) {
-        enable_timescale_ = true;   // 自分も受ける
         world_->set_timescale(0.25f);
         world_->set_timescale(1.0f, mesh_.motion_end_time());
+        enable_timescale_ = true;   // 自分も受ける
     }
 
 	// 移動先を決定
@@ -584,6 +573,12 @@ void Player::on_avoid() {
 
 	velocity_.x = 0.0f;
 	velocity_.z = 0.0f;
+
+    // 回避エフェクトを再生
+    avoid_effect_handle_ = world_->camera_effect_play_foward((GSuint)EffectID::Avoid, 0.25f);
+    const GScolor color{ 1.0f, 1.0f, 1.0f, 0.3f };
+    gsSetEffectColor(avoid_effect_handle_, &color);
+
 }
 
 void Player::on_avoid_attack() {
@@ -633,6 +628,20 @@ GSuint Player::get_skill_motion() const {
 
 GSuint Player::get_current_motion() const {
 	return motion_;
+}
+
+void Player::update_avoid_effect(float delta_time) {
+    // 回避演出タイマーの更新
+    if (avoid_effect_timer_ > 0.0f) {
+        avoid_effect_timer_ -= delta_time / cFPS;
+        if (avoid_effect_timer_ <= 0.0f) {
+            // スケールを変更
+            world_->set_timescale(1.0f, 0.5f);
+            Tween::color(AVOID_EFFECT_COLOR, GScolor{ 1.0f, 1.0f, 1.0f, 1.0f }, 0.5f * cFPS, [=](GScolor color) {
+                world_->set_mask_color(color);
+                }).on_complete([=] { world_->enable_avoid_effect() = false; });
+        }
+    }
 }
 
 void Player::generate_attack_collider(const GSvector3& offset, float radius, int damage, const std::string& name) {
