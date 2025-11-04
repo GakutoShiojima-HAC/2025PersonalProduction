@@ -12,6 +12,7 @@
 #define CAMERA_MANAGER_H_
 
 #include <unordered_map>
+#include <utility>
 #include "Camera/CameraTag.h"
 #include "Engine/Core/Camera/CameraShake.h"
 
@@ -23,12 +24,12 @@ class CameraManager {
 public:
     CameraManager();
 
-    virtual ~CameraManager();
+    ~CameraManager();
 
 public:
     void update(float delta_time);
 
-    virtual void draw() const;
+    void draw() const;
 
     /// <summary>
     /// カメラを管理下に追加
@@ -107,7 +108,15 @@ public:
     /// <returns>参照</returns>
     bool& enable_shake();
 
-protected:
+    /// <summary>
+    /// カメラ演出に使うエフェクトを再生
+    /// </summary>
+    /// <param name="type">= エフェクトのID</param>
+    /// <param name="time">= エフェクトの効果時間(秒)</param>
+    /// <returns>ハンドル</returns>
+    int play_effect(GSuint id, float time);
+
+private:
     /// <summary>
     /// 管理下の寿命が尽きたカメラを管理対象から外す
     /// </summary>
@@ -116,7 +125,7 @@ protected:
     /// <summary>
     /// カメラがないときの描画処理
     /// </summary>
-    virtual void draw_empty() const;
+    void draw_empty() const;
 
     /// <summary>
     /// カメラの座標、方向、角度を取得
@@ -126,7 +135,12 @@ protected:
     /// <param name="up">= カメラ角度</param>
     void camera_lookat(GSvector3& pos, GSvector3& at, GSvector3& up) const;
 
-protected:
+    /// <summary>
+    /// カメラ演出エフェクトの更新
+    /// </summary>
+    void update_effect(float delta_time);
+
+private:
     // カメラマップ
     unordered_map<GSuint, Camera*> cameras_;
     // 現在使用しているカメラ
@@ -147,6 +161,10 @@ protected:
 
     // カメラシェイク
     CameraShake camera_shake_;
+
+private:
+    // カメラ演出エフェクト(ID, ハンドル, 時間)
+    unordered_map<GSuint, std::pair<int, float>> camera_effect_;
 
 public:
 	// コピー禁止
