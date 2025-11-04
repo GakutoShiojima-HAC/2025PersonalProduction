@@ -33,6 +33,9 @@ void NavMeshSurface::update(float delta_time) {
     if (ImGui::Button("Toggle Draw Pattern")) {
         draw_wireframe_ = !draw_wireframe_;
     }
+    if (ImGui::Button("Toggle Funnel Path")) {
+        enable_funnel_ = !enable_funnel_;
+    }
 
     ImGui::End();
 #endif
@@ -133,15 +136,17 @@ bool NavMeshSurface::find(const GSvector3& start, const GSvector3& goal, std::ve
         return false;
     }
 
-    // Asterだけの結果
-    /*
-    out.push_back(start);
-    for (const auto& pory : a_star_path) {
-        out.push_back(m_polygons_[pory].center);
+#ifdef _DEBUG
+        // Asterだけの結果
+    if (!enable_funnel_) {
+        out.push_back(start);
+        for (const auto& pory : a_star_path) {
+            out.push_back(polygons_[pory].center);
+        }
+        out.push_back(goal);
+        return true;
     }
-    out.push_back(goal);
-    return true;
-    */
+#endif
 
     // 滑らかにする
     create_path_with_funnel(a_star_path, start, goal, start_index, out, offset_ratio);
