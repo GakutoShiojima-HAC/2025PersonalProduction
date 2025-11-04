@@ -3,6 +3,7 @@
 #include "Engine/Graphics/Canvas/Canvas.h"
 #include "Assets.h"
 #include "GUI/Button/TextFunctionButton.h"
+#include "Engine/Core/Input/Input.h"
 
 SceneMenuState::SceneMenuState(StandardScene& owner) :
     owner_{ owner } {
@@ -61,4 +62,6 @@ void SceneMenuState::draw() const {
     );
 
     button_.draw();
+
+    Input::get_instance().draw_cursor();
 }
