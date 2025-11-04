@@ -115,7 +115,7 @@ private:
     // SSAO用サンプルカーネル
     std::vector<GSvector3> ssao_sample_kernel_;
     // SSAO用ノイズテクスチャ
-    int ssao_noise_texture_;
+    GSuint ssao_noise_texture_;
 
     // マスクエフェクトの色
     GScolor mask_color_{ 1.0f, 1.0f, 1.0f, 1.0f };

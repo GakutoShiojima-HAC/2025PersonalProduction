@@ -42,7 +42,7 @@ namespace PostEffect {
         /// ノイズテクスチャを作成
         /// </summary>
         /// <param name="texture">= 作成先</param>
-        void create_noise_texture(int& texture);
+        void create_noise_texture(GSuint& texture);
     }
 }
 
