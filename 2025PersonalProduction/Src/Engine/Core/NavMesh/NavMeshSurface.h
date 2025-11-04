@@ -186,6 +186,8 @@ private:
 	bool draw_navmesh_{ false };
     // ワイヤーフレームで描画するかどうか
     bool draw_wireframe_{ true };
+    // Funnelアルゴリズムを適用するかどうか
+    bool enable_funnel_{ true };
 #endif
 
 public:
