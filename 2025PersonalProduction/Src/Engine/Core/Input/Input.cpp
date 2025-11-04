@@ -1,4 +1,6 @@
 #include "Engine/Core/Input/Input.h"
+#include "Engine/Graphics/Canvas/Canvas.h"
+#include "Assets.h"
 
 // PAD接続中判定に使用する識別番号
 const int USE_PAD_NUM{ 0 };
@@ -98,6 +100,10 @@ float& Input::pad_cursor_speed() {
 
 bool Input::is_pad() const {
 	return is_pad_;
+}
+
+void Input::draw_cursor() const {
+    if (!is_pad_) Canvas::draw_texture((GSuint)TextureID::Cursor, cursor_position_, GSrect{ 0.0f, 0.0f, 18.0f, 30.0f });
 }
 
 bool Input::action(InputAction action) const {

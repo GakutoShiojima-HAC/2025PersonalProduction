@@ -28,6 +28,7 @@
 // テクスチャ 
 #define TEXTURE_ID_LIST \
     X(NONE) \
+    X(Cursor) \
     X(MenuWindowTexture) \
     X(PauseWindowTexture) \
     X(SettingWindowTexture) \

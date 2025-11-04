@@ -111,6 +111,11 @@ public:
     /// <returns>接続しているなら真を返却</returns>
     bool is_pad() const;
 
+    /// <summary>
+    /// マウスカーソルを描画
+    /// </summary>
+    void draw_cursor() const;
+
 public:
     /// <summary>
     /// 指定したアクションを行っているかどうか
