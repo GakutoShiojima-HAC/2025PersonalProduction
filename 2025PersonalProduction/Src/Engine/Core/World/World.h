@@ -123,6 +123,8 @@ public:
 
     bool& camera_enable_shake() override;
 
+    int camera_effect_play_foward(GSuint id, float time) override;
+
 	NavMeshSurface* navmesh() override;
 
     std::vector<Actor*> get_all_actor() const override;

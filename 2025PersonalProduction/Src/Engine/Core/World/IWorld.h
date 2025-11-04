@@ -109,6 +109,13 @@ public:
     /// <returns>参照</returns>
     virtual bool& camera_enable_shake() = 0;
 
+    /// <summary>
+    /// カメラの正面にエフェクトを再生する
+    /// </summary>
+    /// <param name="id">= ID</param>
+    /// <param name="time">= 時間(秒)</param>
+    /// <returns>ハンドル</returns>
+    virtual int camera_effect_play_foward(GSuint id, float time) = 0;
 
     /// <summary>
     /// ナビメッシュを取得
