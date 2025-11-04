@@ -21,9 +21,9 @@ void World::update(float delta_time) {
 	if (navmesh_ != nullptr) navmesh_->update(scale_time);
 	actor_.update(delta_time, scale_time);
 	actor_.collide();
-	actor_.late_update(delta_time, scale_time);
 	timeline_.update(delta_time, scale_time);
 	camera_.update(delta_time);
+	actor_.late_update(delta_time, scale_time);
 	gsUpdateEffect(scale_time); // ハンドル指定で計算で戻せる gsSetEffectSpeed
 
 	if (attack_collider_pool_ != nullptr) attack_collider_pool_->remove();
