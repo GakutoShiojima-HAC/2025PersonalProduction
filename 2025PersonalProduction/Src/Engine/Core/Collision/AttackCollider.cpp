@@ -38,7 +38,7 @@ void AttackCollider::react(Actor& other) {
 	// ダメージを与える
 	Pawn* target = dynamic_cast<Pawn*>(&other);
     if (target != nullptr && !target->is_dead_state()) {
-        target->take_damage(*this, damage_);
+        target->take_damage(*owner_, damage_);
 
         // 生成主にコールバック
         Pawn* owner = dynamic_cast<Pawn*>(owner_);
