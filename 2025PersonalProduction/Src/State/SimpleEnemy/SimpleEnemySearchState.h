@@ -18,7 +18,7 @@ public:
     SimpleEnemySearchState(SimpleEnemy& owner);
 
 public:
-    void enter() override {};
+    void enter() override;
 
     void update(float delta_time) override;
 
@@ -29,11 +29,27 @@ public:
     void exit() override {};
 
 private:
-    bool to_find_state_loop_{ false };
+    bool can_move_random();
 
-    GSuint to_find_state_motion_{ 0 };
+    bool can_move_origin();
+
+    float get_move_time() const;
+
+private:
+    enum class MoveState {
+        ToRandom,
+        ToOrigin,
+    };
+
+private:
+    bool idle_motion_loop_{ true };
+    bool move_motion_loop_{ true };
+    GSuint idle_motion_{ 0 };
+    GSuint move_motion_{ 0 };
 
     float move_timer_{ 0.0f };
+
+    MoveState state_{ MoveState::ToRandom };
 
     GSvector3 rotate_foward_{ 0.0f, 0.0f, 0.0f };
 

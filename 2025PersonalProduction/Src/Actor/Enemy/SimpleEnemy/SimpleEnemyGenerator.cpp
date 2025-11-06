@@ -24,6 +24,8 @@ SimpleEnemyGenerator::SimpleEnemyGenerator(const json& j, World* world) {
     info_.attack_detection_radius = MyJson::get_float(param, "AttackDetectionRadius");
     info_.attack_offset = GSvector3{ param["AttackOffset"][0], param["AttackOffset"][1], param["AttackOffset"][2] };
 
+    info_.falter_rate = MyJson::get_float(param, "FalterRate");
+
     if (!MyJson::is_object(param, "Motion")) return;
     auto motion = param["Motion"];
 
@@ -32,6 +34,7 @@ SimpleEnemyGenerator::SimpleEnemyGenerator(const json& j, World* world) {
     info_.motion_attack = MyJson::get_int(motion, "Attack");
     info_.motion_hurt = MyJson::get_int(motion, "Hurt");
     info_.motion_dead = MyJson::get_int(motion, "Dead");
+
 }
 
 void SimpleEnemyGenerator::generate(const GSvector3& position, const GSvector3& lookat, int hp, int damage) {

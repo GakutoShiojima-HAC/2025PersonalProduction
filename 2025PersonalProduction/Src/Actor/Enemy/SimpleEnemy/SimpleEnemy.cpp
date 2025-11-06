@@ -3,6 +3,7 @@
 #include "Assets.h"
 #include "Engine/Utils/Line.h"
 #include "Engine/Utils/MyMath.h"
+#include "Engine/Utils/MyRandom.h"
 
 #include "State/SimpleEnemy/SimpleEnemyAttackState.h"
 #include "State/SimpleEnemy/SimpleEnemyDeadState.h"
@@ -39,7 +40,10 @@ SimpleEnemy::SimpleEnemy(IWorld* world, const GSvector3& position, const GSvecto
     transform_.lookAt(lookat);
     mesh_.transform(transform_.localToWorldMatrix());
     collide_field();
+    origin_position_ = transform_.position();
+
     change_state((GSuint)SimpleEnemyStateType::Search, info.motion_idle, true);
+
 }
 
 void SimpleEnemy::update(float delta_time) {
@@ -77,9 +81,18 @@ void SimpleEnemy::take_damage(Actor& other, const int damage) {
         change_state((GSuint)SimpleEnemyStateType::Dead, info_.motion_dead, false);
     }
     else {
-        // 一度Idleにしてモーションをリセット
-        mesh_.change_motion(info_.motion_idle, true);
-        change_state((GSuint)SimpleEnemyStateType::Hurt, info_.motion_hurt, false);
+        // 怯む確率
+        if (target_ == nullptr || MyRandom::random_float(0.0f, 1.0f) <= info_.falter_rate) {
+            // 一度Idleにしてモーションをリセット
+            mesh_.change_motion(info_.motion_idle, true);
+            change_state((GSuint)SimpleEnemyStateType::Hurt, info_.motion_hurt, false);
+        }
+    }
+
+    // 攻撃対象をターゲットにする
+    Character* target = dynamic_cast<Character*>(&other);
+    if (target != nullptr && !target->is_dead_state()) {
+        target_ = target;
     }
 }
 
@@ -185,13 +198,21 @@ Character* SimpleEnemy::target() {
     return target_;
 }
 
-void SimpleEnemy::start_move() {
-    if (target_ == nullptr) return;
-    navmesh_.find_path(target_);
+bool SimpleEnemy::start_move() {
+    if (target_ == nullptr) return false;
+    return navmesh_.find_path(target_);
+}
+
+bool SimpleEnemy::start_move(const GSvector3& to) {
+    return navmesh_.find_path(to);
 }
 
 void SimpleEnemy::update_move(float delta_time) {
     navmesh_.update_move(delta_time, info_.move_speed, 3.0f);
+}
+
+bool SimpleEnemy::is_end_move() const {
+    return navmesh_.is_end_move();;
 }
 
 void SimpleEnemy::end_move() {
@@ -212,6 +233,10 @@ void SimpleEnemy::update_look_target(float delta_time) {
 
 void SimpleEnemy::release_target() {
     target_ = nullptr;
+}
+
+GSvector3& SimpleEnemy::origin_position() {
+    return origin_position_;
 }
 
 bool SimpleEnemy::is_root_motion_state() const {
