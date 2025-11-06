@@ -41,6 +41,8 @@ struct SimpleEnemyInfo {
     float attack_radius{ 0.5f };    // 攻撃判定の半径
     int attack_damage{ 1 };         // 攻撃力
     float attack_detection_radius{ 1.0f };          // 攻撃を発動できる対象との距離
+
+    float falter_rate{ 1.0f };  // 攻撃を受けた時に怯む確率(0.0~1.0)
 };
 
 class SimpleEnemy : public Character {
@@ -120,12 +122,25 @@ public:
     /// <summary>
     /// 移動開始
     /// </summary>
-    void start_move();
+    bool start_move();
+
+    /// <summary>
+    /// 指定地点への移動開始
+    /// </summary>
+    /// <param name="to">= 指定地点</param>
+    /// <returns>移動できるなら真を返却</returns>
+    bool start_move(const GSvector3& to);
 
     /// <summary>
     /// 移動の更新
     /// </summary>
     void update_move(float delta_time);
+
+    /// <summary>
+    /// 移動が終了したかどうか
+    /// </summary>
+    /// <returns>終了してたら真を返却</returns>
+    bool is_end_move() const;
 
     /// <summary>
     /// 移動終了
@@ -141,6 +156,12 @@ public:
     /// ターゲットを解除
     /// </summary>
     void release_target();
+
+    /// <summary>
+    /// 初期座標
+    /// </summary>
+    /// <returns>座標</returns>
+    GSvector3& origin_position();
 
 private:
     /// <summary>
@@ -162,6 +183,8 @@ private:
     Character* target_{ nullptr };
 
     NavMeshAgent navmesh_{};
+
+    GSvector3 origin_position_{ 0.0f, 0.0f, 0.0f };
 
 };
 
