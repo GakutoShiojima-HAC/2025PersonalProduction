@@ -3,6 +3,18 @@
 
 #include <string>
 
+struct StageDataStruct {
+    // ステージ名
+    std::string name{ "unknown" };
+    // データのフォルダ
+    std::string folder{ "" };
+
+    // タイマーを使用するかどうか
+    bool use_timer{ true };
+    // ステージ終了後にリザルトを描画するかどうか
+    bool use_result{ true };
+};
+
 class StageData {
 public:
     StageData() = default;
@@ -18,22 +30,19 @@ public:
 
 public:
     /// <summary>
-    /// ステージ名を取得
+    /// ステージデータの取得
     /// </summary>
-    /// <returns>ステージ名(UTF-8)</returns>
-    std::string name() const;
+    /// <returns>ステージデータ</returns>
+    StageDataStruct& data();
 
     /// <summary>
-    /// フォルダ名を取得
+    /// ステージデータの取得(const)
     /// </summary>
-    /// <returns></returns>
-    std::string folder() const;
+    /// <returns>ステージデータ</returns>
+    const StageDataStruct& data() const;
 
 private:
-    // ステージ名
-    std::string name_{ "unknown" };
-    // データのフォルダ
-    std::string folder_{ "" };
+    StageDataStruct data_;
 
 public:
     // コピー禁止

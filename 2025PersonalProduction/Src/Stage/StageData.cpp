@@ -4,18 +4,20 @@
 static const std::string DATA_PATH{ "/data.json" };
 
 void StageData::load(const std::string& folder_path) {
-    folder_ = folder_path;
+    data_.folder = folder_path;
 
     json j;
     if (!MyJson::is_json(folder_path + DATA_PATH, j)) return;
 
-    name_ = MyJson::get_string(j, "Name");
+    data_.name = MyJson::get_string(j, "Name");
+    data_.use_timer = MyJson::get_boolean(j, "Timer");
+    data_.use_result = MyJson::get_boolean(j, "Result");
 }
 
-std::string StageData::name() const {
-    return name_;
+StageDataStruct& StageData::data() {
+    return data_;
 }
 
-std::string StageData::folder() const {
-    return folder_;
+const StageDataStruct& StageData::data() const {
+    return data_;
 }
