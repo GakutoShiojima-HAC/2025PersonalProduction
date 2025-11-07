@@ -18,7 +18,8 @@ public:
     ~GameTimer() = default;
 
 public:
-    void init();
+    /// <param name="active">= タイマーを使うかどうか</param>
+    void init(bool enable);
 
     void update(float delta_time);
 
@@ -31,6 +32,8 @@ public:
     float get_elapsed_time() const;
 
 private:
+    bool enabled_{ true };
+
     float elapsed_time_{ 0.0f };
 
 public:

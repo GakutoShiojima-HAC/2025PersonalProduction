@@ -6,15 +6,19 @@
 #include "GameConfig.h"
 #include "Engine/Graphics/Canvas/Canvas.h"
 
-void GameTimer::init() {
+void GameTimer::init(bool enable) {
+    enabled_ = enable;
     elapsed_time_ = 0.0f;
 }
 
 void GameTimer::update(float delta_time) {
+    if (!enabled_) return;
     elapsed_time_ += delta_time / cFPS;
 }
 
 void GameTimer::draw() const {
+    if (!enabled_) return;
+
     // 秒を整数にする
     int total_seconds = (int)std::floor(elapsed_time_);
 

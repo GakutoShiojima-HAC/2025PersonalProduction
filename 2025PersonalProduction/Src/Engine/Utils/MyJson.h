@@ -2,7 +2,7 @@
 //  File          : MyJson.h
 //  Author        : Shiojima Gakuto
 //  Created       : 2025/10/02
-//  Updated       : 2025/10/03
+//  Updated       : 2025/11/07
 //  Description   : nlohmann jsonをさらに便利にする関数
 //
 //  注意：本ソースコードの無断転載・コードのコピー・貼り付けによる流用・再配布を禁止します。
@@ -77,6 +77,18 @@ namespace MyJson {
         if (json_object.contains(object_name.c_str()) && json_object[object_name.c_str()].is_number_float())
             return json_object[object_name.c_str()].get<float>();
         return -1.0f;
+    }
+
+    /// <summary>
+    /// jsonオブジェクトからboolを取り出す
+    /// </summary>
+    /// <param name="json_object">= jsonオブジェクト</param>
+    /// <param name="object_name">= オブジェクト名</param>
+    /// <returns>bool</returns>
+    inline bool get_boolean(const json& json_object, const std::string& object_name) {
+        if (json_object.contains(object_name.c_str()) && json_object[object_name.c_str()].is_boolean())
+            return json_object[object_name.c_str()].get<bool>();
+        return false;
     }
 }
 

@@ -138,8 +138,8 @@ void GameScene::load_data() {
     load_progress_ += progress;
 
     // ステージデータの読み込み
-    stage_data_.load("Resource/Private/Stage/1");
-    const std::string stage = stage_data_.folder();
+    stage_data_.load("Resource/Private/Stage/0");
+    const std::string stage = stage_data_.data().folder;
 
     // ステージ固有アセットの読み込み
     AssetsLoader::load_by_json(stage + "/asset.json", AssetsLoader::GAME_STAGE_ASSET_NAME);
@@ -201,7 +201,7 @@ void GameScene::game_start() {
     // アクションスコアの初期化
     world_.action_score().init();
     // タイマーの初期化
-    world_.time().init();
+    world_.time().init(stage_data_.data().use_timer);
 
     // フィールドの追加
     world_.add_field(new Field{ (GSuint)OctreeID::Mesh, (GSuint)OctreeID::Collider, (GSuint)TextureID::Skybox });
@@ -240,7 +240,7 @@ void GameScene::game_start() {
     world_.add_actor(new ItemActor{ &world_, GSvector3{ 0.0f, 0.0f, 3.0f }, ItemData::Data{ ItemType::Weapon, 1 } });
 
     // アクターの生成
-    actor_generator_.generate(stage_data_.folder() + "/generate.json");
+    actor_generator_.generate(stage_data_.data().folder + "/generate.json");
 
     /*
      *  END
