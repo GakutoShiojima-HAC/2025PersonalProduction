@@ -28,6 +28,8 @@
 #include "State/Scene/SceneGamePauseState.h"
 #include "State/Scene/SceneSettingState.h"
 #include "State/Scene/SceneGuideState.h"
+#include "State/Scene/SceneGameResultState.h"
+#include "State/Scene/SceneGameEndState.h"
 
 GameScene::GameScene() {
     add_state();
@@ -48,7 +50,6 @@ void GameScene::load() {
 void GameScene::start() {
 	is_end_ = false;
 
-    // TODO シーン終了時選べるようにしたり、ポーズで書き換えること
     next_scene_tag_ = SceneTag::Menu;
 
     game_start();
@@ -89,12 +90,14 @@ void GameScene::add_state() {
     state_.add_state((GSuint)SceneStateType::GamePause, make_shared<SceneGamePauseState>(*this));
     state_.add_state((GSuint)SceneStateType::Setting, make_shared<SceneSettingState>(*this, SceneStateType::GamePause));
     state_.add_state((GSuint)SceneStateType::Guide, make_shared<SceneGuideState>(*this, SceneStateType::GamePause));
+    state_.add_state((GSuint)SceneStateType::GameResult, make_shared<SceneGameResultState>(*this, &world_));
+    state_.add_state((GSuint)SceneStateType::GameEnd, make_shared<SceneGameEndState>(*this, &world_));
 }
 
 void GameScene::original_update(float delta_time) {
     // TODO 一時的なタイトルに戻る処理
     if (gsGetKeyState(GKEY_LCONTROL) && gsGetKeyTrigger(GKEY_RETURN)) {
-        is_end_ = true;
+        change_state((GSuint)SceneStateType::GameEnd);
         return;
     }
 
@@ -109,11 +112,11 @@ void GameScene::original_update(float delta_time) {
     // TODO 一時的なゲーム終了処理
     {
         if (world_.count_actor_with_tag(ActorTag::Enemy) <= 0) {
-            is_end_ = true;
+            change_state((GSuint)SceneStateType::GameResult);
             return;
         }
         if (world_.count_actor_with_tag(ActorTag::Player) <= 0) {
-            is_end_ = true;
+            change_state((GSuint)SceneStateType::GameResult);
             return;
         }
     }
