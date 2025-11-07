@@ -105,16 +105,19 @@ void NavMeshAgent::update_move(float delta_time, float move_speed, float rotate_
 void NavMeshAgent::draw_path() const {
 	if (!found_path()) return;
 
-	for (int i = 0; i < (int)path_.size(); ++i) {
-		GSvector3 pos = path_[i];
+#ifdef _DEBUG
+    for (int i = 0; i < (int)path_.size(); ++i) {
+        GSvector3 pos = path_[i];
         pos.y += 0.2f;  // è≠Çµè„Ç∞Ç»Ç¢Ç∆NavMeshSurfaceÇ∆îÌÇÈ
-		float radius = i == path_index_ ? 0.1 : 0.05;
-		MyLib::draw_sphere(pos, radius, GScolor{ 1.0f, 1.0f, 1.0f, 1.0f });
+        float radius = i == path_index_ ? 0.1 : 0.05;
+        MyLib::draw_sphere(pos, radius, GScolor{ 1.0f, 1.0f, 1.0f, 1.0f });
 
-		if (i >= (int)path_.size() - 1) continue;
-		const GSvector3& end = path_[i + 1];
-		MyLib::draw_line(pos, end, GScolor{ 1.0f, 1.0f, 1.0f, 1.0f });
-	}
+        if (i >= (int)path_.size() - 1) continue;
+        GSvector3 end = path_[i + 1];
+        end.y += 0.2f;  // è≠Çµè„Ç∞Ç»Ç¢Ç∆NavMeshSurfaceÇ∆îÌÇÈ
+        MyLib::draw_line(pos, end, GScolor{ 1.0f, 1.0f, 1.0f, 1.0f });
+    }
+#endif 
 }
 
 bool NavMeshAgent::find_path(const GSvector3& end) {

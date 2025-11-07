@@ -17,6 +17,7 @@ NavMeshDebugger::NavMeshDebugger(IWorld* world) {
 void NavMeshDebugger::update(float delta_time) {
 	update_move(delta_time);
 
+#ifdef _DEBUG
 	ImGui::Begin("NavMesh Window");
 
 	ImGui::Text("NavMesh Debugger Option");
@@ -35,7 +36,6 @@ void NavMeshDebugger::update(float delta_time) {
 		end_ = tmp;
 	}
 
-#ifdef _DEBUG
 	if (ImGui::Button("Toggle Draw Path Option")) draw_line_path_ = !draw_line_path_;
 #endif
 
