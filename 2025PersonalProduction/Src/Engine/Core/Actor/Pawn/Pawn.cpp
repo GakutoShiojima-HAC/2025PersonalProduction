@@ -128,6 +128,9 @@ void Pawn::collide_field() {
         on_air();
         is_ground_ = false;
     }
+
+    // 死亡判定
+    if (!is_dead_state() && transform_.position().y < -100.0f) die();
 }
 
 void Pawn::collide_actor(Actor& other) {
