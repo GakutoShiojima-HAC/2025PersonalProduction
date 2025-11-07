@@ -76,6 +76,11 @@ public:
     void scene_end_request();
 
     /// <summary>
+    /// 次のシーンを指定
+    /// </summary>
+    void set_next_scene(SceneTag tag);
+
+    /// <summary>
     /// アプリケーション終了をリクエストする
     /// </summary>
     void app_end_request();

@@ -33,6 +33,10 @@ void StandardScene::scene_end_request() {
     is_end_ = true;
 }
 
+void StandardScene::set_next_scene(SceneTag tag) {
+    next_scene_tag_ = tag;
+}
+
 void StandardScene::app_end_request() {
     is_app_end_ = true;
 }
