@@ -30,7 +30,7 @@ SceneGamePauseState::SceneGamePauseState(GameScene& owner) :
     }
     {
         TextFunctionButton* button = new TextFunctionButton{ "ƒ^ƒCƒgƒ‹‚É–ß‚é", GSvector2{ 416.0f, 786.0f }, 64, Anchor::TopLeft, Anchor::Center };
-        button->on_input([=] { owner_.scene_end_request(); });
+        button->on_input([=] { to_game_end(); });
         button_.add(button);
     }
 }
@@ -84,5 +84,12 @@ void SceneGamePauseState::return_game() {
     // GUI•`‰æ‚ð•œŠˆ
     owner_.enable_draw_game_gui() = true;
     owner_.change_state((GSuint)SceneStateType::Original);
+}
+
+void SceneGamePauseState::to_game_end() {
+    // GUI•`‰æ‚ð•œŠˆ
+    owner_.enable_draw_game_gui() = true;
+    owner_.set_next_scene(SceneTag::Menu);
+    owner_.change_state((GSuint)SceneStateType::GameEnd);
 }
 

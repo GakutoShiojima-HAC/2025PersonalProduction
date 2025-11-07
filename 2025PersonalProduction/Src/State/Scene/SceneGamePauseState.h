@@ -33,6 +33,8 @@ private:
 private:
     void return_game();
 
+    void to_game_end();
+
 private:
     GameScene& owner_;
 
