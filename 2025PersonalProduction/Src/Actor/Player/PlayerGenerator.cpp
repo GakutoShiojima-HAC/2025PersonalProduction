@@ -1,6 +1,7 @@
 #include "Actor/Player/PlayerGenerator.h"
 #include "Engine/Core/World/World.h"
 #include "Camera/PlayerCamera.h"
+#include "Assets.h"
 
 PlayerGenerator::PlayerGenerator(const json& j, World* world) {
     world_ = world;
@@ -20,6 +21,25 @@ PlayerGenerator::PlayerGenerator(const json& j, World* world) {
         return events;
     };
 
+    auto get_effect = [](const json& json_object) {
+        std::vector <PlayerGenerateEffectEvent> events;
+        // 発生タイミング分回す
+        for (const auto& obj : json_object) {
+            PlayerGenerateEffectEvent event;
+            event.effect_id = Assets::to_effect_id(MyJson::get_string(obj, "Effect"));
+            event.offset = GSvector3{ obj["Offset"][0], obj["Offset"][1], obj["Offset"][2] };
+            event.rotate = GSvector3{ obj["Rotate"][0], obj["Rotate"][1], obj["Rotate"][2] };
+            event.scale = GSvector3{ obj["Scale"][0], obj["Scale"][1], obj["Scale"][2] };
+            event.time = MyJson::get_float(obj, "Time");
+            event.speed = MyJson::get_float(obj, "Speed");
+            event.speed = event.speed < 0.0f ? 1.0f : event.speed;      // 未定義の場合は等速にする
+            event.enabled = (GSuint)EffectID::NONE != event.effect_id;  // 未定義エフェクトでなければ生成
+            events.push_back(event);
+
+        }
+        return events;
+    };
+
     // 通常攻撃を取得
     for (const auto& obj : j["Attack"]) {
         // パラメータを取得
@@ -30,6 +50,8 @@ PlayerGenerator::PlayerGenerator(const json& j, World* world) {
         info_.attack_param.push_back(param);
         // モーションを取得
         info_.attack_event.push_back(get_motion(obj["GenerateCollider"]));
+        // エフェクトを取得
+        info_.attack_effect_event.push_back(get_effect(obj["GenerateEffect"]));
     }
     
     // スキルを取得
@@ -38,6 +60,8 @@ PlayerGenerator::PlayerGenerator(const json& j, World* world) {
         info_.skill_damage = MyJson::get_int(obj, "Damage");
         // モーションを取得
         info_.skill_event = get_motion(obj["GenerateCollider"]);
+        // エフェクトを取得
+        info_.skill_effect_event = get_effect(obj["GenerateEffect"]);
     }
     // 回避攻撃を取得
     {
@@ -45,6 +69,8 @@ PlayerGenerator::PlayerGenerator(const json& j, World* world) {
         info_.avoid_attack_damage = MyJson::get_int(obj, "Damage");
         // モーションを取得
         info_.avoid_attack_event = get_motion(obj["GenerateCollider"]);
+        // エフェクトを取得
+        info_.avoid_attack_effect_event = get_effect(obj["GenerateEffect"]);
     }
     // 回避成功攻撃を取得
     {
@@ -52,6 +78,8 @@ PlayerGenerator::PlayerGenerator(const json& j, World* world) {
         info_.avoid_success_attack_damage = MyJson::get_int(obj, "Damage");
         // モーションを取得
         info_.avoid_success_attack_event = get_motion(obj["GenerateCollider"]);
+        // エフェクトを取得
+        info_.avoid_success_attack_effect_event = get_effect(obj["GenerateEffect"]);
     }
     // 回避成功スキルを取得
     {
@@ -59,6 +87,8 @@ PlayerGenerator::PlayerGenerator(const json& j, World* world) {
         info_.avoid_success_skill_damage = MyJson::get_int(obj, "Damage");
         // モーションを取得
         info_.avoid_success_skill_event = get_motion(obj["GenerateCollider"]);
+        // エフェクトを取得
+        info_.avoid_success_skill_effect_event = get_effect(obj["GenerateEffect"]);
     }
 }
 

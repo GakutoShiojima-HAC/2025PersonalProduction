@@ -42,7 +42,7 @@ const float AIR_TURN_SPEED{ 5.0f };
 // 通常移動速度
 const float MOVE_SPEED{ 0.02f };
 // 疾走移動速度
-const float SPRINT_SPEED{ 0.085f };
+const float SPRINT_SPEED{ 0.095f };
 // 減速移動速度倍率
 const float DECELERATION_SPEED{ 0.75f };
 // 無敵時間(秒)
@@ -180,6 +180,12 @@ void Player::update(float delta_time) {
     std::string vibration = "vibration: ";
     vibration += setting.is_vibration() ? "on" : "off";
     if (ImGui::Button(vibration.c_str())) setting.enable_vibration() = !setting.enable_vibration();
+
+    static GSvector3 position;
+    static GSvector3 rotate;
+    ImGui::InputFloat3("EffectPosition", position);
+    ImGui::InputFloat3("EffectRotation", rotate);
+    if (ImGui::Button("Play Effect")) play_effect(Assets::to_effect_id("PlayerSlash"), position, rotate, GSvector3{ 0.6, 0.6, 0.6});
 
 	ImGui::End();
 #endif
@@ -740,6 +746,27 @@ void Player::get_interact_actor_list() {
 }
 
 void Player::add_attack_animation_event(const PlayerInfo& info) {
+    // 対象のモーションのときに生成する判定
+    auto set_generate_collider = [&](GSuint motion, const std::string& name, const std::vector<PlayerGenerateAttackColliderEvent>& events) {
+        for (const auto& param : events) {
+            // イベントを登録
+            mesh_.add_animation_event(motion, param.time, [=] { generate_attack_collider(
+                param.offset, param.radius, info.skill_damage, name
+            ); });
+        }
+    };
+
+    // 対象のモーションのときに生成するエフェクト
+    auto set_effect_event = [&](GSuint motion, const std::vector<PlayerGenerateEffectEvent>& events) {
+        for (const auto& param : events) {
+            if (!param.enabled) continue;
+            // イベントを登録
+            mesh_.add_animation_event(motion, param.time, [=] { play_effect(
+                param.effect_id, param.offset, param.rotate, param.scale, param.speed
+            ); });
+        }
+    };
+
     // 通常攻撃のアニメーションイベントを追加
     for (GSuint i = 0; i < ATTACK_MOTION_MAX; ++i) {
         if (info.attack_event.size() <= i) break;
@@ -751,46 +778,31 @@ void Player::add_attack_animation_event(const PlayerInfo& info) {
                 param.offset, param.radius, i < info.attack_param.size() ? info.attack_param[i].damage : 0, "PlayerNormalAttack"
             ); });
         }
+        // 対象のモーションの時に生成するエフェクト
+        set_effect_event(motion, info.attack_effect_event[i]);
+
     }
     // スキルのアニメーションイベントを追加
     {
-        // 対象のモーションのときに生成する判定
-        for (const auto& param : info.skill_event) {
-            // イベントを登録
-            mesh_.add_animation_event(Motion::Skill, param.time, [=] { generate_attack_collider(
-                param.offset, param.radius, info.skill_damage, "PlayerNormalSkill"
-            ); });
-        }
+        set_generate_collider(Motion::Skill, "PlayerNormalSkill", info.skill_event);
+        set_effect_event(Motion::Skill, info.skill_effect_event);
     }
     // 回避攻撃のアニメーションイベントを追加
     {
-        // 対象のモーションのときに生成する判定
-        for (const auto& param : info.avoid_attack_event) {
-            // イベントを登録
-            mesh_.add_animation_event(Motion::AvoidAttack, param.time, [=] { generate_attack_collider(
-                param.offset, param.radius, info.avoid_attack_damage, "PlayerAvoidAttack"
-            ); });
-        }
+        set_generate_collider(Motion::AvoidAttack, "PlayerAvoidAttack", info.avoid_attack_event);
+        set_effect_event(Motion::AvoidAttack, info.avoid_attack_effect_event);
+
     }
     // 回避成功攻撃のアニメーションイベントを追加
     {
-        // 対象のモーションのときに生成する判定
-        for (const auto& param : info.avoid_success_attack_event) {
-            // イベントを登録
-            mesh_.add_animation_event(Motion::AvoidSuccessAttack, param.time, [=] { generate_attack_collider(
-                param.offset, param.radius, info.avoid_success_attack_damage, "PlayerAvoidSuccessAttack"
-            ); });
-        }
+        set_generate_collider(Motion::AvoidSuccessAttack, "PlayerAvoidSuccessAttack", info.avoid_success_attack_event);
+        set_effect_event(Motion::AvoidSuccessAttack, info.avoid_success_attack_effect_event);
+
     }
     // 回避成功スキルのアニメーションイベントを追加
     {
-        // 対象のモーションのときに生成する判定
-        for (const auto& param : info.avoid_success_skill_event) {
-            // イベントを登録
-            mesh_.add_animation_event(Motion::AvoidSuccessSkill, param.time, [=] { generate_attack_collider(
-                param.offset, param.radius, info.avoid_success_skill_damage, "PlayerSuccessSkill"
-            ); });
-        }
+        set_generate_collider(Motion::AvoidSuccessSkill, "PlayerSuccessSkill", info.avoid_success_skill_event);
+        set_effect_event(Motion::AvoidSuccessSkill, info.avoid_success_skill_effect_event);
     }
 }
 

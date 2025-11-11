@@ -28,6 +28,19 @@ struct PlayerGenerateAttackColliderEvent {
 };
 
 /// <summary>
+/// エフェクト生成アニメーションイベント登録用構造体
+/// </summary>
+struct PlayerGenerateEffectEvent {
+    bool enabled{ false };
+    GSuint effect_id{ 0 };
+    GSvector3 offset{ 0.0f, 0.0f, 0.0f };   // 生成位置
+    GSvector3 rotate{ 0.0f, 0.0f, 0.0f };   // 回転量
+    GSvector3 scale{ 1.0f, 1.0f, 1.0f };    // スケール
+    float speed{ 1.0f };                    // 再生速度
+    float time{ 0.0f };                     // タイミング
+};
+
+/// <summary>
 /// 通常攻撃のパラメータ
 /// </summary>
 struct PlayerAttackParam {
@@ -41,18 +54,23 @@ struct PlayerAttackParam {
 /// </summary>
 struct PlayerInfo {
     std::vector<std::vector<PlayerGenerateAttackColliderEvent>> attack_event;
+    std::vector<std::vector<PlayerGenerateEffectEvent>> attack_effect_event;
     std::vector<PlayerAttackParam> attack_param;
 
     std::vector<PlayerGenerateAttackColliderEvent> skill_event;
+    std::vector<PlayerGenerateEffectEvent> skill_effect_event;
     int skill_damage{ 0 };
 
     std::vector<PlayerGenerateAttackColliderEvent> avoid_attack_event;
+    std::vector<PlayerGenerateEffectEvent> avoid_attack_effect_event;
     int avoid_attack_damage{ 0 };
 
     std::vector<PlayerGenerateAttackColliderEvent> avoid_success_attack_event;
+    std::vector<PlayerGenerateEffectEvent> avoid_success_attack_effect_event;
     int avoid_success_attack_damage{ 0 };
 
     std::vector<PlayerGenerateAttackColliderEvent> avoid_success_skill_event;
+    std::vector<PlayerGenerateEffectEvent> avoid_success_skill_effect_event;
     int avoid_success_skill_damage{ 0 };
 };
 
