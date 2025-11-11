@@ -62,7 +62,7 @@ PlayerGenerator::PlayerGenerator(const json& j, World* world) {
     }
 }
 
-void PlayerGenerator::generate(const GSvector3& position, const GSvector3& lookat, int hp, int damage) {
+void PlayerGenerator::generate(const GSvector3& position, const GSvector3& lookat, int hp, int damage, const json& param) {
     // ¶¬‚Íˆê‘Ì‚Ì‚İ
     if (!can_generate_) return;
 

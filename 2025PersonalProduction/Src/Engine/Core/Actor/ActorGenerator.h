@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <string>
 #include "Engine/Core/Actor/IActorGenerator.h"
+#include "Engine/Utils/MyJson.h"
 
 class ActorGenerator {
 public:
@@ -32,7 +33,7 @@ public:
     /// <param name="lookat">= 注視点</param>
     /// <param name="hp">= 体力</param>
     /// <param name="damage">= 攻撃力</param>
-    void generate(const std::string& actor_key, const GSvector3& position, const GSvector3& lookat, int hp = 1, int damage = 1);
+    void generate(const std::string& actor_key, const GSvector3& position, const GSvector3& lookat, int hp = 1, int damage = 1, const json& param = json{});
 
     /// <summary>
     /// 生成で使ったデータの破棄

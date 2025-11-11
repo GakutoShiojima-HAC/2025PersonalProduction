@@ -85,6 +85,15 @@ bool GameScene::is_application_end() const {
 void GameScene::reception_message(const std::string& message, std::any& param) {
     if (message == "LoadSaveDataName" && param.type() == typeid(std::string)) {
         load_savedata_name_ = std::any_cast<std::string>(param);
+        // ロビーにリセット
+        load_stage_index_ = 0;
+    }
+    if (message == "RequestTereport" && param.type() == typeid(int)) {
+        load_stage_index_ = std::any_cast<int>(param);
+        if (state_.is_current_state((GSuint)SceneStateType::Original)) {
+            change_state((GSuint)SceneStateType::GameEnd);
+            set_next_scene(SceneTag::Game);
+        }
     }
 }
 
@@ -298,9 +307,6 @@ void GameScene::game_end() {
     // シーン中データを残していた分ここで破棄
     actor_generator_.clear();
 #endif
-
-    // ロビーにリセット
-    load_stage_index_ = 0;  
 
     // 次のシーンの情報を渡す
     std::any data = next_scene_tag_;

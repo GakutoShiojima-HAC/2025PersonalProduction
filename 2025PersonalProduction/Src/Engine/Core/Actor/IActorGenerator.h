@@ -2,6 +2,7 @@
 #define I_ACTOR_GENERATER_H_
 
 #include <gslib.h>
+#include "Engine/Utils/MyJson.h"
 
 class World;
 
@@ -19,7 +20,7 @@ public:
     /// <param name="lookat">= ’‹“_</param>
     /// <param name="hp">= ‘Ì—Í</param>
     /// <param name="damage">= UŒ‚—Í</param>
-    virtual void generate(const GSvector3& position, const GSvector3& lookat, int hp = 1, int damage = 1) = 0;
+    virtual void generate(const GSvector3& position, const GSvector3& lookat, int hp = 1, int damage = 1, const json& param = json{}) = 0;
 
 protected:
     World* world_{ nullptr };
