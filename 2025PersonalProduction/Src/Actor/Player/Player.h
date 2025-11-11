@@ -231,6 +231,12 @@ public:
     /// <returns>参照</returns>
     bool& enable_timescale();
 
+    /// <summary>
+    /// 武器を描画するかどうかを設定
+    /// </summary>
+    /// <param name="enabled">= 描画するなら真</param>
+    void set_draw_weapon(bool enabled);
+
     /* アクションのモーション番号を返却 */
 public:
 	GSuint get_attack_motion() const;
@@ -294,6 +300,9 @@ private:
     std::vector<Actor*> interact_actors_;
     // インタラクトしているアクターのインデックス
     GSint interact_target_index_{ 0 };
+
+    // 武器を描画するかどうか
+    bool draw_weapon_{ false };
 
 	// 通常攻撃段数
 	int attack_count_{ 0 };
