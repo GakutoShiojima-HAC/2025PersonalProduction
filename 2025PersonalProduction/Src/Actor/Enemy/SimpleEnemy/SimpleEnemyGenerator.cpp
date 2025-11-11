@@ -37,7 +37,7 @@ SimpleEnemyGenerator::SimpleEnemyGenerator(const json& j, World* world) {
 
 }
 
-void SimpleEnemyGenerator::generate(const GSvector3& position, const GSvector3& lookat, int hp, int damage) {
+void SimpleEnemyGenerator::generate(const GSvector3& position, const GSvector3& lookat, int hp, int damage, const json& param) {
     SimpleEnemyInfo info = info_;
     info.hp = hp;
     info.attack_damage = damage;
