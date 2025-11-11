@@ -78,7 +78,10 @@ protected:
     ActorGenerator actor_generator_;
     // ステージデータ
     StageData stage_data_;
-
+    // 読み込むステージパス
+    std::string load_stage_path_{ "Resource/Private/Stage/0" };
+    // 読み込むセーブデータ名
+    std::string load_savedata_name_{ "Tmp" };
 };
 
 #endif

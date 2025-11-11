@@ -82,7 +82,9 @@ bool GameScene::is_application_end() const {
 }
 
 void GameScene::reception_message(const std::string& message, std::any& param) {
-	// なにも受け取らない
+    if (message == "LoadSaveDataName" && param.type() == typeid(std::string)) {
+        load_savedata_name_ = std::any_cast<std::string>(param);
+    }
 }
 
 void GameScene::add_state() {
@@ -140,8 +142,23 @@ void GameScene::load_data() {
     else  AssetsLoader::load_by_json("Resource/Private/Common/Assets/game.json", AssetsLoader::GAME_COMMON_ASSET_NAME);
     load_progress_ += progress;
 
+    // アイテムデータの読み込み
+    ItemDataManager::get_instance().load();
+    load_progress_ += progress;
+
+    // アクターデータの読み込み
+    actor_generator_.load(&world_);
+    load_progress_ += progress;
+
+    // セーブデータの読み込み
+    world_.game_save_data().load(load_savedata_name_);
+    load_progress_ += progress;
+
     // ステージデータの読み込み
-    stage_data_.load("Resource/Private/Stage/0");
+    const std::string folder_path = world_.game_save_data().get().stage < 0 ? "Resource/Private/Stage/1" : load_stage_path_; // TODO
+    stage_data_.load(folder_path);
+    load_progress_ += progress;
+
     const std::string stage = stage_data_.data().folder;
 
     // ステージ固有アセットの読み込み
@@ -159,18 +176,6 @@ void GameScene::load_data() {
     world_.timeline().init(&world_, false);
 #endif
     world_.timeline().load(stage + "/timeline.json");
-    load_progress_ += progress;
-
-    // アイテムデータの読み込み
-    ItemDataManager::get_instance().load();
-    load_progress_ += progress;
-
-    // セーブデータの読み込み
-    world_.game_save_data().load("test");
-    load_progress_ += progress;
-
-    // アクターデータの読み込み
-    actor_generator_.load(&world_);
     load_progress_ += progress;
 }
 

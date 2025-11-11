@@ -1,22 +1,15 @@
 #include "Item/Inventory.h"
 #include "Engine/Utils/Check.h"
-#include "Engine/Utils/Folder.h"
 #include "Item/ItemDataManager.h"
-#include "Engine/Utils/MyJson.h"
 
 // ファイルパスから先のファイルパス
 const std::string FILE_PATH{ "/inventory.json" };
 
-void Inventory::load(const std::string& folder_path) {
+void Inventory::load(const json& j) {
     ItemDataManager& item_data = ItemDataManager::get_instance();
 
-    // jsonファイルがなければ初期装備にして終了
-    json j;
-    if (!MyJson::is_json(folder_path + FILE_PATH, j)) return;
-
-    // インベントリを展開
-    if (MyJson::is_object(j, "Inventory")) {
-        const auto& inventory_obj = j["Inventory"];
+    if (MyJson::is_object(j, "Items")) {
+        const auto& inventory_obj = j["Items"];
         for (const auto& type_obj : inventory_obj.items()) {
             const std::string& type_name = type_obj.key();
             const ItemType type = ItemData::to_type(type_name);
@@ -38,18 +31,16 @@ void Inventory::load(const std::string& folder_path) {
         }
     }
 
-    // TODO 武器データのバージョンが一致していなかったら...？
-    
     // 現在の武器
     int weapon_id = MyJson::get_int(j, "CurrentWeaponID");
     current_weapon_ = item_data.get_weapon(weapon_id);
 }
 
-void Inventory::save(const std::string& folder_path) {
+ordered_json Inventory::save_object() const {
     ordered_json j;
 
     // 武器データのバージョン
-    j["weapon_version"] = ItemDataManager::get_instance().weapon_version();
+    j["WeaponVersion"] = ItemDataManager::get_instance().weapon_version();
     // 使っていた武器
     j["CurrentWeaponID"] = current_weapon_.id;
 
@@ -66,11 +57,10 @@ void Inventory::save(const std::string& folder_path) {
         for (const auto& v : item.second) {
             data[type_string].push_back({ v.id, v.count }); // 0がID 1が個数
         }
-        j["Inventory"] = data;
+        j["Items"] = data;
     }
 
-    // ファイル保存
-    MyLib::write_to_file(folder_path + FILE_PATH, j);
+    return j;
 }
 
 void Inventory::clear() {
