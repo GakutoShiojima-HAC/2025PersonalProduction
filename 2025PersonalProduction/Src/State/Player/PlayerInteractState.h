@@ -18,7 +18,7 @@ public:
 	PlayerInteractState(Player& owner);
 
 private:
-    void enter() override {};
+    void enter() override;
 
     void update(float delta_time) override;
 

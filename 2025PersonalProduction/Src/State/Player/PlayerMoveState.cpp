@@ -7,7 +7,7 @@ PlayerMoveState::PlayerMoveState(Player& owner) :
 }
 
 void PlayerMoveState::enter() {
-
+    owner_.set_draw_weapon(false);
 }
 
 void PlayerMoveState::update(float delta_time) {

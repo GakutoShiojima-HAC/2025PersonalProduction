@@ -11,6 +11,8 @@ void PlayerAttackState::enter() {
 
 	enter_next_attack_min_timer_ = owner_.get_enter_next_attack_min_time();
     enter_next_attack_max_timer_ = owner_.get_enter_next_attack_max_time();
+
+    owner_.set_draw_weapon(true);
 }
 
 void PlayerAttackState::update(float delta_time) {
