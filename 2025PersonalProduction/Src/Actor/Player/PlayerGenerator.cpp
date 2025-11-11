@@ -31,8 +31,7 @@ PlayerGenerator::PlayerGenerator(const json& j, World* world) {
             event.rotate = GSvector3{ obj["Rotate"][0], obj["Rotate"][1], obj["Rotate"][2] };
             event.scale = GSvector3{ obj["Scale"][0], obj["Scale"][1], obj["Scale"][2] };
             event.time = MyJson::get_float(obj, "Time");
-            event.speed = MyJson::get_float(obj, "Speed");
-            event.speed = event.speed < 0.0f ? 1.0f : event.speed;      // 未定義の場合は等速にする
+            event.speed = MyJson::get_float(obj, "Speed", 1.0f);
             event.enabled = (GSuint)EffectID::NONE != event.effect_id;  // 未定義エフェクトでなければ生成
             events.push_back(event);
 

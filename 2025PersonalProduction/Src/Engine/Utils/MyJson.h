@@ -47,9 +47,10 @@ namespace MyJson {
     /// </summary>
     /// <param name="json_object">= jsonオブジェクト</param>
     /// <param name="object_name">= オブジェクト名</param>
+    /// <param name="not_found_param">= 見つからなかったときのパラメータ</param>
     /// <returns>string</returns>
-    inline std::string get_string(const json& json_object, const std::string& object_name) {
-        std::string result = "none";
+    inline std::string get_string(const json& json_object, const std::string& object_name, const std::string& not_found_param = "not found") {
+        std::string result = not_found_param;
         if (json_object.contains(object_name.c_str()) && json_object[object_name.c_str()].is_string())
             result = json_object[object_name.c_str()].get<std::string>();
         return result;
@@ -60,11 +61,12 @@ namespace MyJson {
     /// </summary>
     /// <param name="json_object">= jsonオブジェクト</param>
     /// <param name="object_name">= オブジェクト名</param>
+    /// <param name="not_found_param">= 見つからなかったときのパラメータ</param>
     /// <returns>int</returns>
-    inline int get_int(const json& json_object, const std::string& object_name) {
+    inline int get_int(const json& json_object, const std::string& object_name, int not_found_param = -1) {
         if (json_object.contains(object_name.c_str()) && json_object[object_name.c_str()].is_number_integer())
             return json_object[object_name.c_str()].get<int>();
-        return -1;
+        return not_found_param;
     };
 
     /// <summary>
@@ -72,11 +74,12 @@ namespace MyJson {
     /// </summary>
     /// <param name="json_object">= jsonオブジェクト</param>
     /// <param name="object_name">= オブジェクト名</param>
+    /// <param name="not_found_param">= 見つからなかったときのパラメータ</param>
     /// <returns>float</returns>
-    inline float get_float(const json& json_object, const std::string& object_name) {
+    inline float get_float(const json& json_object, const std::string& object_name, float not_found_param = -1.0f) {
         if (json_object.contains(object_name.c_str()) && json_object[object_name.c_str()].is_number_float())
             return json_object[object_name.c_str()].get<float>();
-        return -1.0f;
+        return not_found_param;
     }
 
     /// <summary>
@@ -84,11 +87,12 @@ namespace MyJson {
     /// </summary>
     /// <param name="json_object">= jsonオブジェクト</param>
     /// <param name="object_name">= オブジェクト名</param>
+    /// <param name="not_found_param">= 見つからなかったときのパラメータ</param>
     /// <returns>bool</returns>
-    inline bool get_boolean(const json& json_object, const std::string& object_name) {
+    inline bool get_boolean(const json& json_object, const std::string& object_name, bool not_found_param = false) {
         if (json_object.contains(object_name.c_str()) && json_object[object_name.c_str()].is_boolean())
             return json_object[object_name.c_str()].get<bool>();
-        return false;
+        return not_found_param;
     }
 }
 
