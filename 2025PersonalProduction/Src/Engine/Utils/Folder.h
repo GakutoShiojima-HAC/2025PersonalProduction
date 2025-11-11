@@ -22,6 +22,12 @@
 #endif
 #include "Lib/json.hpp"
 
+#include <vector>
+#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
+#include <experimental/filesystem>  // ファイル検索用
+namespace fs = std::experimental::filesystem;
+
+
 using namespace std;
 using json = nlohmann::json;
 using ordered_json = nlohmann::ordered_json;
@@ -150,6 +156,30 @@ namespace MyLib {
         f << j.dump(4);  // インデント
         f.close();
         return true;
+    }
+
+    /// <summary>
+    /// 指定したフォルダ直下の指定した拡張子のファイルパスを全て取得する
+    /// </summary>
+    /// <param name="folder_path">= 検索をかけるファイルパス</param>
+    /// <param name="extension">= 対象ファイルの拡張子</param>
+    /// <returns>見つかったファイル全てのパス</returns>
+    inline std::vector<string> get_all_file_path(const std::string& folder_path, const std::string& extension) {
+        std::vector<std::string> paths;
+
+        for (const auto& entry : fs::recursive_directory_iterator(folder_path)) {
+            const fs::path& p = entry.path();
+
+            if (fs::is_regular_file(p)) {
+                const std::string file_ext = entry.path().extension().string();
+
+                if (file_ext == "." + extension) {
+                    paths.push_back(entry.path().string());
+                }
+            }
+        }
+
+        return paths;
     }
 }
 
