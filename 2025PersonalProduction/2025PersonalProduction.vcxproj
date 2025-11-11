@@ -227,6 +227,7 @@
     <ClCompile Include="Src\Score\ActionScore.cpp" />
     <ClCompile Include="Src\Engine\Core\Actor\ActorGenerator.cpp" />
     <ClCompile Include="Src\Stage\StageData.cpp" />
+    <ClCompile Include="Src\Stage\StageFile.cpp" />
     <ClCompile Include="Src\State\DummyEnemy\DummyEnemyAttackState.cpp" />
     <ClCompile Include="Src\State\DummyEnemy\DummyEnemyDeadState.cpp" />
     <ClCompile Include="Src\State\DummyEnemy\DummyEnemyIdleState.cpp" />
@@ -376,6 +377,7 @@
     <ClInclude Include="Src\Engine\Core\Actor\ActorGenerator.h" />
     <ClInclude Include="Src\Engine\Core\Actor\IActorGenerator.h" />
     <ClInclude Include="Src\Stage\StageData.h" />
+    <ClInclude Include="Src\Stage\StageFile.h" />
     <ClInclude Include="Src\State\DummyEnemy\DummyEnemyState.h" />
     <ClInclude Include="Src\State\DummyEnemy\DummyEnemyAttackState.h" />
     <ClInclude Include="Src\State\DummyEnemy\DummyEnemyDeadState.h" />
