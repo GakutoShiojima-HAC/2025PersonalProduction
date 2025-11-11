@@ -9,6 +9,8 @@ PlayerAvoidState::PlayerAvoidState(Player& owner) :
 void PlayerAvoidState::enter() {
     avoid_attack_input_ = false;
     avoid_skill_input_ = false;
+
+    owner_.set_draw_weapon(false);
 }
 
 void PlayerAvoidState::update(float delta_time) {

@@ -36,9 +36,11 @@
 // 衝突判定用の半径
 const float RADIUS{ 0.4f };
 // 移動時のカメラ向きへの回転角度
-const float TURN_SPEED{ 11.5f };
+const float TURN_SPEED{ 18.0f };
+// 空中移動時のカメラ向きへの回転角度
+const float AIR_TURN_SPEED{ 5.0f };
 // 通常移動速度
-const float MOVE_SPEED{ 0.065f };
+const float MOVE_SPEED{ 0.02f };
 // 疾走移動速度
 const float SPRINT_SPEED{ 0.085f };
 // 減速移動速度倍率
@@ -191,7 +193,7 @@ void Player::draw() const {
 	mesh_.draw();
 
     // 武器の描画
-    if (!inventory_.weapon().is_empty()) {
+    if (!inventory_.weapon().is_empty() && draw_weapon_) {
         glPushMatrix();
         glMultMatrixf(mesh_.bone_matrices(RIGHT_HAND_BONE_NUM));   // 右手に持たせる
         gsDrawMesh(item_data_.get_weapon(inventory_.weapon().id).mesh);
@@ -335,15 +337,15 @@ void Player::update_move(float delta_time) {
 	velocity += right * input.x;
 	velocity += forward * input.y;
 	
-	// 歩行か疾走かを取得
-	bool is_walk = input_.action(InputAction::GAME_Sprint);
+	// 歩行か疾走か
+    const bool is_sprint = ABS(input.x) > 0.95f || ABS(input.y) > 0.95f;
 
 	// ロックオン中かどうかを取得
 	const bool is_lockon = camera_->is_lockon();
 
 	// 移動していたら移動量を、移動していなかったら減速するように移動量を計算
 	if (velocity.magnitude() > 0.01f) {
-		move_speed_ = is_walk ? SPRINT_SPEED : MOVE_SPEED;
+		move_speed_ = is_sprint ? SPRINT_SPEED : MOVE_SPEED;
 		velocity = velocity.normalized() * move_speed_ * delta_time;
 	}
 	else {
@@ -376,20 +378,20 @@ void Player::update_move(float delta_time) {
 		if (is_lockon) {
 			const int dir = MyLib::get_direction(GSvector2{ velocity.x, velocity.z }, GSvector2{ forward.x, forward.z }, 8);
 			switch (dir) {
-			case 0: motion = is_walk ? Motion::WalkF : Motion::SprintF; break;
-			case 1: motion = is_walk ? Motion::WalkFL : Motion::SprintFL; break;
-			case 2: motion = is_walk ? Motion::WalkL : Motion::SprintL; break;
-			case 3: motion = is_walk ? Motion::WalkBL : Motion::SprintBL; break;
-			case 4: motion = is_walk ? Motion::WalkB : Motion::SprintB; break;
-			case 5: motion = is_walk ? Motion::WalkBR : Motion::SprintBR; break;
-			case 6: motion = is_walk ? Motion::WalkR : Motion::SprintR; break;
-			case 7: motion = is_walk ? Motion::WalkFR : Motion::SprintFR; break;
+			case 0: motion = is_sprint ? Motion::SprintF : Motion::WalkF; break;
+			case 1: motion = is_sprint ? Motion::SprintFL : Motion::WalkFL; break;
+			case 2: motion = is_sprint ? Motion::SprintL : Motion::WalkL; break;
+            case 3: motion = is_sprint ? Motion::SprintBL : Motion::WalkBL; break;
+			case 4: motion = is_sprint ? Motion::SprintB : Motion::WalkB; break;
+			case 5: motion = is_sprint ? Motion::SprintBR : Motion::WalkBR; break;
+			case 6: motion = is_sprint ? Motion::SprintR : Motion::WalkR; break;
+			case 7: motion = is_sprint ? Motion::SprintFR : Motion::WalkFR; break;
 			default: break;
 			}
 		}
 		// ロックオン中でなければ1方向モーションを適用する
 		else {
-			motion = is_walk ? Motion::WalkF : Motion::SprintF;
+			motion = is_sprint ? Motion::SprintF : Motion::WalkF;
 		}
 	}
 	// モーションを適用
@@ -420,7 +422,7 @@ void Player::update_move_air(float delta_time) {
 	velocity_.z = prev_velocity.z;
 
 	// 非貫通移動
-	non_penetrating_move(prev_velocity, camera_->is_lockon() ? nullptr : &rotate_velocity, TURN_SPEED * delta_time);
+	non_penetrating_move(prev_velocity, camera_->is_lockon() ? nullptr : &rotate_velocity, AIR_TURN_SPEED * delta_time);
 }
 
 void Player::to_move_state() {
@@ -587,7 +589,7 @@ void Player::on_avoid() {
 
     // 回避エフェクトを再生
     avoid_effect_handle_ = world_->camera_effect_play_foward((GSuint)EffectID::Avoid, 0.25f);
-    const GScolor color{ 1.0f, 1.0f, 1.0f, 0.3f };
+    const GScolor color{ 1.0f, 1.0f, 1.0f, 0.2f };
     gsSetEffectColor(avoid_effect_handle_, &color);
 
 }
@@ -626,6 +628,15 @@ float Player::get_enter_next_attack_max_time() const {
 
 bool& Player::enable_timescale() {
     return enable_timescale_;
+}
+
+void Player::set_draw_weapon(bool enabled) {
+    // 描画が切り替わったら
+    if (draw_weapon_ != enabled) {
+        // TODO effect?
+    }
+
+    draw_weapon_ = enabled;
 }
 
 GSuint Player::get_attack_motion() const {

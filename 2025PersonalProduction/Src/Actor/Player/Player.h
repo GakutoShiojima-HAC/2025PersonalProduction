@@ -65,22 +65,22 @@ public:
         Idle = 0,
 
         WalkF = 1,
-        WalkFL = 2,
-        WalkFR = 3,
-        WalkL = 4,
-        WalkR = 5,
-        WalkB = 6,
-        WalkBL = 7,
-        WalkBR = 8,
+        WalkFL = 12,
+        WalkFR = 22,
+        WalkL = 23,
+        WalkR = 24,
+        WalkB = 25,
+        WalkBL = 26,
+        WalkBR = 27,
 
         SprintF = 28,
-        SprintFL = 12,
-        SprintFR = 22,
-        SprintL = 23,
-        SprintR = 24,
-        SprintB = 25,
-        SprintBL = 26,
-        SprintBR = 27,
+        SprintFL = 2,
+        SprintFR = 3,
+        SprintL = 4,
+        SprintR = 5,
+        SprintB = 6,
+        SprintBL = 7,
+        SprintBR = 8,
 
         Jump = 9,
         Fall = 10,
@@ -231,6 +231,12 @@ public:
     /// <returns>参照</returns>
     bool& enable_timescale();
 
+    /// <summary>
+    /// 武器を描画するかどうかを設定
+    /// </summary>
+    /// <param name="enabled">= 描画するなら真</param>
+    void set_draw_weapon(bool enabled);
+
     /* アクションのモーション番号を返却 */
 public:
 	GSuint get_attack_motion() const;
@@ -294,6 +300,9 @@ private:
     std::vector<Actor*> interact_actors_;
     // インタラクトしているアクターのインデックス
     GSint interact_target_index_{ 0 };
+
+    // 武器を描画するかどうか
+    bool draw_weapon_{ false };
 
 	// 通常攻撃段数
 	int attack_count_{ 0 };

@@ -2,48 +2,48 @@
 #include "Engine/Graphics/Canvas/Canvas.h"
 #include "Assets.h"
 
-// PADæ¥ç¶šä¸­åˆ¤å®šã«ä½¿ç”¨ã™ã‚‹è­˜åˆ¥ç•ªå·
+// PADÚ‘±’†”»’è‚Ég—p‚·‚é¯•Ê”Ô†
 const int USE_PAD_NUM{ 0 };
 
 Input& Input::get_instance() {
-	// staticå¤‰æ•°ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã¯ï¼‘ã¤
-	// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹åŒ–ã‚‚ï¼‘å›ã®ã¿
+	// static•Ï”‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚Í‚P‚Â
+	// ƒCƒ“ƒXƒ^ƒ“ƒX‰»‚à‚P‰ñ‚Ì‚İ
 	static Input self;
 	return self;
 }
 
 void Input::update(float delta_time) {
-	// PADæ¥ç¶šãŒã‚ã‚‹ã‹æ›´æ–°
+	// PADÚ‘±‚ª‚ ‚é‚©XV
 	is_pad_ = gsXBoxGetPadCount() > 0;
 
-	// PADçŠ¶æ…‹ã®æ›´æ–°
+	// PADó‘Ô‚ÌXV
 	if (is_pad_) {
-		// å·¦è»¸
+		// ¶²
 		gsXBoxPadGetLeftAxis(USE_PAD_NUM, &left_axis_);
-		// å³è»¸
+		// ‰E²
 		gsXBoxPadGetRightAxis(USE_PAD_NUM, &right_axis_);
         scroll_ = 0;
 
-		// ã‚«ãƒ¼ã‚½ãƒ«ã¯å·¦ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã§ç§»å‹•ã¨ã™ã‚‹
+		// ƒJ[ƒ\ƒ‹‚Í¶ƒXƒeƒBƒbƒN‚ÅˆÚ“®‚Æ‚·‚é
 		if (!is_update_cursor_position_) return;
 		cursor_position_.x += left_axis_.x * pad_cursor_speed_ * delta_time;
 		cursor_position_.y += -left_axis_.y * pad_cursor_speed_ * delta_time;
 	}
-	// PCçŠ¶æ…‹ã®æ›´æ–°
+	// PCó‘Ô‚ÌXV
 	else {
-		// å·¦è»¸
+		// ¶²
 		left_axis_ = GSvector2{ 0.0f, 0.0f };
 		if (gsGetKeyState(GKEY_W)) left_axis_.y += 1;
 		if (gsGetKeyState(GKEY_S)) left_axis_.y += -1;
 		if (gsGetKeyState(GKEY_D)) left_axis_.x += 1;
 		if (gsGetKeyState(GKEY_A)) left_axis_.x += -1;
-		// å³è»¸
+		// ‰E²
 		int x, y;
 		gsGetMouseVelocity(&x, &y, &scroll_);
 		right_axis_.x = x;
 		right_axis_.y = -y;
 
-		// ã‚«ãƒ¼ã‚½ãƒ«åº§æ¨™
+		// ƒJ[ƒ\ƒ‹À•W
 		if (!is_update_cursor_position_) return;
 		gsGetMouseCursorPosition(&x, &y);
 		cursor_position_.x = x;
@@ -140,8 +140,6 @@ bool Input::action(InputAction action) const {
 		break;
 	case InputAction::GAME_Lockon:
 		return is_pad_ ? gsXBoxPadButtonTrigger(USE_PAD_NUM, GS_XBOX_PAD_RIGHT_SHOULDER) : gsGetKeyTrigger(GKEY_R);
-	case InputAction::GAME_Sprint:
-		break;
 	case InputAction::GAME_Interact:
 		return is_pad_ ? gsXBoxPadButtonTrigger(USE_PAD_NUM, GS_XBOX_PAD_X) : gsGetKeyTrigger(GKEY_E);
     case InputAction::GAME_Interact_Up:

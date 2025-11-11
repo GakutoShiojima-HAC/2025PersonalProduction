@@ -6,6 +6,10 @@ PlayerInteractState::PlayerInteractState(Player& owner) :
 
 }
 
+void PlayerInteractState::enter() {
+    owner_.set_draw_weapon(false);
+}
+
 void PlayerInteractState::update(float delta_time) {
     // カメラ切り替えの更新
     owner_.update_lockon_camera();

@@ -23,7 +23,6 @@ enum class InputAction {
     GAME_Avoid,         // 回避
     GAME_Skill,         // スキル発動
     GAME_Lockon,        // ロックオン
-    GAME_Sprint,        // 疾走
 
     GAME_Interact,      // インタラクト
     GAME_Interact_Up,   // インタラクト上選択
