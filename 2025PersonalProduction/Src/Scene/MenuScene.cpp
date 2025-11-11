@@ -68,8 +68,17 @@ void MenuScene::end() {
     load_progress_ = 0.0f;
 
     // 次のシーンの情報を渡す
-    std::any data = next_scene_tag_;
-    scene_manager_.send_message(SceneTag::Loading, "NextSceneTag", data);
+    {
+        std::any data = next_scene_tag_;
+        scene_manager_.send_message(SceneTag::Loading, "NextSceneTag", data);
+    }
+    // セーブデータのフォルダ
+    {
+        std::string folder = "test";
+        std::any data = folder;
+        scene_manager_.send_message(SceneTag::Game, "LoadSaveDataName", data);
+    }
+   
 }
 
 SceneTag MenuScene::scene_tag() const {
