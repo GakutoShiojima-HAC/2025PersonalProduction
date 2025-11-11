@@ -263,7 +263,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Src\Weapon\WeaponManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Actor\ActorTag.h" />
@@ -417,7 +416,6 @@
     <ClInclude Include="Src\State\SimpleEnemy\SimpleEnemyState.h" />
     <ClInclude Include="Src\stdafx.h" />
     <ClInclude Include="Src\Item\Weapon\WeaponData.h" />
-    <ClInclude Include="Src\Weapon\WeaponManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Private\Shader\MaskEffect.frag" />
