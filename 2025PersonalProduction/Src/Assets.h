@@ -71,6 +71,7 @@
     X(Avoid) \
     X(Item) \
     X(HitAttack) \
+    X(PlayerSlash) \
     X(MAX_SIZE) // 要素数
 #pragma endregion
 
