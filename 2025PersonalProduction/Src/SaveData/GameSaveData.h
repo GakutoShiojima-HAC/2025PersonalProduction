@@ -2,7 +2,12 @@
 #define SAVE_DATA_H_
 
 #include <string>
+#include <vector>
 #include "Item/Inventory.h"
+
+struct SaveData {
+    int stage{ -1 };    // -1でチュートリアル未クリア 0以上ならindex + 1のステージに挑戦できる
+};
 
 class GameSaveData {
 public:
@@ -12,18 +17,18 @@ public:
 
 public:
     /// <summary>
-    /// ゲームに関係のあるデータを一括で読み込む
+    /// ゲームに関係のあるデータを読み込む
     /// </summary>
-    /// <param name="folder_path">フォルダパス</param>
-    void load(const std::string& folder_path);
+    /// <param name="file_path">ファイルパス</param>
+    void load(const std::string& file_path);
 
     /// <summary>
-    /// ゲームに関係のあるデータを一括で保存する
+    /// ゲームに関係のあるデータを保存する
     /// </summary>
     void save();
 
     /// <summary>
-    /// ゲームに関係のあるデータを一括でクリアする
+    /// ゲームに関係のあるデータをクリアする
     /// </summary>
     void clear();
 
@@ -34,14 +39,28 @@ public:
     /// <returns>インベントリ</returns>
     Inventory& inventory();
 
-private:
-    // セーブ先のフォルダ
-    std::string save_folder_path_{ "" };
+    /// <summary>
+    /// セーブデータの取得(const)
+    /// </summary>
+    /// <returns></returns>
+    const SaveData& get() const;
+
+    /// <summary>
+    /// 全てのセーブデータファイルを取得
+    /// </summary>
+    /// <returns>全てのセーブデータファイル</returns>
+    std::vector<string> get_all_save_file() const;
 
 private:
+    // 使用中のセーブデータファイル
+    std::string save_file_path_{ "" };
+
+private:
+    // セーブデータ
+    SaveData save_data_;
     // プレイヤーインベントリ
     Inventory inventory_;
-
+    
 public:
     // コピー禁止
     GameSaveData(const GameSaveData& other) = delete;
