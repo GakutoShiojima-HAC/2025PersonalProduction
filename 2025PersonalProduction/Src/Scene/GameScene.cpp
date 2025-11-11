@@ -13,6 +13,7 @@
 #include "Camera/FixedCamera.h"
 #include "Camera/TimelineCamera.h"
 #include "Camera/PlayerCamera.h"
+#include "Stage/StageFile.h"
 
 // 一時的 ローダーやマネージャーを作ったら不要
 #include <gslib.h>	// シーン終了用
@@ -155,18 +156,17 @@ void GameScene::load_data() {
     load_progress_ += progress;
 
     // ステージデータの読み込み
-    const std::string folder_path = world_.game_save_data().get().stage < 0 ? "Resource/Private/Stage/1" : load_stage_path_; // TODO
+    StageFile sf;
+    const std::string folder_path = world_.game_save_data().get().stage < 0 ? sf.get_path(-1) : sf.get_path(load_stage_index_);
     stage_data_.load(folder_path);
     load_progress_ += progress;
 
-    const std::string stage = stage_data_.data().folder;
-
     // ステージ固有アセットの読み込み
-    AssetsLoader::load_by_json(stage + "/asset.json", AssetsLoader::GAME_STAGE_ASSET_NAME);
+    AssetsLoader::load_by_json(folder_path + "/asset.json", AssetsLoader::GAME_STAGE_ASSET_NAME);
     load_progress_ += progress;
 
     // ナビメッシュデータの読み込み
-    world_.add_navmesh(new NavMeshSurface{ stage + "/navmesh.txt" });
+    world_.add_navmesh(new NavMeshSurface{ folder_path + "/navmesh.txt" });
     load_progress_ += progress;
 
     // タイムラインデータの読み込み
@@ -175,7 +175,7 @@ void GameScene::load_data() {
 #else
     world_.timeline().init(&world_, false);
 #endif
-    world_.timeline().load(stage + "/timeline.json");
+    world_.timeline().load(folder_path + "/timeline.json");
     load_progress_ += progress;
 }
 
@@ -298,6 +298,9 @@ void GameScene::game_end() {
     // シーン中データを残していた分ここで破棄
     actor_generator_.clear();
 #endif
+
+    // ロビーにリセット
+    load_stage_index_ = 0;  
 
     // 次のシーンの情報を渡す
     std::any data = next_scene_tag_;
