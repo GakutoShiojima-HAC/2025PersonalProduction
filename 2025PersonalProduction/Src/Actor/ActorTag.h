@@ -17,6 +17,7 @@ enum class ActorTag {
 	Enemy,
 	Collider,
     Item,
+    Object,
 
 	MAX_SIZE	// 要素数
 };
