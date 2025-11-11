@@ -157,10 +157,12 @@ void Actor::non_penetrating_move(const GSvector3& velocity, GSvector3* foward, f
 	collide_field();
 }
 
-int Actor::play_effect(GSuint effect_id, const GSvector3& position, const GSvector3& rotate, const GSvector3& scale) const {
+int Actor::play_effect(GSuint effect_id, const GSvector3& position, const GSvector3& rotate, const GSvector3& scale, float speed) const {
 	// エフェクトを再生する
 	const GSmatrix4 mat = local_to_world(position, rotate, scale);
-	return gsPlayEffectEx(effect_id, &mat);
+    int handle = gsPlayEffectEx(effect_id, &mat);
+    gsSetEffectSpeed(handle, speed);
+    return handle;
 }
 
 void Actor::draw_collider() const {

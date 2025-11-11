@@ -193,7 +193,8 @@ protected:
 	/// <param name="position">= ローカル移動量</param>
 	/// <param name="rotation">= ローカル回転量</param>
 	/// <param name="scale">= ローカル拡縮量</param>
-	int play_effect(GSuint effect_id, const GSvector3& position, const GSvector3& rotate = GSvector3{ 0.0f, 0.0f, 0.0f }, const GSvector3& scale = GSvector3{ 1.0f, 1.0f, 1.0f }) const;
+    /// <param name="speed">= 再生速度</param>
+	int play_effect(GSuint effect_id, const GSvector3& position, const GSvector3& rotate = GSvector3{ 0.0f, 0.0f, 0.0f }, const GSvector3& scale = GSvector3{ 1.0f, 1.0f, 1.0f }, float speed = 1.0f) const;
 
 protected:
 	// ワールド
