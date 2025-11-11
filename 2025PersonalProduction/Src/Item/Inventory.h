@@ -6,6 +6,7 @@
 #include <vector>
 #include "Item/ItemData.h"
 #include "Weapon/WeaponData.h"
+#include "Engine/Utils/MyJson.h"
 
 class Inventory {
 public:
@@ -14,10 +15,21 @@ public:
     ~Inventory() = default;
 
 public:
-    void load(const std::string& folder_path);
+    /// <summary>
+    /// インベントリをロード
+    /// </summary>
+    /// <param name="j">= jsonオブジェクト</param>
+    void load(const json& j);
 
-    void save(const std::string& folder_path);
+    /// <summary>
+    /// セーブオブジェクトを取得
+    /// </summary>
+    /// <returns>ordered_jsonオブジェクト</returns>
+    ordered_json save_object() const;
 
+    /// <summary>
+    /// インベントリをクリア
+    /// </summary>
     void clear();
 
 public:
@@ -80,7 +92,7 @@ private:
     /// <param name="count">= アイテムの削除個数</param>
     void remove(ItemType type, int id, int count);
 
-public:
+private:
     struct InventorySlot {
         int id{ 0 };
         int count{ 0 };
