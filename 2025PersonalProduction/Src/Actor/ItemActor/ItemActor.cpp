@@ -72,7 +72,7 @@ void ItemActor::init() {
     tag_ = ActorTag::Item;
     name_ = interact_text_;
     enable_collider_ = false;
-    effect_handle_ = play_effect((GSuint)EffectID::Item, transform_.position());
+    effect_handle_ = play_effect((GSuint)EffectID::Item, transform_.position(), GSvector3::zero(), GSvector3{ 0.5f, 0.5f, 0.5f });
 }
 
 void ItemActor::update_mesh(float delta_time) {

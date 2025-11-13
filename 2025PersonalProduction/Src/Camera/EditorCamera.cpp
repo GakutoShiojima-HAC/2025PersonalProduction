@@ -60,7 +60,7 @@ void EditorCamera::update(float delta_time) {
 		velocity += right * input.x;
 		velocity += forward * input.y;
 		velocity.y += (input_.action(InputAction::DEBUG_Up) ? 1.0f : input_.action(InputAction::DEBUG_Down) ? -1.0f : 0.0f);
-		velocity = velocity.normalized() * MOVE_SPEED * delta_time;
+		velocity = velocity.normalized() * (input_.action(InputAction::DEBUG_Sprint) ? MOVE_SPEED * 10.0f: MOVE_SPEED) * delta_time;
 		// 移動
 		transform_.translate(velocity, GStransform::Space::World);
 

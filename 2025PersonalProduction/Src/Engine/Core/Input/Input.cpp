@@ -154,6 +154,8 @@ bool Input::action(InputAction action) const {
 		return gsGetKeyState(GKEY_SPACE);
 	case InputAction::DEBUG_Down:
 		return gsGetKeyState(GKEY_LSHIFT);
+    case InputAction::DEBUG_Sprint:
+        return gsGetKeyState(GKEY_LCONTROL);
 	default:
 		return false;
 	}

@@ -199,21 +199,23 @@ void GameScene::game_start() {
     // カスケードシャドウのシャドウマップの分割位置を調整
     gsSetShadowMapCascadeLamda(0.7f);
     // シャドウの濃さを設定(0.0:濃い～1.0:薄い)
-    gsSetShadowMapAttenuation(0.25f);
+    gsSetShadowMapAttenuation(0.125f);
     // シャドウマップのポリゴンオフセットを設定する
     gsEnableShadowMapPolygonOffset();
     gsSetShadowMapPolygonOffset(2.5f, 1.0f);
 
+    /*
     // 通常フォグの設定
     GScolor4 color{ 1.0f, 1.0f, 1.0f, 1.0f };
     const float fog_color[4]{ color.r, color.g, color.b, color.a };
-    const float fog_start{ 10.0f };
+    const float fog_start{ 50.0f };
     const float fog_end{ 300.0f };
     glFogi(GL_FOG_MODE, GL_LINEAR);     // 線形フォグ
     glFogfv(GL_FOG_COLOR, fog_color);   // フォグの色
     glFogf(GL_FOG_START, fog_start);    // フォグの開始位置（視点からの距離）
     glFogf(GL_FOG_END, fog_end);        // フォグの終了位置（視点からの距離）
     glEnable(GL_FOG);                   // フォグを有効にする
+    */
 
     // アクションスコアの初期化
     world_.action_score().init();
@@ -223,7 +225,7 @@ void GameScene::game_start() {
     // フィールドの追加
     world_.add_field(new Field{ (GSuint)OctreeID::Mesh, (GSuint)OctreeID::Collider, (GSuint)TextureID::Skybox });
     // ライトの追加
-    world_.add_light(new Light{ GSvector3{ 55.0f, -180.0f, 0.0f } });
+    world_.add_light(new Light{ GSvector3{ 58.0f, -47.0f, -14.0f } });
 
     // アタックコライダーのプールを追加
     world_.add_attack_collider_pool(new AttackColliderPool{ &world_ });

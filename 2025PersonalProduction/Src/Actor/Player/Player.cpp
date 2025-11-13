@@ -153,7 +153,7 @@ void Player::update(float delta_time) {
 
 	ImGui::Begin("App Window");
 	const ScreenData& screen = Screen::get_instance().get_current_data();
-	ImGui::Text("fps %f", delta_time * screen.refresh_rate);
+	ImGui::Text("fps %d", (int)std::round(screen.refresh_rate / delta_time));
 	ImGui::Text("width %d height %d", screen.width_px, screen.height_px);
 	std::string input_type = "input ";
 	if (input_.is_pad()) input_type += "gamepad";
