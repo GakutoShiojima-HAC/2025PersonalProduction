@@ -32,8 +32,7 @@ enum class InputAction {
     DEBUG_CameraActive, // カメラ有効化
     DEBUG_Up,           // 上昇
     DEBUG_Down,         // 下降
-
-
+    DEBUG_Sprint,       // 加速移動
 };
 
 class Input {
