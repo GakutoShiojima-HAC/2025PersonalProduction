@@ -204,16 +204,18 @@ void GameScene::game_start() {
     gsEnableShadowMapPolygonOffset();
     gsSetShadowMapPolygonOffset(2.5f, 1.0f);
 
+    /*
     // 通常フォグの設定
     GScolor4 color{ 1.0f, 1.0f, 1.0f, 1.0f };
     const float fog_color[4]{ color.r, color.g, color.b, color.a };
-    const float fog_start{ 10.0f };
+    const float fog_start{ 50.0f };
     const float fog_end{ 300.0f };
     glFogi(GL_FOG_MODE, GL_LINEAR);     // 線形フォグ
     glFogfv(GL_FOG_COLOR, fog_color);   // フォグの色
     glFogf(GL_FOG_START, fog_start);    // フォグの開始位置（視点からの距離）
     glFogf(GL_FOG_END, fog_end);        // フォグの終了位置（視点からの距離）
     glEnable(GL_FOG);                   // フォグを有効にする
+    */
 
     // アクションスコアの初期化
     world_.action_score().init();
