@@ -199,7 +199,7 @@ void GameScene::game_start() {
     // カスケードシャドウのシャドウマップの分割位置を調整
     gsSetShadowMapCascadeLamda(0.7f);
     // シャドウの濃さを設定(0.0:濃い～1.0:薄い)
-    gsSetShadowMapAttenuation(0.25f);
+    gsSetShadowMapAttenuation(0.125f);
     // シャドウマップのポリゴンオフセットを設定する
     gsEnableShadowMapPolygonOffset();
     gsSetShadowMapPolygonOffset(2.5f, 1.0f);
@@ -225,7 +225,7 @@ void GameScene::game_start() {
     // フィールドの追加
     world_.add_field(new Field{ (GSuint)OctreeID::Mesh, (GSuint)OctreeID::Collider, (GSuint)TextureID::Skybox });
     // ライトの追加
-    world_.add_light(new Light{ GSvector3{ 55.0f, -180.0f, 0.0f } });
+    world_.add_light(new Light{ GSvector3{ 58.0f, -47.0f, -14.0f } });
 
     // アタックコライダーのプールを追加
     world_.add_attack_collider_pool(new AttackColliderPool{ &world_ });
