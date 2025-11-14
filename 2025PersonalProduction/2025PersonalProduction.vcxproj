@@ -144,6 +144,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Actor\CinemaActor\EnemyCounter.cpp" />
     <ClCompile Include="Src\Actor\Enemy\SimpleEnemy\SimpleEnemy.cpp" />
     <ClCompile Include="Src\Actor\Enemy\SimpleEnemy\SimpleEnemyGenerator.cpp" />
     <ClCompile Include="Src\Actor\Gimmick\Elevator\Elevator.cpp" />
@@ -267,6 +268,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Actor\CinemaActor\EnemyCounter.h" />
     <ClInclude Include="Src\Actor\Gimmick\Elevator\Elevator.h" />
     <ClInclude Include="Src\Actor\Gimmick\Elevator\ElevatorGenerator.h" />
     <ClInclude Include="Src\Engine\Core\Actor\Pawn\PawnParameter.h" />
