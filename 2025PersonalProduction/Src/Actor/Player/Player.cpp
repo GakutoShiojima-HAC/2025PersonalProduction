@@ -33,8 +33,6 @@
 #include "GUI/InteractUI.h"
 #include "Score/ActionScore.h"
 
-// 衝突判定用の半径
-const float RADIUS{ 0.4f };
 // 移動時のカメラ向きへの回転角度
 const float TURN_SPEED{ 18.0f };
 // 空中移動時のカメラ向きへの回転角度
@@ -77,9 +75,7 @@ Player::Player(IWorld* world, const GSvector3& position, const GSvector3& lookat
 	camera_ = camera;
 	camera_->set_owner(this);
 
-	height_ = 1.6f;
-	head_offset_ = height_;
-	foot_offset_ = 0.05f;
+    init_parameter(PawnParameter::get_type("Normal"));
 
     // タイムスケールを受けない
     enable_timescale_ = false;
@@ -89,9 +85,6 @@ Player::Player(IWorld* world, const GSvector3& position, const GSvector3& lookat
 	mesh_ = { (GSuint)MeshID::Player, (GSuint)MeshID::Player, (GSuint)MeshID::Player };
 	add_state();
 	
-    // 衝突判定球を生成
-    collider_ = BoundingSphere{ RADIUS, GSvector3{ 0.0f, height_ / 2.0f, 0.0f } };
-
 	transform_.position(position);
 	transform_.lookAt(lookat);
 	mesh_.transform(transform_.localToWorldMatrix());

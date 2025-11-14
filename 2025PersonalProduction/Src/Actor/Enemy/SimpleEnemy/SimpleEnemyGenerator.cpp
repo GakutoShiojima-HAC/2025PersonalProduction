@@ -9,9 +9,7 @@ SimpleEnemyGenerator::SimpleEnemyGenerator(const json& j, World* world) {
     if (!MyJson::is_object(j, "Param")) return;
     auto param = j["Param"];
 
-    info_.height = MyJson::get_float(param, "Height");
-    info_.foot_offset = MyJson::get_float(param, "FootOffset");
-    info_.radius = MyJson::get_float(param, "Radius");
+    info_.type = MyJson::get_string(param, "Type");
 
     info_.move_speed = MyJson::get_float(param, "MoveSpeed");
     info_.skinmesh = Assets::to_mesh_id(MyJson::get_string(param, "SkinMeshID"));
