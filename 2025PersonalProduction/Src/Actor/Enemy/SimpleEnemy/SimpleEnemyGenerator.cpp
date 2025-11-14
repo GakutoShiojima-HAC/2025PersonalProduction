@@ -7,7 +7,7 @@ SimpleEnemyGenerator::SimpleEnemyGenerator(const json& j, World* world) {
 
     info_.name = MyJson::get_string(j, "Name");
     if (!MyJson::is_object(j, "Param")) return;
-    auto param = j["Param"];
+    auto& param = j["Param"];
 
     info_.type = MyJson::get_string(param, "Type");
 
@@ -25,7 +25,7 @@ SimpleEnemyGenerator::SimpleEnemyGenerator(const json& j, World* world) {
     info_.falter_rate = MyJson::get_float(param, "FalterRate");
 
     if (!MyJson::is_object(param, "Motion")) return;
-    auto motion = param["Motion"];
+    auto& motion = param["Motion"];
 
     info_.motion_idle = MyJson::get_int(motion, "Idle");
     info_.motion_move = MyJson::get_int(motion, "Move");

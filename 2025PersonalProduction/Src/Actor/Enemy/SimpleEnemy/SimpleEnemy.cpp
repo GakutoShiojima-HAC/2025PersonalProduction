@@ -24,7 +24,7 @@ SimpleEnemy::SimpleEnemy(IWorld* world, const GSvector3& position, const GSvecto
 
     // ナビメッシュ追加
     navmesh_ = { this, world_->navmesh() };
-    navmesh_.offset_ratio() = 0.25f;
+    navmesh_.offset_ratio() = 0.0f;
 
     mesh_ = { info.skinmesh, info.skinmesh, info.skinmesh };
     add_state();
@@ -51,6 +51,11 @@ void SimpleEnemy::update(float delta_time) {
 
 void SimpleEnemy::draw() const {
     mesh_.draw();
+
+#ifdef _DEBUG
+    navmesh_.draw_path();
+#endif
+
 }
 
 void SimpleEnemy::draw_gui() const {
