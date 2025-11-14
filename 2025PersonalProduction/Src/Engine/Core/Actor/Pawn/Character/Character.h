@@ -41,6 +41,12 @@ public:
     /// <returns>delta_time</returns>
     float state_timer() const;
 
+    /// <summary>
+    /// 現在のステート番号
+    /// </summary>
+    /// <returns>ステート番号</returns>
+    GSuint current_state_num() const;
+
 protected:
 	/// <summary>
 	/// ステートの追加
