@@ -51,7 +51,7 @@ void Timeline::load(const std::string& json_file) {
         json data_json;
         if (!MyJson::is_json(data_path, data_json)) continue;
         // 再生用のデータ名を取得
-        const std::string data_name = MyJson::get_string(data_json, "Name");
+        const std::string data_name = it.key();
         // 定義されているパラメータを全て回す
         for (auto it = data_json.begin(); it != data_json.end(); ++it) {
             const std::string parameter_name = it.key();
