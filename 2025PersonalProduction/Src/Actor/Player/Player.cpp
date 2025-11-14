@@ -736,6 +736,18 @@ void Player::get_interact_actor_list() {
         // 対象として追加
         interact_actors_.push_back(actor);
     }
+
+    for (Actor* actor : world_->get_field()->get_all_actor()) {
+        // インタラクトできないなら次
+        if (!actor->can_interact()) continue;
+        // 死んでるなら次
+        if (actor->is_dead()) continue;
+        // 距離外なら次
+        float r = (transform_.position() - actor->transform().position()).magnitude();
+        if (r > 1.5f) continue;
+        // 対象として追加
+        interact_actors_.push_back(actor);
+    }
 }
 
 void Player::add_attack_animation_event(const PlayerInfo& info) {
