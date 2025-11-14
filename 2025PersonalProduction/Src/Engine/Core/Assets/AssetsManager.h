@@ -28,8 +28,6 @@ struct LoadAssets {
 	vector<pair<GSuint, std::string>> bgm;
 	vector<pair<GSuint, std::string>> se;
 	vector<pair<GSuint, std::string>> effect;
-    std::string light_map;
-    std::string reflection_probe;
 };
 
 // 読み込んだアセット

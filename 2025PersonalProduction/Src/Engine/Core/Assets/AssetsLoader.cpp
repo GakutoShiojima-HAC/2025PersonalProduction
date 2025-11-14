@@ -77,8 +77,6 @@ bool AssetsLoader::load_by_json(const std::string& file_path, const std::string&
             object_load(request, i, to, file_path);
         }
     }
-    request->light_map = j.contains("LightMap") && j["LightMap"].is_string() ? j["LightMap"].get<std::string>() : "";
-    request->reflection_probe = j.contains("ReflectionProbe") && j["ReflectionProbe"].is_string() ? j["ReflectionProbe"].get<std::string>() : "";
 
     // 読み込む
     AssetsManager::get_instance().load_asset(request);

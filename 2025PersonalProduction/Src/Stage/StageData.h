@@ -3,11 +3,30 @@
 
 #include <string>
 
-struct StageDataStruct {
+/// <summary>
+/// ロード時に使用するステージ構成
+/// </summary>
+struct StageLoadConfigData {
+    // ナビメッシュパス
+    std::string navmesh{ "" };
+    // ライトマップパス
+    std::string lightmap{ "" };
+    // リフレクションプローブパス
+    std::string refprobe{ "" };
+
+};
+
+/// <summary>
+/// ステージ構成
+/// </summary>
+struct StageConfigData {
     // ステージ名
     std::string name{ "unknown" };
     // データのフォルダ
     std::string folder{ "" };
+
+    // ライトの角度(Unity基準)
+    GSvector3 light_angle{ 0.0f, 0.0f, 0.0f };
 
     // タイマーを使用するかどうか
     bool use_timer{ true };
@@ -26,23 +45,24 @@ public:
     /// ステージデータを読み込む
     /// </summary>
     /// <param name="folder_path">= フォルダパス</param>
-    void load(const std::string& folder_path);
+    /// <returns>ロード時に使用するステージ構成</returns>
+    StageLoadConfigData load(const std::string& folder_path);
 
 public:
     /// <summary>
     /// ステージデータの取得
     /// </summary>
     /// <returns>ステージデータ</returns>
-    StageDataStruct& data();
+    StageConfigData& data();
 
     /// <summary>
     /// ステージデータの取得(const)
     /// </summary>
     /// <returns>ステージデータ</returns>
-    const StageDataStruct& data() const;
+    const StageConfigData& data() const;
 
 private:
-    StageDataStruct data_;
+    StageConfigData data_;
 
 public:
     // コピー禁止

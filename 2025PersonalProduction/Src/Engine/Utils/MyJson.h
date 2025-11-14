@@ -94,6 +94,20 @@ namespace MyJson {
             return json_object[object_name.c_str()].get<bool>();
         return not_found_param;
     }
+
+    /// <summary>
+    /// jsonオブジェクトからvector3を取り出す
+    /// </summary>
+    /// <param name="json_object">= jsonオブジェクト</param>
+    /// <param name="object_name">= オブジェクト名</param>
+    /// <param name="not_found_param">= 見つからなかったときのパラメータ</param>
+    /// <returns>GSvector3</returns>
+    inline GSvector3 get_vector3(const json& json_object, const std::string& object_name, const GSvector3& not_found_param = GSvector3{ -1.0f, -1.0f, -1.0f }) {
+        if (!json_object.contains(object_name) || !json_object[object_name].is_array() || json_object[object_name].size() != 3) return not_found_param;
+        const auto& ary = json_object[object_name];
+        if (!ary[0].is_number() || !ary[1].is_number() || !ary[2].is_number()) return not_found_param;
+        return GSvector3{ ary[0].get<float>(), ary[1].get<float>(),ary[2].get<float>() };
+    }
 }
 
 #endif
