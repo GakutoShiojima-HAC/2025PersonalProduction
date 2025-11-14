@@ -21,6 +21,7 @@
     X(EnemySlimeToxic) \
     X(EnemySlimeManToxic) \
     X(EnemyRockGolemMud) \
+    X(GimmickDoor) \
     X(GimmickElevator) \
     X(WeaponSword1) \
     X(WeaponSword2) \
