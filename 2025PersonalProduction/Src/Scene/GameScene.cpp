@@ -144,48 +144,52 @@ bool& GameScene::enable_draw_game_gui() {
 
 void GameScene::load_data() {
     // 読み込み処理の数から一つの処理分の進捗率を計算
-    const int count = 8;
+    const int count = 11;
     const float progress = 1.0f / (float)count;
+
+    // 進捗率更新
+    auto next = [&]() {
+        load_progress_ += progress;
+    };
 
     // 共通アセットの読み込み
     if (AssetsManager::get_instance().find(AssetsLoader::GAME_COMMON_ASSET_NAME));
     else  AssetsLoader::load_by_json("Resource/Private/Common/Assets/game.json", AssetsLoader::GAME_COMMON_ASSET_NAME);
-    load_progress_ += progress;
+                                                                                                                                next();
 
     // アイテムデータの読み込み
-    ItemDataManager::get_instance().load();
-    load_progress_ += progress;
+    ItemDataManager::get_instance().load();                                                                                     next();
 
     // アクターデータの読み込み
-    actor_generator_.load(&world_);
-    load_progress_ += progress;
+    actor_generator_.load(&world_);                                                                                             next();
 
     // セーブデータの読み込み
-    world_.game_save_data().load(load_savedata_name_);
-    load_progress_ += progress;
+    world_.game_save_data().load(load_savedata_name_);                                                                          next();
+
+    // ステージデータのフォルダを取得
+    StageFile sf;                                                                                                               next();
 
     // ステージデータの読み込み
-    StageFile sf;
     const std::string folder_path = world_.game_save_data().get().stage < 0 ? sf.get_path(-1) : sf.get_path(load_stage_index_);
-    stage_data_.load(folder_path);
-    load_progress_ += progress;
+    const StageLoadConfigData data = stage_data_.load(folder_path);                                                             next();
 
     // ステージ固有アセットの読み込み
-    AssetsLoader::load_by_json(folder_path + "/asset.json", AssetsLoader::GAME_STAGE_ASSET_NAME);
-    load_progress_ += progress;
+    AssetsLoader::load_by_json(folder_path + "/asset.json", AssetsLoader::GAME_STAGE_ASSET_NAME);                               next();
+
+    // ライト関係の読み込み
+    gsLoadLightmap(0, data.lightmap.c_str());                                                                                   next();
+    gsLoadReflectionProbe(0, data.refprobe.c_str());                                                                            next();
 
     // ナビメッシュデータの読み込み
-    world_.add_navmesh(new NavMeshSurface{ folder_path + "/navmesh.txt" });
-    load_progress_ += progress;
+    world_.add_navmesh(new NavMeshSurface{ data.navmesh });                                                                     next();
 
     // タイムラインデータの読み込み
 #ifdef _DEBUG
-    world_.timeline().init(&world_, true);
+    world_.timeline().init(&world_, true);  // エディタ有効
 #else
-    world_.timeline().init(&world_, false);
+    world_.timeline().init(&world_, false); // エディタ無効
 #endif
-    world_.timeline().load(folder_path + "/timeline.json");
-    load_progress_ += progress;
+    world_.timeline().load(folder_path + "/timeline.json");                                                                     next();
 }
 
 void GameScene::game_start() {
