@@ -7,6 +7,8 @@ ElevatorGenerator::ElevatorGenerator(const json& j, World* world) {
     // json‚Íg‚í‚È‚¢
 }
 
-void ElevatorGenerator::generate(const GSvector3& position, const GSvector3& lookat, int hp, int damage, const json& param) {
-    world_->get_field()->add(new Elevator{ world_, position, MyJson::get_vector3(param, "End"), MyJson::get_float(param, "Time") });
+Actor* ElevatorGenerator::generate(const GSvector3& position, const GSvector3& lookat, int hp, int damage, const json& param) {
+    FieldActor* p = new Elevator{ world_, position, MyJson::get_vector3(param, "End"), MyJson::get_float(param, "Time") };
+    world_->get_field()->add(p);
+    return p;
 }

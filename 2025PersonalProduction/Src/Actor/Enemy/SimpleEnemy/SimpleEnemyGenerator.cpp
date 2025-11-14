@@ -35,9 +35,11 @@ SimpleEnemyGenerator::SimpleEnemyGenerator(const json& j, World* world) {
 
 }
 
-void SimpleEnemyGenerator::generate(const GSvector3& position, const GSvector3& lookat, int hp, int damage, const json& param) {
+Actor* SimpleEnemyGenerator::generate(const GSvector3& position, const GSvector3& lookat, int hp, int damage, const json& param) {
     SimpleEnemyInfo info = info_;
     info.hp = hp;
     info.attack_damage = damage;
-    world_->add_character(new SimpleEnemy{ world_, position, lookat, info });
+    Character* p = new SimpleEnemy{ world_, position, lookat, info };
+    world_->add_character(p);
+    return p;
 }

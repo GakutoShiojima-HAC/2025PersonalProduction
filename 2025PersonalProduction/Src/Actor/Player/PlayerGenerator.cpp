@@ -91,14 +91,16 @@ PlayerGenerator::PlayerGenerator(const json& j, World* world) {
     }
 }
 
-void PlayerGenerator::generate(const GSvector3& position, const GSvector3& lookat, int hp, int damage, const json& param) {
+Actor* PlayerGenerator::generate(const GSvector3& position, const GSvector3& lookat, int hp, int damage, const json& param) {
     // 生成は一体のみ
-    if (!can_generate_) return;
+    if (!can_generate_) return nullptr;
 
     // プレイヤーカメラを取得
     PlayerCamera* camera = dynamic_cast<PlayerCamera*>(world_->find_camera(CameraTag::Player));
 
     // 生成
-    world_->add_character(new Player{ world_, position, lookat, camera, info_ });
+    Character* p = new Player{ world_, position, lookat, camera, info_ };
+    world_->add_character(p);
     can_generate_ = false;
+    return p;
 }
