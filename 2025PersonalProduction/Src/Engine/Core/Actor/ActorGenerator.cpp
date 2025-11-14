@@ -5,6 +5,7 @@
 #include "Actor/StageTeleporter/StageTeleporterGenerator.h"
 #include "Actor/Player/PlayerGenerator.h"
 #include "Actor/Enemy/SimpleEnemy/SimpleEnemyGenerator.h"
+#include "Actor/Gimmick/Elevator/ElevatorGenerator.h"
 
 namespace fs = std::experimental::filesystem;
 
@@ -39,6 +40,7 @@ void ActorGenerator::load(World* world) {
         if (key == StageTereporterGeneratorKey) data_[name] = new StageTereporterGenerator(j, world);
         else if (key == PlayerGeneratorKey) data_[name] = new PlayerGenerator(j, world);
         else if (key == SimpleEnemyGeneratorKey) data_[name] = new SimpleEnemyGenerator(j, world);
+        else if (key == ElevatorGeneratorKey) data_[name] = new ElevatorGenerator(j, world);
     }
 }
 
@@ -51,8 +53,8 @@ void ActorGenerator::generate(const std::string& json_file) {
         const std::string key = MyJson::get_string(item, "Name");
         
         // ã§í ÉpÉâÉÅÅ[É^ÇéÊìæ
-        const GSvector3 position = GSvector3{ item["Position"][0], item["Position"][1], item["Position"][2] };
-        const GSvector3 lookat = GSvector3{ item["LookAt"][0], item["LookAt"][1], item["LookAt"][2] };
+        const GSvector3 position = MyJson::get_vector3(item, "Position");
+        const GSvector3 lookat = MyJson::get_vector3(item, "LookAt"); 
         const int hp = MyJson::get_int(item, "HP");
         const int damage = MyJson::get_int(item, "Damage");
         json param;
