@@ -2,6 +2,7 @@
 #define STAGE_DATA_H_
 
 #include <string>
+#include <gslib.h>
 
 /// <summary>
 /// ロード時に使用するステージ構成
@@ -32,6 +33,10 @@ struct StageConfigData {
     bool use_timer{ true };
     // ステージ終了後にリザルトを描画するかどうか
     bool use_result{ true };
+    // 通常エネミーのカウンターとシネマイベントを生成するかどうか
+    bool use_normal_enemy_counter{ true };
+    // カウンターの生成座標
+    GSvector3 enemy_counter_position{ 0.0f, 0.0f, 0.0f };
 };
 
 class StageData {

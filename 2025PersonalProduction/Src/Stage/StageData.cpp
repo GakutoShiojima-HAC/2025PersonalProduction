@@ -15,6 +15,8 @@ StageLoadConfigData StageData::load(const std::string& folder_path) {
     data_.light_angle = MyJson::get_vector3(j, "LightAngle");
     data_.use_timer = MyJson::get_boolean(j, "Timer");
     data_.use_result = MyJson::get_boolean(j, "Result");
+    data_.use_normal_enemy_counter = MyJson::get_boolean(j, "EnemyCounter");
+    data_.enemy_counter_position = MyJson::get_vector3(j, "EnemyCounterPosition");
 
     // ロード用構成データ読み込み
     load_data.navmesh = MyJson::get_string(j, "NavMesh");
