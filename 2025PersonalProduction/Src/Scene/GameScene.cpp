@@ -221,21 +221,24 @@ void GameScene::game_start() {
     glEnable(GL_FOG);                   // フォグを有効にする
     */
 
+    // ステージデータの取得
+    const StageConfigData& config = stage_data_.data();
+
     // アクションスコアの初期化
     world_.action_score().init();
     // タイマーの初期化
-    world_.time().init(stage_data_.data().use_timer);
+    world_.time().init(config.use_timer);
 
     // フィールドの追加
     world_.add_field(new Field{ (GSuint)OctreeID::Mesh, (GSuint)OctreeID::Collider, (GSuint)TextureID::Skybox });
     // ライトの追加
-    world_.add_light(new Light{ GSvector3{ 58.0f, -47.0f, -14.0f } });
+    world_.add_light(new Light{ config.light_angle });
 
     // アタックコライダーのプールを追加
     world_.add_attack_collider_pool(new AttackColliderPool{ &world_ });
 
     // デフォルトカメラの追加
-    world_.add_camera(new FixedCamera{ &world_, GSvector3{ 0.0f, 3.0f, -10.0f }, GSvector3{ 0.0f, 2.0f, 0.0f } });
+    //world_.add_camera(new FixedCamera{ &world_, GSvector3{ 0.0f, 3.0f, -10.0f }, GSvector3{ 0.0f, 2.0f, 0.0f } });    // 11/14 いる？
     // タイムライン用カメラの追加
     world_.add_camera(new TimelineCamera{ &world_ });
     // エディタカメラの追加
@@ -263,7 +266,7 @@ void GameScene::game_start() {
     world_.add_actor(new ItemActor{ &world_, GSvector3{ 0.0f, 0.0f, 3.0f }, ItemData::Data{ ItemType::Weapon, 1 } });
 
     // アクターの生成
-    actor_generator_.generate(stage_data_.data().folder + "/generate.json");
+    actor_generator_.generate(config.folder + "/generate.json");
 
     /*
      *  END
@@ -281,10 +284,8 @@ void GameScene::game_start() {
 
     // GUIの描画を有効化
     world_.enable_draw_gui() = true;
-
     // タイムスケールを初期化
     world_.timescale() = 1.0f;
-
     // 同期
     world_.update(0.0f);
 }
