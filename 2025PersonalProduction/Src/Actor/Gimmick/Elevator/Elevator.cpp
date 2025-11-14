@@ -76,3 +76,7 @@ bool Elevator::can_interact() const {
 std::string Elevator::interact_text() const {
     return "エレベーター";
 }
+
+void Elevator::die() {
+    // 外部から削除させない
+}

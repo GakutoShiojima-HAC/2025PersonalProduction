@@ -29,3 +29,7 @@ float Character::state_timer() const {
     return state_timer_;
 }
 
+GSuint Character::current_state_num() const {
+	return state_.get_current_state();
+}
+

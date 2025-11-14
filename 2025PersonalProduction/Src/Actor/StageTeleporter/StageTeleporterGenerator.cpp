@@ -7,6 +7,8 @@ StageTereporterGenerator::StageTereporterGenerator(const json& j, World* world) 
     // json‚Íg‚í‚È‚¢
 }
 
-void StageTereporterGenerator::generate(const GSvector3& position, const GSvector3& lookat, int hp, int damage, const json& param) {
-    world_->add_actor(new StageTereporter{ world_, position, lookat, MyJson::get_int(param, "Stage") });
+Actor* StageTereporterGenerator::generate(const GSvector3& position, const GSvector3& lookat, int hp, int damage, const json& param) {
+    Actor* p = new StageTereporter{ world_, position, lookat, MyJson::get_int(param, "Stage") };
+    world_->add_actor(p);
+    return p;
 }

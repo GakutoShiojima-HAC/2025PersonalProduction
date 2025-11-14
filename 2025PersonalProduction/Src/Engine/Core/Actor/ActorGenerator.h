@@ -40,9 +40,27 @@ public:
     /// </summary>
     void clear();
 
+public:
+    /// <summary>
+    /// 生成された敵の数を取得
+    /// </summary>
+    /// <returns>数</returns>
+    int count_generate_enemy() const;
+
+    /// <summary>
+    /// 生成されたボスの数を取得
+    /// </summary>
+    /// <returns>数</returns>
+    int count_generate_boss() const;
+
 private:
     // 生成用データ
     std::unordered_map<std::string, IActorGenerator*> data_;
+
+    // 生成された敵の数
+    int generate_enemy_{ 0 };
+    // 生成されたボスの数
+    int generate_boss_{ 0 };
 
 public:
     // コピー禁止

@@ -66,19 +66,35 @@ void ActorGenerator::generate(const std::string& json_file) {
     }
 }
 
-void ActorGenerator::generate(const std::string& actor_key, const GSvector3& position, const GSvector3& lookat, int hp, int damage, const json& param) {
-    // 存在しないキーなら生成しない
-    auto it = data_.find(actor_key);
-    if (it == data_.end()) return;
-
-    // 生成
-    it->second->generate(position, lookat, hp, damage, param);
-}
-
 void ActorGenerator::clear() {
     for (auto& i : data_) {
         delete i.second;
         i.second = nullptr;
     }
     data_.clear();
+
+    generate_enemy_ = 0;
+    generate_boss_ = 0;
+}
+
+int ActorGenerator::count_generate_enemy() const {
+    return generate_enemy_;
+}
+
+int ActorGenerator::count_generate_boss() const {
+    return generate_boss_;
+}
+
+void ActorGenerator::generate(const std::string& actor_key, const GSvector3& position, const GSvector3& lookat, int hp, int damage, const json& param) {
+    // 存在しないキーなら生成しない
+    auto it = data_.find(actor_key);
+    if (it == data_.end()) return;
+
+    // 生成
+    Actor* actor = it->second->generate(position, lookat, hp, damage, param);
+
+    // 生成された敵の数をカウント
+    if (actor == nullptr || actor->tag() != ActorTag::Enemy) return;
+    if (MyJson::get_boolean(param, "Boss", false)) ++generate_boss_;
+    else ++generate_enemy_;
 }

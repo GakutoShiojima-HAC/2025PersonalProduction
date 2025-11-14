@@ -24,3 +24,7 @@ void StageTereporter::react(Actor& other) {
         die();
     }
 }
+
+void StageTereporter::die() {
+    // ŠO•”‚©‚çíœ‚³‚¹‚È‚¢
+}

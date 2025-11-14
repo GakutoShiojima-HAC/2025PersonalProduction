@@ -11,7 +11,7 @@ public:
     SimpleEnemyGenerator(const json& j, World* world);
 
 public:
-    void generate(const GSvector3& position, const GSvector3& lookat, int hp, int damage, const json& param) override;
+    Actor* generate(const GSvector3& position, const GSvector3& lookat, int hp, int damage, const json& param) override;
 
 private:
     World* world_{ nullptr };

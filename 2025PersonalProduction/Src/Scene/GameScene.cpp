@@ -14,6 +14,7 @@
 #include "Camera/TimelineCamera.h"
 #include "Camera/PlayerCamera.h"
 #include "Stage/StageFile.h"
+#include "Actor/CinemaActor/EnemyCounter.h"
 
 // 一時的 ローダーやマネージャーを作ったら不要
 #include <gslib.h>	// シーン終了用
@@ -265,12 +266,15 @@ void GameScene::game_start() {
     // TODO 生成を外部から行う
     world_.add_actor(new ItemActor{ &world_, GSvector3{ 0.0f, 0.0f, 3.0f }, ItemData::Data{ ItemType::Weapon, 1 } });
 
-    // アクターの生成
-    actor_generator_.generate(config.folder + "/generate.json");
-
     /*
      *  END
      */
+
+    // アクターの生成
+    actor_generator_.generate(config.folder + "/generate.json");
+
+    // エネミーカウンターの生成
+    if (config.use_normal_enemy_counter) world_.get_field()->add(new EnemyCounter{ &world_, config.enemy_counter_position, actor_generator_.count_generate_enemy() });
 
 #ifndef _DEBUG
     // エディタでの動的生成のためにデバッグ中はデータを残しておく

@@ -10,7 +10,9 @@ public:
     ~StageTereporter() = default;
 
 public:
-    void react(Actor& other);
+    void react(Actor& other) override;
+
+    void die() override;
 
 private:
     int stage_id_{ 0 };

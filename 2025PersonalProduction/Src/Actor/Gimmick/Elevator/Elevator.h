@@ -21,13 +21,15 @@ public:
     ~Elevator() = default;
 
 public:
-    virtual void update(float delta_time) override;
+    void update(float delta_time) override;
 
-    virtual void message(const std::string& message, std::any& param)override;
+    void message(const std::string& message, std::any& param)override;
 
-    virtual bool can_interact() const override;
+    bool can_interact() const override;
 
-    virtual std::string interact_text() const override;
+    std::string interact_text() const override;
+
+    void die() override;
 
 private:
     enum class State {
