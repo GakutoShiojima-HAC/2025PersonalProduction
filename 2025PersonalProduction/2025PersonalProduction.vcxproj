@@ -146,6 +146,8 @@
   <ItemGroup>
     <ClCompile Include="Src\Actor\Enemy\SimpleEnemy\SimpleEnemy.cpp" />
     <ClCompile Include="Src\Actor\Enemy\SimpleEnemy\SimpleEnemyGenerator.cpp" />
+    <ClCompile Include="Src\Actor\Gimmick\Elevator\Elevator.cpp" />
+    <ClCompile Include="Src\Actor\Gimmick\Elevator\ElevatorGenerator.cpp" />
     <ClCompile Include="Src\Actor\ItemActor\ItemActor.cpp" />
     <ClCompile Include="Src\Actor\Player\PlayerGenerator.cpp" />
     <ClCompile Include="Src\Actor\StageTeleporter\StageTeleporter.cpp" />
@@ -265,6 +267,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Actor\Gimmick\Elevator\Elevator.h" />
+    <ClInclude Include="Src\Actor\Gimmick\Elevator\ElevatorGenerator.h" />
     <ClInclude Include="Src\Engine\Core\Actor\Pawn\PawnParameter.h" />
     <ClInclude Include="Src\Actor\ActorTag.h" />
     <ClInclude Include="Src\Actor\Enemy\SimpleEnemy\SimpleEnemy.h" />
