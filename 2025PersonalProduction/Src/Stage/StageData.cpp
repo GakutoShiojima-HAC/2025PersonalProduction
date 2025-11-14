@@ -12,6 +12,7 @@ StageLoadConfigData StageData::load(const std::string& folder_path) {
 
     // 構成データ読み込み
     data_.name = MyJson::get_string(j, "Name");
+    data_.light_angle = MyJson::get_vector3(j, "LightAngle");
     data_.use_timer = MyJson::get_boolean(j, "Timer");
     data_.use_result = MyJson::get_boolean(j, "Result");
 

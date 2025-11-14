@@ -25,6 +25,9 @@ struct StageConfigData {
     // データのフォルダ
     std::string folder{ "" };
 
+    // ライトの角度(Unity基準)
+    GSvector3 light_angle{ 0.0f, 0.0f, 0.0f };
+
     // タイマーを使用するかどうか
     bool use_timer{ true };
     // ステージ終了後にリザルトを描画するかどうか
