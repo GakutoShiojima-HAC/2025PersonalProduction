@@ -4,6 +4,8 @@
 #include "Engine/Utils/Line.h"
 #include "GameConfig.h"
 
+constexpr float FOOT_OFFSET{ 0.125f };
+
 void Pawn::take_damage(Actor& other, const int damage) {
     hp_ = CLAMP(hp_ - damage, 0, INT_MAX);
 }
@@ -91,10 +93,10 @@ void Pawn::collide_field() {
     GSvector3 position_foot = transform_.position();
     Line head_line;
     head_line.start = position_head + collider_.center;
-    head_line.end = position_head + GSvector3{ 0.0f, head_offset_, 0.0f };
+    head_line.end = position_head + GSvector3{ 0.0f, height_, 0.0f };
     Line foot_line;
     foot_line.start = position_foot + collider_.center;
-    foot_line.end = position_foot + GSvector3{ 0.0f, -foot_offset_, 0.0f };
+    foot_line.end = position_foot + GSvector3{ 0.0f, -FOOT_OFFSET, 0.0f };
 
     // 天井判定
     if (world_->get_field()->collide(head_line, &intersect, nullptr, &field_actor)) {
@@ -162,4 +164,10 @@ void Pawn::on_air() {
 
 void Pawn::on_ground() {
 
+}
+
+void Pawn::init_parameter(PawnParameter::Type type) {
+    height_ = PawnParameter::height(type);
+
+    collider_ = BoundingSphere{ PawnParameter::radius(type), GSvector3{ 0.0f, height_ / 2.0f, 0.0f }};
 }

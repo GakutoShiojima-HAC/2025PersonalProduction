@@ -17,11 +17,8 @@
 #include "Engine/Core/NavMesh/NavMeshAgent.h"
 
 struct SimpleEnemyInfo {
-    float height{ 2.0f };           // 高さ
-    float foot_offset{ 0.05f };     // 足のオフセット
-    float radius{ 0.5f };           // 衝突判定の半径
-    
     std::string name{ "SimpleEnemy" };  // 名前
+    std::string type{ "Normal" };       // タイプ
     int hp{ 5 };                    // 体力
     float move_speed{ 0.25f };      // 移動速度
     

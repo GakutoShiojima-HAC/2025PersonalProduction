@@ -16,8 +16,6 @@
 #include "Engine/Utils/DebugMarker.h"
 #endif
 
-// 衝突判定用の半径
-const float RADIUS{ 0.5f };
 // 無敵時間(秒)
 const float INVINCIBLE_TIME{ 0.5f };
 
@@ -26,12 +24,8 @@ DummyEnemy::DummyEnemy(IWorld* world, const GSvector3& position) {
 	tag_ = ActorTag::Enemy;
 	name_ = "DummyEnemy";
 
-	height_ = 2.0f;
-	head_offset_ = 2.0f;
-	foot_offset_ = 0.05f;
+    init_parameter(PawnParameter::get_type("Normal"));
 
-	// 衝突判定球を生成
-	collider_ = BoundingSphere{ RADIUS, GSvector3{ 0.0f, height_ / 2.0f, 0.0f } };
 
 	mesh_ = { (GSuint)MeshID::DummyEnemy, (GSuint)MeshID::DummyEnemy, (GSuint)MeshID::DummyEnemy };
 	add_state();

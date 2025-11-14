@@ -265,6 +265,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Engine\Core\Actor\Pawn\PawnParameter.h" />
     <ClInclude Include="Src\Actor\ActorTag.h" />
     <ClInclude Include="Src\Actor\Enemy\SimpleEnemy\SimpleEnemy.h" />
     <ClInclude Include="Src\Actor\Enemy\SimpleEnemy\SimpleEnemyGenerator.h" />

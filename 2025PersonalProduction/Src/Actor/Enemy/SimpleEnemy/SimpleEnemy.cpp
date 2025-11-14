@@ -19,9 +19,8 @@ SimpleEnemy::SimpleEnemy(IWorld* world, const GSvector3& position, const GSvecto
     tag_ = ActorTag::Enemy;
     name_ = info.name;
     hp_ = info.hp;
-    height_ = info.height;
-    head_offset_ = height_;
-    foot_offset_ = info.foot_offset;
+
+    init_parameter(PawnParameter::get_type(info.type));
 
     // ナビメッシュ追加
     navmesh_ = { this, world_->navmesh() };
@@ -29,9 +28,6 @@ SimpleEnemy::SimpleEnemy(IWorld* world, const GSvector3& position, const GSvecto
 
     mesh_ = { info.skinmesh, info.skinmesh, info.skinmesh };
     add_state();
-
-    // 衝突判定球を生成
-    collider_ = BoundingSphere{ info.radius, GSvector3{ 0.0f, height_ / 2.0f, 0.0f } };
 
     // 攻撃アニメーションイベントを生成
     mesh_.add_animation_event(info_.motion_attack, info_.attack_event_time, [=] { generate_attack_collider(); });
