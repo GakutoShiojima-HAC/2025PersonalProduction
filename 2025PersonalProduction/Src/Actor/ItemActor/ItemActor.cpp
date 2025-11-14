@@ -2,6 +2,7 @@
 #include "Engine/Core/World/IWorld.h"
 #include "Item/ItemDataManager.h"
 #include "Assets.h"
+#include "Engine/Utils/MyString.h"
 
 ItemActor::ItemActor(IWorld* world, const GSvector3& position) {
     world_ = world;
@@ -64,7 +65,7 @@ bool ItemActor::can_interact() const {
 }
 
 std::string ItemActor::interact_text() const {
-    return interact_text_;
+    return MyString::utf8_to_shiftjis(interact_text_);
 }
 
 void ItemActor::init() {

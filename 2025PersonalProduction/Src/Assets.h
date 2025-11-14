@@ -21,6 +21,7 @@
     X(EnemySlimeToxic) \
     X(EnemySlimeManToxic) \
     X(EnemyRockGolemMud) \
+    X(GimmickElevator) \
     X(WeaponSword1) \
     X(WeaponSword2) \
     X(MAX_SIZE) // 要素数
