@@ -14,6 +14,7 @@
 
 #include "Engine/Core/Actor/Actor.h"
 #include "Engine/Graphics/AnimatedMesh/AnimatedMesh.h"
+#include "Engine/Core/Actor/Pawn/PawnParameter.h"
 
 class AttackCollider;
 
@@ -114,6 +115,12 @@ protected:
     /// </summary>
     virtual void on_ground();
 
+
+    /// <summary>
+    /// パラメータの初期化
+    /// </summary>
+    void init_parameter(PawnParameter::Type type);
+
 protected:
 	// アニメーションメッシュ
 	AnimatedMesh mesh_{ 0, 0, 0, 0 };
@@ -133,10 +140,6 @@ protected:
 
 	// 身長
 	float height_{ 2.0f };
-	// 頭のオフセット
-	float head_offset_{ 0.05f };
-	// 足元のオフセット
-	float foot_offset_{ 0.05f };
 	
 	// 接地しているか
 	bool is_ground_{ false };
