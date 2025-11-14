@@ -95,6 +95,13 @@ public:
 	/// </summary>
 	GSuint& skybox();
 
+public:
+    /// <summary>
+    /// フィールドアクターを全て取得
+    /// </summary>
+    /// <returns>全てのフィールドアクター</returns>
+    std::vector<Actor*> get_all_actor();
+
 private:
 	// オクツリー
 	GSuint octree_{ 0 };

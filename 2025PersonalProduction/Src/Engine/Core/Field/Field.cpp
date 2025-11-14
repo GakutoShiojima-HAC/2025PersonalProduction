@@ -149,3 +149,7 @@ GSuint& Field::collider() {
 GSuint& Field::skybox() {
     return skybox_;
 }
+
+std::vector<Actor*> Field::get_all_actor() {
+    return actors_.get_all();
+}
