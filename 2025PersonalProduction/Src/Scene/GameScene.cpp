@@ -274,7 +274,7 @@ void GameScene::game_start() {
     actor_generator_.generate(config.folder + "/generate.json");
 
     // エネミーカウンターの生成
-    if (config.use_normal_enemy_counter) world_.get_field()->add(new EnemyCounter{ &world_, config.enemy_counter_position, actor_generator_.count_generate_enemy() });
+    if (config.use_normal_enemy_counter) world_.add_actor(new EnemyCounter{ &world_, actor_generator_.count_generate_enemy() });
 
 #ifndef _DEBUG
     // エディタでの動的生成のためにデバッグ中はデータを残しておく
