@@ -1,19 +1,13 @@
 #include "Actor/CinemaActor/EnemyCounter.h"
 #include "Engine/Core/Actor/Pawn/Character/Character.h"
 #include "State/Player/PlayerState.h"
-#include "Assets.h"
 
-EnemyCounter::EnemyCounter(IWorld* world, const GSvector3& position, int enemy_count) {
+EnemyCounter::EnemyCounter(IWorld* world, int enemy_count) {
     world_ = world;
     name_ = "EnemyCounter";
     tag_ = ActorTag::None;
     enable_collider_ = false;
     enable_timescale_ = false;
-
-    mesh_ = (GSuint)MeshID::GimmickDoor;
-    mesh_collider_ = (GSuint)MeshID::GimmickDoor;
-
-    transform_.position(position);
 
     int count{ 0 };
     for (const auto& actor : world_->get_all_actor()) {
@@ -34,7 +28,7 @@ void EnemyCounter::update(float delta_time) {
         if (count <= counter_) {
             // タイムラインを再生する
             state_ = State::Event;
-            world_->play_timeline("OpenDoor");
+            world_->play_timeline("BreakBarrier");
             // プレイヤーの動きを止めておく
             Character* player = world_->find_character("Player");
             if (player != nullptr) {

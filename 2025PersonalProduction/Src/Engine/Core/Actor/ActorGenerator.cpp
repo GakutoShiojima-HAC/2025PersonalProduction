@@ -6,6 +6,7 @@
 #include "Actor/Player/PlayerGenerator.h"
 #include "Actor/Enemy/SimpleEnemy/SimpleEnemyGenerator.h"
 #include "Actor/Gimmick/Elevator/ElevatorGenerator.h"
+#include "Actor/Gimmick/Barrier/BarrierGenerator.h"
 
 namespace fs = std::experimental::filesystem;
 
@@ -41,6 +42,7 @@ void ActorGenerator::load(World* world) {
         else if (key == PlayerGeneratorKey) data_[name] = new PlayerGenerator(j, world);
         else if (key == SimpleEnemyGeneratorKey) data_[name] = new SimpleEnemyGenerator(j, world);
         else if (key == ElevatorGeneratorKey) data_[name] = new ElevatorGenerator(j, world);
+        else if (key == BarrierGeneratorKey) data_[name] = new BarrierGenerator(j, world);
     }
 }
 

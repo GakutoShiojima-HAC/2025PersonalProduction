@@ -147,6 +147,8 @@
     <ClCompile Include="Src\Actor\CinemaActor\EnemyCounter.cpp" />
     <ClCompile Include="Src\Actor\Enemy\SimpleEnemy\SimpleEnemy.cpp" />
     <ClCompile Include="Src\Actor\Enemy\SimpleEnemy\SimpleEnemyGenerator.cpp" />
+    <ClCompile Include="Src\Actor\Gimmick\Barrier\Barrier.cpp" />
+    <ClCompile Include="Src\Actor\Gimmick\Barrier\BarrierGenerator.cpp" />
     <ClCompile Include="Src\Actor\Gimmick\Elevator\Elevator.cpp" />
     <ClCompile Include="Src\Actor\Gimmick\Elevator\ElevatorGenerator.cpp" />
     <ClCompile Include="Src\Actor\ItemActor\ItemActor.cpp" />
@@ -271,6 +273,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Actor\CinemaActor\EnemyCounter.h" />
+    <ClInclude Include="Src\Actor\Gimmick\Barrier\Barrier.h" />
+    <ClInclude Include="Src\Actor\Gimmick\Barrier\BarrierGenerator.h" />
     <ClInclude Include="Src\Actor\Gimmick\Elevator\Elevator.h" />
     <ClInclude Include="Src\Actor\Gimmick\Elevator\ElevatorGenerator.h" />
     <ClInclude Include="Src\Engine\Core\Actor\Pawn\PawnParameter.h" />
