@@ -48,6 +48,13 @@ public:
 	/// </summary>
 	/// <param name="actor">フィールドアクター</param>
 	void add(FieldActor* field_actor);
+
+    /// <summary>
+    /// 指定した名前を持つアクターを検索
+    /// </summary>
+    /// <param name="name">= 名前</param>
+    /// <returns>見つかればアクターを、見つからなければnullptr</returns>
+    Actor* find(const std::string& name);
 	
 	/// <summary>
 	/// レイとの衝突判定
