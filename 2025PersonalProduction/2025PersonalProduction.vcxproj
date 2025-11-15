@@ -183,7 +183,9 @@
     <ClCompile Include="Src\Engine\Core\Scene\StandardScene.cpp" />
     <ClCompile Include="Src\Engine\Core\Setting\SettingWindow.cpp" />
     <ClCompile Include="Src\Engine\Core\Timeline\Editor\CameraTimelineEditor.cpp" />
+    <ClCompile Include="Src\Engine\Core\Timeline\Editor\SendMessageTimelineEditor.cpp" />
     <ClCompile Include="Src\Engine\Core\Timeline\Parameters\CameraTimelineParameter.cpp" />
+    <ClCompile Include="Src\Engine\Core\Timeline\Parameters\SendMessageTimelineParameter.cpp" />
     <ClCompile Include="Src\Engine\Core\Timeline\Timeline.cpp" />
     <ClCompile Include="Src\Engine\Core\Timeline\TimelineEditor.cpp" />
     <ClCompile Include="Src\Engine\Core\Tween\ColorUnit.cpp" />
@@ -298,8 +300,10 @@
     <ClInclude Include="Src\Engine\Core\Setting\SettingWindow.h" />
     <ClInclude Include="Src\Engine\Core\Timeline\Editor\CameraTimelineEditor.h" />
     <ClInclude Include="Src\Engine\Core\Timeline\Editor\ITimelineEditor.h" />
+    <ClInclude Include="Src\Engine\Core\Timeline\Editor\SendMessageTimelineEditor.h" />
     <ClInclude Include="Src\Engine\Core\Timeline\Parameters\CameraTimelineParameter.h" />
     <ClInclude Include="Src\Engine\Core\Timeline\Parameters\ITimelineParameter.h" />
+    <ClInclude Include="Src\Engine\Core\Timeline\Parameters\SendMessageTimelineParameter.h" />
     <ClInclude Include="Src\Engine\Core\Timeline\Timeline.h" />
     <ClInclude Include="Src\Engine\Core\Timeline\TimelineEditor.h" />
     <ClInclude Include="Src\Engine\Utils\MyMath.h" />
