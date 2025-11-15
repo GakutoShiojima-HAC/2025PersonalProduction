@@ -11,7 +11,7 @@ Actor* BarrierGenerator::generate(const GSvector3& position, const GSvector3& lo
     // ¶¬‚Íˆê‘Ì‚Ì‚İ
     if (!can_generate_) return nullptr;
 
-    FieldActor* p = new Barrier(world_, position);
+    FieldActor* p = new Barrier(world_, position, MyJson::get_string(param, "Type"), MyJson::get_float(param, "Time"), MyJson::get_float(param, "Value"));
     world_->get_field()->add(p);
     return p;
 }
