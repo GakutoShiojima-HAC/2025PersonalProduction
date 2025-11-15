@@ -12,11 +12,11 @@
 #ifndef ENEMY_COUNTER_H_
 #define ENEMY_COUNTER_H_
 
-#include "Engine/Core/Actor/FieldActor/FieldActor.h"
+#include "Engine/Core/Actor/Actor.h"
 
-class EnemyCounter : public FieldActor {
+class EnemyCounter : public Actor {
 public:
-    EnemyCounter(IWorld* world, const GSvector3& position, int enemy_count);
+    EnemyCounter(IWorld* world, int enemy_count);
 
     ~EnemyCounter() = default;
 
