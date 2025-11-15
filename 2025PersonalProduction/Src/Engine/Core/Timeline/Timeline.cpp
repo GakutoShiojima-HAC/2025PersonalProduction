@@ -4,7 +4,9 @@
 #include "TimelineEditor.h"
 
 #include "Parameters/CameraTimelineParameter.h"
+#include "Parameters/SendMessageTimelineParameter.h"
 #include "Editor/CameraTimelineEditor.h"
+#include "Editor/SendMessageTimelineEditor.h"
 
 Timeline::~Timeline() {
     clear();
@@ -34,10 +36,14 @@ void Timeline::init(World* world, bool enable_editor) {
     // タイムラインパラメータを追加
     CameraTimelineParameter* camera_timeline = new CameraTimelineParameter(world);
     timelines_.push_back(camera_timeline);
+    SendMessageTimelineParameter* sendmessage_timeline = new SendMessageTimelineParameter(world);
+    timelines_.push_back(sendmessage_timeline);
 
     if (!enable_editor) return;
     // エディタを追加
     editor_.add(new CameraTimelineEditor(*camera_timeline));
+    editor_.add(new SendMessageTimelineEditor(*sendmessage_timeline));
+    
 }
 
 void Timeline::load(const std::string& json_file) {

@@ -23,7 +23,7 @@ class Camera;
 struct CameraTimelineKeyFrame {
     CameraTimelineKeyFrame(
         float time,
-        std::string target,
+        const std::string& target,
         GSvector3 position,
         GSvector3 lookat,
         float angle

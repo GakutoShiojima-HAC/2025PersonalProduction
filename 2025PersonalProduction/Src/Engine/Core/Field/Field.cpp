@@ -57,6 +57,10 @@ void Field::add(FieldActor* field_actor) {
 	actors_.add(field_actor);
 }
 
+Actor* Field::find(const std::string& name) {
+    return actors_.find(name);
+}
+
 bool Field::collide(const Ray& ray, float max_distance, GSvector3* intersect, GSplane* plane, Actor** actor) const {
 	Line line;
 	line.start = ray.position;

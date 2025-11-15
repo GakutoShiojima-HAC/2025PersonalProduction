@@ -78,7 +78,7 @@ void TimelineEditor::update_add_keyframe() {
         for (unsigned int i = 0; i < editors_.size(); ++i) {
             bool is_selected = (select_parameter_index_ == i);
             // 選択を更新
-            if (ImGui::Selectable(editors_[select_parameter_index_]->name().c_str(), is_selected))  select_parameter_index_ = i;
+            if (ImGui::Selectable(editors_[i]->name().c_str(), is_selected))  select_parameter_index_ = i;
             // 選択にフォーカス
             if (is_selected)ImGui::SetItemDefaultFocus();
         }
@@ -134,17 +134,18 @@ void TimelineEditor::update_timeline_view() {
         // キーフレームがないなら描画しない
         if (editor->is_empty()) continue;
 
+        canvas_pos = ImGui::GetCursorScreenPos();       // 描画を始める座標(左上)
+        canvas_pos.x = canvas_pos_x + 100.0f;
+        canvas_size = ImGui::GetContentRegionAvail();   // 描画範囲
+        canvas_size.x -= 20.0f;
+        canvas_size.y = TIMELINE_HEIGHT;
+
         // 編集対象を選択
         if (ImGui::Button((editor->name() + "##1").c_str())) {
             edit_parameter_index_ = i;
             move_key_frame_index_ = KEYFRAME_NOMOVE;
         }
         ImGui::SameLine();
-        canvas_pos = ImGui::GetCursorScreenPos();       // 描画を始める座標(左上)
-        canvas_pos.x = canvas_pos_x + 80.0f;
-        canvas_size = ImGui::GetContentRegionAvail();   // 描画範囲
-        canvas_size.x -= 20.0f;
-        canvas_size.y = TIMELINE_HEIGHT;
 
         // 背景の描画
         draw_list->AddRectFilled(canvas_pos, ImVec2(canvas_pos.x + canvas_size.x, canvas_pos.y + canvas_size.y), edit_parameter_index_ == i ? IM_COL32(50, 50, 50, 255) : IM_COL32(25, 25, 25, 255));
@@ -194,14 +195,16 @@ void TimelineEditor::update_timeline_view() {
                 if (ImGui::IsMouseClicked(ImGuiMouseButton_Left)) edit_keyframe = move_key_frame_index_ = j;
             }
         }
-
+        
         // 編集中ならドラッグ移動
         if (edit_parameter_index_ == i && move_key_frame_index_ != KEYFRAME_NOMOVE) {
+            /*
             // マウス位置から再生時間を更新
             if (ImGui::IsMouseDragging(ImGuiMouseButton_Left, 0.0f)) {
                 editor->get_keyframe_time(move_key_frame_index_) = screen_x_to_time(ImGui::GetMousePos().x);
                 if (editor->get_keyframe_time(move_key_frame_index_) < 0.0f) editor->get_keyframe_time(move_key_frame_index_) = 0.0f;
             }
+            */
             // ドラッグを終了
             if (ImGui::IsMouseReleased(ImGuiMouseButton_Left)) {
                 editor->sort_timeline();
@@ -210,12 +213,14 @@ void TimelineEditor::update_timeline_view() {
         }
         // 編集中のパラメータ描画範囲はマウス入力を無効化する
         if (edit_parameter_index_ == i) ImGui::InvisibleButton("timeline_canvas", canvas_size);
+
+        ImGui::Separator();
     }
 
     // 選択中のキーフレームのパラメータを編集
     ImGui::Separator();
     ImGui::Text("Edit Parameter");
-    editors_[select_parameter_index_]->update_select_keyframe();
+    editors_[edit_parameter_index_]->update_select_keyframe();
 }
 
 void TimelineEditor::on_play() {
@@ -248,7 +253,9 @@ void TimelineEditor::on_load() {
     if (ImGui::Button("load##3", ImVec2(120, 0))) {
         // 読み込む
         json j;
-        if (!MyJson::is_json("Resource/Private/Behavior/Timeline/" + load_file_name_ + ".json", j)) return;
+        if (!MyJson::is_json("Resource/Private/Behavior/Timeline/" + load_file_name_ + ".json", j)) {
+            ImGui::CloseCurrentPopup(); // ポップアップを閉じる
+        }
 
         // 再生用のデータ名を取得
         name_ = MyJson::get_string(j, "Name");
