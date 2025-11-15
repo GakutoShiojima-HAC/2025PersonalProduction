@@ -23,11 +23,9 @@ void SendMessageTimelineParameter::update(float delta_time) {
     // playの後にupdateが呼ばれる都合上先に処理
     SendMessageTimelineKeyFrame* current{ nullptr };
     MyLib::is_valid_index(current_->get(), key_frame_, &current);
-    SendMessageTimelineKeyFrame* next{ nullptr };
-    MyLib::is_valid_index(current_->get(), key_frame_ + 1, &next);
 
     // 次のキーフレームがなくなったら終了
-    if (current == nullptr || next == nullptr) {
+    if (current == nullptr) {
         stop();
         return;
     }
