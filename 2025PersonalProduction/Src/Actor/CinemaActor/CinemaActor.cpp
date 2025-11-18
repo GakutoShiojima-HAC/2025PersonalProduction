@@ -106,5 +106,6 @@ CinemaActor& CinemaActor::set_behavior(ICinemaBehavior* behavior) {
 void CinemaActor::end() {
     delete behavior_;
     behavior_ = nullptr;
+    enable_collider_ = false;
     is_dead_ = true;
 }
