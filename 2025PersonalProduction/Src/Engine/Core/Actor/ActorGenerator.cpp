@@ -3,6 +3,7 @@
 #include <experimental/filesystem>
 
 #include "Actor/StageTeleporter/StageTeleporterGenerator.h"
+#include "Actor/CinemaActor/CinemaActorGenerator.h"
 #include "Actor/Player/PlayerGenerator.h"
 #include "Actor/Enemy/SimpleEnemy/SimpleEnemyGenerator.h"
 #include "Actor/Gimmick/Elevator/ElevatorGenerator.h"
@@ -38,7 +39,9 @@ void ActorGenerator::load(World* world) {
 
         // 10/27 下手にenumやmap作るより"else if"連打の方が見やすく、ソースファイル1つの編集で
         // 追加が完結するため、このままでいきます
+        // 11/18 もしかしたらumapのkey部分にgeneratorkeyを入れとくことで処理減ったりする？(generatekey, pair<actornamekey, generator>)
         if (key == StageTereporterGeneratorKey) data_[name] = new StageTereporterGenerator(j, world);
+        else if (key == CinemaActorGeneratorKey) data_[name] = new CinemaActorGenerator(j, world);
         else if (key == PlayerGeneratorKey) data_[name] = new PlayerGenerator(j, world);
         else if (key == SimpleEnemyGeneratorKey) data_[name] = new SimpleEnemyGenerator(j, world);
         else if (key == ElevatorGeneratorKey) data_[name] = new ElevatorGenerator(j, world);
@@ -56,7 +59,7 @@ void ActorGenerator::generate(const std::string& json_file) {
         
         // 共通パラメータを取得
         const GSvector3 position = MyJson::get_vector3(item, "Position");
-        const GSvector3 lookat = MyJson::get_vector3(item, "LookAt"); 
+        const GSvector3 rotate = MyJson::get_vector3(item, "Rotate");
         const int hp = MyJson::get_int(item, "HP");
         const int damage = MyJson::get_int(item, "Damage");
         json param;
@@ -64,7 +67,7 @@ void ActorGenerator::generate(const std::string& json_file) {
             param = item["Param"];
         }
         // 生成
-        generate(key, position, lookat, hp, damage, param);
+        generate(key, position, rotate, hp, damage, param);
     }
 }
 
@@ -87,13 +90,13 @@ int ActorGenerator::count_generate_boss() const {
     return generate_boss_;
 }
 
-void ActorGenerator::generate(const std::string& actor_key, const GSvector3& position, const GSvector3& lookat, int hp, int damage, const json& param) {
+void ActorGenerator::generate(const std::string& actor_key, const GSvector3& position, const GSvector3& rotate, int hp, int damage, const json& param) {
     // 存在しないキーなら生成しない
     auto it = data_.find(actor_key);
     if (it == data_.end()) return;
 
     // 生成
-    Actor* actor = it->second->generate(position, lookat, hp, damage, param);
+    Actor* actor = it->second->generate(position, rotate, hp, damage, param);
 
     // 生成された敵の数をカウント
     if (actor == nullptr || actor->tag() != ActorTag::Enemy) return;
