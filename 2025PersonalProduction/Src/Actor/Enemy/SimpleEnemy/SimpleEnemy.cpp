@@ -13,7 +13,7 @@
 #include "State/SimpleEnemy/SimpleEnemyMoveState.h"
 #include "State/SimpleEnemy/SimpleEnemySearchState.h"
 
-SimpleEnemy::SimpleEnemy(IWorld* world, const GSvector3& position, const GSvector3& lookat, const SimpleEnemyInfo& info) :
+SimpleEnemy::SimpleEnemy(IWorld* world, const GSvector3& position, const GSvector3& rotate, const SimpleEnemyInfo& info) :
     info_{ info } {
     world_ = world;
     tag_ = ActorTag::Enemy;
@@ -33,7 +33,7 @@ SimpleEnemy::SimpleEnemy(IWorld* world, const GSvector3& position, const GSvecto
     mesh_.add_animation_event(info_.motion_attack, info_.attack_event_time, [=] { generate_attack_collider(); });
 
     transform_.position(position);
-    transform_.lookAt(lookat);
+    transform_.eulerAngles(rotate);
     mesh_.transform(transform_.localToWorldMatrix());
     collide_field();
     origin_position_ = transform_.position();

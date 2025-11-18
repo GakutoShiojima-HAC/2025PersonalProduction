@@ -2,12 +2,13 @@
 #include "Engine/Core/Scene/SceneManager.h"
 #include <any>
 
-StageTereporter::StageTereporter(IWorld* world, const GSvector3& position, const GSvector3& lookat, int stage_id) {
+StageTereporter::StageTereporter(IWorld* world, const GSvector3& position, const GSvector3& rotate, int stage_id) {
     world_ = world;
     stage_id_ = stage_id;
     tag_ = ActorTag::Object;
     name_ = "StageTereporter";
     transform_.position(position);
+    transform_.eulerAngles(rotate);
 
     // テレポートできるかどうか
     enable_collider_ = world_->game_save_data().get().stage <= stage_id - 1;

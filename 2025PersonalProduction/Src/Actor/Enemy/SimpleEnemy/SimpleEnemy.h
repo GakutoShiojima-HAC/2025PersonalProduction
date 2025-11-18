@@ -44,7 +44,7 @@ struct SimpleEnemyInfo {
 
 class SimpleEnemy : public Character {
 public:
-    SimpleEnemy(IWorld* world, const GSvector3& position, const GSvector3& lookat, const SimpleEnemyInfo& info = SimpleEnemyInfo{});
+    SimpleEnemy(IWorld* world, const GSvector3& position, const GSvector3& rotate, const SimpleEnemyInfo& info = SimpleEnemyInfo{});
 
     ~SimpleEnemy() = default;
 
