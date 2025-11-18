@@ -72,9 +72,6 @@ Player::Player(IWorld* world, const GSvector3& position, const GSvector3& rotate
 	tag_ = ActorTag::Player;
 	name_ = "Player";
 
-	camera_ = camera;
-	camera_->set_owner(this);
-
     init_parameter(PawnParameter::get_type("Normal"));
 
     // タイムスケールを受けない
@@ -90,6 +87,9 @@ Player::Player(IWorld* world, const GSvector3& position, const GSvector3& rotate
 	mesh_.transform(transform_.localToWorldMatrix());
     collide_field();
 	change_state((GSuint)PlayerStateType::Move, Motion::Idle, true);
+
+    camera_ = camera;
+    camera_->set_owner(this);
 
     // 情報を保持
     attack_param_ = info.attack_param;
