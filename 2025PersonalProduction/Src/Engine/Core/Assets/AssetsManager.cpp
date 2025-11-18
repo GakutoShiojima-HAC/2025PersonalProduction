@@ -2,9 +2,9 @@
 #include <gslib.h>
 #include <GSeffect.h>
 
-#define GS_ENABLE_MESH_SHADOW			// メッシュに影を付ける
-//#define GS_ENABLE_SKIN_MESH_SHADOW	// スキニングメッシュに影を付ける
-#define GS_ENABLE_SOFT_SHADOW			// 影の輪郭をぼかす
+#define GS_ENABLE_MESH_SHADOW           // メッシュに影を付ける
+#define GS_ENABLE_SKIN_MESH_SHADOW      // スキニングメッシュに影を付ける
+#define GS_ENABLE_SOFT_SHADOW           // 影の輪郭をぼかす
 #include <GSstandard_shader.h>
 
 AssetsManager::~AssetsManager() {

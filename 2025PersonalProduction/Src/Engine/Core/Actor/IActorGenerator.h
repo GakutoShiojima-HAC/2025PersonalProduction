@@ -18,11 +18,11 @@ public:
     /// 生成
     /// </summary>
     /// <param name="position">= 生成先の座標</param>
-    /// <param name="lookat">= 注視点</param>
+    /// <param name="rotate">= 回転</param>
     /// <param name="hp">= 体力</param>
     /// <param name="damage">= 攻撃力</param>
     /// <returns>生成したアクターのポインタ</returns>
-    virtual Actor* generate(const GSvector3& position, const GSvector3& lookat, int hp = 1, int damage = 1, const json& param = json{}) = 0;
+    virtual Actor* generate(const GSvector3& position, const GSvector3& rotate, int hp = 1, int damage = 1, const json& param = json{}) = 0;
 
 protected:
     World* world_{ nullptr };

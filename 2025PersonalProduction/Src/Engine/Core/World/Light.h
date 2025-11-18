@@ -18,7 +18,7 @@ class Light {
 public:
 	Light(
 		const GSvector3& angle = GSvector3{ 30.0f, 50.0f, 0.0f },
-		const GSvector4& ambient = GSvector4{ 0.0f, 0.0f, 0.0f, 1.0f },
+		const GSvector4& ambient = GSvector4{ 0.01f, 0.01f, 0.01f, 1.0f },
 		const GSvector4& diffuse = GSvector4{ 1.0f, 1.0f, 1.0f, 1.0f },
 		const GSvector4& specular = GSvector4{ 1.0f, 1.0f, 1.0f, 1.0f }
 	);

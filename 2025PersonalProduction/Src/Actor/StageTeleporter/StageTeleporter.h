@@ -5,7 +5,7 @@
 
 class StageTereporter : public Actor {
 public:
-    StageTereporter(IWorld* world, const GSvector3& position, const GSvector3& lookat, int stage_id);
+    StageTereporter(IWorld* world, const GSvector3& position, const GSvector3& rotate, int stage_id);
 
     ~StageTereporter() = default;
 

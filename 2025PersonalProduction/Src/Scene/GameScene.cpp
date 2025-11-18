@@ -14,7 +14,9 @@
 #include "Camera/TimelineCamera.h"
 #include "Camera/PlayerCamera.h"
 #include "Stage/StageFile.h"
-#include "Actor/CinemaActor/EnemyCounter.h"
+
+#include "Actor/CinemaActor/CinemaActor.h"
+#include "Actor/CinemaActor/CinemaBehavior/NormalEnemyCounter.h"
 
 // 一時的 ローダーやマネージャーを作ったら不要
 #include <gslib.h>	// シーン終了用
@@ -274,7 +276,11 @@ void GameScene::game_start() {
     actor_generator_.generate(config.folder + "/generate.json");
 
     // エネミーカウンターの生成
-    if (config.use_normal_enemy_counter) world_.add_actor(new EnemyCounter{ &world_, actor_generator_.count_generate_enemy() });
+    if (config.use_normal_enemy_counter) {
+        CinemaActor* cinema_actor = new CinemaActor{ &world_, "BreakBarrier" , true };
+        cinema_actor->set_behavior(new NormalEnemyCounter{ &world_, actor_generator_.count_generate_enemy() });
+        world_.add_actor(cinema_actor);
+    }
 
 #ifndef _DEBUG
     // エディタでの動的生成のためにデバッグ中はデータを残しておく

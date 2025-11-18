@@ -144,7 +144,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Src\Actor\CinemaActor\EnemyCounter.cpp" />
+    <ClCompile Include="Src\Actor\CinemaActor\CinemaActor.cpp" />
+    <ClCompile Include="Src\Actor\CinemaActor\CinemaActorGenerator.cpp" />
+    <ClCompile Include="Src\Actor\CinemaActor\CinemaBehavior\NormalEnemyCounter.cpp" />
+    <ClCompile Include="Src\Actor\CinemaActor\CinemaBehavior\PlayReact.cpp" />
     <ClCompile Include="Src\Actor\Enemy\SimpleEnemy\SimpleEnemy.cpp" />
     <ClCompile Include="Src\Actor\Enemy\SimpleEnemy\SimpleEnemyGenerator.cpp" />
     <ClCompile Include="Src\Actor\Gimmick\Barrier\Barrier.cpp" />
@@ -272,7 +275,11 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Src\Actor\CinemaActor\EnemyCounter.h" />
+    <ClInclude Include="Src\Actor\CinemaActor\CinemaActor.h" />
+    <ClInclude Include="Src\Actor\CinemaActor\CinemaActorGenerator.h" />
+    <ClInclude Include="Src\Actor\CinemaActor\CinemaBehavior\ICinemaBehavior.h" />
+    <ClInclude Include="Src\Actor\CinemaActor\CinemaBehavior\NormalEnemyCounter.h" />
+    <ClInclude Include="Src\Actor\CinemaActor\CinemaBehavior\PlayReact.h" />
     <ClInclude Include="Src\Actor\Gimmick\Barrier\Barrier.h" />
     <ClInclude Include="Src\Actor\Gimmick\Barrier\BarrierGenerator.h" />
     <ClInclude Include="Src\Actor\Gimmick\Elevator\Elevator.h" />

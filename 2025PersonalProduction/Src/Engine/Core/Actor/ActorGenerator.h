@@ -30,10 +30,10 @@ public:
     /// </summary>
     /// <param name="actor_key">= 識別キー</param>
     /// <param name="position">= 座標</param>
-    /// <param name="lookat">= 注視点</param>
+    /// <param name="rotate">= 回転</param>
     /// <param name="hp">= 体力</param>
     /// <param name="damage">= 攻撃力</param>
-    void generate(const std::string& actor_key, const GSvector3& position, const GSvector3& lookat, int hp = 1, int damage = 1, const json& param = json{});
+    void generate(const std::string& actor_key, const GSvector3& position, const GSvector3& rotate, int hp = 1, int damage = 1, const json& param = json{});
 
     /// <summary>
     /// 生成で使ったデータの破棄
