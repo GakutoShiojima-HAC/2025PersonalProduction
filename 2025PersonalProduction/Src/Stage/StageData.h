@@ -31,7 +31,7 @@ struct StageConfigData {
 
     // タイマーを使用するかどうか
     bool use_timer{ true };
-    // ステージ終了後にリザルトを描画するかどうか
+    // 敵もしくはプレイヤーがいなくなった時にリザルトに遷移するかどうか
     bool use_result{ true };
     // 通常エネミーのカウンターとシネマイベントを生成するかどうか
     bool use_normal_enemy_counter{ true };

@@ -124,8 +124,8 @@ void GameScene::original_update(float delta_time) {
 
     world_.update(delta_time);
 
-    // TODO 一時的なゲーム終了処理
-    {
+    // ゲーム終了処理
+    if (stage_data_.data().use_result) {
         if (world_.count_actor_with_tag(ActorTag::Enemy) <= 0) {
             change_state((GSuint)SceneStateType::GameResult);
             return;
