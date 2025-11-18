@@ -9,13 +9,13 @@ const GSvector3 LOOKAT_ORIGIN_TO_OFFSET{ 0.0f, 1.35f, 0.0f };
 // 注視点からの位置
 const GSvector3 CAMERA_OFFSET{ 0.0f, 1.3f, -4.0f };
 // 視点移動速度
-const float SENSITIVITY_X{ 0.095f };
-const float SENSITIVITY_Y{ 0.075f };
+constexpr float SENSITIVITY_X{ 0.095f };
+constexpr float SENSITIVITY_Y{ 0.075f };
 
 // スムースダンプ補間時間
-const float SMOOTH_TIME{ 6.0f };
+constexpr float SMOOTH_TIME{ 6.0f };
 // スムースダンプ移動量
-const float SMOOTH_MAX_SPEED{ 1.0f };
+constexpr float SMOOTH_MAX_SPEED{ 1.0f };
 
 PlayerCamera::PlayerCamera(IWorld* world) {
 	world_ = world;
@@ -48,7 +48,6 @@ void PlayerCamera::update(float delta_time) {
 
 		// 注視点の座標を求める
 		at = owner_->transform().position() + LOOKAT_ORIGIN_TO_OFFSET;
-
 		// カメラの座標を求める
 		pos = at + GSquaternion::euler(pitch_, yaw_, 0.0f) * CAMERA_OFFSET;	
 	}
@@ -70,6 +69,7 @@ void PlayerCamera::update(float delta_time) {
 	transform_.position(pos);
 	// 注視点の方向を見る
 	transform_.lookAt(at);
+
 }
 
 void PlayerCamera::die() {
@@ -78,6 +78,23 @@ void PlayerCamera::die() {
 
 void PlayerCamera::set_owner(Pawn* owner) {
 	owner_ = owner;
+
+    if (owner == nullptr) return;
+
+    // 注視点の座標を求める
+    GSvector3 at = owner_->transform().position() + LOOKAT_ORIGIN_TO_OFFSET;
+    // カメラの座標を求める
+    GSvector3 pos = at + owner_->transform().rotation() * CAMERA_OFFSET;
+    // 座標の設定
+    transform_.position(pos);
+    // 注視点の方向を見る
+    transform_.lookAt(at);
+    prev_at_ = at;
+
+    const GSvector3 direction = at - pos;
+    yaw_ = std::atan2f(direction.x, direction.z);
+    yaw_ *= (180.0f / GS_PI);
+    pitch_ = 0.0f;
 }
 
 void PlayerCamera::set_lockon_target(Pawn* target) {
