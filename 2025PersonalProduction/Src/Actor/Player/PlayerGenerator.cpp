@@ -1,6 +1,5 @@
 #include "Actor/Player/PlayerGenerator.h"
 #include "Engine/Core/World/World.h"
-#include "Camera/PlayerCamera.h"
 #include "Assets.h"
 
 PlayerGenerator::PlayerGenerator(const json& j, World* world) {
@@ -95,11 +94,8 @@ Actor* PlayerGenerator::generate(const GSvector3& position, const GSvector3& rot
     // 生成は一体のみ
     if (!can_generate_) return nullptr;
 
-    // プレイヤーカメラを取得
-    PlayerCamera* camera = dynamic_cast<PlayerCamera*>(world_->find_camera(CameraTag::Player));
-
     // 生成
-    Character* p = new Player{ world_, position, rotate, camera, info_ };
+    Character* p = new Player{ world_, position, rotate, info_ };
     world_->add_character(p);
     can_generate_ = false;
     return p;

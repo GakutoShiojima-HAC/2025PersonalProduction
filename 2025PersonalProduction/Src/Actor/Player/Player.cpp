@@ -66,7 +66,7 @@ constexpr GSuint ATTACK_MOTION[] = {
     Player::Motion::Attack5
 };
 
-Player::Player(IWorld* world, const GSvector3& position, const GSvector3& rotate, PlayerCamera* camera, const PlayerInfo& info) :
+Player::Player(IWorld* world, const GSvector3& position, const GSvector3& rotate, const PlayerInfo& info) :
     inventory_{ world->game_save_data().inventory() } {
 	world_ = world;
 	tag_ = ActorTag::Player;
@@ -88,8 +88,11 @@ Player::Player(IWorld* world, const GSvector3& position, const GSvector3& rotate
     collide_field();
 	change_state((GSuint)PlayerStateType::Move, Motion::Idle, true);
 
-    camera_ = camera;
+    // ƒJƒƒ‰‚Ì’Ç‰Á
+    camera_ = new PlayerCamera{ world };
     camera_->set_owner(this);
+    world_->add_camera(camera_);
+    world_->camera_transition(camera_);
 
     // î•ñ‚ğ•Û
     attack_param_ = info.attack_param;

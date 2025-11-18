@@ -12,7 +12,6 @@
 #include "Item/ItemDataManager.h"
 #include "Camera/FixedCamera.h"
 #include "Camera/TimelineCamera.h"
-#include "Camera/PlayerCamera.h"
 #include "Stage/StageFile.h"
 
 #include "Actor/CinemaActor/CinemaActor.h"
@@ -248,11 +247,6 @@ void GameScene::game_start() {
 #ifdef _DEBUG
     world_.add_camera(new EditorCamera{ &world_ });
 #endif
-    // プレイヤーカメラの追加
-    PlayerCamera* player_camera = new PlayerCamera{ &world_ };
-    world_.add_camera(player_camera);
-    // プレイヤーカメラから開始
-    world_.camera_transition(player_camera);
 
     /*
      *  TODO ローダーにする
