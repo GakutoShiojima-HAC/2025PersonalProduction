@@ -24,6 +24,12 @@ public:
     /// <returns>生成したアクターのポインタ</returns>
     virtual Actor* generate(const GSvector3& position, const GSvector3& rotate, int hp = 1, int damage = 1, const json& param = json{}) = 0;
 
+    /// <summary>
+    /// リスポーンがあり得るかどうか
+    /// </summary>
+    /// <returns>するなら真を返却</returns>
+    virtual bool is_respawn() const { return false; }
+
 protected:
     World* world_{ nullptr };
 

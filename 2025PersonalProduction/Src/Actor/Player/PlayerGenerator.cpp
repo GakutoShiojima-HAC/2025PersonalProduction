@@ -91,12 +91,12 @@ PlayerGenerator::PlayerGenerator(const json& j, World* world) {
 }
 
 Actor* PlayerGenerator::generate(const GSvector3& position, const GSvector3& rotate, int hp, int damage, const json& param) {
-    // ¶¬‚Íˆê‘Ì‚Ì‚İ
-    if (!can_generate_) return nullptr;
-
     // ¶¬
     Character* p = new Player{ world_, position, rotate, info_ };
     world_->add_character(p);
-    can_generate_ = false;
     return p;
+}
+
+bool PlayerGenerator::is_respawn() const {
+    return true;
 }
