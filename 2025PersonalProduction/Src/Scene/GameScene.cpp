@@ -85,16 +85,20 @@ bool GameScene::is_application_end() const {
 }
 
 void GameScene::reception_message(const std::string& message, std::any& param) {
+    // 他シーンからゲームシーンに遷移するとき、読み込むセーブデータを設定する
     if (message == "LoadSaveDataName" && param.type() == typeid(std::string)) {
         load_savedata_name_ = std::any_cast<std::string>(param);
-        // ロビーにリセット
+        // 最初はロビー
         load_stage_index_ = 0;
     }
+    // ロビーからステージへ移動する
     if (message == "RequestTereport" && param.type() == typeid(int)) {
+        // 移動先
         load_stage_index_ = std::any_cast<int>(param);
+        // 遷移条件
         if (state_.is_current_state((GSuint)SceneStateType::Original)) {
-            change_state((GSuint)SceneStateType::GameEnd);
             set_next_scene(SceneTag::Game);
+            change_state((GSuint)SceneStateType::GameEnd);
         }
     }
 }
@@ -134,6 +138,15 @@ void GameScene::original_update(float delta_time) {
             return;
         }
     }
+    else {
+        // リザルトがない(敵が出現しない)ステージで万が一死んでしまったら自動復活
+        if (world_.count_actor_with_tag(ActorTag::Player) <= 0) {
+            // 一応設定
+            world_.player_respawner().add_point(GSvector3::zero(), GSvector3::zero());
+            respawn_player();
+            return;
+        }
+    }
 }
 
 void GameScene::original_draw() const {
@@ -142,6 +155,15 @@ void GameScene::original_draw() const {
 
 bool& GameScene::enable_draw_game_gui() {
     return world_.enable_draw_gui();
+}
+
+void GameScene::respawn_player() {
+    PlayerRespawner& respawner = world_.player_respawner();
+    actor_generator_.generate("Player", respawner.respawn_position(), respawner.respawn_rotate());
+}
+
+void GameScene::set_next_stage(int id) {
+    load_stage_index_ = id;
 }
 
 void GameScene::load_data() {
@@ -171,8 +193,9 @@ void GameScene::load_data() {
     // ステージデータのフォルダを取得
     StageFile sf;                                                                                                               next();
 
-    // ステージデータの読み込み
-    const std::string folder_path = world_.game_save_data().get().stage < 0 ? sf.get_path(-1) : sf.get_path(load_stage_index_);
+    // ステージデータの読み込み(チュートリアル未クリアの場合はチュートリアルを優先する)
+    load_stage_index_ = world_.game_save_data().get().stage < 0 ? -1 : load_stage_index_;
+    const std::string folder_path = sf.get_path(load_stage_index_);
     const StageLoadConfigData data = stage_data_.load(folder_path);                                                             next();
 
     // ステージ固有アセットの読み込み
@@ -269,7 +292,7 @@ void GameScene::game_start() {
     // アクターの生成
     actor_generator_.generate(config.folder + "/generate.json");
 
-    // エネミーカウンターの生成
+    // 通常エネミーカウンターの生成
     if (config.use_normal_enemy_counter) {
         CinemaActor* cinema_actor = new CinemaActor{ &world_, "BreakBarrier" , true };
         cinema_actor->set_behavior(new NormalEnemyCounter{ &world_, actor_generator_.count_generate_enemy() });
@@ -278,7 +301,7 @@ void GameScene::game_start() {
 
 #ifndef _DEBUG
     // エディタでの動的生成のためにデバッグ中はデータを残しておく
-    actor_generator_.clear();
+    actor_generator_.clear_no_respawn();
 #endif
 
     // シェーダーの有効化
@@ -314,10 +337,8 @@ void GameScene::game_end() {
     // メニューに戻るなら共通アセットも開放
     if (next_scene_tag_ != SceneTag::Game) AssetsManager::get_instance().delete_asset(AssetsLoader::GAME_COMMON_ASSET_NAME);
 
-#ifdef _DEBUG
-    // シーン中データを残していた分ここで破棄
+    // アクター生成用データを完全に破棄
     actor_generator_.clear();
-#endif
 
     // 次のシーンの情報を渡す
     std::any data = next_scene_tag_;
