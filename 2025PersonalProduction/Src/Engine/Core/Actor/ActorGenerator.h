@@ -40,6 +40,11 @@ public:
     /// </summary>
     void clear();
 
+    /// <summary>
+    /// 生成で使ったデータの破棄(リスポーンしないデータのみ)
+    /// </summary>
+    void clear_no_respawn();
+
 public:
     /// <summary>
     /// 生成された敵の数を取得
@@ -54,6 +59,14 @@ public:
     int count_generate_boss() const;
 
 private:
+    /// <summary>
+    /// ジェネレーターを追加
+    /// </summary>
+    /// <param name="name">= 登録名</param>
+    /// <param name="generator">= ジェネレーター</param>
+    void add_generator(const std::string& name, IActorGenerator* generator);
+
+private:
     // 生成用データ
     std::unordered_map<std::string, IActorGenerator*> data_;
 
@@ -61,6 +74,8 @@ private:
     int generate_enemy_{ 0 };
     // 生成されたボスの数
     int generate_boss_{ 0 };
+    // 生成したプレイヤーの数
+    int generate_player_{ 0 };
 
 public:
     // コピー禁止

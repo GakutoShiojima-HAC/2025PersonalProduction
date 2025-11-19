@@ -93,6 +93,7 @@ void World::clear() {
 	timeline_.clear();
 	actor_.clear();
 	camera_.clear();
+    player_respawner_.clear();
 }
 
 void World::shadow_map_callback(void* param, const GSmatrix4* view, const GSmatrix4* projection) {
@@ -145,6 +146,10 @@ GameTimer& World::time() {
 
 Timeline& World::timeline() {
     return timeline_;
+}
+
+PlayerRespawner& World::player_respawner() {
+    return player_respawner_;
 }
 
 bool& World::enable_draw_gui() {
@@ -277,4 +282,8 @@ void World::set_timescale(float scale, float time) {
     Tween::cancel("WorldTimeScale");
     if (time <= 0.0f) timescale_ = scale;
     else Tween::value(timescale_, scale, time, [&](float current) { timescale() = current; }).name("WorldTimeScale").ease(EaseType::EaseOutQuad);
+}
+
+void World::update_check_point(const GSvector3& position, const GSvector3& rotate) {
+    player_respawner_.add_point(position, rotate);
 }

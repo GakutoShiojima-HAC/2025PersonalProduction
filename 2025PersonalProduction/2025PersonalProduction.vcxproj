@@ -152,10 +152,13 @@
     <ClCompile Include="Src\Actor\Enemy\SimpleEnemy\SimpleEnemyGenerator.cpp" />
     <ClCompile Include="Src\Actor\Gimmick\Barrier\Barrier.cpp" />
     <ClCompile Include="Src\Actor\Gimmick\Barrier\BarrierGenerator.cpp" />
+    <ClCompile Include="Src\Actor\Gimmick\CheckPoint\CheckPoint.cpp" />
+    <ClCompile Include="Src\Actor\Gimmick\CheckPoint\CheckPointGenerator.cpp" />
     <ClCompile Include="Src\Actor\Gimmick\Elevator\Elevator.cpp" />
     <ClCompile Include="Src\Actor\Gimmick\Elevator\ElevatorGenerator.cpp" />
     <ClCompile Include="Src\Actor\ItemActor\ItemActor.cpp" />
     <ClCompile Include="Src\Actor\Player\PlayerGenerator.cpp" />
+    <ClCompile Include="Src\Actor\Player\PlayerRespawner.cpp" />
     <ClCompile Include="Src\Actor\StageTeleporter\StageTeleporter.cpp" />
     <ClCompile Include="Src\Actor\StageTeleporter\StageTeleporterGenerator.cpp" />
     <ClCompile Include="Src\Engine\Core\Assets\AssetsLoader.cpp" />
@@ -282,8 +285,11 @@
     <ClInclude Include="Src\Actor\CinemaActor\CinemaBehavior\PlayReact.h" />
     <ClInclude Include="Src\Actor\Gimmick\Barrier\Barrier.h" />
     <ClInclude Include="Src\Actor\Gimmick\Barrier\BarrierGenerator.h" />
+    <ClInclude Include="Src\Actor\Gimmick\CheckPoint\CheckPoint.h" />
+    <ClInclude Include="Src\Actor\Gimmick\CheckPoint\CheckPointGenerator.h" />
     <ClInclude Include="Src\Actor\Gimmick\Elevator\Elevator.h" />
     <ClInclude Include="Src\Actor\Gimmick\Elevator\ElevatorGenerator.h" />
+    <ClInclude Include="Src\Actor\Player\PlayerRespawner.h" />
     <ClInclude Include="Src\Engine\Core\Actor\Pawn\PawnParameter.h" />
     <ClInclude Include="Src\Actor\ActorTag.h" />
     <ClInclude Include="Src\Actor\Enemy\SimpleEnemy\SimpleEnemy.h" />

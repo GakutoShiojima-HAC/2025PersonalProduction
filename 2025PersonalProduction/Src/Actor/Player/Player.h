@@ -76,7 +76,7 @@ struct PlayerInfo {
 
 class Player : public Character {
 public:
-	Player(IWorld* world, const GSvector3& position, const GSvector3& rotate, PlayerCamera* camera, const PlayerInfo& info);
+	Player(IWorld* world, const GSvector3& position, const GSvector3& rotate, const PlayerInfo& info);
 
 public:
     enum Motion {

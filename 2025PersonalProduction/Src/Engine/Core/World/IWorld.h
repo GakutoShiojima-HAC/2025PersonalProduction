@@ -250,6 +250,13 @@ public:
     /// <param name="time">= 元のスケールから指定したスケールになるまでにかかる時間(delta_time)</param>
     virtual void set_timescale(float scale= 1.0f, float time = 0.0f) = 0;
 
+    /// <summary>
+    /// チェックポイントを更新
+    /// </summary>
+    /// <param name="position">= 復活時の座標</param>
+    /// <param name="rotate">= 復活時の回転</param>
+    virtual void update_check_point(const GSvector3& position, const GSvector3& rotate) = 0;
+
 public:
 	// コピー禁止
 	IWorld(const IWorld& other) = delete;

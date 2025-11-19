@@ -13,10 +13,10 @@ public:
 public:
     Actor* generate(const GSvector3& position, const GSvector3& rotate, int hp, int damage, const json& param) override;
 
+    bool is_respawn() const override;
+
 private:
     World* world_{ nullptr };
-
-    bool can_generate_{ true };
 
     PlayerInfo info_;
 

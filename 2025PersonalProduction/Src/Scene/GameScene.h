@@ -53,6 +53,17 @@ public:
     /// <returns>参照</returns>
     bool& enable_draw_game_gui();
 
+    /// <summary>
+    /// プレイヤーを復活させる
+    /// </summary>
+    void respawn_player();
+
+    /// <summary>
+    /// 移動先のステージ番号を設定する
+    /// </summary>
+    /// <param name="id">= ステージID</param>
+    void set_next_stage(int id);
+
 protected:
     /// <summary>
     /// ゲーム用データのロード
@@ -82,6 +93,7 @@ protected:
     int load_stage_index_{ 0 };
     // 読み込むセーブデータ名
     std::string load_savedata_name_{ "Tmp" };
+
 };
 
 #endif

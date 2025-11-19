@@ -3,6 +3,7 @@
 #include <experimental/filesystem>
 
 #include "Actor/StageTeleporter/StageTeleporterGenerator.h"
+#include "Actor/Gimmick/CheckPoint/CheckPointGenerator.h"
 #include "Actor/CinemaActor/CinemaActorGenerator.h"
 #include "Actor/Player/PlayerGenerator.h"
 #include "Actor/Enemy/SimpleEnemy/SimpleEnemyGenerator.h"
@@ -40,12 +41,13 @@ void ActorGenerator::load(World* world) {
         // 10/27 下手にenumやmap作るより"else if"連打の方が見やすく、ソースファイル1つの編集で
         // 追加が完結するため、このままでいきます
         // 11/18 もしかしたらumapのkey部分にgeneratorkeyを入れとくことで処理減ったりする？(generatekey, pair<actornamekey, generator>)
-        if (key == StageTereporterGeneratorKey) data_[name] = new StageTereporterGenerator(j, world);
-        else if (key == CinemaActorGeneratorKey) data_[name] = new CinemaActorGenerator(j, world);
-        else if (key == PlayerGeneratorKey) data_[name] = new PlayerGenerator(j, world);
-        else if (key == SimpleEnemyGeneratorKey) data_[name] = new SimpleEnemyGenerator(j, world);
-        else if (key == ElevatorGeneratorKey) data_[name] = new ElevatorGenerator(j, world);
-        else if (key == BarrierGeneratorKey) data_[name] = new BarrierGenerator(j, world);
+        if (key == StageTereporterGeneratorKey) add_generator(name, new StageTereporterGenerator(j, world));
+        else if (key == CheckPointGeneratorKey) add_generator(name, new CheckPointGenerator{ j, world });
+        else if (key == CinemaActorGeneratorKey) add_generator(name, new CinemaActorGenerator(j, world));
+        else if (key == PlayerGeneratorKey) add_generator(name, new PlayerGenerator(j, world));
+        else if (key == SimpleEnemyGeneratorKey) add_generator(name, new SimpleEnemyGenerator(j, world));
+        else if (key == ElevatorGeneratorKey) add_generator(name, new ElevatorGenerator(j, world));
+        else if (key == BarrierGeneratorKey) add_generator(name, new BarrierGenerator(j, world));
     }
 }
 
@@ -56,7 +58,13 @@ void ActorGenerator::generate(const std::string& json_file) {
     for (const auto& item : j["Actor"]) {
         // キーを取得
         const std::string key = MyJson::get_string(item, "Name");
-        
+
+        // プレイヤーを生成するかどうか
+        if (key == "Player") {
+            ++generate_player_;
+            if (generate_player_ > 1) continue;
+        }
+
         // 共通パラメータを取得
         const GSvector3 position = MyJson::get_vector3(item, "Position");
         const GSvector3 rotate = MyJson::get_vector3(item, "Rotate");
@@ -66,6 +74,7 @@ void ActorGenerator::generate(const std::string& json_file) {
         if (MyJson::is_object(item, "Param")) {
             param = item["Param"];
         }
+
         // 生成
         generate(key, position, rotate, hp, damage, param);
     }
@@ -80,6 +89,20 @@ void ActorGenerator::clear() {
 
     generate_enemy_ = 0;
     generate_boss_ = 0;
+    generate_player_ = 0;
+}
+
+void ActorGenerator::clear_no_respawn() {
+    for (auto& i : data_) {
+        if (i.second != nullptr && i.second->is_respawn()) continue;   // リスポーンするならスキップ
+        delete i.second;
+        i.second = nullptr;
+    }
+    data_.clear();
+
+    generate_enemy_ = 0;
+    generate_boss_ = 0;
+    generate_player_ = 0;
 }
 
 int ActorGenerator::count_generate_enemy() const {
@@ -88,6 +111,12 @@ int ActorGenerator::count_generate_enemy() const {
 
 int ActorGenerator::count_generate_boss() const {
     return generate_boss_;
+}
+
+void ActorGenerator::add_generator(const std::string& name, IActorGenerator* generator) {
+    auto it = data_.find(name);
+    if (it != data_.end()) delete it->second;
+    data_[name] = generator;
 }
 
 void ActorGenerator::generate(const std::string& actor_key, const GSvector3& position, const GSvector3& rotate, int hp, int damage, const json& param) {
