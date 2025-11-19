@@ -40,6 +40,13 @@ private:
 
     ButtonManager button_;
 
+    // プレイヤーが死亡したか
+    bool player_dead_{ false };
+    // ステージをクリアしたか
+    bool stage_clear_{ false };
+    // プレイヤーの復活は可能か
+    bool player_respawn_{ false };
+
 };
 
 #endif
