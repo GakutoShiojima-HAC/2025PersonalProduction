@@ -23,6 +23,7 @@
 #include "SaveData/GameSaveData.h"
 #include "Score/ActionScore.h"
 #include "GameTimer/GameTimer.h"
+#include "Actor/Player/PlayerRespawner.h"
 
 class AttackColliderPool;
 
@@ -100,6 +101,12 @@ public:
     /// <returns>参照</returns>
     Timeline& timeline();
 
+    /// <summary>
+    /// プレイヤーリスポーンマネージャーを取得
+    /// </summary>
+    /// <returns>参照</returns>
+    PlayerRespawner& player_respawner();
+
 public:
     bool& enable_draw_gui() override;
 
@@ -165,6 +172,8 @@ public:
 
     void set_timescale(float scale = 1.0f, float time = 0.0f) override;
 
+    void update_check_point(const GSvector3& position, const GSvector3& rotate) override;
+
 protected:
     // GUIを描画するかどうか
     bool enable_draw_gui_{ true };
@@ -199,6 +208,8 @@ protected:
     GameTimer game_timer_;
     // タイムスケール
     float timescale_{ 1.0f };
+    // プレイヤーリスポーンマネージャー
+    PlayerRespawner player_respawner_;
 
 };
 
