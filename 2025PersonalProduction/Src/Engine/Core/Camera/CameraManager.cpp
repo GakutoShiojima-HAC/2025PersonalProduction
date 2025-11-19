@@ -74,7 +74,8 @@ void CameraManager::add(Camera* camera) {
 
 	// 既に存在する場合
 	if (cameras_.find(key) != cameras_.end()) {
-		if (current_ == camera) current_ = nullptr;
+		if (current_ != nullptr && (GSuint)current_->tag() == key) current_ = nullptr;
+        if (prev_ != nullptr && (GSuint)prev_->tag() == key) prev_ = nullptr;
 		delete cameras_[key];	// 既存のを消去
 		cameras_[key] = camera;
 	}
