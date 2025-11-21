@@ -5,8 +5,8 @@
 
 SimpleEnemySearchState::SimpleEnemySearchState(SimpleEnemy& owner) : SimpleEnemyState(owner) {
     // モーションを取得
-    idle_motion_ = owner_.get_motion(SimpleEnemyStateType::Search, &idle_motion_loop_);
-    move_motion_ = owner_.get_motion(SimpleEnemyStateType::Move, &move_motion_loop_);
+    idle_motion_ = owner_.get_motion((GSuint)SimpleEnemyStateType::Search, &idle_motion_loop_);
+    move_motion_ = owner_.get_motion((GSuint)SimpleEnemyStateType::Move, &move_motion_loop_);
 }
 
 void SimpleEnemySearchState::enter() {
@@ -30,7 +30,7 @@ void SimpleEnemySearchState::update(float delta_time) {
     if (owner_.search_target()) {
         // ターゲットの方向を向く
         bool loop;
-        GSuint motion = owner_.get_motion(SimpleEnemyStateType::Find, &loop);
+        GSuint motion = owner_.get_motion((GSuint)SimpleEnemyStateType::Find, &loop);
         owner_.change_state((GSuint)SimpleEnemyStateType::Find, motion, loop);
         return;
     }
@@ -45,7 +45,7 @@ void SimpleEnemySearchState::update(float delta_time) {
 
     // Random
     if (state_ == MoveState::ToRandom) {
-        if (owner_.is_end_move() && can_move_origin()) {
+        if (owner_.is_move_end() && can_move_origin()) {
             state_ = MoveState::ToOrigin;
             move_timer_ = get_move_time();
             owner_.change_state((GSuint)SimpleEnemyStateType::Search, idle_motion_, idle_motion_loop_);
@@ -54,7 +54,7 @@ void SimpleEnemySearchState::update(float delta_time) {
     }
     // Origin
     else {
-        if (owner_.is_end_move() && can_move_random()) {
+        if (owner_.is_move_end() && can_move_random()) {
             state_ = MoveState::ToRandom;
             move_timer_ = get_move_time();
             owner_.change_state((GSuint)SimpleEnemyStateType::Search, idle_motion_, idle_motion_loop_);
@@ -82,7 +82,7 @@ void SimpleEnemySearchState::update(float delta_time) {
 
 bool SimpleEnemySearchState::can_move_random() {
     const GSvector3 origin = owner_.origin_position();
-    const float len = owner_.get_info().search_length / 2.0f;
+    const float len = owner_.my_info().search_length / 2.0f;
     const GSvector3 v = GSvector3{ len, 0.0f, len };  // TODO yは経路探索のendの高さが正しい値に修正できるまで待つ
     GSvector3 to = MyRandom::random_vec3(origin - v, origin + v);
     return owner_.start_move(to);
