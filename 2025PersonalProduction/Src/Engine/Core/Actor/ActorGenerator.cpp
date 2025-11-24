@@ -6,9 +6,10 @@
 #include "Actor/Gimmick/CheckPoint/CheckPointGenerator.h"
 #include "Actor/CinemaActor/CinemaActorGenerator.h"
 #include "Actor/Player/PlayerGenerator.h"
-#include "Actor/Enemy/SimpleEnemy/SimpleEnemyGenerator.h"
 #include "Actor/Gimmick/Elevator/ElevatorGenerator.h"
 #include "Actor/Gimmick/Barrier/BarrierGenerator.h"
+#include "Actor/Enemy/SimpleEnemy/SimpleEnemyGenerator.h"
+#include "Actor/Enemy/Lich/LichGenerator.h"
 
 namespace fs = std::experimental::filesystem;
 
@@ -45,9 +46,10 @@ void ActorGenerator::load(World* world) {
         else if (key == CheckPointGeneratorKey) add_generator(name, new CheckPointGenerator{ j, world });
         else if (key == CinemaActorGeneratorKey) add_generator(name, new CinemaActorGenerator(j, world));
         else if (key == PlayerGeneratorKey) add_generator(name, new PlayerGenerator(j, world));
-        else if (key == SimpleEnemyGeneratorKey) add_generator(name, new SimpleEnemyGenerator(j, world));
         else if (key == ElevatorGeneratorKey) add_generator(name, new ElevatorGenerator(j, world));
         else if (key == BarrierGeneratorKey) add_generator(name, new BarrierGenerator(j, world));
+        else if (key == SimpleEnemyGeneratorKey) add_generator(name, new SimpleEnemyGenerator(j, world));
+        else if (key == LichGeneratorKey) add_generator(name, new LichGenerator{ j, world });
     }
 }
 
