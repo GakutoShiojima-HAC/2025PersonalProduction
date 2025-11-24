@@ -22,7 +22,7 @@ LichGenerator::LichGenerator(const json& j, World* world) {
     my_info_.attack_offset = GSvector3{ param["AttackOffset"][0], param["AttackOffset"][1], param["AttackOffset"][2] };
 
     my_info_.falter_rate = MyJson::get_float(param, "FalterRate");
-
+    my_info_.critical_bone_num = MyJson::get_int(param, "CriticalBone");
 
     info_.attack_lottery_by_attack = MyJson::get_float(param, "LotteryByAttack");
     info_.attack_lottery_by_spell = MyJson::get_float(param, "LotteryBySpell");

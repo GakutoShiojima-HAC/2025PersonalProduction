@@ -28,6 +28,12 @@ Lich::Lich(IWorld* world, const GSvector3& position, const GSvector3& rotate, co
     mesh_.add_animation_event(Motion::Spell1, 36.0f, [=] { generate_spell_a(); });
     mesh_.add_animation_event(Motion::Spell2, 23.0f, [=] { generate_spell_b(); });
 
+    mesh_.add_animation_event(Motion::Attack1, CLAMP(35.0f - 15.0f, 0.0f, FLT_MAX), [=] { play_danger_signal_effect(my_info_.critical_bone_num); });
+    mesh_.add_animation_event(Motion::Attack2, CLAMP(44.0f - 15.0f, 0.0f, FLT_MAX), [=] { play_danger_signal_effect(my_info_.critical_bone_num); });
+    mesh_.add_animation_event(Motion::Spell1, CLAMP(36.0f - 15.0f, 0.0f, FLT_MAX), [=] { play_danger_signal_effect(my_info_.critical_bone_num); });
+    mesh_.add_animation_event(Motion::Spell2, CLAMP(23.0f - 15.0f, 0.0f, FLT_MAX), [=] { play_danger_signal_effect(my_info_.critical_bone_num); });
+
+
     change_state_and_motion((GSuint)LichStateType::Idle);
     save_current_state();
 }
