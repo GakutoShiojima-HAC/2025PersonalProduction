@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -148,6 +148,7 @@
     <ClCompile Include="Src\Actor\CinemaActor\CinemaActorGenerator.cpp" />
     <ClCompile Include="Src\Actor\CinemaActor\CinemaBehavior\NormalEnemyCounter.cpp" />
     <ClCompile Include="Src\Actor\CinemaActor\CinemaBehavior\PlayReact.cpp" />
+    <ClCompile Include="Src\Actor\Enemy\MyEnemy.cpp" />
     <ClCompile Include="Src\Actor\Enemy\SimpleEnemy\SimpleEnemy.cpp" />
     <ClCompile Include="Src\Actor\Enemy\SimpleEnemy\SimpleEnemyGenerator.cpp" />
     <ClCompile Include="Src\Actor\Gimmick\Barrier\Barrier.cpp" />
@@ -276,6 +277,13 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Src\State\Lich\LichIdleState.cpp" />
+    <ClCompile Include="Src\State\Lich\LichDeadState.cpp" />
+    <ClCompile Include="Src\State\Lich\LichHurtState.cpp" />
+    <ClCompile Include="Src\Actor\Enemy\Lich\Lich.cpp" />
+    <ClCompile Include="Src\Actor\Enemy\Lich\LichGenerator.cpp" />
+    <ClCompile Include="Src\State\Lich\LichAttackState.cpp" />
+    <ClCompile Include="Src\State\Lich\LichSpellState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Actor\CinemaActor\CinemaActor.h" />
@@ -283,6 +291,7 @@
     <ClInclude Include="Src\Actor\CinemaActor\CinemaBehavior\ICinemaBehavior.h" />
     <ClInclude Include="Src\Actor\CinemaActor\CinemaBehavior\NormalEnemyCounter.h" />
     <ClInclude Include="Src\Actor\CinemaActor\CinemaBehavior\PlayReact.h" />
+    <ClInclude Include="Src\Actor\Enemy\MyEnemy.h" />
     <ClInclude Include="Src\Actor\Gimmick\Barrier\Barrier.h" />
     <ClInclude Include="Src\Actor\Gimmick\Barrier\BarrierGenerator.h" />
     <ClInclude Include="Src\Actor\Gimmick\CheckPoint\CheckPoint.h" />
@@ -414,6 +423,7 @@
     <ClInclude Include="Src\State\DummyEnemy\DummyEnemyDeadState.h" />
     <ClInclude Include="Src\State\DummyEnemy\DummyEnemyIdleState.h" />
     <ClInclude Include="Src\State\DummyEnemy\DummyEnemyMoveState.h" />
+    <ClInclude Include="Src\State\Lich\LichState.h" />
     <ClInclude Include="Src\State\Player\PlayerAttackState.h" />
     <ClInclude Include="Src\State\Player\PlayerAvoidState.h" />
     <ClInclude Include="Src\State\Player\PlayerDeadState.h" />
@@ -444,6 +454,13 @@
     <ClInclude Include="Src\State\SimpleEnemy\SimpleEnemyState.h" />
     <ClInclude Include="Src\stdafx.h" />
     <ClInclude Include="Src\Item\Weapon\WeaponData.h" />
+    <ClInclude Include="Src\State\Lich\LichIdleState.h" />
+    <ClInclude Include="Src\State\Lich\LichDeadState.h" />
+    <ClInclude Include="Src\State\Lich\LichHurtState.h" />
+    <ClInclude Include="Src\Actor\Enemy\Lich\Lich.h" />
+    <ClInclude Include="Src\Actor\Enemy\Lich\LichGenerator.h" />
+    <ClInclude Include="Src\State\Lich\LichAttackState.h" />
+    <ClInclude Include="Src\State\Lich\LichSpellState.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Private\Shader\MaskEffect.frag" />
