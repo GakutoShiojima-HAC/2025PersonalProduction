@@ -1,0 +1,51 @@
+#include "ExplodeRoad.h"
+#include "Engine/Core/World/IWorld.h"
+#include "Assets.h"
+#include <GSeffect.h>
+#include "GameConfig.h"
+
+constexpr float RADIUS{ 1.0f };
+
+ExplodeRoad::ExplodeRoad(IWorld* world, const GSvector3& position, const GSvector3& velocity, Actor* owner, int damage, int time, float interval) {
+	world_ = world;
+	tag_ = ActorTag::None;
+    name_ = "ExplodeRoad";
+
+    owner_ = owner;
+    damage_ = damage;
+    time_ = time;
+    counter_ = 0;
+    interval_ = interval;
+    timer_ = interval;  // 最初は即出現
+
+    velocity_ = velocity;
+    transform_.position(position);
+    transform_.rotation(GSquaternion::lookRotation(velocity));
+
+	enable_collider_ = false;
+}
+
+void ExplodeRoad::update(float delta_time) {
+    // 判定を生成
+    if (timer_ >= interval_) {
+        timer_ = 0.0f;
+        ++counter_;
+
+        world_->generate_attack_collider(RADIUS, transform_.position() + GSvector3{ 0.0f, RADIUS, 0.0f }, owner_, damage_, "Attack", 0.1f, 0.0f);
+        play_effect((GSuint)EffectID::ExplosionSmall, GSvector3::zero());
+        world_->camera_shake(CameraShakeType::HandShake, 0.5f, 15.0f, false);
+
+        // 終了か？
+        if (counter_ >= time_) {
+            die();
+            return;
+        }
+
+        // 次の位置へ
+        transform_.translate(velocity_, GStransform::Space::World);
+    }
+    else {
+        timer_ += delta_time / cFPS;
+    }
+    
+}
