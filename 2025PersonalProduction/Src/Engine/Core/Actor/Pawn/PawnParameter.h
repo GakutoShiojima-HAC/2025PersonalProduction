@@ -38,9 +38,9 @@ namespace PawnParameter {
     inline float height(Type type) {
         switch (type) {
         case PawnParameter::Type::Big:
-            return 1.6f;
+            return 1.8f;
         default:
-            return 1.6f;
+            return 1.8f;
         }
     }
 }
