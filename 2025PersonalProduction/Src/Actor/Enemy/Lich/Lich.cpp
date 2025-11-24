@@ -4,6 +4,8 @@
 #include "Engine/Utils/Line.h"
 #include "Engine/Utils/MyMath.h"
 #include "Engine/Utils/MyRandom.h"
+#include "Actor/Magic/FireBall/FireBall.h"
+#include "Actor/Magic/ExplodeRoad/ExplodeRoad.h"
 
 #include "State/Lich/LichState.h"
 #include "State/Lich/LichIdleState.h"
@@ -97,11 +99,17 @@ bool Lich::is_root_motion_state() const {
 }
 
 void Lich::generate_spell_a() {
-    // “Š±
+    const GSvector3 position = local_to_world(GSvector3{ 0.0f, 2.0f, 0.25f }, GSvector3::zero(), GSvector3::one()).position();
+    const GSvector3 velocity = (target_ == nullptr ? transform_.forward() : target_->collider().center - position).normalized() * 15.0f / cFPS;
+    const int damage{ 5 };
+    world_->add_actor(new FireBall{ world_, position, velocity, 5.0f, this, damage });
 }
 
 void Lich::generate_spell_b() {
-    // ’n–Ê‚©‚ç‰½‚©
-
-    // HP‚Å•ªŠò‚·‚éH
+    GSvector3 position = local_to_world(GSvector3{ 0.0f, 0.0f, 0.25f }, GSvector3::zero(), GSvector3::one()).position();
+    GSvector3 to = target_ == nullptr ? transform_.forward() : target_->collider().center;
+    to.y = position.y;
+    GSvector3 velocity = (to - position).normalized() * 2.1f;
+    const int damage{ 3 };
+    world_->add_actor(new ExplodeRoad{ world_, position, velocity, this, damage, 5, 0.25f });
 }
