@@ -54,12 +54,10 @@ protected:
 
 public:
     /// <summary>
-    /// ステートに対応したモーション番号を返却
+    /// 指定したステートと対応したモーションに変更
     /// </summary>
-    /// <param name="state">= 状態</param>
-    /// <param name="loop">= ループするかどうか</param>
-    /// <returns>モーション番号</returns>
-    virtual GSuint get_motion(GSuint state, bool* loop = nullptr) const = 0;
+    /// <param name="state_num">ステート番号</param>
+    virtual void change_state_and_motion(const GSuint state_num) = 0;
 
 protected:
     /// <summary>
