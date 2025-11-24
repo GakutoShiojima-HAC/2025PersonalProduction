@@ -132,6 +132,8 @@ void SendMessageTimelineEditor::remove_keyframe(unsigned int index) {
 ordered_json SendMessageTimelineEditor::save_data() {
     ordered_json data;
 
+    if (data_ == nullptr || data_->get().empty()) return data;
+
     for (const auto* kf : data_->get()) {
         ordered_json item;
         item["time"] = kf->time;

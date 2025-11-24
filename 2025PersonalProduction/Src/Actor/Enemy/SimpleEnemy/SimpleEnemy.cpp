@@ -13,53 +13,16 @@
 #include "State/SimpleEnemy/SimpleEnemyMoveState.h"
 #include "State/SimpleEnemy/SimpleEnemySearchState.h"
 
-SimpleEnemy::SimpleEnemy(IWorld* world, const GSvector3& position, const GSvector3& rotate, const SimpleEnemyInfo& info) :
+SimpleEnemy::SimpleEnemy(IWorld* world, const GSvector3& position, const GSvector3& rotate, const MyEnemyInfo& my_info, const SimpleEnemyInfo& info) :
+    MyEnemy{ world, position, rotate, my_info },
     info_{ info } {
-    world_ = world;
-    tag_ = ActorTag::Enemy;
-    name_ = info.name;
-    hp_ = info.hp;
-
-    init_parameter(PawnParameter::get_type(info.type));
-
-    // ナビメッシュ追加
-    navmesh_ = { this, world_->navmesh() };
-    navmesh_.offset_ratio() = 0.0f;
-
-    mesh_ = { info.skinmesh, info.skinmesh, info.skinmesh };
     add_state();
 
     // 攻撃アニメーションイベントを生成
-    mesh_.add_animation_event(info_.motion_attack, info_.attack_event_time, [=] { generate_attack_collider(); });
+    mesh_.add_animation_event(info_.motion_attack, my_info_.attack_event_time, [=] { generate_attack_collider(); });
 
-    transform_.position(position);
-    transform_.eulerAngles(rotate);
-    mesh_.transform(transform_.localToWorldMatrix());
-    collide_field();
-    origin_position_ = transform_.position();
-
-    change_state((GSuint)SimpleEnemyStateType::Search, info.motion_idle, true);
-
-}
-
-void SimpleEnemy::update(float delta_time) {
-    update_invincible(delta_time);
-    update_state(delta_time);
-    update_gravity(delta_time);
-    update_mesh(delta_time);
-}
-
-void SimpleEnemy::draw() const {
-    mesh_.draw();
-
-#ifdef _DEBUG
-    navmesh_.draw_path();
-#endif
-
-}
-
-void SimpleEnemy::draw_gui() const {
-    // TODO HP?
+    change_state_and_motion((GSuint)SimpleEnemyStateType::Search);
+    save_current_state();
 }
 
 void SimpleEnemy::take_damage(Actor& other, const int damage) {
@@ -76,17 +39,17 @@ void SimpleEnemy::take_damage(Actor& other, const int damage) {
     if (!MyLib::is_in(state_.get_current_state(),
         (GSuint)SimpleEnemyStateType::Hurt,
         (GSuint)SimpleEnemyStateType::Attack
-    )) prev_state_num_ = state_.get_current_state();
+    )) save_current_state();
 
     if (hp_ <= 0) {
-        change_state((GSuint)SimpleEnemyStateType::Dead, info_.motion_dead, false);
+        change_state_and_motion((GSuint)SimpleEnemyStateType::Dead);
     }
     else {
         // 怯む確率
-        if (target_ == nullptr || MyRandom::random_float(0.0f, 1.0f) <= info_.falter_rate) {
+        if (target_ == nullptr || MyRandom::random_float(0.0f, 1.0f) <= my_info_.falter_rate) {
             // 一度Idleにしてモーションをリセット
             mesh_.change_motion(info_.motion_idle, true);
-            change_state((GSuint)SimpleEnemyStateType::Hurt, info_.motion_hurt, false);
+            change_state_and_motion((GSuint)SimpleEnemyStateType::Hurt);
         }
     }
 
@@ -101,8 +64,22 @@ bool SimpleEnemy::is_dead_state() const {
     return MyLib::is_in(state_.get_current_state(), (GSuint)SimpleEnemyStateType::Dead) || is_dead_;
 }
 
-void SimpleEnemy::react(Actor& other) {
-    if (MyLib::is_in(other.tag(), ActorTag::Enemy, ActorTag::Player)) collide_actor(other);
+void SimpleEnemy::change_state_and_motion(const GSuint state_num) {
+    bool loop{ true };
+    GSuint motion{ info_.motion_idle };
+
+    switch (SimpleEnemyStateType(state_num)) {
+    case SimpleEnemyStateType::Idle:    loop = true;    motion = info_.motion_idle;     break;
+    case SimpleEnemyStateType::Attack:  loop = false;   motion = info_.motion_attack;   break;
+    case SimpleEnemyStateType::Dead:    loop = false;   motion = info_.motion_dead;     break;
+    case SimpleEnemyStateType::Find:    loop = true;    motion = info_.motion_idle;     break;
+    case SimpleEnemyStateType::Hurt:    loop = false;   motion = info_.motion_hurt;     break;
+    case SimpleEnemyStateType::Move:    loop = true;    motion = info_.motion_move;     break;
+    case SimpleEnemyStateType::Search:  loop = true;    motion = info_.motion_idle;     break;
+    default:                            loop = true;    motion = info_.motion_idle;     break;
+    }
+
+    change_state(state_num, motion, loop);
 }
 
 void SimpleEnemy::add_state() {
@@ -115,36 +92,12 @@ void SimpleEnemy::add_state() {
     state_.add_state((GSuint)SimpleEnemyStateType::Search, make_shared<SimpleEnemySearchState>(*this));
 }
 
-void SimpleEnemy::update_mesh(float delta_time) {
-    // メッシュのモーションを更新
-    mesh_.update(delta_time);
-    // ルートモーションを適用
-    if (is_root_motion_state()) mesh_.apply_root_motion(transform_);
-    // ワールド変換行列を設定
-    mesh_.transform(transform_.localToWorldMatrix());
-}
-
-const SimpleEnemyInfo& SimpleEnemy::get_info() const {
+const SimpleEnemyInfo& SimpleEnemy::info() const {
     return info_;
 }
 
-void SimpleEnemy::save_prev_state() {
-    prev_state_num_ = state_.get_current_state();
-}
-
-void SimpleEnemy::change_prev_state() {
-    bool loop{ true };
-    GSuint motion = get_motion((SimpleEnemyStateType)prev_state_num_, &loop);
-
-    change_state(prev_state_num_, motion, loop);
-}
-
-GSuint SimpleEnemy::prev_state_num() const {
-    return prev_state_num_;
-}
-
-GSuint SimpleEnemy::get_motion(SimpleEnemyStateType state, bool* loop) const {
-    switch (state) {
+GSuint SimpleEnemy::get_motion(GSuint state, bool* loop) const {
+    switch (SimpleEnemyStateType(state)) {
     case SimpleEnemyStateType::Idle: if (loop != nullptr) *loop = true; return info_.motion_idle;
     case SimpleEnemyStateType::Attack: if (loop != nullptr) *loop = false; return info_.motion_attack;
     case SimpleEnemyStateType::Dead: if (loop != nullptr) *loop = false; return info_.motion_dead;
@@ -156,95 +109,6 @@ GSuint SimpleEnemy::get_motion(SimpleEnemyStateType state, bool* loop) const {
     }
 }
 
-bool SimpleEnemy::search_target() {
-    if (target_ != nullptr) {
-        // 死亡判定なら再検索
-        if (target_->is_dead_state()) target_ = nullptr;
-        // 存在しているなら真
-        else return true;
-    }
-    std::vector<Character*> character = world_->find_character_with_tag(ActorTag::Player);
-    if (character.empty()) {
-        target_ = nullptr;
-        return false;
-    }
-    // 一番近いキャラクターを探す
-    float min_length{ FLT_MAX };
-    Character* target{ nullptr };
-    const float fov = info_.search_fov;
-    const float len = info_.search_length;
-    for (const auto& chara : character) {
-        // 死亡していたらスキップ
-        if (chara->is_dead_state()) continue;
-        // 自分の視野の外なら見えていないとしてスキップ
-        if (MyMath::to_target_angle(transform_.position(), transform_.forward(), chara->transform().position()) > fov) continue;
-        // 障害物があったら見えていないとしてスキップ
-        Line line{ collider().center, chara->collider().center };
-        if (world_->get_field()->collide(line)) continue;
-        // 索敵範囲の外なら見えていないとしてスキップ
-        float length = (line.end - line.start).magnitude();
-        if (length > len) continue;
-        // 一番近ければ対象を更新
-        if (length < min_length) {
-            min_length = length;
-            target = chara;
-        }
-    }
-
-    target_ = target;
-    return target_ != nullptr;
-}
-
-Character* SimpleEnemy::target() {
-    return target_;
-}
-
-bool SimpleEnemy::start_move() {
-    if (target_ == nullptr) return false;
-    return navmesh_.find_path(target_);
-}
-
-bool SimpleEnemy::start_move(const GSvector3& to) {
-    return navmesh_.find_path(to);
-}
-
-void SimpleEnemy::update_move(float delta_time) {
-    navmesh_.update_move(delta_time, info_.move_speed, 3.0f);
-}
-
-bool SimpleEnemy::is_end_move() const {
-    return navmesh_.is_end_move();;
-}
-
-void SimpleEnemy::end_move() {
-    navmesh_.end();
-}
-
-void SimpleEnemy::update_look_target(float delta_time) {
-    if (target_ == nullptr) return;
-
-    GSvector3 to_target = target()->transform().position() - transform_.position();
-    GSquaternion rotation = GSquaternion::rotateTowards(
-        transform_.rotation(),
-        GSquaternion::lookRotation(to_target),
-        3.0f * delta_time
-    );
-    transform_.rotation(rotation);
-}
-
-void SimpleEnemy::release_target() {
-    target_ = nullptr;
-}
-
-GSvector3& SimpleEnemy::origin_position() {
-    return origin_position_;
-}
-
 bool SimpleEnemy::is_root_motion_state() const {
     return false;
-}
-
-void SimpleEnemy::generate_attack_collider() {
-    GSmatrix4 m = local_to_world(info_.attack_offset, GSvector3::zero(), GSvector3::one());
-    world_->generate_attack_collider(info_.attack_radius, m.position(), this, info_.attack_damage, "SimpleEnemyAttack", 0.1f, 0.0f);
 }

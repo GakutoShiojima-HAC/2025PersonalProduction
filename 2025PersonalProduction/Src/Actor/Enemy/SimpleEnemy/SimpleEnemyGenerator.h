@@ -18,6 +18,8 @@ private:
 
     SimpleEnemyInfo info_;
 
+    MyEnemyInfo my_info_;
+
 };
 
 #endif

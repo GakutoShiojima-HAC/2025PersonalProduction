@@ -162,6 +162,9 @@ void CameraTimelineEditor::remove_keyframe(unsigned int index) {
 
 ordered_json CameraTimelineEditor::save_data() {
     ordered_json data;
+
+    if (data_ == nullptr || data_->get().empty()) return data;
+
     data["start"] = data_->start_transition_time();
     data["end"] = data_->end_transition_time();
 

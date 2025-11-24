@@ -1,4 +1,5 @@
 #include "Scene/GameScene.h"
+#include <gslib.h>
 #include <GSeffect.h>
 #include "Assets.h"
 #include "Engine/Core/Tween/Tween.h"
@@ -18,7 +19,6 @@
 #include "Actor/CinemaActor/CinemaBehavior/NormalEnemyCounter.h"
 
 // 一時的 ローダーやマネージャーを作ったら不要
-#include <gslib.h>	// シーン終了用
 #include "Actor/Enemy/DummyEnemy.h"	// アクターローダーを作るべし
 #include "Actor/ItemActor/ItemActor.h"  //アクターローダーを作るべし
 
