@@ -66,12 +66,6 @@ public:
 	void add_navmesh(NavMeshSurface* navmesh);
 
 	/// <summary>
-	/// アクターの追加
-	/// </summary>
-	/// <param name="actor">= アクター</param>
-	void add_actor(Actor* actor);
-
-	/// <summary>
 	/// ポーンの追加
 	/// </summary>
 	/// <param name="pawn">= ポーン</param>
@@ -108,6 +102,8 @@ public:
     PlayerRespawner& player_respawner();
 
 public:
+    void add_actor(Actor* actor) override;
+
     bool& enable_draw_gui() override;
 
 	Field* get_field() override;
