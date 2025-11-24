@@ -100,6 +100,17 @@ protected:
 	/// <returns></returns>
 	float current_motion_end_time() const;
 
+    /// <summary>
+    /// 攻撃時の危険信号エフェクトを再生
+    /// </summary>
+    /// <param name="bone_num">= 信号を出すボーン番号</param>
+    void play_danger_signal_effect(GSuint bone_num);
+
+    /// <summary>
+    /// 危険信号エフェクトの更新
+    /// </summary>
+    void update_denger_signal(float delta_time);
+
 protected:
 	/// <summary>
 	/// 地形との衝突判定
@@ -120,7 +131,6 @@ protected:
     /// 接地
     /// </summary>
     virtual void on_ground();
-
 
     /// <summary>
     /// パラメータの初期化
@@ -149,6 +159,11 @@ protected:
 	
 	// 接地しているか
 	bool is_ground_{ false };
+
+    // 危険信号のボーン番号
+    GSuint danger_signal_bone_num_{ 0 };
+    // 危険信号のエフェクトハンドル
+    int danger_signal_effect_handle_{ 0 };
 
 };
 

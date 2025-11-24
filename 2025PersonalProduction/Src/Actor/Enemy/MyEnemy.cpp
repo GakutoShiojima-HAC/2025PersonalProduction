@@ -30,6 +30,10 @@ void MyEnemy::update(float delta_time) {
     update_mesh(delta_time);
 }
 
+void MyEnemy::late_update(float delta_time) {
+    update_denger_signal(delta_time);
+}
+
 void MyEnemy::draw() const {
     mesh_.draw();
 

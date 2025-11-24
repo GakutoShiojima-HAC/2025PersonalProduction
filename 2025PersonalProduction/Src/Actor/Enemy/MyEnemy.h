@@ -34,6 +34,8 @@ struct MyEnemyInfo {
     float attack_detection_radius{ 1.0f };          // UŒ‚‚ğ”­“®‚Å‚«‚é‘ÎÛ‚Æ‚Ì‹——£
 
     float falter_rate{ 1.0f };  // UŒ‚‚ğó‚¯‚½‚É‹¯‚ŞŠm—¦(0.0~1.0)
+
+    int critical_bone_num{ 0 };
 };
 
 class MyEnemy : public Character {
@@ -44,6 +46,8 @@ public:
 
 public:
     virtual void update(float delta_time) override;
+
+    virtual void late_update(float delta_time) override;
 
     virtual void draw() const override;
 
