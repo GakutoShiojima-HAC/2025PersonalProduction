@@ -60,6 +60,8 @@
 #define BGM_ID_LIST \
     X(NONE) \
     X(Title) \
+    X(GameNormal) \
+    X(GameBoss) \
     X(MAX_SIZE) // 要素数
 
 // SE
@@ -75,6 +77,8 @@
     X(Item) \
     X(HitAttack) \
     X(PlayerSlash) \
+    X(FireBall) \
+    X(ExplosionSmall) \
     X(MAX_SIZE) // 要素数
 #pragma endregion
 
