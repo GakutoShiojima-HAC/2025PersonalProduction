@@ -158,6 +158,8 @@
     <ClCompile Include="Src\Actor\Gimmick\Elevator\Elevator.cpp" />
     <ClCompile Include="Src\Actor\Gimmick\Elevator\ElevatorGenerator.cpp" />
     <ClCompile Include="Src\Actor\ItemActor\ItemActor.cpp" />
+    <ClCompile Include="Src\Actor\Magic\ExplodeRoad\ExplodeRoad.cpp" />
+    <ClCompile Include="Src\Actor\Magic\FireBall\FireBall.cpp" />
     <ClCompile Include="Src\Actor\Player\PlayerGenerator.cpp" />
     <ClCompile Include="Src\Actor\Player\PlayerRespawner.cpp" />
     <ClCompile Include="Src\Actor\StageTeleporter\StageTeleporter.cpp" />
@@ -298,6 +300,8 @@
     <ClInclude Include="Src\Actor\Gimmick\CheckPoint\CheckPointGenerator.h" />
     <ClInclude Include="Src\Actor\Gimmick\Elevator\Elevator.h" />
     <ClInclude Include="Src\Actor\Gimmick\Elevator\ElevatorGenerator.h" />
+    <ClInclude Include="Src\Actor\Magic\ExplodeRoad\ExplodeRoad.h" />
+    <ClInclude Include="Src\Actor\Magic\FireBall\FireBall.h" />
     <ClInclude Include="Src\Actor\Player\PlayerRespawner.h" />
     <ClInclude Include="Src\Engine\Core\Actor\Pawn\PawnParameter.h" />
     <ClInclude Include="Src\Actor\ActorTag.h" />
