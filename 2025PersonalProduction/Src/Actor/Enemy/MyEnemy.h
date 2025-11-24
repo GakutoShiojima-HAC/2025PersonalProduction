@@ -129,6 +129,11 @@ public:
     void update_look_target(float delta_time, float angle = 3.0f);
 
     /// <summary>
+    /// ターゲットを見る(即時)
+    /// </summary>
+    void look_target();
+
+    /// <summary>
     /// ターゲットを解除
     /// </summary>
     void release_target();

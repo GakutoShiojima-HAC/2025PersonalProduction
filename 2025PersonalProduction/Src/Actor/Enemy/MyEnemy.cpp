@@ -140,6 +140,14 @@ void MyEnemy::update_look_target(float delta_time, float angle) {
     transform_.rotation(rotation);
 }
 
+void MyEnemy::look_target() {
+    if (target_ == nullptr) return;
+
+    GSvector3 target_position = target_->transform().position();
+    target_position.y = transform_.position().y; // Œü‚©‚¹‚é‚¾‚¯‚È‚Ì‚ÅyÀ•W‚Í“¯‚¶
+    transform_.lookAt(target_position);
+}
+
 void MyEnemy::release_target() {
     target_ = nullptr;
 }
