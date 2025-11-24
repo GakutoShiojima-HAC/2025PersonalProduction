@@ -72,6 +72,12 @@ public:
 	/// <returns>モーションが終了していたら真を返却</returns>
 	bool is_motion_end() const;
 
+    /// <summary>
+    /// 現在のモーション
+    /// </summary>
+    /// <returns>モーション番号</returns>
+    GSuint current_motion() const;
+
 protected:
 	/// <summary>
 	/// 重力の更新

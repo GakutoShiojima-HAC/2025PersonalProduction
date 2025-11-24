@@ -38,6 +38,10 @@ bool Pawn::is_motion_end() const {
     return mesh_.is_motion_end();
 }
 
+GSuint Pawn::current_motion() const {
+    return motion_;
+}
+
 float Pawn::current_motion_end_time() const {
     return mesh_.motion_end_time();
 }
