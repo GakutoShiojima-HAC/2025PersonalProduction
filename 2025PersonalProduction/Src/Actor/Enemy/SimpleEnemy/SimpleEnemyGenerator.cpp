@@ -24,6 +24,8 @@ SimpleEnemyGenerator::SimpleEnemyGenerator(const json& j, World* world) {
 
     my_info_.falter_rate = MyJson::get_float(param, "FalterRate");
 
+    my_info_.critical_bone_num = MyJson::get_int(param, "CriticalBone");
+
     if (!MyJson::is_object(param, "Motion")) return;
     auto& motion = param["Motion"];
 

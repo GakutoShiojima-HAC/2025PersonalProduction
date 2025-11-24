@@ -74,6 +74,7 @@
 #define EFFECT_ID_LIST \
     X(NONE) \
     X(Avoid) \
+    X(DangerSignal) \
     X(Item) \
     X(HitAttack) \
     X(PlayerSlash) \

@@ -3,6 +3,8 @@
 #include "Engine/Core/Field/Field.h"
 #include "Engine/Utils/Line.h"
 #include "GameConfig.h"
+#include "Assets.h"
+#include <GSeffect.h>
 
 constexpr float FOOT_OFFSET{ 0.125f };
 
@@ -69,6 +71,22 @@ void Pawn::update_mesh(float delta_time) {
 
     // ワールド変換行列を設定
     mesh_.transform(transform_.localToWorldMatrix());
+}
+
+void Pawn::play_danger_signal_effect(GSuint bone_num) {
+    // エフェクトを再生する
+    const GSmatrix4 mat = mesh_.bone_matrices(bone_num);
+    danger_signal_bone_num_ = bone_num;
+    danger_signal_effect_handle_ = gsPlayEffectEx((GSuint)EffectID::DangerSignal, &mat);
+}
+
+void Pawn::update_denger_signal(float delta_time) {
+    if (!gsExistsEffect(danger_signal_effect_handle_)) return;
+
+    GSmatrix4 mat = mesh_.bone_matrices(danger_signal_bone_num_);
+    gsSetEffectMatrix(danger_signal_effect_handle_, &mat);
+    const GSvector3 scale{ 0.2f, 0.2f, 0.2f };
+    gsSetEffectScale(danger_signal_effect_handle_, &scale);
 }
 
 void Pawn::collide_field() {
