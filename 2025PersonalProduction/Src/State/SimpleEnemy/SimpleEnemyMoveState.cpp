@@ -13,7 +13,7 @@ void SimpleEnemyMoveState::enter() {
 void SimpleEnemyMoveState::update(float delta_time) {
     // ターゲットがいなかったらサーチに戻る
     if (!owner_.search_target()) {
-        owner_.change_state((GSuint)SimpleEnemyStateType::Search, owner_.get_motion((GSuint)SimpleEnemyStateType::Search), true);
+        owner_.change_state_and_motion((GSuint)SimpleEnemyStateType::Search);
         return;
     }
 
@@ -25,7 +25,7 @@ void SimpleEnemyMoveState::update(float delta_time) {
         if (MyMath::to_target_angle(owner_.transform().position(), owner_.transform().forward(), owner_.target()->transform().position()) <= 10.0f) {
             // 判定内なら攻撃
             owner_.save_current_state();
-            owner_.change_state((GSuint)SimpleEnemyStateType::Attack, owner_.get_motion((GSuint)SimpleEnemyStateType::Attack), false);
+            owner_.change_state_and_motion((GSuint)SimpleEnemyStateType::Attack);
             return;
         }
         else {
@@ -36,7 +36,7 @@ void SimpleEnemyMoveState::update(float delta_time) {
         // 見失ったらサーチ状態に戻る
         if (to_target_length > owner_.my_info().search_length * 2.5f) {
             owner_.release_target();
-            owner_.change_state((GSuint)SimpleEnemyStateType::Search, owner_.get_motion((GSuint)SimpleEnemyStateType::Search), true);
+            owner_.change_state_and_motion((GSuint)SimpleEnemyStateType::Search);
             return;
         }
         owner_.update_move(delta_time);

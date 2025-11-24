@@ -9,7 +9,7 @@ SimpleEnemyFindState::SimpleEnemyFindState(SimpleEnemy& owner) : SimpleEnemyStat
 void SimpleEnemyFindState::update(float delta_time) {
     // ターゲットがいなかったらサーチに戻る
     if (!owner_.search_target()) {
-        owner_.change_state((GSuint)SimpleEnemyStateType::Search, owner_.get_motion((GSuint)SimpleEnemyStateType::Search), true);
+        owner_.change_state_and_motion((GSuint)SimpleEnemyStateType::Search);
         return;
     }
 
@@ -17,7 +17,7 @@ void SimpleEnemyFindState::update(float delta_time) {
 
     // ターゲットが見える位置に入ったら遷移
     if (MyMath::to_target_angle(owner_.transform().position(), owner_.transform().forward(), owner_.target()->transform().position()) <= 10.0f) {
-        owner_.change_state((GSuint)SimpleEnemyStateType::Move, owner_.get_motion((GSuint)SimpleEnemyStateType::Move), true);
+        owner_.change_state_and_motion((GSuint)SimpleEnemyStateType::Move);
         return;
     }
 

@@ -38,7 +38,7 @@ public:
 
     bool is_dead_state() const override;
 
-    GSuint get_motion(GSuint state, bool* loop = nullptr) const override;
+    void change_state_and_motion(const GSuint state_num) override;
 
 private:
     void add_state() override;
@@ -53,6 +53,14 @@ public:
     /// </summary>
     /// <returns>参照</returns>
     const SimpleEnemyInfo& info() const;
+
+    /// <summary>
+    /// ステートに対応したモーション番号を返却
+    /// </summary>
+    /// <param name="state">= 状態</param>
+    /// <param name="loop">= ループするかどうか</param>
+    /// <returns>モーション番号</returns>
+    GSuint get_motion(GSuint state, bool* loop = nullptr) const;
 
 private:
     /// <summary>

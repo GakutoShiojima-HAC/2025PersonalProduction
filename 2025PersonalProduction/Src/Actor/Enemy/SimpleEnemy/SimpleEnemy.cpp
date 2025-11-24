@@ -21,7 +21,7 @@ SimpleEnemy::SimpleEnemy(IWorld* world, const GSvector3& position, const GSvecto
     // 攻撃アニメーションイベントを生成
     mesh_.add_animation_event(info_.motion_attack, my_info_.attack_event_time, [=] { generate_attack_collider(); });
 
-    change_state((GSuint)SimpleEnemyStateType::Search, info.motion_idle, true);
+    change_state_and_motion((GSuint)SimpleEnemyStateType::Search);
     save_current_state();
 }
 
@@ -42,14 +42,14 @@ void SimpleEnemy::take_damage(Actor& other, const int damage) {
     )) save_current_state();
 
     if (hp_ <= 0) {
-        change_state((GSuint)SimpleEnemyStateType::Dead, get_motion((GSuint)SimpleEnemyStateType::Dead), false);
+        change_state_and_motion((GSuint)SimpleEnemyStateType::Dead);
     }
     else {
         // 怯む確率
         if (target_ == nullptr || MyRandom::random_float(0.0f, 1.0f) <= my_info_.falter_rate) {
             // 一度Idleにしてモーションをリセット
-            mesh_.change_motion(get_motion((GSuint)SimpleEnemyStateType::Idle), true);
-            change_state((GSuint)SimpleEnemyStateType::Hurt, get_motion((GSuint)SimpleEnemyStateType::Hurt), false);
+            mesh_.change_motion(info_.motion_idle, true);
+            change_state_and_motion((GSuint)SimpleEnemyStateType::Hurt);
         }
     }
 
@@ -64,17 +64,22 @@ bool SimpleEnemy::is_dead_state() const {
     return MyLib::is_in(state_.get_current_state(), (GSuint)SimpleEnemyStateType::Dead) || is_dead_;
 }
 
-GSuint SimpleEnemy::get_motion(GSuint state, bool* loop) const {
-    switch (SimpleEnemyStateType(state)) {
-    case SimpleEnemyStateType::Idle: if (loop != nullptr) *loop = true; return info_.motion_idle;
-    case SimpleEnemyStateType::Attack: if (loop != nullptr) *loop = false; return info_.motion_attack;
-    case SimpleEnemyStateType::Dead: if (loop != nullptr) *loop = false; return info_.motion_dead;
-    case SimpleEnemyStateType::Find: if (loop != nullptr) *loop = true; return info_.motion_idle;
-    case SimpleEnemyStateType::Hurt: if (loop != nullptr) *loop = false; return info_.motion_hurt;
-    case SimpleEnemyStateType::Move: if (loop != nullptr) *loop = true; return info_.motion_move;
-    case SimpleEnemyStateType::Search: if (loop != nullptr) *loop = true; return info_.motion_idle;
-    default: if (loop != nullptr) *loop = true; return info_.motion_idle;
+void SimpleEnemy::change_state_and_motion(const GSuint state_num) {
+    bool loop{ true };
+    GSuint motion{ info_.motion_idle };
+
+    switch (SimpleEnemyStateType(state_num)) {
+    case SimpleEnemyStateType::Idle:    loop = true;    motion = info_.motion_idle;     break;
+    case SimpleEnemyStateType::Attack:  loop = false;   motion = info_.motion_attack;   break;
+    case SimpleEnemyStateType::Dead:    loop = false;   motion = info_.motion_dead;     break;
+    case SimpleEnemyStateType::Find:    loop = true;    motion = info_.motion_idle;     break;
+    case SimpleEnemyStateType::Hurt:    loop = false;   motion = info_.motion_hurt;     break;
+    case SimpleEnemyStateType::Move:    loop = true;    motion = info_.motion_move;     break;
+    case SimpleEnemyStateType::Search:  loop = true;    motion = info_.motion_idle;     break;
+    default:                            loop = true;    motion = info_.motion_idle;     break;
     }
+
+    change_state(state_num, motion, loop);
 }
 
 void SimpleEnemy::add_state() {
@@ -89,6 +94,19 @@ void SimpleEnemy::add_state() {
 
 const SimpleEnemyInfo& SimpleEnemy::info() const {
     return info_;
+}
+
+GSuint SimpleEnemy::get_motion(GSuint state, bool* loop) const {
+    switch (SimpleEnemyStateType(state)) {
+    case SimpleEnemyStateType::Idle: if (loop != nullptr) *loop = true; return info_.motion_idle;
+    case SimpleEnemyStateType::Attack: if (loop != nullptr) *loop = false; return info_.motion_attack;
+    case SimpleEnemyStateType::Dead: if (loop != nullptr) *loop = false; return info_.motion_dead;
+    case SimpleEnemyStateType::Find: if (loop != nullptr) *loop = true; return info_.motion_idle;
+    case SimpleEnemyStateType::Hurt: if (loop != nullptr) *loop = false; return info_.motion_hurt;
+    case SimpleEnemyStateType::Move: if (loop != nullptr) *loop = true; return info_.motion_move;
+    case SimpleEnemyStateType::Search: if (loop != nullptr) *loop = true; return info_.motion_idle;
+    default: if (loop != nullptr) *loop = true; return info_.motion_idle;
+    }
 }
 
 bool SimpleEnemy::is_root_motion_state() const {

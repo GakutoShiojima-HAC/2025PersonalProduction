@@ -29,9 +29,7 @@ void SimpleEnemySearchState::update(float delta_time) {
     // ターゲットが見つかったら
     if (owner_.search_target()) {
         // ターゲットの方向を向く
-        bool loop;
-        GSuint motion = owner_.get_motion((GSuint)SimpleEnemyStateType::Find, &loop);
-        owner_.change_state((GSuint)SimpleEnemyStateType::Find, motion, loop);
+        owner_.change_state_and_motion((GSuint)SimpleEnemyStateType::Find);
         return;
     }
 
