@@ -9,6 +9,7 @@
 #include "Engine/Core/Tween/Tween.h"
 #include "GameConfig.h"
 #include "Engine/Core/Vibration/Vibration.h"
+#include "GUI//PlayerUI.h"
 
 #include "State/Player/PlayerAttackState.h"
 #include "State/Player/PlayerAvoidState.h"
@@ -34,27 +35,30 @@
 #include "Score/ActionScore.h"
 
 // ˆÚ“®‚ÌƒJƒƒ‰Œü‚«‚Ö‚Ì‰ñ“]Šp“x
-const float TURN_SPEED{ 18.0f };
+constexpr float TURN_SPEED{ 18.0f };
 // ‹ó’†ˆÚ“®‚ÌƒJƒƒ‰Œü‚«‚Ö‚Ì‰ñ“]Šp“x
-const float AIR_TURN_SPEED{ 5.0f };
+constexpr float AIR_TURN_SPEED{ 5.0f };
 // ’ÊíˆÚ“®‘¬“x
-const float MOVE_SPEED{ 0.02f };
+constexpr float MOVE_SPEED{ 0.02f };
 // ¾‘–ˆÚ“®‘¬“x
-const float SPRINT_SPEED{ 0.095f };
+constexpr float SPRINT_SPEED{ 0.095f };
 // Œ¸‘¬ˆÚ“®‘¬“x”{—¦
-const float DECELERATION_SPEED{ 0.75f };
+constexpr float DECELERATION_SPEED{ 0.75f };
 // –³“GŠÔ(•b)
-const float INVINCIBLE_TIME{ 0.5f };
+constexpr float INVINCIBLE_TIME{ 0.5f };
 // ‰ñ”ğˆÚ“®‘¬“x
-const float AVOID_SPEED{ 9.0f };
+constexpr float AVOID_SPEED{ 9.0f };
 
 // ‰ñ”ğ‰‰o‚ÌŠÔ
-const float AVOID_EFFECT_TIME{ 3.0f };
+constexpr float AVOID_EFFECT_TIME{ 3.0f };
 // ‰ñ”ğ‰‰o‚ÌF
 const GScolor AVOID_EFFECT_COLOR{ 0.592f, 0.627f, 1.0f, 1.0f };
 
 // ‰Eè‚Ìƒ{[ƒ“”Ô†
-const int RIGHT_HAND_BONE_NUM{ 114 };
+constexpr int RIGHT_HAND_BONE_NUM{ 114 };
+
+// Šî‘b‘Ì—Í
+constexpr int BASIC_HP{ 10 };
 
 // UŒ‚ƒ‚[ƒVƒ‡ƒ“
 constexpr GSuint ATTACK_MOTION_MAX = 5;
@@ -77,7 +81,10 @@ Player::Player(IWorld* world, const GSvector3& position, const GSvector3& rotate
     // ƒ^ƒCƒ€ƒXƒP[ƒ‹‚ğó‚¯‚È‚¢
     enable_timescale_ = false;
 
-    hp_ = 10;
+    // HP‚ğŒvZ
+    GameSaveData& save_data = world_->game_save_data();
+    max_hp_ = hp_ = BASIC_HP + save_data.get().player_level * 2;
+    display_hp_ = (float)max_hp_;
 
 	mesh_ = { (GSuint)MeshID::Player, (GSuint)MeshID::Player, (GSuint)MeshID::Player };
 	add_state();
@@ -188,6 +195,7 @@ void Player::update(float delta_time) {
 }
 
 void Player::late_update(float delta_time) {
+    update_display_hp(delta_time);
     interact_update();
 }
 
@@ -215,6 +223,11 @@ void Player::draw_gui() const {
 
     // ƒCƒ“ƒ^ƒ‰ƒNƒgUI‚Ì•`‰æ
     InteractUI::draw(interact_actors_, interact_target_index_);
+
+    // HP‚Ì•`‰æ
+    PlayerUI::draw_hp(hp_, display_hp_, max_hp_);
+    // ƒŒƒxƒ‹‚Ì•`‰æ
+    PlayerUI::draw_level(world_->game_save_data().get().player_level);
 
 	// state_.draw_gui();
 }

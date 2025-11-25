@@ -322,6 +322,9 @@ private:
     // 武器を描画するかどうか
     bool draw_weapon_{ false };
 
+    // 最大HP
+    int max_hp_{ 0 };
+
 	// 通常攻撃段数
 	int attack_count_{ 0 };
     // 通常攻撃のパラメータ

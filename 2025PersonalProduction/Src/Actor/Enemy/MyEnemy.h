@@ -24,6 +24,8 @@ struct MyEnemyInfo {
     int hp{ 5 };                        // ‘Ì—Í
     float move_speed{ 0.125f };         // ˆÚ“®‘¬“x
 
+    float hp_height{ 1.0f };            // HP•\¦‚Ì‚‚³
+
     float search_fov{ 75.0f };          // õ“G‚Ì‹–ìŠp
     float search_length{ 5.0f };        // õ“G‚Ì‹——£
 
@@ -160,6 +162,16 @@ protected:
     /// </summary>
     void generate_attack_collider();
 
+    /// <summary>
+    /// HP‚ğ•`‰æ
+    /// </summary>
+    void draw_hp_gauge() const;
+
+    /// <summary>
+    /// ƒ{ƒXƒo[‚ğ•`‰æ
+    /// </summary>
+    void draw_boss_bar() const;
+
 protected:
     GSuint prev_state_num_{ 0 };
     GSuint prev_motion_num_{ 0 };
@@ -172,6 +184,7 @@ protected:
     GSvector3 origin_position_{ 0.0f, 0.0f, 0.0f };
 
     MyEnemyInfo my_info_;
+
 };        
 
 #endif

@@ -7,6 +7,7 @@
 
 struct SaveData {
     int stage{ -1 };    // -1でチュートリアル未クリア 0以上ならindex + 1のステージに挑戦できる
+    int player_level{ 1 };
 };
 
 class GameSaveData {

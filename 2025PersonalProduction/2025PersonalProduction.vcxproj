@@ -219,6 +219,7 @@
     <ClCompile Include="Src\GUI\Button\TextureFunctionButton.cpp" />
     <ClCompile Include="Src\GUI\Button\ToggleButton.cpp" />
     <ClCompile Include="Src\GUI\InteractUI.cpp" />
+    <ClCompile Include="Src\GUI\PlayerUI.cpp" />
     <ClCompile Include="Src\Item\Inventory.cpp" />
     <ClCompile Include="Src\Item\ItemDataManager.cpp" />
     <ClCompile Include="Src\Item\Weapon\WeaponDataManager.cpp" />
@@ -383,6 +384,7 @@
     <ClInclude Include="Src\GUI\Button\TextureFunctionButton.h" />
     <ClInclude Include="Src\GUI\Button\ToggleButton.h" />
     <ClInclude Include="Src\GUI\InteractUI.h" />
+    <ClInclude Include="Src\GUI\PlayerUI.h" />
     <ClInclude Include="Src\Item\Inventory.h" />
     <ClInclude Include="Src\Item\ItemData.h" />
     <ClInclude Include="Src\Item\ItemDataManager.h" />

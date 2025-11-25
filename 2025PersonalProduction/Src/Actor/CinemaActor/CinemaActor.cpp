@@ -35,6 +35,7 @@ void CinemaActor::update(float delta_time) {
             if (player != nullptr) {
                 player->change_state(player_prev_state_);
             }
+            world_->enable_draw_gui() = true;
             end();
         }
         return;
@@ -45,6 +46,7 @@ void CinemaActor::update(float delta_time) {
         play_start_ = true;
         world_->play_timeline(timeline_name_);
         behavior_->enter();
+        world_->enable_draw_gui() = false;
 
         // プレイヤーを固定するかどうか
         if (is_player_fixed_) {
@@ -53,11 +55,6 @@ void CinemaActor::update(float delta_time) {
                 player_prev_state_ = player->current_state_num();
                 player->change_state((GSuint)PlayerStateType::Idle);
             }
-            return;
-        }
-        // 固定しないならこの後存在する意味がないので終了
-        else {
-            end();
             return;
         }
     }

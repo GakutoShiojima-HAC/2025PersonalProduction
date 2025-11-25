@@ -9,6 +9,8 @@ SimpleEnemyGenerator::SimpleEnemyGenerator(const json& j, World* world) {
     if (!MyJson::is_object(j, "Param")) return;
     auto& param = j["Param"];
 
+    my_info_.hp_height = MyJson::get_float(param, "HPHeight");
+
     my_info_.type = MyJson::get_string(param, "Type");
 
     my_info_.move_speed = MyJson::get_float(param, "MoveSpeed");
