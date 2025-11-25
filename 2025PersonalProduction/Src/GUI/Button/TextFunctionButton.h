@@ -41,7 +41,7 @@ public:
     /// <param name="input_func">= 関数</param>
     void on_input(std::function<void()> input_func);
 
-protected:
+public:
     /// <summary>
     /// テキストを変更し、判定矩形を再定義する
     /// </summary>
