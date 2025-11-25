@@ -47,6 +47,8 @@
     X(MenuLogo) \
     X(SafeArea) \
     X(BonusGauge) \
+    X(HPGauge) \
+    X(StatusGaugeBG) \
     X(MAX_SIZE) // 要素数
 
 // オクツリー
