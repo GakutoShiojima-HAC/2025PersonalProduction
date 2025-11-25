@@ -230,3 +230,41 @@ void MyEnemy::draw_hp_gauge() const {
     
 }
 
+void MyEnemy::draw_boss_bar() const {
+    if (target_ == nullptr) return;
+
+    // îwåiÇï`âÊ
+    {
+        const GSrect pic_rect{ 0.0f, 0.0f, 687.0f, 25.0f };
+        const GSvector2 position{ 617.0f, 82.0f };
+
+        Canvas::draw_texture(
+            (GSuint)TextureID::HPBossGaugeBG,
+            position,
+            pic_rect,
+            GSvector2{ 0.0f, 0.0f },
+            GSvector2{ 1.0f, 1.0f }
+        );
+    }
+
+    // ëÃóÕÇï`âÊ
+    {
+        GSrect pic_rect{ 0.0f, 0.0f, 683.0f, 21.0f };
+        const GSvector2 position{ 619.0f, 84.0f };
+        // ëÃóÕÇÃäÑçá
+        const float ratio = display_hp_ / (float)my_info_.hp;
+        pic_rect.right *= ratio;
+
+        Canvas::draw_texture(
+            (GSuint)TextureID::HPBossGauge,
+            position,
+            pic_rect,
+            GSvector2{ 0.0f, 0.0f },
+            GSvector2{ 1.0f, 1.0f },
+            GScolor{ 0.772f, 0.192f, 0.192f, 1.0f },
+            0.0f
+        );
+    }
+
+}
+

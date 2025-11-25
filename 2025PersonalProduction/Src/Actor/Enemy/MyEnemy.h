@@ -170,7 +170,7 @@ protected:
     /// <summary>
     /// ボスバーを描画
     /// </summary>
-    //void draw_boss_bar() const;
+    void draw_boss_bar() const;
 
 protected:
     GSuint prev_state_num_{ 0 };
