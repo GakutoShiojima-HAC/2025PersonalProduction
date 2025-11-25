@@ -29,8 +29,8 @@ void PlayBGMTimelineParameter::update(float delta_time) {
     }
 
     auto react = [=]() {
-        if (current->transition_time > 0.0f) manager_.play(Assets::to_bgm_id(current->bgm_name));
-        else manager_.play(Assets::to_bgm_id(current->bgm_name), current->transition_time);
+        if (current->transition_time > 0.0f) manager_.play(Assets::to_bgm_id(current->bgm_name), current->transition_time);
+        else manager_.play(Assets::to_bgm_id(current->bgm_name));
         ++key_frame_;
     };
 
