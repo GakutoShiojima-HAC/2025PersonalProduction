@@ -66,6 +66,7 @@
     X(NONE) \
     X(Title) \
     X(GameNormal) \
+    X(GameBattle) \
     X(GameBoss) \
     X(MAX_SIZE) // 要素数
 

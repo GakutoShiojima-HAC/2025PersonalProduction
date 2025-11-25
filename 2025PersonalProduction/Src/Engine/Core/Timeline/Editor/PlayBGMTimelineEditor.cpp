@@ -1,29 +1,29 @@
-#include "SendMessageTimelineEditor.h"
+#include "PlayBGMTimelineEditor.h"
 
 // 参照返しのエラー回避用
 static float EMPTY_TIME{ 0.0f };
 
-SendMessageTimelineEditor::SendMessageTimelineEditor(SendMessageTimelineParameter& parameter) :
+PlayBGMTimelineEditor::PlayBGMTimelineEditor(PlayBGMTimelineParameter& parameter) :
     parameter_{ parameter } {
 
 }
 
-SendMessageTimelineEditor::~SendMessageTimelineEditor() {
+PlayBGMTimelineEditor::~PlayBGMTimelineEditor() {
     clear();
 }
 
-void SendMessageTimelineEditor::clear() {
+void PlayBGMTimelineEditor::clear() {
     if (data_ != nullptr) data_->clear();
     delete data_;
     data_ = nullptr;
     edit_keyframe_index_ = 0;
 }
 
-void SendMessageTimelineEditor::update_select_keyframe() {
+void PlayBGMTimelineEditor::update_select_keyframe() {
     if (data_ == nullptr) return;
-    vector<SendMessageTimelineKeyFrame*>& timeline = data_->get();
+    vector<PlayBGMTimelineKeyFrame*>& timeline = data_->get();
     if (timeline.empty()) return;
-    SendMessageTimelineKeyFrame* key_frame = timeline[edit_keyframe_index_];
+    PlayBGMTimelineKeyFrame* key_frame = timeline[edit_keyframe_index_];
     if (key_frame == nullptr) return;
 
     // 時間を編集
@@ -35,63 +35,62 @@ void SendMessageTimelineEditor::update_select_keyframe() {
     }
     ImGui::PopItemWidth();
 
-    // ターゲットを編集
+    // BGM番号の名前を編集
     ImGui::PushItemWidth(200);
-    ImGui::InputText("target actor name##2", &key_frame->target);
+    ImGui::InputText("bgm name##2", &key_frame->bgm_name);
     ImGui::PopItemWidth();
 
-    // メッセージを編集
+    // フェード時間を編集
     ImGui::PushItemWidth(200);
-    ImGui::InputText("message##2", &key_frame->message);
+    ImGui::InputFloat("transition time", &key_frame->transition_time);
     ImGui::PopItemWidth();
 
     // キーフレームを削除
     if (ImGui::Button("Delete KeyFrame")) remove_keyframe(edit_keyframe_index_);
 }
 
-std::string SendMessageTimelineEditor::name() const {
+std::string PlayBGMTimelineEditor::name() const {
     return parameter_.name();
 }
 
-bool SendMessageTimelineEditor::is_empty() const {
+bool PlayBGMTimelineEditor::is_empty() const {
     if (data_ == nullptr) return true;
     return data_->get().empty();
 }
 
-unsigned int SendMessageTimelineEditor::count_keyframe() const {
+unsigned int PlayBGMTimelineEditor::count_keyframe() const {
     if (data_ == nullptr) return 0;
     return data_->get().size();
 }
 
-float& SendMessageTimelineEditor::get_keyframe_time(unsigned int index)
-{
+float& PlayBGMTimelineEditor::get_keyframe_time(unsigned int index) {
     if (data_ == nullptr) return EMPTY_TIME;
-    std::vector<SendMessageTimelineKeyFrame*>& data = data_->get();
+    std::vector<PlayBGMTimelineKeyFrame*>& data = data_->get();
     if (data.empty() || index >= data.size()) return EMPTY_TIME;
     return data[index]->time;
 }
 
-void SendMessageTimelineEditor::sort_timeline() {
+void PlayBGMTimelineEditor::sort_timeline() {
     if (data_ == nullptr) return;
-    vector<SendMessageTimelineKeyFrame*>& timeline = data_->get();
+    vector<PlayBGMTimelineKeyFrame*>& timeline = data_->get();
     if (timeline.empty()) return;
 
-    sort(timeline.begin(), timeline.end(), [](const SendMessageTimelineKeyFrame* a, const SendMessageTimelineKeyFrame* b) {
+    sort(timeline.begin(), timeline.end(), [](const PlayBGMTimelineKeyFrame* a, const PlayBGMTimelineKeyFrame* b) {
         return a->time < b->time;  // 昇順にソート
     });
 }
 
-void SendMessageTimelineEditor::add_keyframe(float time) {
+void PlayBGMTimelineEditor::add_keyframe(float time) {
     // キーフレームを作成
-    SendMessageTimelineKeyFrame* keyframe = new SendMessageTimelineKeyFrame{ time, "", "" };
+    PlayBGMTimelineKeyFrame* keyframe = new PlayBGMTimelineKeyFrame{ time, "", 0.0f };
 
     // データが無ければ作成
     if (data_ == nullptr) {
-        std::vector<SendMessageTimelineKeyFrame*> timeline;
-        data_ = new SendMessageTimelineParameter::SendMessageTimelineData(timeline);
+        std::vector<PlayBGMTimelineKeyFrame*> timeline;
+        data_ = new PlayBGMTimelineParameter::PlayBGMTimelineData(timeline);
     }
 
-    vector<SendMessageTimelineKeyFrame*>& timeline = data_->get();
+    vector<PlayBGMTimelineKeyFrame*>& timeline = data_->get();
     if (timeline.empty()) {
         timeline.push_back(keyframe);
         edit_keyframe_index_ = 0;
@@ -103,17 +102,17 @@ void SendMessageTimelineEditor::add_keyframe(float time) {
         timeline.end(),
         keyframe,
         [](
-            const SendMessageTimelineKeyFrame* lhs,
-            const SendMessageTimelineKeyFrame* rhs) {
+            const PlayBGMTimelineKeyFrame* lhs,
+            const PlayBGMTimelineKeyFrame* rhs) {
                 return lhs->time < rhs->time;
         }
     );
     timeline.insert(it, keyframe);
 }
 
-void SendMessageTimelineEditor::remove_keyframe(unsigned int index) {
+void PlayBGMTimelineEditor::remove_keyframe(unsigned int index) {
     if (data_ == nullptr) return;
-    vector<SendMessageTimelineKeyFrame*>& timeline = data_->get();
+    vector<PlayBGMTimelineKeyFrame*>& timeline = data_->get();
 
     if (index < timeline.size()) {
         delete timeline[index];
@@ -128,7 +127,7 @@ void SendMessageTimelineEditor::remove_keyframe(unsigned int index) {
     }
 }
 
-ordered_json SendMessageTimelineEditor::save_data() {
+ordered_json PlayBGMTimelineEditor::save_data() {
     ordered_json data;
 
     if (data_ == nullptr || data_->get().empty()) return data;
@@ -136,19 +135,19 @@ ordered_json SendMessageTimelineEditor::save_data() {
     for (const auto* kf : data_->get()) {
         ordered_json item;
         item["time"] = kf->time;
-        item["target"] = kf->target;
-        item["message"] = kf->message;
+        item["name"] = kf->bgm_name;
+        item["transition"] = kf->transition_time;
         data["timeline"].push_back(item);
     }
     return data;
 }
 
-void SendMessageTimelineEditor::load(const json& j) {
+void PlayBGMTimelineEditor::load(const json& j) {
     clear();
     data_ = parameter_.create_data(j);
 }
 
-void SendMessageTimelineEditor::play() {
+void PlayBGMTimelineEditor::play() {
     if (data_ == nullptr) return;
     parameter_.play(data_);
 }
