@@ -1,5 +1,6 @@
 #include "MyEnemy.h"
 #include "Engine/Utils/MyMath.h"
+#include "Assets.h"
 
 MyEnemy::MyEnemy(IWorld* world, const GSvector3& position, const GSvector3& rotate, const MyEnemyInfo& info) :
     my_info_{ info } {
@@ -8,6 +9,7 @@ MyEnemy::MyEnemy(IWorld* world, const GSvector3& position, const GSvector3& rota
     name_ = info.name;
 
     hp_ = info.hp;
+    display_hp_ = (float)info.hp;
 
     init_parameter(PawnParameter::get_type(info.type));
     mesh_ = { info.skinmesh, info.skinmesh, info.skinmesh };
@@ -31,6 +33,7 @@ void MyEnemy::update(float delta_time) {
 }
 
 void MyEnemy::late_update(float delta_time) {
+    update_display_hp(delta_time);
     update_denger_signal(delta_time);
 }
 
@@ -169,3 +172,61 @@ void MyEnemy::generate_attack_collider() {
     world_->generate_attack_collider(my_info_.attack_radius, m.position(), this, my_info_.attack_damage, name_ + "Attack", 0.1f, 0.0f);
 
 }
+
+void MyEnemy::draw_hp_gauge() const {
+    // UIを描画するためにカメラを取得
+    Camera* camera = world_->get_camera();
+    if (camera == nullptr) return;
+    // カメラ外なら終了
+    Line line{ camera->transform().position(), collider().center };
+    const GSvector3 to_target = line.start - line.end;
+    if (GSvector3::dot(camera->transform().forward(), to_target) > 0) return;
+    // 障害物があったら見えていないとして終了
+    if (world_->get_field()->collide(line)) return;
+    // 範囲の外なら見えていないとして終了
+    const float length = to_target.magnitude();
+    if (length > 30.0f) return;
+
+    // スクリーン座標を計算
+    const GSmatrix4 wmat = local_to_world(GSvector3{ 0.0f, my_info_.hp_height, 0.0f }, GSvector3::zero(), GSvector3::one());
+    const GSvector3 world_position = wmat.position();
+    GSvector2 screen_position;
+    gsCalculateScreen(&screen_position, &world_position);
+
+    // 背景を描画
+    {
+        const GSrect pic_rect{ 0.0f, 0.0f, 440.0f, 25.0f };
+        const GSvector2 scale{ 0.25f, 0.25f };
+        const GSvector2 position = screen_position - GSvector2{ pic_rect.right / 2.0f, pic_rect.bottom / 2.0f } *scale;
+
+        Canvas::draw_texture(
+            (GSuint)TextureID::HPGaugeBG,
+            position,
+            pic_rect,
+            GSvector2{ 0.0f, 0.0f },
+            scale
+        );
+    }
+
+    // 体力を描画
+    {
+        GSrect pic_rect{ 0.0f, 0.0f, 434.0f, 21.0f };
+        const GSvector2 scale{ 0.25f, 0.25f };
+        const GSvector2 position = screen_position - GSvector2{ pic_rect.right / 2.0f, pic_rect.bottom / 2.0f } * scale;
+        // 体力の割合
+        const float ratio = display_hp_ / (float)my_info_.hp;
+        pic_rect.right *= ratio;
+
+        Canvas::draw_texture(
+            (GSuint)TextureID::HPGauge,
+            position,
+            pic_rect,
+            GSvector2{ 0.0f, 0.0f },
+            scale,
+            GScolor{ 0.772f, 0.192f, 0.192f, 1.0f },
+            0.0f
+        );
+    }
+    
+}
+

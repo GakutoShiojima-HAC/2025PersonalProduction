@@ -48,6 +48,7 @@
     X(SafeArea) \
     X(BonusGauge) \
     X(HPGauge) \
+    X(HPGaugeBG) \
     X(StatusGaugeBG) \
     X(MAX_SIZE) // 要素数
 
