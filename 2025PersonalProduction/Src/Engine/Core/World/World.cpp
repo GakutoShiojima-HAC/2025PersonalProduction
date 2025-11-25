@@ -266,6 +266,10 @@ bool& World::enable_avoid_effect() {
     return game_post_effect_.enable_draw_avoid_effect();
 }
 
+float& World::set_blur_effect_power() {
+    return game_post_effect_.blur_power();
+}
+
 GameSaveData& World::game_save_data() {
     return game_save_data_;
 }

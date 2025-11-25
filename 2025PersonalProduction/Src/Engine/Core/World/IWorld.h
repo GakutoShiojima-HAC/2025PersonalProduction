@@ -232,6 +232,12 @@ public:
     virtual bool& enable_avoid_effect() = 0;
 
     /// <summary>
+    /// シーン描画をどれだけぼかすかどうかを設定(0.0~1.0)
+    /// </summary>
+    /// <returns>参照</returns>
+    virtual float& set_blur_effect_power() = 0;
+
+    /// <summary>
     /// ゲームセーブデータの取得
     /// </summary>
     /// <returns>ゲームセーブデータ管理クラス</returns>
