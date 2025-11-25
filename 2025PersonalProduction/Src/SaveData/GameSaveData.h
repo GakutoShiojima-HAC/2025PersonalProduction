@@ -51,6 +51,13 @@ public:
     /// <returns>全てのセーブデータファイル</returns>
     std::vector<string> get_all_save_file() const;
 
+public:
+    /// <summary>
+    /// クリアしたステージ番号を保存
+    /// </summary>
+    /// <param name="stage_num">= クリアしたステージ番号</param>
+    void set_clear_stage(int stage_num);
+
 private:
     // 使用中のセーブデータファイル
     std::string save_file_path_{ "" };

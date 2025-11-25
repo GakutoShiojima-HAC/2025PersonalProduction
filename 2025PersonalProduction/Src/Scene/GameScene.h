@@ -64,6 +64,12 @@ public:
     /// <param name="id">= ステージID</param>
     void set_next_stage(int id);
 
+    /// <summary>
+    /// 現在読み込んでいるステージ番号を取得
+    /// </summary>
+    /// <returns>ステージ番号</returns>
+    int get_current_load_stage() const;
+
 protected:
     /// <summary>
     /// ゲーム用データのロード

@@ -166,6 +166,10 @@ void GameScene::set_next_stage(int id) {
     load_stage_index_ = id;
 }
 
+int GameScene::get_current_load_stage() const {
+    return load_stage_index_;
+}
+
 void GameScene::load_data() {
     // 読み込み処理の数から一つの処理分の進捗率を計算
     const int count = 11;

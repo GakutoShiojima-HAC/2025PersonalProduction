@@ -11,7 +11,7 @@ StageTereporter::StageTereporter(IWorld* world, const GSvector3& position, const
     transform_.eulerAngles(rotate);
 
     // テレポートできるかどうか
-    enable_collider_ = world_->game_save_data().get().stage <= stage_id - 1;
+    enable_collider_ = stage_id <= world_->game_save_data().get().stage + 1;
 
     if (enable_collider_) {
         collider_ = BoundingSphere{ 0.5f, GSvector3{ 0.0f, 1.0f, 0.0f } };
