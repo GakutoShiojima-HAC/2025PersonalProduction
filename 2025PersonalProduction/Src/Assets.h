@@ -49,6 +49,8 @@
     X(BonusGauge) \
     X(HPGauge) \
     X(HPGaugeBG) \
+    X(HPBossGauge) \
+    X(HPBossGaugeBG) \
     X(StatusGaugeBG) \
     X(MAX_SIZE) // 要素数
 
