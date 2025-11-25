@@ -38,6 +38,10 @@ Lich::Lich(IWorld* world, const GSvector3& position, const GSvector3& rotate, co
     save_current_state();
 }
 
+void Lich::draw_gui() const {
+    draw_boss_bar();
+}
+
 void Lich::take_damage(Actor& other, const int damage) {
     if (MyLib::is_in(state_.get_current_state(),
         (GSuint)LichStateType::Dead
