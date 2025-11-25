@@ -26,6 +26,10 @@ SimpleEnemy::SimpleEnemy(IWorld* world, const GSvector3& position, const GSvecto
     save_current_state();
 }
 
+void SimpleEnemy::draw_gui() const {
+    draw_hp_gauge();
+}
+
 void SimpleEnemy::take_damage(Actor& other, const int damage) {
     if (MyLib::is_in(
         state_.get_current_state(),

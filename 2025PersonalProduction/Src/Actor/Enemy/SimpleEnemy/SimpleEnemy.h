@@ -29,7 +29,7 @@ public:
     ~SimpleEnemy() = default;
 
 public:
-    //void draw_gui() const override;
+    void draw_gui() const override;
 
 public:
     void take_damage(Actor& other, const int damage) override;
