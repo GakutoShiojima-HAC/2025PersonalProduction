@@ -34,27 +34,30 @@
 #include "Score/ActionScore.h"
 
 // 移動時のカメラ向きへの回転角度
-const float TURN_SPEED{ 18.0f };
+constexpr float TURN_SPEED{ 18.0f };
 // 空中移動時のカメラ向きへの回転角度
-const float AIR_TURN_SPEED{ 5.0f };
+constexpr float AIR_TURN_SPEED{ 5.0f };
 // 通常移動速度
-const float MOVE_SPEED{ 0.02f };
+constexpr float MOVE_SPEED{ 0.02f };
 // 疾走移動速度
-const float SPRINT_SPEED{ 0.095f };
+constexpr float SPRINT_SPEED{ 0.095f };
 // 減速移動速度倍率
-const float DECELERATION_SPEED{ 0.75f };
+constexpr float DECELERATION_SPEED{ 0.75f };
 // 無敵時間(秒)
-const float INVINCIBLE_TIME{ 0.5f };
+constexpr float INVINCIBLE_TIME{ 0.5f };
 // 回避移動速度
-const float AVOID_SPEED{ 9.0f };
+constexpr float AVOID_SPEED{ 9.0f };
 
 // 回避演出の時間
-const float AVOID_EFFECT_TIME{ 3.0f };
+constexpr float AVOID_EFFECT_TIME{ 3.0f };
 // 回避演出の色
 const GScolor AVOID_EFFECT_COLOR{ 0.592f, 0.627f, 1.0f, 1.0f };
 
 // 右手のボーン番号
-const int RIGHT_HAND_BONE_NUM{ 114 };
+constexpr int RIGHT_HAND_BONE_NUM{ 114 };
+
+// 基礎体力
+constexpr int BASIC_HP{ 10 };
 
 // 攻撃モーション
 constexpr GSuint ATTACK_MOTION_MAX = 5;
@@ -77,7 +80,9 @@ Player::Player(IWorld* world, const GSvector3& position, const GSvector3& rotate
     // タイムスケールを受けない
     enable_timescale_ = false;
 
-    hp_ = 10;
+    // HPを計算
+    GameSaveData& save_data = world_->game_save_data();
+    max_hp_ = hp_ = BASIC_HP + save_data.get().player_level * 2;
 
 	mesh_ = { (GSuint)MeshID::Player, (GSuint)MeshID::Player, (GSuint)MeshID::Player };
 	add_state();
