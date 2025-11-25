@@ -15,6 +15,7 @@ void GameSaveData::load(const std::string& file_path) {
     // セーブデータの読み込み
     {
         save_data_.stage = MyJson::get_int(j, "Stage");
+        save_data_.player_level = MyJson::get_int(j, "PlayerLevel", 1);
     }
     // インベントリの読み込み
     {
@@ -29,6 +30,8 @@ void GameSaveData::save() {
     // データを保存
     ordered_json data;
     data["Stage"] = save_data_.stage;
+    data["PlayerLevel"] = save_data_.player_level;
+
     data["Inventory"] = inventory_.save_object();
 
     MyLib::write_to_file(save_file_path_, data);
