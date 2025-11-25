@@ -70,10 +70,13 @@ void SceneGameResultState::end_result() {
 
     // ステージをクリアしたかどうか
     if (stage_clear_) {
+        // クリアしたのでセーブする
+        world_->game_save_data().set_clear_stage(owner_.get_current_load_stage());
         // ロビーに戻る
         owner_.set_next_stage(0);
         owner_.set_next_scene(SceneTag::Game);
         owner_.change_state((GSuint)SceneStateType::GameEnd);
+        
         return;
     }
     else {

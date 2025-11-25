@@ -50,3 +50,15 @@ const SaveData& GameSaveData::get() const {
 std::vector<string> GameSaveData::get_all_save_file() const {
     return MyLib::get_all_file_path(SAVE_FOLDER_PATH, "json");
 }
+
+void GameSaveData::set_clear_stage(int stage_num) {
+    if (stage_num == -1) {
+        save_data_.stage = stage_num + 1;
+    }
+    else if (stage_num >= 0) {
+        if(stage_num > save_data_.stage) save_data_.stage = stage_num;
+    }
+    else {
+        //
+    }
+}
