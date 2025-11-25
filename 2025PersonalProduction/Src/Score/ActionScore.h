@@ -87,6 +87,8 @@ private:
     int max_combo_score_{ 0 };
     // 連続コンボ数
     int combo_count_{ 0 };
+    // 最高連続コンボ数
+    int max_combo_count_{ 0 };
 
     // コンボスコアの強調表示タイマー
     float combo_emphasis_timer_{ 0.0f };
