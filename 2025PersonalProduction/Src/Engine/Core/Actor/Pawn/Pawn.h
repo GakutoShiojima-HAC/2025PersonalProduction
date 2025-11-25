@@ -111,6 +111,11 @@ protected:
     /// </summary>
     void update_denger_signal(float delta_time);
 
+    /// <summary>
+    /// 描画用HPの値の更新
+    /// </summary>
+    void update_display_hp(float delta_time);
+
 protected:
 	/// <summary>
 	/// 地形との衝突判定
@@ -147,6 +152,8 @@ protected:
 
 	// HP
 	int hp_{ 1 };
+    // 描画用のHP
+    float display_hp_{ 1 };
 	// 重力値
 	float gravity_{ 9.8f };
 	// ジャンプ力

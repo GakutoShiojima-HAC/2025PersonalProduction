@@ -89,6 +89,18 @@ void Pawn::update_denger_signal(float delta_time) {
     gsSetEffectScale(danger_signal_effect_handle_, &scale);
 }
 
+void Pawn::update_display_hp(float delta_time) {
+    // 描画と現在で差があるか
+    if (std::fabs(display_hp_ - (float)hp_) > 0.01f) {
+        // 線形補間で合わせる
+        display_hp_ += ((float)hp_ - display_hp_) * 9.0f * delta_time / cFPS;
+    }
+    else {
+        // 誤差対策
+        display_hp_ = (float)hp_;
+    }
+}
+
 void Pawn::collide_field() {
     // x,z軸の回転を無効にする
     transform_.rotation(GSquaternion(0.0f, transform_.rotation().y, 0.0f, transform_.rotation().w));
