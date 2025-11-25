@@ -62,6 +62,17 @@ void GameSaveData::set_clear_stage(int stage_num) {
         if(stage_num > save_data_.stage) save_data_.stage = stage_num;
     }
     else {
-        //
+        // -1未満は不要
     }
+}
+
+int GameSaveData::calc_final_score(int action_score, float time, int respawn_count) const {
+    float final_score = (float)action_score + 1000.0f;
+
+    // 復活回数分基礎を減らす
+    final_score -= final_score * respawn_count * 0.1f;
+    // 時間を引く
+    final_score -= time * 0.5f;
+
+    return CLAMP((int)final_score, 0, INT_MAX);
 }

@@ -59,6 +59,16 @@ public:
     /// <param name="stage_num">= クリアしたステージ番号</param>
     void set_clear_stage(int stage_num);
 
+public:
+    /// <summary>
+    /// 最終スコアを計算
+    /// </summary>
+    /// <param name="action_score">= アクションスコア</param>
+    /// <param name="time">= 経過時間</param>
+    /// <param name="respawn_count">= 復活回数</param>
+    /// <returns>最終スコア</returns>
+    int calc_final_score(int action_score, float time, int respawn_count) const;
+
 private:
     // 使用中のセーブデータファイル
     std::string save_file_path_{ "" };
