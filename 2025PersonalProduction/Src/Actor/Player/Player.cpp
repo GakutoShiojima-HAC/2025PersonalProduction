@@ -9,6 +9,7 @@
 #include "Engine/Core/Tween/Tween.h"
 #include "GameConfig.h"
 #include "Engine/Core/Vibration/Vibration.h"
+#include "GUI//PlayerUI.h"
 
 #include "State/Player/PlayerAttackState.h"
 #include "State/Player/PlayerAvoidState.h"
@@ -220,6 +221,11 @@ void Player::draw_gui() const {
 
     // ƒCƒ“ƒ^ƒ‰ƒNƒgUI‚Ì•`‰æ
     InteractUI::draw(interact_actors_, interact_target_index_);
+
+    // HP‚Ì•`‰æ
+    PlayerUI::draw_hp(hp_, max_hp_);
+    // ƒŒƒxƒ‹‚Ì•`‰æ
+    PlayerUI::draw_level(world_->game_save_data().get().player_level);
 
 	// state_.draw_gui();
 }
