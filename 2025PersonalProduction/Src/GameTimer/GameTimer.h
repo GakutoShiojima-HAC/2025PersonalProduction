@@ -11,6 +11,8 @@
 #ifndef GAME_TIMER_H_
 #define GAME_TIMER_H_
 
+#include <string>
+
 class GameTimer {
 public:
     GameTimer() = default;
@@ -30,6 +32,12 @@ public:
     /// </summary>
     /// <returns>時間</returns>
     float get_elapsed_time() const;
+
+    /// <summary>
+    /// 経過時間(秒)を取得
+    /// </summary>
+    /// <returns>文字列変換済みの時間</returns>
+    std::string get_elapsed_time_string() const;
 
 private:
     bool enabled_{ true };
