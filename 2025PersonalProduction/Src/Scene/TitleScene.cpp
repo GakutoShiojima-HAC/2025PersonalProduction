@@ -59,7 +59,7 @@ void TitleScene::draw() const {
 
 	// 仮ロゴ描画
 	{
-		const GSrect rect{ 0.0f, 0.0f, 507.0f, 84.0f };
+		const GSrect rect{ 0.0f, 0.0f, 720.0f, 174.0f };
 		const GSvector2 center{ rect.right / 2.0f, rect.bottom / 2.0f };
         Canvas::draw_texture((GSuint)TextureID::TitleLogo, GSvector2{ 0.0f, -100.0f }, rect, center, GSvector2::one(), GScolor{ 1.0f, 1.0f, 1.0f, 1.0f }, 0.0f, Anchor::Center);
 	}
