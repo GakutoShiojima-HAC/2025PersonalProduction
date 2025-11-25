@@ -104,6 +104,7 @@ void GamePostEffect::start() {
 
     // パラメータをリセット
     draw_avoid_effect_ = false;
+    blur_power_ = 0.0f;
 }
 
 void GamePostEffect::end() {
@@ -174,6 +175,14 @@ void GamePostEffect::draw(const GSmatrix4& projection) const {
         current = PostEffect::FXAA::fxaa(current, screen_size);
     }
 
+    // シーンをぼかす
+    if (blur_power_ > 0.0f) {
+        if (blur_power_ >= 0.25f) current = PostEffect::Blur::apply_blur(current, { width_ / 4.0f, height_ / 4.0f }, Rt_GaussianBlurH1, Rt_GaussianBlurV1);
+        if (blur_power_ >= 0.5f) current = PostEffect::Blur::apply_blur(current, { width_ / 8.0f,  height_ / 8.0f }, Rt_GaussianBlurH2, Rt_GaussianBlurV2);
+        if (blur_power_ >= 0.75f) current = PostEffect::Blur::apply_blur(current, { width_ / 16.0f, height_ / 16.0f }, Rt_GaussianBlurH3, Rt_GaussianBlurV3);
+        if (blur_power_ >= 1.0f) current = PostEffect::Blur::apply_blur(current, { width_ / 32.0f, height_ / 32.0f }, Rt_GaussianBlurH4, Rt_GaussianBlurV4);
+    }
+
     // 最終結果のテクスチャを設定
     gsBindRenderTargetTextureEx(current, 0, 0);
     // レンダーターゲットを描画
@@ -240,6 +249,10 @@ bool GamePostEffect::is_draw_avoid_effect() const {
 
 bool& GamePostEffect::enable_draw_avoid_effect() {
     return draw_avoid_effect_;
+}
+
+float& GamePostEffect::blur_power() {
+    return blur_power_;
 }
 
 GSvector2 GamePostEffect::get_screen_size() const {

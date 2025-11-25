@@ -6,6 +6,7 @@ PlayerRespawner::~PlayerRespawner() {
 
 void PlayerRespawner::clear() {
     can_respawn_ = false;
+    counter_ = 0;
 }
 
 void PlayerRespawner::add_point(const GSvector3& position, const GSvector3& rotate) {
@@ -24,4 +25,12 @@ GSvector3 PlayerRespawner::respawn_position() const {
 
 GSvector3 PlayerRespawner::respawn_rotate() const {
     return respawn_rotate_;
+}
+
+void PlayerRespawner::respawn_countup() {
+    ++counter_;
+}
+
+int PlayerRespawner::respawn_count() const {
+    return counter_;
 }

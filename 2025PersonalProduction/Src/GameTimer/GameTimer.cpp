@@ -19,6 +19,20 @@ void GameTimer::update(float delta_time) {
 void GameTimer::draw() const {
     if (!enabled_) return;
 
+    Canvas::draw_sprite_text(
+        get_elapsed_time_string(),
+        GSvector2{ 100.0f, 350.0f },    // TODO
+        40,
+        cFONT,
+        GS_FONT_BOLD
+    );
+}
+
+float GameTimer::get_elapsed_time() const {
+    return elapsed_time_;
+}
+
+std::string GameTimer::get_elapsed_time_string() const {
     // 秒を整数にする
     int total_seconds = (int)std::floor(elapsed_time_);
 
@@ -31,16 +45,5 @@ void GameTimer::draw() const {
     ss << std::setfill('0') << std::setw(2) << minutes
         << ":"
         << std::setfill('0') << std::setw(2) << seconds;
-
-    Canvas::draw_sprite_text(
-        ss.str(),
-        GSvector2{ 100.0f, 350.0f },    // TODO
-        40,
-        cFONT,
-        GS_FONT_BOLD
-    );
-}
-
-float GameTimer::get_elapsed_time() const {
-    return elapsed_time_;
+    return ss.str();
 }

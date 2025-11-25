@@ -160,6 +160,8 @@ public:
 
 	bool& enable_avoid_effect() override;
 
+    float& set_blur_effect_power() override;
+
     GameSaveData& game_save_data() override;
 
     ActionScore& action_score() override;

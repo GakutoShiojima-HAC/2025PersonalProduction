@@ -38,12 +38,25 @@ public:
     /// <returns>回転</returns>
     GSvector3 respawn_rotate() const;
 
+    /// <summary>
+    /// リスポーン回数をカウントアップ
+    /// </summary>
+    void respawn_countup();
+
+    /// <summary>
+    /// リスポーン回数を取得
+    /// </summary>
+    /// <returns></returns>
+    int respawn_count() const;
+
 private:
     bool can_respawn_{ false };
 
     GSvector3 respawn_position_{ 0.0f, 0.0f, 0.0f };
 
     GSvector3 respawn_rotate_{ 0.0f, 0.0f, 0.0f };
+
+    int counter_{ 0 };
 
 public:
     // コピー禁止

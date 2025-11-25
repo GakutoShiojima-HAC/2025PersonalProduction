@@ -22,6 +22,7 @@ void ActionScore::init() {
     reset_combo_bonus();
     action_text_ = "";
     max_combo_score_ = 0;
+    max_combo_count_ = 0;
 }
 
 void ActionScore::update(float delta_time) {
@@ -178,13 +179,14 @@ int ActionScore::get_max_combo_score() const {
 }
 
 int ActionScore::get_max_combo_count() const {
-    return combo_count_;
+    return max_combo_count_;
 }
 
 void ActionScore::reset_combo_bonus() {
     // 最大コンボスコアを上書き
     if (combo_score_ > max_combo_score_) max_combo_score_ = combo_score_;
-
+    // 最大コンボ数を上書き
+    if (combo_count_ > max_combo_count_) max_combo_count_ = combo_count_;
     combo_score_ = 0;
     combo_timer_ = 0.0f;
     combo_time_ = 0.0f;

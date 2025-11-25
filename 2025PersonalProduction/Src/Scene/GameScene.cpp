@@ -160,6 +160,7 @@ bool& GameScene::enable_draw_game_gui() {
 void GameScene::respawn_player() {
     PlayerRespawner& respawner = world_.player_respawner();
     actor_generator_.generate("Player", respawner.respawn_position(), respawner.respawn_rotate());
+    respawner.respawn_countup();    // カウントアップ
 }
 
 void GameScene::set_next_stage(int id) {

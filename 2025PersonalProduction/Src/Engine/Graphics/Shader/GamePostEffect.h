@@ -97,6 +97,12 @@ public:
     /// <returns>参照</returns>
     bool& enable_draw_avoid_effect();
 
+    /// <summary>
+    /// 最終結果にかけるブラーの強さを指定(0.0~1.0)
+    /// </summary>
+    /// <returns>参照</returns>
+    float& blur_power();
+
 private:
     /// <summary>
     /// スクリーンサイズの取得
@@ -115,12 +121,15 @@ private:
     // SSAO用サンプルカーネル
     std::vector<GSvector3> ssao_sample_kernel_;
     // SSAO用ノイズテクスチャ
-    GSuint ssao_noise_texture_;
+    GSuint ssao_noise_texture_{ 0 };
 
     // マスクエフェクトの色
     GScolor mask_color_{ 1.0f, 1.0f, 1.0f, 1.0f };
     // 回避エフェクトを描画するかどうか
     bool draw_avoid_effect_{ false };
+
+    // 画面ぼかしの強さ(0.0~1.0)
+    float blur_power_{ 0.0f };
 
 public:
     // コピー禁止
