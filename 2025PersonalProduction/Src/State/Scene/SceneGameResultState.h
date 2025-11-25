@@ -14,6 +14,7 @@
 #include "State/Scene/SceneState.h"
 #include "Engine/Core/Button/ButtonManager.h"
 
+class TextFunctionButton;
 class GameScene;
 class World;
 
@@ -31,6 +32,10 @@ private:
     void exit() override;
 
 private:
+    void try_agein();
+
+    void end_game();
+
     void end_result();
 
 private:
@@ -38,7 +43,11 @@ private:
 
     World* world_{ nullptr };
 
-    ButtonManager button_;
+    ButtonManager button_one_;
+    ButtonManager button_two_;
+
+    // •¶š‚ğ•Ï‚¦‚é‚½‚ß‚É•Û‚µ‚Ä‚¨‚­
+    TextFunctionButton* try_agein_button_{ nullptr };
 
     // ƒvƒŒƒCƒ„[‚ª€–S‚µ‚½‚©
     bool player_dead_{ false };
