@@ -49,7 +49,7 @@ void SceneMenuState::draw() const {
     );
 
     // âºÉçÉSï`âÊ    
-    const GSrect logo_rect{ 0.0f, 0.0f, 340.0f, 76.0f };
+    const GSrect logo_rect{ 0.0f, 0.0f, 720.0f, 174.0f };
     Canvas::draw_texture(
         (GSuint)TextureID::MenuLogo,
         GSvector2{ 0.0f, -200.0f },
