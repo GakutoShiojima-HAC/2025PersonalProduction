@@ -17,8 +17,9 @@ namespace PlayerUI {
     /// 体力を描画
     /// </summary>
     /// <param name="current">= 現在の体力</param>
+    /// <param name="display">= アニメーション用の体力</param>
     /// <param name="max">= 体力の最大値</param>
-    void draw_hp(int current, int max);
+    void draw_hp(int current, float display, int max);
 
     /// <summary>
     /// レベルを描画

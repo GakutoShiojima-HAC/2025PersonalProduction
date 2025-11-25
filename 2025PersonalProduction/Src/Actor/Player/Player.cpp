@@ -84,6 +84,7 @@ Player::Player(IWorld* world, const GSvector3& position, const GSvector3& rotate
     // HP‚ğŒvZ
     GameSaveData& save_data = world_->game_save_data();
     max_hp_ = hp_ = BASIC_HP + save_data.get().player_level * 2;
+    display_hp_ = (float)max_hp_;
 
 	mesh_ = { (GSuint)MeshID::Player, (GSuint)MeshID::Player, (GSuint)MeshID::Player };
 	add_state();
@@ -194,6 +195,7 @@ void Player::update(float delta_time) {
 }
 
 void Player::late_update(float delta_time) {
+    update_display_hp(delta_time);
     interact_update();
 }
 
@@ -223,7 +225,7 @@ void Player::draw_gui() const {
     InteractUI::draw(interact_actors_, interact_target_index_);
 
     // HP‚Ì•`‰æ
-    PlayerUI::draw_hp(hp_, max_hp_);
+    PlayerUI::draw_hp(hp_, display_hp_, max_hp_);
     // ƒŒƒxƒ‹‚Ì•`‰æ
     PlayerUI::draw_level(world_->game_save_data().get().player_level);
 

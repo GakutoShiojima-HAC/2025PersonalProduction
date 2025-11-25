@@ -5,7 +5,9 @@
 #include "Assets.h"
 #include "GameConfig.h"
 
-void PlayerUI::draw_hp(int current, int max) {
+void PlayerUI::draw_hp(int current, float display, int max) {
+    const float max_hp = (float)max;
+
     // îwåiÇÃï`âÊ
     {
         const GSvector2 position{ 680.0, 972.0 };
@@ -23,15 +25,15 @@ void PlayerUI::draw_hp(int current, int max) {
         const GSvector2 position{ 743.0, 974.0 };
 
         // ëÃóÕÇÃäÑçá
-        float ratio = (float)current / (float)max;
+        float ratio = display / max_hp;
         // Ç«Ç±Ç‹Ç≈êÿÇËéÊÇÈÇ©
         const GSrect pic_rect{ 0.0f, 0.0f, 434.0f * ratio, 21.0f };
 
         GScolor color;
         // ëÃóÕÇ™ç≈ëÂëÃóÕÇÃîºï™à»è„Ç»ÇÁóŒ
-        if (current > max / 2) color = GScolor{ 0.494f, 0.827f, 0.313f, 1.0f };
+        if ((float)current > max_hp / 2.0f) color = GScolor{ 0.494f, 0.827f, 0.313f, 1.0f };
         // ëÃóÕÇ™ç≈ëÂëÃóÕÇÃ25Åìà»è„Ç»ÇÁâ©
-        else if (current > max / 4) color = GScolor{ 0.905f, 0.741f, 0.333f, 1.0f };
+        else if ((float)current > max_hp / 4.0f) color = GScolor{ 0.905f, 0.741f, 0.333f, 1.0f };
         // ÇªÇÍà»â∫ÇÕê‘
         else color = GScolor{ 0.772f, 0.192f, 0.192f, 1.0f };
 
