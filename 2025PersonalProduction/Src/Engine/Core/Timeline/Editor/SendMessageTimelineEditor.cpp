@@ -36,7 +36,6 @@ void SendMessageTimelineEditor::update_select_keyframe() {
     ImGui::PopItemWidth();
 
     // ターゲットを編集
-    ImGui::SameLine();
     ImGui::PushItemWidth(200);
     ImGui::InputText("target actor name##2", &key_frame->target);
     ImGui::PopItemWidth();
