@@ -28,6 +28,8 @@ enum {
     Rt_BloomCombine,		// ブルームエフェクト合成
 
     Rt_FXAA,				// アンチエイリアシング処理
+
+    Rt_Dissolve,            // ディゾルブ
 };
 
 // シェーダー
@@ -46,6 +48,8 @@ enum {
     Shader_GaussianBlur,    // ガウシアンブラー
     Shader_BloomCombine,    // ブルームエフェクト合成
     Shader_FXAA,			// アンチエイリアシング
+
+    Shader_Dissolve,        // ディゾルブ
 };
 
 #endif
