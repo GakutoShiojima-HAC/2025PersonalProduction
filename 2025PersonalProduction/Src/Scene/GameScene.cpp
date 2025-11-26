@@ -38,10 +38,6 @@ GameScene::GameScene() {
 }
 
 void GameScene::load() {
-    // 初期化
-    is_load_end_ = false;
-    load_progress_ = 0.0f;
-
     load_data();
 
     // 終了
@@ -344,4 +340,8 @@ void GameScene::game_end() {
     // 次のシーンの情報を渡す
     std::any data = next_scene_tag_;
     scene_manager_.send_message(SceneTag::Loading, "NextSceneTag", data);
+
+    // 初期化
+    is_load_end_ = false;
+    load_progress_ = 0.0f;
 }
