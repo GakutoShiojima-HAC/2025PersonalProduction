@@ -5,7 +5,7 @@
 Barrier::Barrier(IWorld* world, const GSvector3& position, const std::string& break_type, float break_time, float parameter) {
     world_ = world;
     transform_.position(position);
-    tag_ = ActorTag::None;
+    tag_ = ActorTag::Object;
     name_ = "Barrier";
     enable_collider_ = false;
     enable_timescale_ = false;

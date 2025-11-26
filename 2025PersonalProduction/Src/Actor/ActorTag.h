@@ -12,12 +12,13 @@
 #define ACTOR_TAG_H_
 
 enum class ActorTag {
-	None,
+	None,       // 指定なし
 	Player,
 	Enemy,
-	Collider,
+	Collider,   // 攻撃衝突判定
+    Projectile, // 飛び道具の実体
     Item,
-    Object,
+    Object,          
 
 	MAX_SIZE	// 要素数
 };

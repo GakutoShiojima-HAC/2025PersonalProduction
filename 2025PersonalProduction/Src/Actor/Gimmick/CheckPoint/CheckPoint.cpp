@@ -3,7 +3,7 @@
 
 CheckPoint::CheckPoint(IWorld* world, const GSvector3& position, const GSvector3& rotate, float radius) {
     world_ = world;
-    tag_ = ActorTag::None;
+    tag_ = ActorTag::Object;
     name_ = "CheckPoint";
 
     transform_.position(position);
