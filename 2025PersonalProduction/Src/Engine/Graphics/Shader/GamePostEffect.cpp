@@ -10,6 +10,7 @@
 #include "Engine/Graphics/Shader/PostEffects/FogEffect.h"
 #include "Engine/Graphics/Shader/PostEffects/BloomEffect.h"
 #include "Engine/Graphics/Shader/PostEffects/FXAAEffect.h"
+#include "Engine/Graphics/Shader/PostEffects/DissolveEffect.h"
 
 // ブルームエフェクトの対象にするテクセルの輝度のしきい値
 const float BLOOM_THRESHOLD{ 0.65f };
@@ -35,6 +36,7 @@ void GamePostEffect::load() {
     gsLoadShader(Shader_GaussianBlur, "Resource/Private/Shader/RenderTexture.vert", "Resource/Private/Shader/GaussianBlur.frag");
     gsLoadShader(Shader_BloomCombine, "Resource/Private/Shader/RenderTexture.vert", "Resource/Private/Shader/BloomCombine.frag");
     gsLoadShader(Shader_FXAA, "Resource/Private/Shader/RenderTexture.vert", "Resource/Private/Shader/FXAA.frag");
+    gsLoadShader(Shader_Dissolve, "Resource/Private/Shader/RenderTexture.vert", "Resource/Private/Shader/Dissolve.frag");
 }
 
 void GamePostEffect::clear() {
@@ -49,6 +51,7 @@ void GamePostEffect::clear() {
     gsDeleteShader(Shader_GaussianBlur);
     gsDeleteShader(Shader_BloomCombine);
     gsDeleteShader(Shader_FXAA);
+    gsDeleteShader(Shader_Dissolve);
 }
 
 void GamePostEffect::create() {
@@ -97,6 +100,8 @@ void GamePostEffect::create() {
 
     // アンチエイリアシング用のレンダーターゲットの作成
     gsCreateRenderTarget(Rt_FXAA, width_, height_, GS_TRUE, GS_FALSE, GS_TRUE);
+    // ディゾルブ用のレンダーターゲットの作成
+    gsCreateRenderTarget(Rt_Dissolve, width_, height_, GS_TRUE, GS_FALSE, GS_TRUE);
 
     // SSAO用データの作成
     PostEffect::SSAO::create_sample_kernel(ssao_sample_kernel_, KERNEL_SIZE);
@@ -105,6 +110,7 @@ void GamePostEffect::create() {
     // パラメータをリセット
     draw_avoid_effect_ = false;
     blur_power_ = 0.0f;
+    threshold_ = 1.0f;
 }
 
 void GamePostEffect::release() {
@@ -132,6 +138,7 @@ void GamePostEffect::release() {
     gsDeleteRenderTarget(Rt_GaussianBlurV4);
     gsDeleteRenderTarget(Rt_BloomCombine);
     gsDeleteRenderTarget(Rt_FXAA);
+    gsDeleteRenderTarget(Rt_Dissolve);
 }
 
 void GamePostEffect::draw(GSuint source) const {
@@ -191,6 +198,14 @@ GSuint GamePostEffect::apply(const GSmatrix4& projection) const {
         if (blur_power_ >= 0.75f) current = PostEffect::Blur::apply_blur(current, { width_ / 16.0f, height_ / 16.0f }, Rt_GaussianBlurH3, Rt_GaussianBlurV3);
         if (blur_power_ >= 1.0f) current = PostEffect::Blur::apply_blur(current, { width_ / 32.0f, height_ / 32.0f }, Rt_GaussianBlurH4, Rt_GaussianBlurV4);
     }
+
+    return current;
+}
+
+GSuint GamePostEffect::apply_dissolve(GSuint source) const {
+    if (threshold_ >= 1.0f) return source;
+
+    GSuint current = PostEffect::Dissolve::apply(source, threshold_);
 
     return current;
 }
@@ -267,6 +282,10 @@ bool& GamePostEffect::enable_draw_avoid_effect() {
 
 float& GamePostEffect::blur_power() {
     return blur_power_;
+}
+
+float& GamePostEffect::dissolve_threshold() {
+    return threshold_;
 }
 
 GSvector2 GamePostEffect::get_screen_size() const {

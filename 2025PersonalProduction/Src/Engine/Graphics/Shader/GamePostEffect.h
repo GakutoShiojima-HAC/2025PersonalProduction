@@ -56,6 +56,13 @@ public:
     GSuint apply(const GSmatrix4& projection) const;
 
     /// <summary>
+    /// ディゾルブエフェクトを適用する
+    /// </summary>
+    /// <param name="source">= 最終結果を持つレンダーターゲット</param>
+    /// <returns>適用後のレンダーターゲット</returns>
+    GSuint apply_dissolve(GSuint source) const;
+
+    /// <summary>
     /// レンダーターゲットへの描画を開始
     /// </summary>
     void begin() const;
@@ -117,6 +124,12 @@ public:
     /// <returns>参照</returns>
     float& blur_power();
 
+    /// <summary>
+    /// ディゾルブエフェクトのしきい値を指定
+    /// </summary>
+    /// <returns>参照</returns>
+    float& dissolve_threshold();
+
 private:
     /// <summary>
     /// スクリーンサイズの取得
@@ -144,6 +157,9 @@ private:
 
     // 画面ぼかしの強さ(0.0~1.0)
     float blur_power_{ 0.0f };
+
+    // ディゾルブのしきい値(0.0~1.0)
+    float threshold_{ 1.0f };
 
 public:
     // コピー禁止
