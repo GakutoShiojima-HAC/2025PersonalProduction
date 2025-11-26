@@ -41,6 +41,10 @@ void TitleScene::update(float delta_time) {
 }
 
 void TitleScene::draw() const {
+    // 背景描画
+    ScreenData& data = Screen::get_instance().get_current_data();
+    Canvas::draw_texture((GSuint)TextureID::BackGround, GSvector2::zero(), GSrect{ 0.0f, 0.0f, (float)data.width_px, (float)data.height_px });
+
     // テキストの描画
     if (is_load_end_) {
         const std::string text = Input::get_instance().is_pad() ? "PRESS  ANY  BUTTON" : "PRESS  ANY  KEY";
