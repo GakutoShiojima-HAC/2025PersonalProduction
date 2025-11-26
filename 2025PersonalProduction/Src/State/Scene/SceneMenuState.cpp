@@ -10,12 +10,12 @@ SceneMenuState::SceneMenuState(StandardScene& owner) :
     // ƒ{ƒ^ƒ“‚Ì’Ç‰Á
     {
         TextFunctionButton* button = new TextFunctionButton{ "Å‰‚©‚ç", GSvector2{ 960.0f, 679.0f }, 42, Anchor::TopLeft, Anchor::Center };
-        button->on_input([=] { owner_.scene_end_request(); });
+        button->on_input([=] { owner_.change_state((GSuint)SceneStateType::End); });
         button_.add(button);
     }
     {
         TextFunctionButton* button = new TextFunctionButton{ "‘±‚«‚©‚ç(–¢ŽÀ‘•)", GSvector2{ 960.0f, 765.0f }, 42, Anchor::TopLeft, Anchor::Center };
-        button->on_input([=] { owner_.scene_end_request(); });
+        button->on_input([=] { owner_.change_state((GSuint)SceneStateType::End); });
         button_.add(button);
     }
     {

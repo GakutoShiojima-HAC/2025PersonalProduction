@@ -90,6 +90,6 @@ void SceneGamePauseState::to_game_end() {
     // GUI•`‰æ‚ð•œŠˆ
     owner_.enable_draw_game_gui() = true;
     owner_.set_next_scene(SceneTag::Menu);
-    owner_.change_state((GSuint)SceneStateType::GameEnd);
+    owner_.change_state((GSuint)SceneStateType::End);
 }
 

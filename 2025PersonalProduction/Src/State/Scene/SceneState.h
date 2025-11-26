@@ -25,7 +25,9 @@ public:
 
         GamePause,      // ゲーム中のポーズ画面
         GameResult,     // ゲーム中のリザルト表示画面
-        GameEnd,        // ゲーム中の終了画面
+
+        Start,          // シーン遷移用
+        End,            // シーン遷移用
 
         Setting,        // 設定画面
         Guide,          // 操作説明画面
