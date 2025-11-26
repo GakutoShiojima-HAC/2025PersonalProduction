@@ -23,10 +23,6 @@ MenuScene::MenuScene() {
 }
 
 void MenuScene::load() {
-    // 初期化
-    is_load_end_ = false;
-    load_progress_ = 0.0f;
-
     load_data();
 
     // 終了
@@ -92,10 +88,6 @@ void MenuScene::end() {
 	// アセットの開放
 	AssetsManager::get_instance().delete_asset(AssetsLoader::MENU_ASSET_NAME);
 
-    // 初期化
-    is_load_end_ = false;
-    load_progress_ = 0.0f;
-
     // 次のシーンの情報を渡す
     {
         std::any data = next_scene_tag_;
@@ -107,6 +99,10 @@ void MenuScene::end() {
         std::any data = folder;
         scene_manager_.send_message(SceneTag::Game, "LoadSaveDataName", data);
     }
+
+    // 初期化
+    is_load_end_ = false;
+    load_progress_ = 0.0f;
 }
 
 SceneTag MenuScene::scene_tag() const {
