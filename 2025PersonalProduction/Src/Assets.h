@@ -80,10 +80,12 @@
 #define EFFECT_ID_LIST \
     X(NONE) \
     X(Avoid) \
+    X(OnGroundSmoke) \
     X(DangerSignal) \
     X(Item) \
     X(HitAttack) \
     X(PlayerSlash) \
+    X(DustLarge) \
     X(FireBall) \
     X(ExplosionSmall) \
     X(MAX_SIZE) // 要素数
