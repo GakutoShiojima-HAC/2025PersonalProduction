@@ -9,7 +9,7 @@ constexpr float RADIUS{ 0.4f };
 
 FireBall::FireBall(IWorld* world, const GSvector3& position, const GSvector3& velocity, float life_time, Actor* owner, int damage) {
 	world_ = world;
-	tag_ = ActorTag::None;
+	tag_ = ActorTag::Projectile;
     name_ = "FireBall";
 
     if (owner != nullptr && owner->tag() == ActorTag::Enemy) target_tag_ = ActorTag::Player;

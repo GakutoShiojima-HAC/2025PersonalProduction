@@ -5,7 +5,7 @@
 
 CinemaActor::CinemaActor(IWorld* world, const std::string& timeline_name, bool is_playing_fixed_player) {
     world_ = world;
-    tag_ = ActorTag::None;
+    tag_ = ActorTag::Object;
     name_ = "CinemaActor";
 
     timeline_name_ = timeline_name;

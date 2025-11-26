@@ -8,7 +8,7 @@ constexpr float RADIUS{ 1.0f };
 
 ExplodeRoad::ExplodeRoad(IWorld* world, const GSvector3& position, const GSvector3& velocity, Actor* owner, int damage, int time, float interval) {
 	world_ = world;
-	tag_ = ActorTag::None;
+	tag_ = ActorTag::Projectile;
     name_ = "ExplodeRoad";
 
     owner_ = owner;
@@ -22,7 +22,7 @@ ExplodeRoad::ExplodeRoad(IWorld* world, const GSvector3& position, const GSvecto
     transform_.position(position);
     transform_.rotation(GSquaternion::lookRotation(velocity));
 
-	enable_collider_ = false;
+	enable_collider_ = true;
 }
 
 void ExplodeRoad::update(float delta_time) {
