@@ -44,6 +44,10 @@ GSuint Pawn::current_motion() const {
     return motion_;
 }
 
+bool Pawn::current_motion_loop() const {
+    return motion_loop_;
+}
+
 float Pawn::current_motion_end_time() const {
     return mesh_.motion_end_time();
 }

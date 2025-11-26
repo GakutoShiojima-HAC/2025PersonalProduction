@@ -78,6 +78,12 @@ public:
     /// <returns>モーション番号</returns>
     GSuint current_motion() const;
 
+    /// <summary>
+    /// 現在のモーションがループしているか
+    /// </summary>
+    /// <returns>ループの状態</returns>
+    bool current_motion_loop() const;
+
 protected:
 	/// <summary>
 	/// 重力の更新
