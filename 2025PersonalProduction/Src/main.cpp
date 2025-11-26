@@ -24,6 +24,7 @@
 #include "Engine/Graphics/Shader/GamePostEffect.h"
 #include "Engine/Core/LogSystem/LogManager.h"
 #include "Engine/Core/Vibration/Vibration.h"
+#include "Engine/Sound/SE.h"
 
 #include "Engine/Core/Scene/SceneManager.h"
 #include "Scene/LoadingScene.h"
@@ -52,6 +53,7 @@ public:
         gsInitEffect();
         scene_manager_.init();
         Canvas::init();
+        SE::init();
         Setting::get_instance().load("tmp");
         MyRandom::set_seed(5);
 
@@ -115,6 +117,8 @@ private:
         GamePostEffect::get_instance().clear();
         // アセットの破棄
         AssetsManager::get_instance().clear();
+        SE::clear();
+        SE::end();
         // エフェクトの終了
         gsFinishEffect();
 
