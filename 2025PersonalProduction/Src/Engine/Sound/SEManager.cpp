@@ -52,6 +52,8 @@ void SEManager::play(unsigned int id, float pitch) {
 
     // ピッチを指定
     ma_sound_set_pitch(s, pitch);
+    // 3D計算をしない
+    ma_sound_set_spatialization_enabled(s, MA_FALSE);
 
     // 強制的に巻き戻して再生(一番古い音なので上書き 困るならロード時の数増やそう)
     ma_sound_seek_to_pcm_frame(s, 0);
@@ -72,6 +74,8 @@ void SEManager::play(unsigned int id, float pitch, float x, float y, float z) {
 
     ma_sound* s = pool.sounds[pool.index];
 
+    // 3D計算を行う
+    ma_sound_set_spatialization_enabled(s, MA_TRUE);
     // 座標を指定
     ma_sound_set_position(s, x, y, z);
     // ピッチを指定
@@ -79,6 +83,12 @@ void SEManager::play(unsigned int id, float pitch, float x, float y, float z) {
     // その他設定(魔法らしい)
     ma_sound_seek_to_pcm_frame(s, 0);
     ma_sound_start(s);
+    // 音の減衰の設定(直線的)
+    ma_sound_set_attenuation_model(s, ma_attenuation_model_linear);
+    // これ以上音を大きくしない距離
+    ma_sound_set_min_distance(s, min_);
+    // 音が聞こえなくなる距離
+    ma_sound_set_max_distance(s, max_);
 
     pool.index++;
     if (pool.index >= pool.sounds.size()) {

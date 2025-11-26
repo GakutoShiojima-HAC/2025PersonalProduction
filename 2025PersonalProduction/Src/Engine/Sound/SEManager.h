@@ -101,6 +101,11 @@ private:
 
     std::unordered_map<unsigned int, SoundPool> sound_map_;
 
+    // 音が最大音量になるリスナーとの距離
+    float min_{ 5.0f };
+    // 音が聞こえなくなるリスナーとの距離
+    float max_{ 20.0f };
+
 public:
     // コピー禁止
     SEManager(const SEManager& other) = delete;
