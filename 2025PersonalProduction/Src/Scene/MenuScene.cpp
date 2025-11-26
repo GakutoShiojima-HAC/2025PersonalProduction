@@ -4,12 +4,16 @@
 #include "Assets.h"
 #include "Engine/Graphics/Canvas/Canvas.h"
 #include "Engine/Core/Tween/Tween.h"
+#include "Engine/Graphics/Shader/GameShader.h"
+#include "Engine/Graphics/Shader/GamePostEffect.h"
 
 #ifdef _DEBUG
 #include <imgui/imgui.h>
 #endif
 
 #include "State/Scene/SceneState.h"
+#include "State/Scene/SceneStartState.h"
+#include "State/Scene/SceneEndState.h"
 #include "State/Scene/SceneOriginalState.h"
 #include "State/Scene/SceneSettingState.h"
 #include "State/Scene/SceneMenuState.h"
@@ -35,7 +39,12 @@ void MenuScene::start() {
     is_app_end_ = false;
     next_scene_tag_ = SceneTag::Game;
 
-    change_state((GSuint)SceneStateType::MenuScene);
+    // シェーダー上書きを開始
+    GameShader::get_instance().begin();
+    // レンダーターゲットの作成
+    game_post_effect_.create();
+
+    change_state((GSuint)SceneStateType::Start);
 }
 
 void MenuScene::update(float delta_time) {
@@ -53,13 +62,33 @@ void MenuScene::update(float delta_time) {
 }
 
 void MenuScene::draw() const {
+    game_post_effect_.begin();
+
+    // draw 背景(octree)
+
+    game_post_effect_.end();
+
+    GSuint current{ 0 };    // 背景描画するならポストエフェクトを適用する ( = apply)
+
+    game_post_effect_.begin_gui(current);
+
     state_.draw();
+
+    game_post_effect_.end_gui();
+    current = game_post_effect_.apply_dissolve(current);
+
+    // 最終結果を描画
+    game_post_effect_.draw(current);
 }
 
 void MenuScene::end() {
 	// Tweenの終了
 	Tween::clear();
 
+    // シェーダー上書きを終了
+    GameShader::get_instance().end();
+    // レンダーターゲットの解放
+    game_post_effect_.release();
 	// アセットの開放
 	AssetsManager::get_instance().delete_asset(AssetsLoader::MENU_ASSET_NAME);
 
@@ -78,7 +107,6 @@ void MenuScene::end() {
         std::any data = folder;
         scene_manager_.send_message(SceneTag::Game, "LoadSaveDataName", data);
     }
-   
 }
 
 SceneTag MenuScene::scene_tag() const {
@@ -91,6 +119,8 @@ void MenuScene::reception_message(const std::string& message, std::any& param) {
 
 void MenuScene::add_state() {
     state_.add_state((GSuint)SceneStateType::Original, make_shared<SceneOriginalState>(*this));
+    state_.add_state((GSuint)SceneStateType::Start, make_shared<SceneStartState>(*this));
+    state_.add_state((GSuint)SceneStateType::End, make_shared<SceneEndState>(*this));
     state_.add_state((GSuint)SceneStateType::Setting, make_shared<SceneSettingState>(*this, SceneStateType::MenuScene));
     state_.add_state((GSuint)SceneStateType::MenuScene, make_shared<SceneMenuState>(*this));
 }
@@ -101,13 +131,14 @@ void MenuScene::original_update(float delta_time) {
 }
 
 void MenuScene::original_draw() const {
-    // TODO 背景
+    // GUIでの固定描画があるならここへ
 }
 
 void MenuScene::load_data() {
     // 読み込み処理の数から一つの処理分の進捗率を計算
     const int count = 1;
     const float progress = 1.0f / (float)count;
+
 
     // アセットの読み込み
     AssetsLoader::load_by_json("Resource/Private/Common/Assets/menu.json", AssetsLoader::MENU_ASSET_NAME);
