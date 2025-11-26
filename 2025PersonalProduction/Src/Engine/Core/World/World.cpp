@@ -80,6 +80,8 @@ void World::draw() const {
         game_post_effect_.end_gui();
     }
 
+    current = game_post_effect_.apply_dissolve(current);
+
     // 最終結果を描画
     game_post_effect_.draw(current);
 }
