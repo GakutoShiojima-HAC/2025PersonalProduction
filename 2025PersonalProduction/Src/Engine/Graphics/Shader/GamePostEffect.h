@@ -22,55 +22,63 @@ public:
 
 public:
     /// <summary>
-    /// シェーダーのロード
+    /// ポストエフェクトシェーダーのロード
     /// </summary>
     void load();
 
     /// <summary>
-    /// シェーダーのクリア
+    /// ポストエフェクトシェーダーのクリア
     /// </summary>
     void clear();
 
     /// <summary>
-    /// ポストエフェクトの使用を開始
-    /// レンダーターゲットを作成する
+    /// レンダーターゲットを作成
     /// </summary>
-    void start();
+    void create();
 
     /// <summary>
-    /// ポストエフェクトの使用を終了
-    /// レンダーターゲットを削除する
+    /// レンダーターゲットを解放
     /// </summary>
-    void end();
-
-    /// <summary>
-    /// ポストエフェクトを適用した結果を描画する
-    /// </summary>
-    /// <param name="projection">= 射影行列</param>
-    void draw(const GSmatrix4& projection) const;
-
-    /// <summary>
-    /// レンダーターゲットを有効にする
-    /// 描画の前に実行する
-    /// </summary>
-    void draw_start() const;
-
-    /// <summary>
-    /// レンダーターゲットを無効にする
-    /// 描画の後に実行する
-    /// </summary>
-    void draw_end() const;
+    void release();
 
 public:
     /// <summary>
-    /// マスク用レンダーターゲットを有効にする
+    /// ポストエフェクトを適用する
     /// </summary>
-    void draw_mask_start() const;
+    /// <param name="projection">= 射影行列</param>
+    /// <returns>適用後のレンダーターゲット</returns>
+    GSuint apply(const GSmatrix4& projection) const;
 
     /// <summary>
-    /// マスク用レンダーターゲットを無効にする
+    /// レンダーターゲットへの描画を開始
     /// </summary>
-    void draw_mask_end() const;
+    void begin() const;
+
+    /// <summary>
+    /// レンダーターゲットへの描画を終了
+    /// </summary>
+    void end() const;
+
+    /// <summary>
+    /// マスク用レンダーターゲットへの描画を開始
+    /// </summary>
+    void begin_mask() const;
+
+    /// <summary>
+    /// マスク用レンダーターゲットへの描画を終了
+    /// </summary>
+    void end_mask() const;
+
+    /// <summary>
+    /// GUI用レンダーターゲットへの描画を開始
+    /// </summary>
+    /// <param name="scene">= ベースのレンダーターゲット</param>
+    void begin_gui(GSuint scene) const;
+
+    /// <summary>
+    /// GUI用レンダーターゲットへの描画を終了
+    /// </summary>
+    void end_gui() const;
 
 public:
     /// <summary>

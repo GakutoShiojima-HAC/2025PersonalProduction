@@ -309,10 +309,10 @@ void GameScene::game_start() {
     actor_generator_.clear_no_respawn();
 #endif
 
-    // シェーダーの有効化
-    GameShader::get_instance().start();
+    // シェーダー上書きを開始
+    GameShader::get_instance().begin();
     // レンダーターゲットの作成
-    GamePostEffect::get_instance().start();
+    GamePostEffect::get_instance().create();
 
     // GUIの描画を有効化
     world_.enable_draw_gui() = true;
@@ -333,10 +333,10 @@ void GameScene::game_end() {
     // 全てのエフェクトを停止する
     gsStopAllEffects();
 
-    // シェーダーの無効化
+    // シェーダー上書きを終了
     GameShader::get_instance().end();
-    // レンダーターゲットの削除
-    GamePostEffect::get_instance().end();
+    // レンダーターゲットの解放
+    GamePostEffect::get_instance().release();
     // アセットの開放
     AssetsManager::get_instance().delete_asset(AssetsLoader::GAME_STAGE_ASSET_NAME);
     // メニューに戻るなら共通アセットも開放

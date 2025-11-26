@@ -12,7 +12,7 @@
 #include "Engine/Graphics/Shader/PostEffects/FXAAEffect.h"
 
 // ブルームエフェクトの対象にするテクセルの輝度のしきい値
-const float BLOOM_THRESHOLD{ 0.85f };
+const float BLOOM_THRESHOLD{ 0.65f };
 // ブルームエフェクトの強さ
 const float BLOOM_INTENSITY{ 0.15f };
 
@@ -38,7 +38,7 @@ void GamePostEffect::load() {
 }
 
 void GamePostEffect::clear() {
-    end();
+    release();
 
     // シェーダーの削除
     gsDeleteShader(Shader_SSAO);
@@ -51,7 +51,7 @@ void GamePostEffect::clear() {
     gsDeleteShader(Shader_FXAA);
 }
 
-void GamePostEffect::start() {
+void GamePostEffect::create() {
     // 現在のビューポートのサイズを取得 [0]x座標, [1]:y座標, [2]:幅, [3]:高さ
     GLint viewport[4];
     glGetIntegerv(GL_VIEWPORT, viewport);
@@ -107,7 +107,7 @@ void GamePostEffect::start() {
     blur_power_ = 0.0f;
 }
 
-void GamePostEffect::end() {
+void GamePostEffect::release() {
     // SSAO用データをクリア
     ssao_sample_kernel_.clear();
     glDeleteTextures(1, &ssao_noise_texture_);
@@ -134,7 +134,7 @@ void GamePostEffect::end() {
     gsDeleteRenderTarget(Rt_FXAA);
 }
 
-void GamePostEffect::draw(const GSmatrix4& projection) const {
+GSuint GamePostEffect::apply(const GSmatrix4& projection) const {
     GSuint current = Rt_Base;
 
     const GSvector2 screen_size = get_screen_size();
@@ -183,15 +183,10 @@ void GamePostEffect::draw(const GSmatrix4& projection) const {
         if (blur_power_ >= 1.0f) current = PostEffect::Blur::apply_blur(current, { width_ / 32.0f, height_ / 32.0f }, Rt_GaussianBlurH4, Rt_GaussianBlurV4);
     }
 
-    // 最終結果のテクスチャを設定
-    gsBindRenderTargetTextureEx(current, 0, 0);
-    // レンダーターゲットを描画
-    gsDrawRenderTarget(current);
-    // テクスチャのバインド解除
-    gsUnbindRenderTargetTextureEx(current, 0, 0);
+    return current;
 }
 
-void GamePostEffect::draw_start() const {
+void GamePostEffect::begin() const {
     // レンダーターゲットを有効化
     gsBeginRenderTarget(Rt_Base);
     // 深度マスク用に設定を有効化
@@ -202,12 +197,12 @@ void GamePostEffect::draw_start() const {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void GamePostEffect::draw_end() const {
+void GamePostEffect::end() const {
     // レンダーターゲットを無効化
     gsEndRenderTarget();
 }
 
-void GamePostEffect::draw_mask_start() const {
+void GamePostEffect::begin_mask() const {
     // 深度を再利用するためにテクスチャを取得
     GStexture* texture = gsGetRenderTargetDepthTexture(Rt_Base);
     GSuint id = texture->dwTexName;
@@ -226,11 +221,21 @@ void GamePostEffect::draw_mask_start() const {
     glDepthMask(GL_FALSE);
 }
 
-void GamePostEffect::draw_mask_end() const {
+void GamePostEffect::end_mask() const {
     // 深度への書き込みを有効化
     glDepthMask(GL_TRUE);
     // 深度テクスチャを解除
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
+    // レンダーターゲットを無効化
+    gsEndRenderTarget();
+}
+
+void GamePostEffect::begin_gui(GSuint scene) const {
+    // レンダーターゲットを有効化
+    gsBeginRenderTarget(scene);
+}
+
+void GamePostEffect::end_gui() const {
     // レンダーターゲットを無効化
     gsEndRenderTarget();
 }

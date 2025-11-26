@@ -26,7 +26,7 @@ void GameShader::clear() {
     gsDeleteShader(Shader_Octree);
 }
 
-void GameShader::start() {
+void GameShader::begin() {
     // デフォルトシェーダーを退避
     //default_instacedmesh_ = gsGetBindDefaultInstacedMeshShader();
     default_mesh_ = gsGetBindDefaultMeshShader();
