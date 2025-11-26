@@ -43,6 +43,12 @@ public:
 
 public:
     /// <summary>
+    /// レンダーターゲットを描画
+    /// </summary>
+    /// <param name="source">= 最終結果を持つレンダーターゲット</param>
+    void draw(GSuint source) const;
+
+    /// <summary>
     /// ポストエフェクトを適用する
     /// </summary>
     /// <param name="projection">= 射影行列</param>
@@ -72,8 +78,8 @@ public:
     /// <summary>
     /// GUI用レンダーターゲットへの描画を開始
     /// </summary>
-    /// <param name="scene">= ベースのレンダーターゲット</param>
-    void begin_gui(GSuint scene) const;
+    /// <param name="source">= ベースのレンダーターゲット</param>
+    void begin_gui(GSuint source) const;
 
     /// <summary>
     /// GUI用レンダーターゲットへの描画を終了

@@ -134,6 +134,15 @@ void GamePostEffect::release() {
     gsDeleteRenderTarget(Rt_FXAA);
 }
 
+void GamePostEffect::draw(GSuint source) const {
+    // 最終結果のテクスチャを設定
+    gsBindRenderTargetTextureEx(source, 0, 0);
+    // レンダーターゲットを描画
+    gsDrawRenderTarget(source);
+    // テクスチャのバインド解除
+    gsUnbindRenderTargetTextureEx(source, 0, 0);
+}
+
 GSuint GamePostEffect::apply(const GSmatrix4& projection) const {
     GSuint current = Rt_Base;
 
@@ -230,9 +239,9 @@ void GamePostEffect::end_mask() const {
     gsEndRenderTarget();
 }
 
-void GamePostEffect::begin_gui(GSuint scene) const {
+void GamePostEffect::begin_gui(GSuint source) const {
     // レンダーターゲットを有効化
-    gsBeginRenderTarget(scene);
+    gsBeginRenderTarget(source);
 }
 
 void GamePostEffect::end_gui() const {
