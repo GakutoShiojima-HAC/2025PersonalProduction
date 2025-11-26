@@ -6,6 +6,7 @@
 #include "Engine/Utils/MyString.h"
 #include "Assets.h"
 #include "GameConfig.h"
+#include "Engine/Sound/SE.h"
 
 // コンボボーナス倍率の上昇幅
 const float BONUS_UP{ 0.5f };
@@ -42,7 +43,7 @@ void ActionScore::update(float delta_time) {
 
     // SE
     if (play_add_score_se_) {
-        gsPlaySE((GSuint)SEID::AddScore);
+        SE::play_random((GSuint)SEID::AddScore, 0.25f);
         play_add_score_se_ = false;
     }
 }
