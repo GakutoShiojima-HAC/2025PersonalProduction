@@ -879,5 +879,8 @@ void Player::on_ground() {
 	)) return;
 
 	change_state((GSuint)PlayerStateType::Land, Motion::Land, false);
+    int handle = play_effect((GSuint)EffectID::OnGroundSmoke, GSvector3::zero());
+    const GScolor color{ 1.0f, 1.0f, 1.0f, 0.125f };
+    gsSetEffectColor(handle, &color);
 }
 

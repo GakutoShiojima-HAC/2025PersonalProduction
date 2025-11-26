@@ -36,6 +36,8 @@ private:
     float timer_{ 0.0f };
 
     float parameter_{ 0.0f };
+
+    GSvector3 origin_position_{ 0.0f, 0.0f, 0.0f };
 };
 
 

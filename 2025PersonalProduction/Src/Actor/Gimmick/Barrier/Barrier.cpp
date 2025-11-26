@@ -1,14 +1,18 @@
 #include "Actor/Gimmick/Barrier/Barrier.h"
 #include "Assets.h"
 #include "GameConfig.h"
+#include <GSeffect.h>
 
 Barrier::Barrier(IWorld* world, const GSvector3& position, const std::string& break_type, float break_time, float parameter) {
     world_ = world;
-    transform_.position(position);
     tag_ = ActorTag::Object;
     name_ = "Barrier";
+    transform_.position(position);
+    origin_position_ = position;
+
     enable_collider_ = false;
     enable_timescale_ = false;
+
     mesh_ = (GSuint)MeshID::GimmickBarrier;
     mesh_collider_ = (GSuint)MeshID::GimmickBarrier;
 
@@ -23,6 +27,8 @@ void Barrier::update(float delta_time) {
         timer_ -= delta_time / cFPS;
 
         if (timer_ <= 0.0f) {
+            if (break_type_ == BarrierBreakType::Down) gsPlayEffect((GSuint)EffectID::DustLarge, &origin_position_);
+
             die();
             return;
         }
@@ -35,5 +41,8 @@ void Barrier::update(float delta_time) {
 }
 
 void Barrier::message(const std::string& message, std::any& param) {
-    if (message == "ByTimeline") is_break_ = true;
+    if (message == "ByTimeline") {
+        is_break_ = true;
+        gsPlayEffect((GSuint)EffectID::DustLarge, &origin_position_);
+    }
 }
