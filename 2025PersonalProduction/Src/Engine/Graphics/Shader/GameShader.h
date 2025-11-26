@@ -33,7 +33,7 @@ public:
     /// シェーダーの使用を開始
     /// デフォルトシェーダーを上書きする
     /// </summary>
-    void start();
+    void begin();
 
     /// <summary>
     /// シェーダーの使用を終了

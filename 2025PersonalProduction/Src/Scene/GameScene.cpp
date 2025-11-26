@@ -1,6 +1,4 @@
 #include "Scene/GameScene.h"
-#include <gslib.h>
-#include <GSeffect.h>
 #include "Assets.h"
 #include "Engine/Core/Tween/Tween.h"
 #include "Engine/Core/Assets/AssetsManager.h"
@@ -27,12 +25,13 @@
 #endif
 
 #include "State/Scene/SceneState.h"
+#include "State/Scene/SceneStartState.h"
+#include "State/Scene/SceneEndState.h"
 #include "State/Scene/SceneOriginalState.h"
 #include "State/Scene/SceneGamePauseState.h"
 #include "State/Scene/SceneSettingState.h"
 #include "State/Scene/SceneGuideState.h"
 #include "State/Scene/SceneGameResultState.h"
-#include "State/Scene/SceneGameEndState.h"
 
 GameScene::GameScene() {
     add_state();
@@ -57,7 +56,7 @@ void GameScene::start() {
 
     game_start();
 
-    change_state((GSuint)SceneStateType::Original);
+    change_state((GSuint)SceneStateType::Start);
 }
 
 void GameScene::update(float delta_time) {
@@ -98,34 +97,31 @@ void GameScene::reception_message(const std::string& message, std::any& param) {
         // 遷移条件
         if (state_.is_current_state((GSuint)SceneStateType::Original)) {
             set_next_scene(SceneTag::Game);
-            change_state((GSuint)SceneStateType::GameEnd);
+            change_state((GSuint)SceneStateType::End);
         }
     }
 }
 
 void GameScene::add_state() {
+    state_.add_state((GSuint)SceneStateType::Start, make_shared<SceneStartState>(*this));
+    state_.add_state((GSuint)SceneStateType::End, make_shared<SceneEndState>(*this));
     state_.add_state((GSuint)SceneStateType::Original, make_shared<SceneOriginalState>(*this));
     state_.add_state((GSuint)SceneStateType::GamePause, make_shared<SceneGamePauseState>(*this));
     state_.add_state((GSuint)SceneStateType::Setting, make_shared<SceneSettingState>(*this, SceneStateType::GamePause));
     state_.add_state((GSuint)SceneStateType::Guide, make_shared<SceneGuideState>(*this, SceneStateType::GamePause));
     state_.add_state((GSuint)SceneStateType::GameResult, make_shared<SceneGameResultState>(*this, &world_));
-    state_.add_state((GSuint)SceneStateType::GameEnd, make_shared<SceneGameEndState>(*this, &world_));
 }
 
 void GameScene::original_update(float delta_time) {
-    // TODO 一時的なタイトルに戻る処理
-    if (gsGetKeyState(GKEY_LCONTROL) && gsGetKeyTrigger(GKEY_RETURN)) {
-        change_state((GSuint)SceneStateType::GameEnd);
-        return;
-    }
+    world_.update(delta_time);
+
+    if (state_.get_current_state() != (GSuint)SceneStateType::Original) return;
 
     // ポーズ
     if (input_.action(InputAction::APP_Pause)) {
         change_state((GSuint)SceneStateType::GamePause);
         return;
     }
-
-    world_.update(delta_time);
 
     // ゲーム終了処理
     if (stage_data_.data().use_result) {
@@ -309,10 +305,10 @@ void GameScene::game_start() {
     actor_generator_.clear_no_respawn();
 #endif
 
-    // シェーダーの有効化
-    GameShader::get_instance().start();
+    // シェーダー上書きを開始
+    GameShader::get_instance().begin();
     // レンダーターゲットの作成
-    GamePostEffect::get_instance().start();
+    GamePostEffect::get_instance().create();
 
     // GUIの描画を有効化
     world_.enable_draw_gui() = true;
@@ -333,10 +329,10 @@ void GameScene::game_end() {
     // 全てのエフェクトを停止する
     gsStopAllEffects();
 
-    // シェーダーの無効化
+    // シェーダー上書きを終了
     GameShader::get_instance().end();
-    // レンダーターゲットの削除
-    GamePostEffect::get_instance().end();
+    // レンダーターゲットの解放
+    GamePostEffect::get_instance().release();
     // アセットの開放
     AssetsManager::get_instance().delete_asset(AssetsLoader::GAME_STAGE_ASSET_NAME);
     // メニューに戻るなら共通アセットも開放

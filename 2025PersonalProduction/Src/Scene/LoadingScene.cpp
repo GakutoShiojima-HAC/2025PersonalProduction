@@ -1,7 +1,9 @@
 #include "Scene/LoadingScene.h"
-#include "Engine/Graphics/Canvas/Canvas.h"
 #include <gslib.h>
+#include "Engine/Graphics/Canvas/Canvas.h"
 #include "Engine/Core/Tween/Tween.h"
+#include "Assets.h"
+#include "Engine/Core/Screen/Screen.h"
 
 void LoadingScene::start() {
     is_end_ = false;
@@ -21,6 +23,10 @@ void LoadingScene::update(float delta_time) {
 }
 
 void LoadingScene::draw() const {
+    // 背景描画
+    ScreenData& data = Screen::get_instance().get_current_data();
+    Canvas::draw_texture((GSuint)TextureID::BackGround, GSvector2::zero(), GSrect{ 0.0f, 0.0f, (float)data.width_px, (float)data.height_px });
+
     // 進捗率仮描画
     std::string text = "progress: " + to_string(scene_manager_.load_progress(next_scene_tag_) * 100.0f);
     Canvas::draw_text(text, GSvector2{ 0.0f, 0.0f }, 50.0f);

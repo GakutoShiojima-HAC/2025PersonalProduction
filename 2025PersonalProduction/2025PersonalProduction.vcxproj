@@ -53,8 +53,10 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ImportGroup Label="ExtensionSettings"></ImportGroup>
-  <ImportGroup Label="Shared"></ImportGroup>
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -208,6 +210,7 @@
     <ClCompile Include="Src\Engine\Core\Vibration\Vibration.cpp" />
     <ClCompile Include="Src\Engine\Graphics\Shader\GamePostEffect.cpp" />
     <ClCompile Include="Src\Engine\Graphics\Shader\GameShader.cpp" />
+    <ClCompile Include="Src\Engine\Graphics\Shader\PostEffects\DissolveEffect.cpp" />
     <ClCompile Include="Src\Engine\Graphics\Shader\PostEffects\FogEffect.cpp" />
     <ClCompile Include="Src\Engine\Graphics\Shader\PostEffects\FXAAEffect.cpp" />
     <ClCompile Include="Src\Engine\Graphics\Shader\PostEffects\MaskEffect.cpp" />
@@ -262,13 +265,14 @@
     <ClCompile Include="Src\State\Player\PlayerLandState.cpp" />
     <ClCompile Include="Src\State\Player\PlayerMoveState.cpp" />
     <ClCompile Include="Src\State\Player\PlayerSkillState.cpp" />
-    <ClCompile Include="Src\State\Scene\SceneGameEndState.cpp" />
+    <ClCompile Include="Src\State\Scene\SceneEndState.cpp" />
     <ClCompile Include="Src\State\Scene\SceneGamePauseState.cpp" />
     <ClCompile Include="Src\State\Scene\SceneGameResultState.cpp" />
     <ClCompile Include="Src\State\Scene\SceneGuideState.cpp" />
     <ClCompile Include="Src\State\Scene\SceneMenuState.cpp" />
     <ClCompile Include="Src\State\Scene\SceneOriginalState.cpp" />
     <ClCompile Include="Src\State\Scene\SceneSettingState.cpp" />
+    <ClCompile Include="Src\State\Scene\SceneStartState.cpp" />
     <ClCompile Include="Src\State\SimpleEnemy\SimpleEnemyAttackState.cpp" />
     <ClCompile Include="Src\State\SimpleEnemy\SimpleEnemyDeadState.cpp" />
     <ClCompile Include="Src\State\SimpleEnemy\SimpleEnemyFindState.cpp" />
@@ -340,6 +344,7 @@
     <ClInclude Include="Src\Engine\Core\Timeline\Parameters\SendMessageTimelineParameter.h" />
     <ClInclude Include="Src\Engine\Core\Timeline\Timeline.h" />
     <ClInclude Include="Src\Engine\Core\Timeline\TimelineEditor.h" />
+    <ClInclude Include="Src\Engine\Graphics\Shader\PostEffects\DissolveEffect.h" />
     <ClInclude Include="Src\Engine\Utils\MyMath.h" />
     <ClInclude Include="Src\GameTimer\GameTimer.h" />
     <ClInclude Include="Src\Engine\Core\Input\Input.h" />
@@ -445,13 +450,14 @@
     <ClInclude Include="Src\State\Player\PlayerMoveState.h" />
     <ClInclude Include="Src\State\Player\PlayerSkillState.h" />
     <ClInclude Include="Src\State\Player\PlayerState.h" />
-    <ClInclude Include="Src\State\Scene\SceneGameEndState.h" />
+    <ClInclude Include="Src\State\Scene\SceneEndState.h" />
     <ClInclude Include="Src\State\Scene\SceneGamePauseState.h" />
     <ClInclude Include="Src\State\Scene\SceneGameResultState.h" />
     <ClInclude Include="Src\State\Scene\SceneGuideState.h" />
     <ClInclude Include="Src\State\Scene\SceneMenuState.h" />
     <ClInclude Include="Src\State\Scene\SceneOriginalState.h" />
     <ClInclude Include="Src\State\Scene\SceneSettingState.h" />
+    <ClInclude Include="Src\State\Scene\SceneStartState.h" />
     <ClInclude Include="Src\State\Scene\SceneState.h" />
     <ClInclude Include="Src\State\SimpleEnemy\SimpleEnemyAttackState.h" />
     <ClInclude Include="Src\State\SimpleEnemy\SimpleEnemyDeadState.h" />
@@ -473,6 +479,7 @@
     <ClInclude Include="Src\Engine\Sound\BGMManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resource\Private\Shader\Dissolve.frag" />
     <None Include="Resource\Private\Shader\MaskEffect.frag" />
     <None Include="Resource\Private\Shader\BloomCombine.frag" />
     <None Include="Resource\Private\Shader\BloomExtract.frag" />
@@ -492,5 +499,6 @@
     <None Include="Resource\Private\Shader\SSAOCombine.frag" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets"></ImportGroup>
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
 </Project>

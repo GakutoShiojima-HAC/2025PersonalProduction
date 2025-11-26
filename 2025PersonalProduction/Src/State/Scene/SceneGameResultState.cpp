@@ -177,7 +177,7 @@ void SceneGameResultState::try_agein() {
     // 再挑戦
     else {
         owner_.set_next_scene(SceneTag::Game);
-        owner_.change_state((GSuint)SceneStateType::GameEnd);
+        owner_.change_state((GSuint)SceneStateType::End);
         return;
     }
 }
@@ -193,13 +193,13 @@ void SceneGameResultState::end_game() {
         world_->game_save_data().set_clear_stage(owner_.get_current_load_stage());
         owner_.set_next_stage(0);
         owner_.set_next_scene(SceneTag::Game);
-        owner_.change_state((GSuint)SceneStateType::GameEnd);
+        owner_.change_state((GSuint)SceneStateType::End);
         return;
     }
     // メニューに戻る
     else {
         owner_.set_next_scene(SceneTag::Menu);
-        owner_.change_state((GSuint)SceneStateType::GameEnd);
+        owner_.change_state((GSuint)SceneStateType::End);
         return;
     }
 }
@@ -222,7 +222,7 @@ void SceneGameResultState::end_result() {
             // ロビーに戻る
             owner_.set_next_stage(0);
             owner_.set_next_scene(SceneTag::Game);
-            owner_.change_state((GSuint)SceneStateType::GameEnd);   // 再挑戦 戻る の二択
+            owner_.change_state((GSuint)SceneStateType::End);   // 再挑戦 戻る の二択
             return;
         }
     }
@@ -234,14 +234,14 @@ void SceneGameResultState::end_result() {
         // ロビーに戻る
         owner_.set_next_stage(0);
         owner_.set_next_scene(SceneTag::Game);
-        owner_.change_state((GSuint)SceneStateType::GameEnd);       // 戻る の一択
+        owner_.change_state((GSuint)SceneStateType::End);       // 戻る の一択
         
         return;
     }
     else {
         // メニューに戻る
         owner_.set_next_scene(SceneTag::Menu);
-        owner_.change_state((GSuint)SceneStateType::GameEnd);       // 戻る の一択
+        owner_.change_state((GSuint)SceneStateType::End);       // 戻る の一択
         return;
     }
 }

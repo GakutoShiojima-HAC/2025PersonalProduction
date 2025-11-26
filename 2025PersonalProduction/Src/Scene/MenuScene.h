@@ -12,6 +12,7 @@
 #define MENU_SCENE_H_
 
 #include "Engine/Core/Scene/StandardScene.h"
+#include "Engine/Graphics/Shader/GamePostEffect.h"
 
 class MenuScene : public StandardScene {
 public:
@@ -45,6 +46,10 @@ private:
     /// データロード用
     /// </summary>
     void load_data();
+
+private:
+    // ゲームポストエフェクト
+    GamePostEffect& game_post_effect_ = GamePostEffect::get_instance();
 
 };
 

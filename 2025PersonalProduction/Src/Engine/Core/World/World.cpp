@@ -36,7 +36,7 @@ void World::update(float delta_time) {
 
 void World::draw() const {
     // ポストエフェクトの開始
-    game_post_effect_.draw_start();
+    game_post_effect_.begin();
 
 	camera_.draw();
 	gsSetEffectCamera();
@@ -45,38 +45,45 @@ void World::draw() const {
 
 	field_->draw();
 	if (navmesh_ != nullptr) navmesh_->draw();
+    gsDrawEffect();
 	actor_.draw();
 	actor_.draw_tranparent();
-    gsBeginRenderingEffect();
-    gsDrawEffect();
-    gsEndRenderingEffect();
 
     // ポストエフェクトの終了
-    game_post_effect_.draw_end();
+    game_post_effect_.end();
 
 	// マスクエフェクトの描画
     if (game_post_effect_.is_draw_mask()) {
-        game_post_effect_.draw_mask_start();
+        game_post_effect_.begin_mask();
 
         // 回避エフェクトか
         if (game_post_effect_.is_draw_avoid_effect()) {
+            gsDrawEffect();
             actor_.draw();
             actor_.draw_tranparent();
-            gsBeginRenderingEffect();
-            gsDrawEffect();
-            gsEndRenderingEffect();
         }
 
-        game_post_effect_.draw_mask_end();
+        game_post_effect_.end_mask();
     }
 	
-    // ポストエフェクトの結果を描画
-    game_post_effect_.draw(camera_.get_projection_matrix());
+    // ポストエフェクトを適用
+    GSuint current = game_post_effect_.apply(camera_.get_projection_matrix());
 
-    if (!enable_draw_gui_) return;
-	actor_.draw_gui();
-    action_score_.draw();
-    game_timer_.draw();
+    // GUIの描画
+    if (enable_draw_gui_) {
+        game_post_effect_.begin_gui(current);
+
+        actor_.draw_gui();
+        action_score_.draw();
+        game_timer_.draw();
+
+        game_post_effect_.end_gui();
+    }
+
+    current = game_post_effect_.apply_dissolve(current);
+
+    // 最終結果を描画
+    game_post_effect_.draw(current);
 }
 
 void World::clear() {

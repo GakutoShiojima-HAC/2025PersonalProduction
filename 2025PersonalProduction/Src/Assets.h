@@ -31,6 +31,8 @@
 // テクスチャ 
 #define TEXTURE_ID_LIST \
     X(NONE) \
+    X(BackGround) \
+    X(DissolveMask) \
     X(Cursor) \
     X(MenuWindowTexture) \
     X(PauseWindowTexture) \
