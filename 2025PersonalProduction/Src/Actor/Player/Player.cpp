@@ -871,7 +871,7 @@ void Player::update_mesh(float delta_time) {
 void Player::on_jump() {
     velocity_.y = jump_power_ * 0.1f + gravity_ * 0.1f / cFPS;	// èdóÕÇâ¡éZÇ∑ÇÈÇ±Ç∆Ç≈èâë¨Çà€éù
     int handle = play_effect((GSuint)EffectID::OnGroundSmoke, GSvector3::zero());
-    const GScolor color{ 1.0f, 1.0f, 1.0f, 0.125f };
+    const GScolor color{ 1.0f, 1.0f, 1.0f, 0.25f };
     gsSetEffectColor(handle, &color);
 }
 
@@ -904,7 +904,9 @@ void Player::on_ground() {
 
 	change_state((GSuint)PlayerStateType::Land, Motion::Land, false);
     int handle = play_effect((GSuint)EffectID::OnGroundSmoke, GSvector3::zero());
-    const GScolor color{ 1.0f, 1.0f, 1.0f, 0.125f };
+    const GScolor color{ 1.0f, 1.0f, 1.0f, 0.25f };
     gsSetEffectColor(handle, &color);
+
+    SE::play((GSuint)SEID::Land);
 }
 
