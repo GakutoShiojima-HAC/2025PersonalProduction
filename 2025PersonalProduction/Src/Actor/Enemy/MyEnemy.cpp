@@ -59,7 +59,7 @@ bool MyEnemy::is_attack_soon() const {
     if (it == my_info_.attack_data.end()) return false;
 
     // アラート開始から攻撃判定生成までを真とする
-    return it->second.start_time >= state_timer_ && it->second.attack_time <= state_timer_;
+    return state_timer_ >= it->second.start_time && state_timer_ <= it->second.attack_time;
 }
 
 void MyEnemy::react(Actor& other) {
