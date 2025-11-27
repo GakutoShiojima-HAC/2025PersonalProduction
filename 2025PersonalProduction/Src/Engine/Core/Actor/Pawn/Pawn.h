@@ -34,7 +34,6 @@ public:
 
     /// <summary>
     /// 攻撃ヒットコールバック処理
-    /// コライダーの寿命は呼ばれたフレームまで
     /// </summary>
     /// <param name="collider">= コライダー</param>
     virtual void on_hit_attack(AttackCollider& collider);
@@ -49,6 +48,12 @@ public:
 	/// </summary>
 	/// <returns>死亡状態なら真を返却</returns>
 	virtual bool is_dead_state() const;
+
+    /// <summary>
+    /// 攻撃動作に入っているかどうか
+    /// </summary>
+    /// <returns>入っていたら真を返却</returns>
+    virtual bool is_attack_soon() const { return false; }
 
 public:
 	/// <summary>
@@ -84,6 +89,12 @@ public:
     /// <returns>ループの状態</returns>
     bool current_motion_loop() const;
 
+    /// <summary>
+	/// 現在のモーションの総再生時間を取得
+	/// </summary>
+	/// <returns></returns>
+	float current_motion_end_time() const;
+
 protected:
 	/// <summary>
 	/// 重力の更新
@@ -95,34 +106,22 @@ protected:
 	/// </summary>
 	void update_invincible(float delta_time);
 
-	/// <summary>
-	/// メッシュの更新
-	/// </summary>
-	virtual void update_mesh(float delta_time);
-
-	/// <summary>
-	/// 現在のモーションの総再生時間を取得
-	/// </summary>
-	/// <returns></returns>
-	float current_motion_end_time() const;
-
-    /// <summary>
-    /// 攻撃時の危険信号エフェクトを再生
-    /// </summary>
-    /// <param name="bone_num">= 信号を出すボーン番号</param>
-    void play_danger_signal_effect(GSuint bone_num);
-
-    /// <summary>
-    /// 危険信号エフェクトの更新
-    /// </summary>
-    void update_denger_signal(float delta_time);
-
     /// <summary>
     /// 描画用HPの値の更新
     /// </summary>
     void update_display_hp(float delta_time);
 
+    /// <summary>
+    /// ポーンパラメータの初期化
+    /// </summary>
+    void init_parameter(PawnParameter::Type type);
+
 protected:
+    /// <summary>
+    /// メッシュの更新
+    /// </summary>
+    virtual void update_mesh(float delta_time);
+
 	/// <summary>
 	/// 地形との衝突判定
 	/// </summary>
@@ -134,19 +133,20 @@ protected:
 	virtual void collide_actor(Actor& other) override;
 
     /// <summary>
-    /// 空中
+    /// 接地しなくなった瞬間
     /// </summary>
-    virtual void on_air();
+    virtual void on_air() {};
 
     /// <summary>
-    /// 接地
+    /// 接地する瞬間
     /// </summary>
-    virtual void on_ground();
+    virtual void on_ground() {};
 
     /// <summary>
-    /// パラメータの初期化
+    /// ルートモーションを使う状態かどうか
     /// </summary>
-    void init_parameter(PawnParameter::Type type);
+    /// <returns>ルートモーションを使うなら真を返却</returns>
+    virtual bool is_root_motion_state() const { return false; };
 
 protected:
 	// アニメーションメッシュ
@@ -159,7 +159,7 @@ protected:
 	// HP
 	int hp_{ 1 };
     // 描画用のHP
-    float display_hp_{ 1 };
+    float display_hp_{ 1.0f };
 	// 重力値
 	float gravity_{ 9.8f };
 	// ジャンプ力
@@ -173,10 +173,8 @@ protected:
 	// 接地しているか
 	bool is_ground_{ false };
 
-    // 危険信号のボーン番号
-    GSuint danger_signal_bone_num_{ 0 };
-    // 危険信号のエフェクトハンドル
-    int danger_signal_effect_handle_{ 0 };
+    // 攻撃動作に入っているか
+    bool is_attack_soon_{ false };
 
 };
 

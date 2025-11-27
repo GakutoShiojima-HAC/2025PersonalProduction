@@ -1,9 +1,11 @@
 #include "MyEnemy.h"
 #include "Engine/Utils/MyMath.h"
 #include "Assets.h"
+#include "Engine/Sound/SE.h"
 
 MyEnemy::MyEnemy(IWorld* world, const GSvector3& position, const GSvector3& rotate, const MyEnemyInfo& info) :
-    my_info_{ info } {
+    my_info_{ info },
+    navmesh_{ this, world->navmesh() } {
     world_ = world;
     tag_ = ActorTag::Enemy;
     name_ = info.name;
@@ -11,18 +13,21 @@ MyEnemy::MyEnemy(IWorld* world, const GSvector3& position, const GSvector3& rota
     hp_ = info.hp;
     display_hp_ = (float)info.hp;
 
-    init_parameter(PawnParameter::get_type(info.type));
+    init_parameter(PawnParameter::get_type(info.pawn_type));
     mesh_ = { info.skinmesh, info.skinmesh, info.skinmesh };
 
-    // ナビメッシュ追加
-    navmesh_ = { this, world_->navmesh() };
     navmesh_.offset_ratio() = 0.0f;
 
     transform_.position(position);
     transform_.eulerAngles(rotate);
-    mesh_.transform(transform_.localToWorldMatrix());
     collide_field();
+    mesh_.transform(transform_.localToWorldMatrix());
     origin_position_ = transform_.position();
+
+    // モーションによるアラートイベントの追加
+    for (const auto& data : info.attack_data) {
+        set_motion_alert_event(data.first, data.second.start_time, data.second.bone);
+    }
 }
 
 void MyEnemy::update(float delta_time) {
@@ -34,7 +39,7 @@ void MyEnemy::update(float delta_time) {
 
 void MyEnemy::late_update(float delta_time) {
     update_display_hp(delta_time);
-    update_denger_signal(delta_time);
+    update_alert_effect();
 }
 
 void MyEnemy::draw() const {
@@ -45,17 +50,20 @@ void MyEnemy::draw() const {
 #endif
 }
 
-void MyEnemy::react(Actor& other) {
-    if (other.tag() == ActorTag::Enemy) collide_actor(other);
+void MyEnemy::draw_gui() const {
+    draw_hp_gauge();
 }
 
-void MyEnemy::update_mesh(float delta_time) {
-    // メッシュのモーションを更新
-    mesh_.update(delta_time);
-    // ルートモーションを適用
-    if (is_root_motion_state()) mesh_.apply_root_motion(transform_);
-    // ワールド変換行列を設定
-    mesh_.transform(transform_.localToWorldMatrix());
+bool MyEnemy::is_attack_soon() const {
+    auto it = my_info_.attack_data.find(motion_);
+    if (it == my_info_.attack_data.end()) return false;
+
+    // アラート開始から攻撃判定生成までを真とする
+    return state_timer_ >= it->second.start_time && state_timer_ < it->second.attack_time;
+}
+
+void MyEnemy::react(Actor& other) {
+    if (other.tag() == ActorTag::Enemy) collide_actor(other);
 }
 
 void MyEnemy::save_current_state() {
@@ -113,8 +121,7 @@ Character* MyEnemy::target() {
     return target_;
 }
 
-bool MyEnemy::start_move()
-{
+bool MyEnemy::start_move() {
     if (target_ == nullptr) return false;
     return navmesh_.find_path(target_);
 }
@@ -167,10 +174,19 @@ const MyEnemyInfo& MyEnemy::my_info() const {
     return my_info_;
 }
 
-void MyEnemy::generate_attack_collider() {
-    GSmatrix4 m = local_to_world(my_info_.attack_offset, GSvector3::zero(), GSvector3::one());
-    world_->generate_attack_collider(my_info_.attack_radius, m.position(), this, my_info_.attack_damage, name_ + "Attack", 0.1f, 0.0f);
+bool MyEnemy::is_attack_motion(GSuint motion) const {
+    auto it = my_info_.attack_data.find(motion);
+    if (it == my_info_.attack_data.end()) return false;
+    return true;
+}
 
+void MyEnemy::set_motion_attack_event(GSuint motion, const MyEnemyAttackData& data) {
+    mesh_.add_animation_event(motion, data.attack_time, [=] { generate_attack_collider(data.offset, data.radius, data.damage); });
+}
+
+void MyEnemy::generate_attack_collider(const GSvector3& offset, float radius, int damage) {
+    GSmatrix4 m = local_to_world(offset, GSvector3::zero(), GSvector3::one());
+    world_->generate_attack_collider(radius, m.position(), this, my_info_.damage + damage, name_ + "Attack", 0.1f, 0.0f);
 }
 
 void MyEnemy::draw_hp_gauge() const {
@@ -188,7 +204,7 @@ void MyEnemy::draw_hp_gauge() const {
     if (length > 30.0f) return;
 
     // スクリーン座標を計算
-    const GSmatrix4 wmat = local_to_world(GSvector3{ 0.0f, my_info_.hp_height, 0.0f }, GSvector3::zero(), GSvector3::one());
+    const GSmatrix4 wmat = local_to_world(GSvector3{ 0.0f, my_info_.ui_height, 0.0f }, GSvector3::zero(), GSvector3::one());
     const GSvector3 world_position = wmat.position();
     GSvector2 screen_position;
     gsCalculateScreen(&screen_position, &world_position);
@@ -227,7 +243,6 @@ void MyEnemy::draw_hp_gauge() const {
             0.0f
         );
     }
-    
 }
 
 void MyEnemy::draw_boss_bar() const {
@@ -265,6 +280,27 @@ void MyEnemy::draw_boss_bar() const {
             0.0f
         );
     }
-
 }
 
+void MyEnemy::set_motion_alert_event(GSuint motion, float time, GSuint bone_num) {
+    mesh_.add_animation_event(motion, time, [=] { play_alert_event(bone_num); });
+}
+
+void MyEnemy::play_alert_event(GSuint bone_num) {
+    alert_effect_bone_num_ = bone_num;
+
+    // エフェクトを再生
+    const GSmatrix4 mat = mesh_.bone_matrices(bone_num);
+    alert_effect_handle_ = gsPlayEffectEx((GSuint)EffectID::DangerSignal, &mat);
+    // SEを再生
+    SE::play((GSuint)SEID::Alert, transform_.position());
+}
+
+void MyEnemy::update_alert_effect() {
+    if (!gsExistsEffect(alert_effect_handle_)) return;
+
+    GSmatrix4 mat = mesh_.bone_matrices(alert_effect_bone_num_);
+    gsSetEffectMatrix(alert_effect_handle_, &mat);
+    const GSvector3 scale{ 0.2f, 0.2f, 0.2f };
+    gsSetEffectScale(alert_effect_handle_, &scale);
+}

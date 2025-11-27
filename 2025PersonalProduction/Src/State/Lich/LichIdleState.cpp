@@ -38,22 +38,24 @@ void LichIdleState::update(float delta_time) {
 
     // Ú‹ßUŒ‚‹——£‚É“G‚ª‘¶İ‚·‚é‚È‚çUŒ‚
     owner_.look_target();
-    if (to_target_length < owner_.my_info().attack_detection_radius) {
+    if (to_target_length < owner_.my_info().attack_data.find(LichMotion::Attack1)->second.detection_radius) {
         next_state_timer_ = owner_.info().attack_lottery_by_attack;
+        // 60%
         if (MyRandom::random_float(0.0f, 1.0f) <= 0.6f) {
             owner_.change_state((GSuint)LichStateType::Attack, LichMotion::Attack1, false);
         }
-        else {
+        else if (owner_.is_attack_motion(LichMotion::Spell2)) {
             owner_.change_state((GSuint)LichStateType::Spell, LichMotion::Spell2, false);
         }
     }
     // ‰“‹——£‚È‚ç–‚–@
     else {
-        if (MyRandom::random_float(0.0f, 1.0f) <= 0.5f) {
+        // 50%
+        if (MyRandom::random_float(0.0f, 1.0f) <= 0.5f && owner_.is_attack_motion(LichMotion::Spell1)) {
             next_state_timer_ = owner_.info().attack_lottery_by_spell;
             owner_.change_state((GSuint)LichStateType::Spell, LichMotion::Spell1, false);
         }
-        else {
+        else if (owner_.is_attack_motion(LichMotion::Spell2)) {
             next_state_timer_ = owner_.info().attack_lottery_by_attack;
             owner_.change_state((GSuint)LichStateType::Spell, LichMotion::Spell2, false);
         }

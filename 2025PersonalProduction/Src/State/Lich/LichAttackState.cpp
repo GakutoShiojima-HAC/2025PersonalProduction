@@ -24,15 +24,17 @@ void LichAttackState::update(float delta_time) {
         const GSvector3 to_target = owner_.target()->transform().position() - owner_.transform().position();
         const float to_target_length = to_target.magnitude();
 
-        // îÕàÕì‡Ç©ÅH
-        if (to_target_length < owner_.my_info().attack_detection_radius) {
-            owner_.look_target();
-            owner_.change_state((GSuint)LichStateType::Attack, LichMotion::Attack2, false);
-            return;
+        if (owner_.is_attack_motion(LichMotion::Attack2)) {
+            // îÕàÕì‡Ç»ÇÁéüÇÃçUåÇÇ÷
+            if (to_target_length < owner_.my_info().attack_data.find(LichMotion::Attack2)->second.detection_radius) {
+                owner_.look_target();
+                owner_.change_state((GSuint)LichStateType::Attack, LichMotion::Attack2, false);
+                return;
+            }
         }
     }
 
-    // ñﬂÇÈ
+    // âΩÇ‡Ç»ÇØÇÍÇŒñﬂÇÈ
     owner_.change_state_and_motion((GSuint)LichStateType::Idle);
 }
 

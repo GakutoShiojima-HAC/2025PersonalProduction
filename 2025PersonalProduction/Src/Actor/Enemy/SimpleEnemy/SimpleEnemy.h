@@ -29,9 +29,6 @@ public:
     ~SimpleEnemy() = default;
 
 public:
-    void draw_gui() const override;
-
-public:
     void take_damage(Actor& other, const int damage) override;
 
     void on_hit_attack(AttackCollider& collider) override {};
@@ -53,21 +50,6 @@ public:
     /// </summary>
     /// <returns>参照</returns>
     const SimpleEnemyInfo& info() const;
-
-    /// <summary>
-    /// ステートに対応したモーション番号を返却
-    /// </summary>
-    /// <param name="state">= 状態</param>
-    /// <param name="loop">= ループするかどうか</param>
-    /// <returns>モーション番号</returns>
-    GSuint get_motion(GSuint state, bool* loop = nullptr) const;
-
-private:
-    /// <summary>
-    /// ルートモーションを使う状態かどうか
-    /// </summary>
-    /// <returns>ルートモーションを使うなら真を返却</returns>
-    bool is_root_motion_state() const;
 
 private:
     SimpleEnemyInfo info_;

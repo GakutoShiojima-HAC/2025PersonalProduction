@@ -66,31 +66,7 @@ void Pawn::update_invincible(float delta_time) {
     if (invincible_timer_ <= 0.0f) return;
 
     // 無敵時間を減らす
-    invincible_timer_ = CLAMP(invincible_timer_ - delta_time / cFPS, 0.0f, FLT_MAX);
-}
-
-void Pawn::update_mesh(float delta_time) {
-    // メッシュのモーションを更新
-    mesh_.update(delta_time);
-
-    // ワールド変換行列を設定
-    mesh_.transform(transform_.localToWorldMatrix());
-}
-
-void Pawn::play_danger_signal_effect(GSuint bone_num) {
-    // エフェクトを再生する
-    const GSmatrix4 mat = mesh_.bone_matrices(bone_num);
-    danger_signal_bone_num_ = bone_num;
-    danger_signal_effect_handle_ = gsPlayEffectEx((GSuint)EffectID::DangerSignal, &mat);
-}
-
-void Pawn::update_denger_signal(float delta_time) {
-    if (!gsExistsEffect(danger_signal_effect_handle_)) return;
-
-    GSmatrix4 mat = mesh_.bone_matrices(danger_signal_bone_num_);
-    gsSetEffectMatrix(danger_signal_effect_handle_, &mat);
-    const GSvector3 scale{ 0.2f, 0.2f, 0.2f };
-    gsSetEffectScale(danger_signal_effect_handle_, &scale);
+    invincible_timer_ = CLAMP(invincible_timer_ - delta_time / world_->timescale() / cFPS, 0.0f, FLT_MAX);
 }
 
 void Pawn::update_display_hp(float delta_time) {
@@ -103,6 +79,25 @@ void Pawn::update_display_hp(float delta_time) {
         // 誤差対策
         display_hp_ = (float)hp_;
     }
+}
+
+void Pawn::init_parameter(PawnParameter::Type type) {
+    height_ = PawnParameter::height(type);
+
+    collider_ = BoundingSphere{ PawnParameter::radius(type), GSvector3{ 0.0f, height_ / 2.0f, 0.0f } };
+}
+
+
+void Pawn::update_mesh(float delta_time) {
+    // メッシュのモーションを更新
+    mesh_.update(delta_time);
+    // ルートモーションを適用
+    if (is_root_motion_state()) {
+        mesh_.apply_root_motion(transform_);
+        collide_field();
+    }
+    // ワールド変換行列を設定
+    mesh_.transform(transform_.localToWorldMatrix());
 }
 
 void Pawn::collide_field() {
@@ -196,16 +191,3 @@ void Pawn::collide_actor(Actor& other) {
     collide_field();
 }
 
-void Pawn::on_air() {
-
-}
-
-void Pawn::on_ground() {
-
-}
-
-void Pawn::init_parameter(PawnParameter::Type type) {
-    height_ = PawnParameter::height(type);
-
-    collider_ = BoundingSphere{ PawnParameter::radius(type), GSvector3{ 0.0f, height_ / 2.0f, 0.0f }};
-}

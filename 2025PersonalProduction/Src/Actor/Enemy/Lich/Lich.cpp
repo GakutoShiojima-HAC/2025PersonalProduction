@@ -16,7 +16,7 @@
 #include "State/Lich/LichSpellState.h"
 
 // 無敵時間(秒)
-const float INVINCIBLE_TIME{ 0.5f };
+const float INVINCIBLE_TIME{ 0.25f };
 
 Lich::Lich(IWorld* world, const GSvector3& position, const GSvector3& rotate, const MyEnemyInfo& my_info, const LichInfo& info) :
     MyEnemy{ world, position, rotate, my_info },
@@ -24,22 +24,10 @@ Lich::Lich(IWorld* world, const GSvector3& position, const GSvector3& rotate, co
     add_state();
 
     // 攻撃アニメーションイベントを生成
-    mesh_.add_animation_event(Motion::Attack1, 35.0f, [=] { generate_attack_collider(); });
-    mesh_.add_animation_event(Motion::Attack2, 44.0f, [=] { generate_attack_collider(); });
+    set_motion_attack_event(Motion::Attack1, my_info_.attack_data[Motion::Attack1]);
+    set_motion_attack_event(Motion::Attack2, my_info_.attack_data[Motion::Attack2]);
     mesh_.add_animation_event(Motion::Spell1, 36.0f, [=] { generate_spell_a(); });
     mesh_.add_animation_event(Motion::Spell2, 23.0f, [=] { generate_spell_b(); });
-
-    auto alert = [=](GSuint motion, float time) {
-        mesh_.add_animation_event(motion, CLAMP(time - 15.0f, 0.0f, FLT_MAX), [=] {
-            play_danger_signal_effect(my_info_.critical_bone_num);
-            SE::play((GSuint)SEID::Alert);
-        });
-    };
-
-    alert(Motion::Attack1, 35.0f);
-    alert(Motion::Attack2, 44.0f);
-    alert(Motion::Spell1, 36.0f);
-    alert(Motion::Spell2, 23.0f);
 
     change_state_and_motion((GSuint)LichStateType::Idle);
     save_current_state();
@@ -109,10 +97,6 @@ void Lich::add_state() {
 
 const LichInfo& Lich::info() const {
     return info_;
-}
-
-bool Lich::is_root_motion_state() const {
-    return false;
 }
 
 void Lich::generate_spell_a() {

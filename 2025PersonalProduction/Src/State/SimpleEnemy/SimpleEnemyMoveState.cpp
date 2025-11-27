@@ -17,10 +17,17 @@ void SimpleEnemyMoveState::update(float delta_time) {
         return;
     }
 
-    // UŒ‚”»’è‚Ì’†‚É‚¢‚é‚©‚Ç‚¤‚©
+    bool is_in_radius{ false };
     const GSvector3 to_target = owner_.target()->transform().position() - owner_.transform().position();
     const float to_target_length = to_target.magnitude();
-    if (to_target_length < owner_.my_info().attack_detection_radius) {
+
+    // UŒ‚‚Å‚«‚é‚©‚Ç‚¤‚©
+    const GSuint attack_motion = owner_.info().motion_attack;
+    if (owner_.is_attack_motion(attack_motion)) {
+        is_in_radius = to_target_length < owner_.my_info().attack_data.find(attack_motion)->second.detection_radius;
+    }
+
+    if (is_in_radius) {
         // “G‚Ì•ûŒü‚ðŒü‚¢‚Ä‚¢‚é‚©‚Ç‚¤‚©
         if (MyMath::to_target_angle(owner_.transform().position(), owner_.transform().forward(), owner_.target()->transform().position()) <= 10.0f) {
             // ”»’è“à‚È‚çUŒ‚
