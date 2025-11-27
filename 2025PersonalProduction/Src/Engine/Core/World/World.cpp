@@ -48,9 +48,9 @@ void World::draw() const {
 
 	field_->draw();
 	if (navmesh_ != nullptr) navmesh_->draw();
-    gsDrawEffect();
 	actor_.draw();
 	actor_.draw_tranparent();
+    gsDrawEffect();
 
     // ポストエフェクトの終了
     game_post_effect_.end();
@@ -61,9 +61,9 @@ void World::draw() const {
 
         // 回避エフェクトか
         if (game_post_effect_.is_draw_avoid_effect()) {
-            gsDrawEffect();
             actor_.draw();
             actor_.draw_tranparent();
+            gsDrawEffect();
         }
 
         game_post_effect_.end_mask();
