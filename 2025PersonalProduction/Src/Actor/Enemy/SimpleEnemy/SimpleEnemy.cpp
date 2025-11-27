@@ -53,7 +53,8 @@ void SimpleEnemy::take_damage(Actor& other, const int damage) {
     }
     else {
         // 怯む確率
-        if (target_ == nullptr || MyRandom::random_float(0.0f, 1.0f) <= my_info_.falter_rate) {
+        const bool falter = world_->enable_avoid_effect() ? true : MyRandom::random_float(0.0f, 1.0f) <= my_info_.falter_rate;
+        if (target_ == nullptr || falter) {
             // 一度Idleにしてモーションをリセット
             mesh_.change_motion(info_.motion_idle, true);
             change_state_and_motion((GSuint)SimpleEnemyStateType::Hurt);
