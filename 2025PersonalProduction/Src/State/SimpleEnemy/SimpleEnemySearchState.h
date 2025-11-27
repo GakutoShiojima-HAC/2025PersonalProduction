@@ -42,11 +42,6 @@ private:
     };
 
 private:
-    bool idle_motion_loop_{ true };
-    bool move_motion_loop_{ true };
-    GSuint idle_motion_{ 0 };
-    GSuint move_motion_{ 0 };
-
     float move_timer_{ 0.0f };
 
     MoveState state_{ MoveState::ToRandom };

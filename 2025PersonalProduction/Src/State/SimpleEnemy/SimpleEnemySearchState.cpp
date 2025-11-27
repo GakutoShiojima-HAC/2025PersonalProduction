@@ -4,9 +4,7 @@
 #include "Engine/Utils/MyRandom.h"
 
 SimpleEnemySearchState::SimpleEnemySearchState(SimpleEnemy& owner) : SimpleEnemyState(owner) {
-    // モーションを取得
-    idle_motion_ = owner_.get_motion((GSuint)SimpleEnemyStateType::Search, &idle_motion_loop_);
-    move_motion_ = owner_.get_motion((GSuint)SimpleEnemyStateType::Move, &move_motion_loop_);
+
 }
 
 void SimpleEnemySearchState::enter() {
@@ -36,7 +34,7 @@ void SimpleEnemySearchState::update(float delta_time) {
     if (move_timer_ > 0.0f) {
         move_timer_ -= delta_time / cFPS;
         if (move_timer_ <= 0.0f) {
-            owner_.change_state((GSuint)SimpleEnemyStateType::Search, move_motion_, move_motion_loop_);
+            owner_.change_state((GSuint)SimpleEnemyStateType::Search, owner_.info().motion_move, true);
         }
         return;
     }
@@ -46,7 +44,7 @@ void SimpleEnemySearchState::update(float delta_time) {
         if (owner_.is_move_end() && can_move_origin()) {
             state_ = MoveState::ToOrigin;
             move_timer_ = get_move_time();
-            owner_.change_state((GSuint)SimpleEnemyStateType::Search, idle_motion_, idle_motion_loop_);
+            owner_.change_state((GSuint)SimpleEnemyStateType::Search, owner_.info().motion_idle, true);
             return;
         }
     }
@@ -55,27 +53,12 @@ void SimpleEnemySearchState::update(float delta_time) {
         if (owner_.is_move_end() && can_move_random()) {
             state_ = MoveState::ToRandom;
             move_timer_ = get_move_time();
-            owner_.change_state((GSuint)SimpleEnemyStateType::Search, idle_motion_, idle_motion_loop_);
+            owner_.change_state((GSuint)SimpleEnemyStateType::Search, owner_.info().motion_idle, true);
             return;
         }
     }
 
-    owner_.update_move(delta_time);
-    
-    //// 見つけていない間は探索行動を行う
-    //if (move_timer_ > 5.0f) {
-    //    // 右を向く
-    //    rotate_foward_ = owner_.transform().right();
-    //    move_timer_ = 0.0f;
-    //}
-
-    //// 探索行動の回転
-    //GSquaternion rotation = GSquaternion::rotateTowards(
-    //    owner_.transform().rotation(),
-    //    GSquaternion::lookRotation(rotate_foward_),
-    //    3.0f * delta_time
-    //);
-    //owner_.transform().rotation(rotation);
+    owner_.update_move(delta_time);    
 }
 
 bool SimpleEnemySearchState::can_move_random() {
