@@ -12,6 +12,7 @@
 #include "Camera/FixedCamera.h"
 #include "Camera/TimelineCamera.h"
 #include "Stage/StageFile.h"
+#include "Engine/Sound/BGMManager.h"
 
 #include "Actor/CinemaActor/CinemaActor.h"
 #include "Actor/CinemaActor/CinemaBehavior/NormalEnemyCounter.h"
@@ -312,6 +313,8 @@ void GameScene::game_start() {
     world_.timescale() = 1.0f;
     // 同期
     world_.update(0.0f);
+
+    BGMManager::get_instance().play((GSuint)BGMID::GameNormal, 1.0f);
 }
 
 void GameScene::game_end() {
