@@ -4,6 +4,7 @@
 #include "Engine/Utils/Line.h"
 #include "Engine/Utils/MyMath.h"
 #include "Engine/Utils/MyRandom.h"
+#include "Engine/Sound/SE.h"
 
 #include "State/SimpleEnemy/SimpleEnemyAttackState.h"
 #include "State/SimpleEnemy/SimpleEnemyDeadState.h"
@@ -20,7 +21,10 @@ SimpleEnemy::SimpleEnemy(IWorld* world, const GSvector3& position, const GSvecto
 
     // 攻撃アニメーションイベントを生成
     mesh_.add_animation_event(info_.motion_attack, my_info_.attack_event_time, [=] { generate_attack_collider(); });
-    mesh_.add_animation_event(info_.motion_attack, CLAMP(my_info_.attack_event_time - 15.0f, 0.0f, FLT_MAX), [=] { play_danger_signal_effect(my_info_.critical_bone_num); });
+    mesh_.add_animation_event(info_.motion_attack, CLAMP(my_info_.attack_event_time - 15.0f, 0.0f, FLT_MAX), [=] {
+        play_danger_signal_effect(my_info_.critical_bone_num);
+        SE::play((GSuint)SEID::Alert);
+        });
 
     change_state_and_motion((GSuint)SimpleEnemyStateType::Search);
     save_current_state();
