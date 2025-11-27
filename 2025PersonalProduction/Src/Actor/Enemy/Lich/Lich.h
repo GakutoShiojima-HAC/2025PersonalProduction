@@ -54,6 +54,8 @@ private:
 
     //void on_ground() override;
 
+    //bool is_root_motion_state() const override;
+
 public:
     /// <summary>
     /// 情報を取得
@@ -62,12 +64,6 @@ public:
     const LichInfo& info() const;
 
 private:
-    /// <summary>
-    /// ルートモーションを使う状態かどうか
-    /// </summary>
-    /// <returns>ルートモーションを使うなら真を返却</returns>
-    bool is_root_motion_state() const;
-
     /// <summary>
     /// 魔法Aを召喚
     /// </summary>
