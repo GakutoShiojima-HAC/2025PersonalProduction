@@ -29,9 +29,10 @@ void PlayBGMTimelineParameter::update(float delta_time) {
     }
 
     auto react = [=]() {
-        if (current->transition_time > 0.0f) manager_.play(Assets::to_bgm_id(current->bgm_name), current->transition_time);
-        else manager_.play(Assets::to_bgm_id(current->bgm_name));
-        ++key_frame_;
+        GSuint id = Assets::to_bgm_id(current->bgm_name);
+        if (current->transition_time > 0.0f) manager_.play(id, current->transition_time);
+        else manager_.play(id);
+        key_frame_++;
     };
 
     // 最初のキーフレームを再生中かつ最初のキーフレーム開始時間が始まっていなかったらタイマーを更新して終了
@@ -45,7 +46,7 @@ void PlayBGMTimelineParameter::update(float delta_time) {
     }
 
     // キーフレームを再生
-    if (current->time >= timer_) {
+    if (current->time <= timer_) {
         react();
     }
 

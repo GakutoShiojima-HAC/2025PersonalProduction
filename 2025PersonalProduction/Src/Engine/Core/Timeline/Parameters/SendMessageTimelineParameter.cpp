@@ -52,7 +52,7 @@ void SendMessageTimelineParameter::update(float delta_time) {
     }
 
     // キーフレームを再生
-    if (current->time >= timer_) {
+    if (current->time <= timer_) {
         send_message(current->target, current->message);
     }
 

@@ -2,6 +2,7 @@
 #include <gslib.h>
 #include "Engine/Core/Tween/Tween.h"
 #include "GameConfig.h"
+#include "Assets.h"
 
 BGMManager& BGMManager::get_instance() {
 	// static変数のインスタンスは１つ
@@ -21,9 +22,16 @@ void BGMManager::play(unsigned int id, float transition_time) {
     // ボリュームを記憶
     volume_ = gsGetVolumeBGM();
 
-    Tween::value(volume_, 0.0f, transition_time * cFPS, gsSetVolumeBGM).name("PlayBGM").on_complete(
-        [=] { gsSetVolumeBGM(volume_); gsPlayBGM(id); }
-    );
+    if (id == (GSuint)BGMID::NONE) {
+        Tween::value(volume_, 0.0f, transition_time * cFPS, gsSetVolumeBGM).name("PlayBGM").on_complete(
+            [=] { gsSetVolumeBGM(volume_); gsStopBGM(); }
+        );
+    }
+    else {
+        Tween::value(volume_, 0.0f, transition_time * cFPS, gsSetVolumeBGM).name("PlayBGM").on_complete(
+            [=] { gsSetVolumeBGM(volume_); gsPlayBGM(id); }
+        );
+    }
 
 }
 
