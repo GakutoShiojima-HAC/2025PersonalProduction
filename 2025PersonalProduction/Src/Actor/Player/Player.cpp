@@ -870,9 +870,12 @@ void Player::update_mesh(float delta_time) {
 
 void Player::on_jump() {
     velocity_.y = jump_power_ * 0.1f + gravity_ * 0.1f / cFPS;	// d—Í‚ğ‰ÁZ‚·‚é‚±‚Æ‚Å‰‘¬‚ğˆÛ
+
     int handle = play_effect((GSuint)EffectID::OnGroundSmoke, GSvector3::zero());
     const GScolor color{ 1.0f, 1.0f, 1.0f, 0.25f };
     gsSetEffectColor(handle, &color);
+
+    SE::play((GSuint)SEID::Jump);
 }
 
 void Player::on_air() {
