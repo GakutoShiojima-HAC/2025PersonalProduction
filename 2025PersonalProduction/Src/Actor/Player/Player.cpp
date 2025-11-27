@@ -255,7 +255,7 @@ void Player::take_damage(Actor& other, const int damage) {
 	// 回避演出
 	if (invincible_timer() > 0.0f && state_.get_current_state() == (GSuint)PlayerStateType::Avoid) {
         // 回避演出のマスクを適用
-        SE::play((GSuint)SEID::AvoidStart);
+        SE::play((GSuint)SEID::AvoidEffectStart);
 		world_->enable_avoid_effect() = true;
 		world_->set_mask_color(AVOID_EFFECT_COLOR);
 		avoid_effect_timer_ = AVOID_EFFECT_TIME;
@@ -619,6 +619,7 @@ void Player::on_avoid() {
     const GScolor color{ 1.0f, 1.0f, 1.0f, 0.2f };
     gsSetEffectColor(avoid_effect_handle_, &color);
 
+    SE::play_random((GSuint)SEID::Avoid, 0.25f);
 }
 
 void Player::on_avoid_attack() {
@@ -684,7 +685,7 @@ void Player::update_avoid_effect(float delta_time) {
     if (avoid_effect_timer_ > 0.0f) {
         avoid_effect_timer_ -= delta_time / cFPS;
         if (avoid_effect_timer_ <= 0.0f) {
-            SE::play((GSuint)SEID::AvoidEnd);
+            SE::play((GSuint)SEID::AvoidEffectEnd);
             // スケールを変更
             world_->set_timescale(1.0f, 0.5f);
             Tween::color(AVOID_EFFECT_COLOR, GScolor{ 1.0f, 1.0f, 1.0f, 1.0f }, 0.5f * cFPS, [=](GScolor color) {
@@ -845,15 +846,14 @@ void Player::add_attack_animation_event(const PlayerInfo& info) {
 }
 
 bool Player::is_root_motion_state() const {
-    //return false;
-    return MyLib::is_in(
-        get_current_motion(),
+    if (MyLib::is_in(get_current_motion(),
         (GSuint)Motion::AvoidAttack,
         (GSuint)Motion::AvoidSuccessAttack
-    );
-    //return MyLib::is_in(state_.get_current_state(),
-    //    (GSuint)PlayerStateType::Attack
-    //);
+    )) return true;
+    if (MyLib::is_in(state_.get_current_state(),
+        (GSuint)PlayerStateType::Attack
+    )) return true;
+    return false;
 }
 
 void Player::update_mesh(float delta_time) {
@@ -866,6 +866,13 @@ void Player::update_mesh(float delta_time) {
     }
     // ワールド変換行列を設定
     mesh_.transform(transform_.localToWorldMatrix());
+}
+
+void Player::on_jump() {
+    velocity_.y = jump_power_ * 0.1f + gravity_ * 0.1f / cFPS;	// 重力を加算することで初速を維持
+    int handle = play_effect((GSuint)EffectID::OnGroundSmoke, GSvector3::zero());
+    const GScolor color{ 1.0f, 1.0f, 1.0f, 0.125f };
+    gsSetEffectColor(handle, &color);
 }
 
 void Player::on_air() {
