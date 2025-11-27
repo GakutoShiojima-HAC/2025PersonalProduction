@@ -192,61 +192,12 @@ void SceneGameResultState::end_game() {
     owner_.enable_draw_game_gui() = true;
     // ブラーを解除
     world_->set_blur_effect_power() = 0.0f;
+    if (stage_clear_) {
+        // クリアしたのでセーブする
+        world_->game_save_data().set_clear_stage(owner_.get_current_load_stage());
+    }
     // ロビーに戻る
-    if (stage_clear_) {
-        // クリアしたのでセーブする
-        world_->game_save_data().set_clear_stage(owner_.get_current_load_stage());
-        owner_.set_next_stage(0);
-        owner_.set_next_scene(SceneTag::Game);
-        owner_.change_state((GSuint)SceneStateType::End);
-        return;
-    }
-    // メニューに戻る
-    else {
-        owner_.set_next_scene(SceneTag::Menu);
-        owner_.change_state((GSuint)SceneStateType::End);
-        return;
-    }
-}
-
-void SceneGameResultState::end_result() {
-    // GUI描画を復活
-    owner_.enable_draw_game_gui() = true;
-    // ブラーを解除
-    world_->set_blur_effect_power() = 0.0f;
-    // プレイヤーが死亡したかどうか
-    if (player_dead_) {
-        // リスポーンができる状態
-        if (player_respawn_) {
-            owner_.respawn_player();
-            owner_.change_state((GSuint)SceneStateType::Original); // 復活 戻る の二択
-            return;
-        }
-        // リスポーンができない状態
-        else {
-            // ロビーに戻る
-            owner_.set_next_stage(0);
-            owner_.set_next_scene(SceneTag::Game);
-            owner_.change_state((GSuint)SceneStateType::End);   // 再挑戦 戻る の二択
-            return;
-        }
-    }
-
-    // ステージをクリアしたかどうか
-    if (stage_clear_) {
-        // クリアしたのでセーブする
-        world_->game_save_data().set_clear_stage(owner_.get_current_load_stage());
-        // ロビーに戻る
-        owner_.set_next_stage(0);
-        owner_.set_next_scene(SceneTag::Game);
-        owner_.change_state((GSuint)SceneStateType::End);       // 戻る の一択
-        
-        return;
-    }
-    else {
-        // メニューに戻る
-        owner_.set_next_scene(SceneTag::Menu);
-        owner_.change_state((GSuint)SceneStateType::End);       // 戻る の一択
-        return;
-    }
+    owner_.set_next_stage(0);
+    owner_.set_next_scene(SceneTag::Game);
+    owner_.change_state((GSuint)SceneStateType::End);
 }
