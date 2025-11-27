@@ -10,6 +10,7 @@
 #include "GUI/Button/ToggleButton.h"
 #include "GUI/Button/TextureFunctionButton.h"
 #include "Engine/Core/Vibration/Vibration.h"
+#include "Engine/Sound/SE.h"
 
 // 歯車アイコンの回転スピード
 static const float GEAR_ROTATE_SPEED{ 1.0f };
@@ -39,12 +40,12 @@ SettingWindow::SettingWindow(Setting& owner) :
     }
     {
         TextureFunctionButton* button = new TextureFunctionButton{ (GSuint)TextureID::ArrowIconTexture, GSvector2{ 1461.0f, 469.0f }, GSrect{ 0.0f, 0.0f, 27.0f, 27.0f }, TextureFunctionButton::Angle::Rotate180 };
-        button->on_input([=] { gsSetMasterVolumeSE(CLAMP(gsGetMasterVolumeSE() - 0.1f, 0.0f, 1.0f)); });
+        button->on_input([=] { SE::set_master_volume(CLAMP(SE::get_master_volume() - 0.1f, 0.0f, 1.0f)); });
         button_.add(button);
     }
     {
         TextureFunctionButton* button = new TextureFunctionButton{ (GSuint)TextureID::ArrowIconTexture, GSvector2{ 1605.0f, 443.0f }, GSrect{ 0.0f, 0.0f, 27.0f, 27.0f } };
-        button->on_input([=] { gsSetMasterVolumeSE(CLAMP(gsGetMasterVolumeSE() + 0.1f, 0.0f, 1.0f)); });
+        button->on_input([=] { SE::set_master_volume(CLAMP(SE::get_master_volume() + 0.1f, 0.0f, 1.0f)); });
         button_.add(button);
     }
     {
@@ -113,7 +114,7 @@ void SettingWindow::draw() const {
         );
     };
     draw_ratio(gsGetVolumeBGM(), GSvector2{ 1534.0f, 370.0f });
-    draw_ratio(gsGetMasterVolumeSE(), GSvector2{ 1534.0f, 456.0f });
+    draw_ratio(SE::get_master_volume(), GSvector2{ 1534.0f, 456.0f });
 
     button_.draw();
     Input::get_instance().draw_cursor();

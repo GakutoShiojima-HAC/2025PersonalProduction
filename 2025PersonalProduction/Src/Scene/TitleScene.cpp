@@ -9,6 +9,7 @@
 #include "GameConfig.h"
 #include <gslib.h>
 #include "Engine/Sound/BGMManager.h"
+#include "Engine/Sound/SE.h"
 
 SceneTag NEXT_SCENE{ SceneTag::Menu };
 
@@ -38,6 +39,7 @@ void TitleScene::update(float delta_time) {
     if (is_load_end_ && Input::get_instance().action(InputAction::MENU_ANY)) {
         is_end_ = true;
         BGMManager::get_instance().play(0, 1.0f);
+        SE::play((GSuint)SEID::ButtonInput);
         return;
     }
 

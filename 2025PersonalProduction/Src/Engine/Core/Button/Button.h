@@ -22,6 +22,11 @@ public:
 
 public:
     /// <summary>
+    /// 初期状態の選択初期状態の選択(音などを鳴らさないため)
+    /// </summary>
+    void init_select();
+
+    /// <summary>
     /// ゲームパッドで呼ぶ更新
     /// </summary>
     /// <param name="is_selected">= 選択対象のボタンかどうか</param>
