@@ -94,8 +94,8 @@ Player::Player(IWorld* world, const GSvector3& position, const GSvector3& rotate
 	transform_.position(position);
     transform_.eulerAngles(rotate);
 	mesh_.transform(transform_.localToWorldMatrix());
-    collide_field();
 	change_state((GSuint)PlayerStateType::Move, Motion::Idle, true);
+    collide_field();
 
     // ÉJÉÅÉâÇÃí«â¡
     camera_ = new PlayerCamera{ world };
@@ -902,6 +902,7 @@ void Player::on_ground() {
 		(GSuint)PlayerStateType::Hurt,
 		(GSuint)PlayerStateType::Dead,
 		(GSuint)PlayerStateType::Land,
+        (GSuint)PlayerStateType::Move,
         (GSuint)PlayerStateType::Skill
 	)) return;
 
