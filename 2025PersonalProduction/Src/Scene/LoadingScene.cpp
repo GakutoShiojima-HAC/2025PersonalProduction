@@ -7,6 +7,7 @@
 
 void LoadingScene::start() {
     is_end_ = false;
+    display_load_progress_ = 0.0f;
 
     // TODO loading image asset load
 
@@ -18,8 +19,20 @@ void LoadingScene::start() {
 
 void LoadingScene::update(float delta_time) {
     Tween::update(delta_time);
+
+    // 描画と現在で差があるか
+    const float current_load_progress = scene_manager_.load_progress(next_scene_tag_);
+    if (std::fabs(display_load_progress_ - current_load_progress) > 0.0025f) {
+        // 線形補間で合わせる
+        display_load_progress_ += (current_load_progress - display_load_progress_) * 4.0f * delta_time / cFPS;
+    }
+    else {
+        // 誤差対策
+        display_load_progress_ = current_load_progress;
+    }
+
     // 次のシーンのロード処理が終了したらシーンを終了する
-    if (scene_manager_.is_load_end(next_scene_tag_)) is_end_ = true;
+    if (scene_manager_.is_load_end(next_scene_tag_) && display_load_progress_ >= 1.0f) is_end_ = true;
 }
 
 void LoadingScene::draw() const {
@@ -27,9 +40,22 @@ void LoadingScene::draw() const {
     ScreenData& data = Screen::get_instance().get_current_data();
     Canvas::draw_texture((GSuint)TextureID::BackGround, GSvector2::zero(), GSrect{ 0.0f, 0.0f, (float)data.width_px, (float)data.height_px });
 
-    // 進捗率仮描画
-    std::string text = "progress: " + to_string(scene_manager_.load_progress(next_scene_tag_) * 100.0f);
-    Canvas::draw_text(text, GSvector2{ 0.0f, 0.0f }, 50.0f);
+    // 進捗率背景描画
+    Canvas::draw_texture(
+        (GSuint)TextureID::ProgressBarEmpty,
+        GSvector2{ 208, 972 },
+        GSrect{ 0.0f, 0.0f, 1504, 25 }
+    );
+
+    // 進捗率描画
+    GSrect pic_rect{ 0.0f, 0.0f, 1500.0f, 21.0f };
+    const GSvector2 position{ 210.0f, 974.0f };
+    pic_rect.right *= display_load_progress_;
+    Canvas::draw_texture(
+        (GSuint)TextureID::ProgressBar,
+        position,
+        pic_rect
+    );
 }
 
 void LoadingScene::end() {

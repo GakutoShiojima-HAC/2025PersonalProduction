@@ -14,7 +14,7 @@ void PlayerUI::draw_hp(int current, float display, int max) {
         const GSrect pic_rect{ 0.0f, 0.0f, 500.0f, 25.0f };
 
         Canvas::draw_texture(
-            (GSuint)TextureID::StatusGaugeBG,
+            (GSuint)TextureID::StatusGauge,
             position,
             pic_rect
         );

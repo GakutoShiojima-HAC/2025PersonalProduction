@@ -216,7 +216,7 @@ void MyEnemy::draw_hp_gauge() const {
         const GSvector2 position = screen_position - GSvector2{ pic_rect.right / 2.0f, pic_rect.bottom / 2.0f } *scale;
 
         Canvas::draw_texture(
-            (GSuint)TextureID::HPGaugeBG,
+            (GSuint)TextureID::HPGaugeEmpty,
             position,
             pic_rect,
             GSvector2{ 0.0f, 0.0f },
@@ -254,7 +254,7 @@ void MyEnemy::draw_boss_bar() const {
         const GSvector2 position{ 617.0f, 82.0f };
 
         Canvas::draw_texture(
-            (GSuint)TextureID::HPBossGaugeBG,
+            (GSuint)TextureID::HPBossGaugeEmpty,
             position,
             pic_rect,
             GSvector2{ 0.0f, 0.0f },

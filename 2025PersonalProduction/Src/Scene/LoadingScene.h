@@ -52,6 +52,8 @@ private:
     bool is_end_{ false };
     // 次のシーン
     SceneTag next_scene_tag_{ SceneTag::Null };
+    // 表示用の進捗率
+    float display_load_progress_{ 0.0f };
 
 };
 

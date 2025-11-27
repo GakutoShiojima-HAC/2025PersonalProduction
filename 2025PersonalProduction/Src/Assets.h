@@ -45,15 +45,17 @@
     X(ArrowIconTexture) \
     X(DotIconTexture) \
     X(Skybox) \
+    X(ProgressBar) \
+    X(ProgressBarEmpty) \
     X(TitleLogo) \
     X(MenuLogo) \
     X(SafeArea) \
     X(BonusGauge) \
     X(HPGauge) \
-    X(HPGaugeBG) \
+    X(HPGaugeEmpty) \
     X(HPBossGauge) \
-    X(HPBossGaugeBG) \
-    X(StatusGaugeBG) \
+    X(HPBossGaugeEmpty) \
+    X(StatusGauge) \
     X(MAX_SIZE) // 要素数
 
 // オクツリー
