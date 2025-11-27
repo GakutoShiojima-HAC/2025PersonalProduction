@@ -250,13 +250,8 @@ void Player::take_damage(Actor& other, const int damage) {
 		(GSuint)PlayerStateType::Dead,
 		(GSuint)PlayerStateType::Skill	// スキル中も無敵
 	)) return;
-    // 回避演出中は無敵とし、延長不可
-    if (avoid_effect_timer_ > 0.0f) return;
-	// 回避演出
-	if (invincible_timer() > 0.0f && state_.get_current_state() == (GSuint)PlayerStateType::Avoid) {
-        avoid_effect_start();
-		return;
-	}
+    if (invincible_timer() > 0.0f) return;
+    if (avoid_effect_timer_ > 0.0f) return; // 回避演出中は無敵とし、延長不可
 
 	hp_ = CLAMP(hp_ - damage, 0, INT_MAX);
 	invincible_timer_ = INVINCIBLE_TIME;
@@ -573,8 +568,8 @@ void Player::on_avoid() {
 	}
 
     // 負傷中なら
-    bool enable_timescale = state_.get_current_state() == (GSuint)PlayerStateType::Hurt && avoid_effect_timer_ <= 0.0f;
-    if (enable_timescale) {
+    const bool is_hurt = state_.get_current_state() == (GSuint)PlayerStateType::Hurt && avoid_effect_timer_ <= 0.0f;
+    if (is_hurt) {
         // タイムスケールを少し遅く
         world_->set_timescale(0.25f);
         world_->set_timescale(1.0f, mesh_.motion_end_time());
@@ -593,7 +588,7 @@ void Player::on_avoid() {
 	// 移動
 	float move_time = mesh_.motion_end_time();
 	Tween::vector3(avoid_velocity, GSvector3::zero(), move_time, [&](GSvector3 pos) {
-		non_penetrating_move(pos); }).ease(EaseType::EaseOutCubic).name("PlayerAvoid").enable_timescale(enable_timescale);
+		non_penetrating_move(pos); }).ease(EaseType::EaseOutCubic).name("PlayerAvoid").enable_timescale(is_hurt);
 	// 強制回転
 	transform_.lookAt(transform_.position() + (is_lockon ? forward : avoid_velocity));
 
@@ -605,6 +600,19 @@ void Player::on_avoid() {
     const GScolor color{ 1.0f, 1.0f, 1.0f, 0.2f };
     gsSetEffectColor(avoid_effect_handle_, &color);
     SE::play_random((GSuint)SEID::Avoid, 0.25f);
+
+    // 回避演出に入るかどうか(近くに攻撃動作に入っている敵がいるかどうか)
+    std::vector<Pawn*> enemys = world_->find_pawn_with_tag(ActorTag::Enemy);
+    if (enemys.empty()) return;
+    for (const auto& enemy : enemys) {
+        //近くにいなければスキップ
+        if ((enemy->transform().position() - transform_.position()).magnitude() > 5.0f) continue;
+        // 攻撃動作に入っているか
+        if (enemy->is_attack_soon()) {
+            avoid_effect_start();   // 回避演出開始
+            break;
+        }
+    }
 }
 
 void Player::on_avoid_attack() {
