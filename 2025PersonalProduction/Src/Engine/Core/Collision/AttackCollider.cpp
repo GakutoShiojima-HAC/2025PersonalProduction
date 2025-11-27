@@ -48,8 +48,9 @@ void AttackCollider::react(Actor& other) {
         // エフェクトを衝突した相手との中点に生成
         GSvector3 center = (other.collider().center - transform_.position()) / 2;
         play_effect((GSuint)EffectID::HitAttack, center);
+        // SE
+        SE::play_random((GSuint)SEID::AttackHit, transform_.position(), 0.25f);
     }
-    SE::play_random((GSuint)SEID::AttackHit, transform_.position(), 0.25f);
 	// 衝突したら削除
 	die();
 }
