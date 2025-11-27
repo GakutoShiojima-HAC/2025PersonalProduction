@@ -49,7 +49,7 @@ constexpr float DECELERATION_SPEED{ 0.75f };
 // –³“GŠÔ(•b)
 constexpr float INVINCIBLE_TIME{ 0.5f };
 // ‰ñ”ğˆÚ“®‘¬“x
-constexpr float AVOID_SPEED{ 9.0f };
+constexpr float AVOID_SPEED{ 10.0f };
 
 // ‰ñ”ğ‰‰o‚ÌŠÔ
 constexpr float AVOID_EFFECT_TIME{ 3.0f };
