@@ -301,6 +301,7 @@
     <ClInclude Include="Src\Actor\CinemaActor\CinemaBehavior\ICinemaBehavior.h" />
     <ClInclude Include="Src\Actor\CinemaActor\CinemaBehavior\NormalEnemyCounter.h" />
     <ClInclude Include="Src\Actor\CinemaActor\CinemaBehavior\PlayReact.h" />
+    <ClInclude Include="Src\Actor\Enemy\GetMyEnemyInfo.h" />
     <ClInclude Include="Src\Actor\Enemy\MyEnemy.h" />
     <ClInclude Include="Src\Actor\Gimmick\Barrier\Barrier.h" />
     <ClInclude Include="Src\Actor\Gimmick\Barrier\BarrierGenerator.h" />
