@@ -95,12 +95,17 @@ void ActorGenerator::clear() {
 }
 
 void ActorGenerator::clear_no_respawn() {
-    for (auto& i : data_) {
-        if (i.second != nullptr && i.second->is_respawn()) continue;   // リスポーンするならスキップ
-        delete i.second;
-        i.second = nullptr;
+    for (auto it = data_.begin(); it != data_.end(); ) {
+        // リスポーンするならスキップ
+        if (it->second != nullptr && it->second->is_respawn()) {
+            ++it;
+            continue;
+        }
+
+        delete it->second;
+        it->second = nullptr;
+        it = data_.erase(it);
     }
-    data_.clear();
 
     generate_enemy_ = 0;
     generate_boss_ = 0;
