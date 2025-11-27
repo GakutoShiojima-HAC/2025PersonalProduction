@@ -97,7 +97,7 @@ void Pawn::update_display_hp(float delta_time) {
     // 描画と現在で差があるか
     if (std::fabs(display_hp_ - (float)hp_) > 0.01f) {
         // 線形補間で合わせる
-        display_hp_ += ((float)hp_ - display_hp_) * 9.0f * delta_time / cFPS;
+        display_hp_ += ((float)hp_ - display_hp_) * 9.0f * delta_time / world_->timescale() / cFPS;
     }
     else {
         // 誤差対策
