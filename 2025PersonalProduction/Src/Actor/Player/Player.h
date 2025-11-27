@@ -2,7 +2,7 @@
 //  File          : Player.h
 //  Author        : Shiojima Gakuto
 //  Created       : 2025/08/11
-//  Updated       : 2025/10/28
+//  Updated       : 2025/11/27
 //  Description   : プレイヤー
 //
 //  注意：本ソースコードの無断転載・コードのコピー・貼り付けによる流用・再配布を禁止します。
@@ -267,23 +267,19 @@ public:
 
 private:
     /// <summary>
+    /// 回避演出スタート
+    /// </summary>
+    void avoid_effect_start();
+
+    /// <summary>
     /// 回避演出の更新
     /// </summary>
     void update_avoid_effect(float delta_time);
 
     /// <summary>
-    /// 攻撃判定を作成
-    /// </summary>
-    /// <param name="offset">= オフセット</param>
-    /// <param name="radius">= 半径</param>
-    /// <param name="damage">= ダメージ</param>
-    /// <param name="name">= 識別名</param>
-    void generate_attack_collider(const GSvector3& offset, float radius, int damage, const std::string& name);
-
-    /// <summary>
     /// インタラクトを更新
     /// </summary>
-    void interact_update();
+    void update_interact();
 
     /// <summary>
     /// インタラクトできるアクターを集める
@@ -295,6 +291,15 @@ private:
 	/// </summary>
 	/// <param name="info">= 生成情報</param>
 	void add_attack_animation_event(const PlayerInfo& info);
+
+    /// <summary>
+    /// 攻撃判定を作成
+    /// </summary>
+    /// <param name="offset">= オフセット</param>
+    /// <param name="radius">= 半径</param>
+    /// <param name="damage">= ダメージ</param>
+    /// <param name="name">= 識別名</param>
+    void generate_attack_collider(const GSvector3& offset, float radius, int damage, const std::string& name);
 
 private:
 	// プレイヤーカメラ

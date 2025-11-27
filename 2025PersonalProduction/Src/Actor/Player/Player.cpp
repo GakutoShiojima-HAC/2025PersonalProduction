@@ -207,7 +207,7 @@ void Player::update(float delta_time) {
 
 void Player::late_update(float delta_time) {
     update_display_hp(delta_time);
-    interact_update();
+    update_interact();
 }
 
 void Player::draw() const {
@@ -254,21 +254,7 @@ void Player::take_damage(Actor& other, const int damage) {
     if (avoid_effect_timer_ > 0.0f) return;
 	// 回避演出
 	if (invincible_timer() > 0.0f && state_.get_current_state() == (GSuint)PlayerStateType::Avoid) {
-        // 回避演出のマスクを適用
-        SE::play((GSuint)SEID::AvoidEffectStart);
-		world_->enable_avoid_effect() = true;
-		world_->set_mask_color(AVOID_EFFECT_COLOR);
-		avoid_effect_timer_ = AVOID_EFFECT_TIME;
-        // タイムスケールを変更
-        world_->set_timescale(0.25f);
-        enable_timescale_ = false;
-        gsSetEffectSpeed(avoid_effect_handle_, 1.0f / 0.25f); // タイムスケールを受けないようにする
-
-        // ボーナス
-        world_->action_score().add_score(250, mesh_.motion_end_time() * 5.0f, 2.0f);
-        world_->action_score().set_action_text("回避成功！");
-        // コントローラーを振動させる
-        if (input_.is_pad()) Vibration::get_instance().start(0.25f, 1.0f);
+        avoid_effect_start();
 		return;
 	}
 
@@ -600,7 +586,7 @@ void Player::on_avoid() {
     }
 
 	// 移動先を決定
-	avoid_velocity = avoid_velocity.normalized() * AVOID_SPEED * 1.0f / cFPS;
+	avoid_velocity = avoid_velocity.normalized() * AVOID_SPEED / cFPS;
 	// モーションを適用
 	change_state((GSuint)PlayerStateType::Avoid, motion, false);
 
@@ -618,7 +604,6 @@ void Player::on_avoid() {
     avoid_effect_handle_ = world_->camera_effect_play_foward((GSuint)EffectID::Avoid, 0.25f);
     const GScolor color{ 1.0f, 1.0f, 1.0f, 0.2f };
     gsSetEffectColor(avoid_effect_handle_, &color);
-
     SE::play_random((GSuint)SEID::Avoid, 0.25f);
 }
 
@@ -680,6 +665,26 @@ GSuint Player::get_current_motion() const {
 	return motion_;
 }
 
+void Player::avoid_effect_start() {
+    if (avoid_effect_timer_ > 0.0f) return;
+
+    // 回避演出のマスクを適用
+    world_->enable_avoid_effect() = true;
+    world_->set_mask_color(AVOID_EFFECT_COLOR);
+    avoid_effect_timer_ = AVOID_EFFECT_TIME;
+    SE::play((GSuint)SEID::AvoidEffectStart);
+    // タイムスケールを変更
+    world_->set_timescale(0.25f);
+    enable_timescale_ = false;
+    gsSetEffectSpeed(avoid_effect_handle_, 1.0f / 0.25f); // タイムスケールを受けないようにする
+
+    // ボーナス
+    world_->action_score().add_score(250, mesh_.motion_end_time() * 5.0f, 2.0f);
+    world_->action_score().set_action_text("回避成功！");
+    // コントローラーを振動させる
+    if (input_.is_pad()) Vibration::get_instance().start(0.25f, 1.0f);
+}
+
 void Player::update_avoid_effect(float delta_time) {
     // 回避演出タイマーの更新
     if (avoid_effect_timer_ > 0.0f) {
@@ -695,16 +700,7 @@ void Player::update_avoid_effect(float delta_time) {
     }
 }
 
-void Player::generate_attack_collider(const GSvector3& offset, float radius, int damage, const std::string& name) {
-    GSmatrix4 m = local_to_world(offset, GSvector3::zero(), GSvector3::one());
-
-    WeaponData::Data weapon = world_->game_save_data().inventory().weapon();
-    int dmg = (weapon.is_empty() ? 0 : weapon.damage) + damage;
-
-    world_->generate_attack_collider(radius, m.position(), this, dmg, name, 0.1f, 0.0f);
-}
-
-void Player::interact_update() {
+void Player::update_interact() {
     // インタラクトさせないステート
     if (MyLib::is_in(
         state_.get_current_state(),
@@ -740,7 +736,7 @@ void Player::interact_update() {
     ))  return;
 
     // インタラクト
-    if(input_.action(InputAction::GAME_Interact)) {
+    if (input_.action(InputAction::GAME_Interact)) {
         std::any data = this;
         interact_actors_[interact_target_index_]->message("PlayerInteract", data);
 
@@ -819,30 +815,32 @@ void Player::add_attack_animation_event(const PlayerInfo& info) {
         }
         // 対象のモーションの時に生成するエフェクト
         set_effect_event(motion, info.attack_effect_event[i]);
-
     }
+
     // スキルのアニメーションイベントを追加
-    {
-        set_generate_collider(Motion::Skill, "PlayerNormalSkill", info.skill_event);
-        set_effect_event(Motion::Skill, info.skill_effect_event);
-    }
+    set_generate_collider(Motion::Skill, "PlayerNormalSkill", info.skill_event);
+    set_effect_event(Motion::Skill, info.skill_effect_event);
+    
     // 回避攻撃のアニメーションイベントを追加
-    {
-        set_generate_collider(Motion::AvoidAttack, "PlayerAvoidAttack", info.avoid_attack_event);
-        set_effect_event(Motion::AvoidAttack, info.avoid_attack_effect_event);
+    set_generate_collider(Motion::AvoidAttack, "PlayerAvoidAttack", info.avoid_attack_event);
+    set_effect_event(Motion::AvoidAttack, info.avoid_attack_effect_event);
 
-    }
     // 回避成功攻撃のアニメーションイベントを追加
-    {
-        set_generate_collider(Motion::AvoidSuccessAttack, "PlayerAvoidSuccessAttack", info.avoid_success_attack_event);
-        set_effect_event(Motion::AvoidSuccessAttack, info.avoid_success_attack_effect_event);
+    set_generate_collider(Motion::AvoidSuccessAttack, "PlayerAvoidSuccessAttack", info.avoid_success_attack_event);
+    set_effect_event(Motion::AvoidSuccessAttack, info.avoid_success_attack_effect_event);
 
-    }
     // 回避成功スキルのアニメーションイベントを追加
-    {
-        set_generate_collider(Motion::AvoidSuccessSkill, "PlayerSuccessSkill", info.avoid_success_skill_event);
-        set_effect_event(Motion::AvoidSuccessSkill, info.avoid_success_skill_effect_event);
-    }
+    set_generate_collider(Motion::AvoidSuccessSkill, "PlayerSuccessSkill", info.avoid_success_skill_event);
+    set_effect_event(Motion::AvoidSuccessSkill, info.avoid_success_skill_effect_event);
+}
+
+void Player::generate_attack_collider(const GSvector3& offset, float radius, int damage, const std::string& name) {
+    GSmatrix4 m = local_to_world(offset, GSvector3::zero(), GSvector3::one());
+
+    WeaponData::Data weapon = world_->game_save_data().inventory().weapon();
+    int dmg = (weapon.is_empty() ? 0 : weapon.damage) + damage;
+
+    world_->generate_attack_collider(radius, m.position(), this, dmg, name, 0.1f, 0.0f);
 }
 
 bool Player::is_root_motion_state() const {
