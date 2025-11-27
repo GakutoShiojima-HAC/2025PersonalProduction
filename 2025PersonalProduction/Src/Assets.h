@@ -66,8 +66,7 @@
 // BGM
 #define BGM_ID_LIST \
     X(NONE) \
-    X(Title) \
-    X(GameNormal) \
+    X(Main) \
     X(GameBattle) \
     X(GameBoss) \
     X(MAX_SIZE) // 要素数
@@ -75,12 +74,20 @@
 // SE
 #define SE_ID_LIST \
     X(NONE) \
+    X(ButtonSelect) \
+    X(ButtonInput) \
     X(AddScore) \
     X(Swing) \
     X(Step) \
-    X(AvoidStart) \
-    X(AvoidEnd) \
-    X(SworldHit) \
+    X(Jump) \
+    X(Land) \
+    X(AvoidEffectStart) \
+    X(AvoidEffectEnd) \
+    X(Avoid) \
+    X(AttackHit) \
+    X(Alert) \
+    X(FireBallSummon) \
+    X(Explosion) \
     X(MAX_SIZE) // 要素数
 
 // エフェクト
