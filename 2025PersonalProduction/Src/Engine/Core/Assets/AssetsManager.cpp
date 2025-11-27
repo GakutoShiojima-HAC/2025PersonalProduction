@@ -1,6 +1,7 @@
 #include "Engine/Core/Assets/AssetsManager.h"
 #include <gslib.h>
 #include <GSeffect.h>
+#include "Engine/Sound/SE.h"
 
 #define GS_ENABLE_MESH_SHADOW           // メッシュに影を付ける
 #define GS_ENABLE_SKIN_MESH_SHADOW      // スキニングメッシュに影を付ける
@@ -61,7 +62,8 @@ LoadedAssets* AssetsManager::load_asset(LoadAssets* data) {
 		result->bgm.push_back(asset.first);
 	}
 	for (const auto& asset : data->se) {
-		gsLoadSE(asset.first, asset.second.c_str(), 5, GWAVE_DEFAULT);
+        SE::load(asset.first, asset.second.c_str(), 5);
+		//gsLoadSE(asset.first, asset.second.c_str(), 5, GWAVE_DEFAULT);
 		result->se.push_back(asset.first);
 	}
 	for (const auto& asset : data->effect) {
@@ -164,7 +166,7 @@ void AssetsManager::assets_delete(LoadedAssets* data) {
                 break;
             }
         }
-        if (!same) gsDeleteSE(asset);
+        if (!same) SE::delete_se(asset);
     }
     for (const auto& asset : data->effect) {
         bool same{ false };

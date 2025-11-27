@@ -217,6 +217,8 @@
     <ClCompile Include="Src\Engine\Graphics\Shader\PostEffects\BloomEffect.cpp" />
     <ClCompile Include="Src\Engine\Graphics\Shader\PostEffects\BlurEffect.cpp" />
     <ClCompile Include="Src\Engine\Graphics\Shader\PostEffects\SSAOEffect.cpp" />
+    <ClCompile Include="Src\Engine\Sound\SE.cpp" />
+    <ClCompile Include="Src\Engine\Sound\SEManager.cpp" />
     <ClCompile Include="Src\GameTimer\GameTimer.cpp" />
     <ClCompile Include="Src\GUI\Button\TextFunctionButton.cpp" />
     <ClCompile Include="Src\GUI\Button\TextureFunctionButton.cpp" />
@@ -345,6 +347,8 @@
     <ClInclude Include="Src\Engine\Core\Timeline\Timeline.h" />
     <ClInclude Include="Src\Engine\Core\Timeline\TimelineEditor.h" />
     <ClInclude Include="Src\Engine\Graphics\Shader\PostEffects\DissolveEffect.h" />
+    <ClInclude Include="Src\Engine\Sound\SE.h" />
+    <ClInclude Include="Src\Engine\Sound\SEManager.h" />
     <ClInclude Include="Src\Engine\Utils\MyMath.h" />
     <ClInclude Include="Src\GameTimer\GameTimer.h" />
     <ClInclude Include="Src\Engine\Core\Input\Input.h" />
@@ -419,6 +423,7 @@
     <ClInclude Include="Src\Engine\Utils\Ray.h" />
     <ClInclude Include="Src\Lib\json.hpp" />
     <ClInclude Include="Src\Engine\Core\Actor\Pawn\PawnManager.h" />
+    <ClInclude Include="Src\Lib\miniaudio.h" />
     <ClInclude Include="Src\SaveData\GameSaveData.h" />
     <ClInclude Include="Src\Scene\GameScene.h" />
     <ClInclude Include="Src\Scene\LoadingScene.h" />

@@ -52,6 +52,8 @@ private:
     bool is_player_fixed_{ false };
 
     GSuint player_prev_state_{ 0 };
+    GSuint player_prev_motion_{ 0 };
+    bool player_prev_motion_loop_{ false };
 
     bool play_start_{ false };
 

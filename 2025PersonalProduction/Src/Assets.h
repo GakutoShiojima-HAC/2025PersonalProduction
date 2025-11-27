@@ -76,6 +76,11 @@
 #define SE_ID_LIST \
     X(NONE) \
     X(AddScore) \
+    X(Swing) \
+    X(Step) \
+    X(AvoidStart) \
+    X(AvoidEnd) \
+    X(SworldHit) \
     X(MAX_SIZE) // 要素数
 
 // エフェクト

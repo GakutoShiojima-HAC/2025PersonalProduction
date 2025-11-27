@@ -7,6 +7,7 @@
 #include "Engine/Core/Collision/AttackColliderPool.h"
 #include "Engine/Core/Collision/AttackCollider.h"
 #include "Engine/Core/Tween/Tween.h"
+#include "Engine/Sound/SE.h"
 
 World::~World() {
 	clear();
@@ -32,6 +33,8 @@ void World::update(float delta_time) {
 	actor_.remove();
 
     action_score_.update(delta_time);
+
+    if(camera_.current() != nullptr) SE::listener(camera_.current()->transform());
 }
 
 void World::draw() const {

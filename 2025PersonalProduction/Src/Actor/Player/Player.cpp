@@ -9,7 +9,9 @@
 #include "Engine/Core/Tween/Tween.h"
 #include "GameConfig.h"
 #include "Engine/Core/Vibration/Vibration.h"
-#include "GUI//PlayerUI.h"
+#include "GUI/PlayerUI.h"
+#include "Engine/Sound/SE.h"
+#include "Engine/Utils/MyRandom.h"
 
 #include "State/Player/PlayerAttackState.h"
 #include "State/Player/PlayerAvoidState.h"
@@ -103,6 +105,15 @@ Player::Player(IWorld* world, const GSvector3& position, const GSvector3& rotate
 
     // 情報を保持
     attack_param_ = info.attack_param;
+
+    // 足音
+    auto play_step = [=](GSuint motion, float time) {
+        mesh_.add_animation_event(motion, time, [=] { SE::play_random((GSuint)SEID::Step, 0.5f); });
+    };
+    play_step(Motion::WalkF, 8.0f);
+    play_step(Motion::WalkF, 36.0f);
+    play_step(Motion::SprintF, 3.0f);
+    play_step(Motion::SprintF, 19.0f);
 
 	// 攻撃アニメーションイベントを追加
 	add_attack_animation_event(info);
@@ -244,6 +255,7 @@ void Player::take_damage(Actor& other, const int damage) {
 	// 回避演出
 	if (invincible_timer() > 0.0f && state_.get_current_state() == (GSuint)PlayerStateType::Avoid) {
         // 回避演出のマスクを適用
+        SE::play((GSuint)SEID::AvoidStart);
 		world_->enable_avoid_effect() = true;
 		world_->set_mask_color(AVOID_EFFECT_COLOR);
 		avoid_effect_timer_ = AVOID_EFFECT_TIME;
@@ -672,6 +684,7 @@ void Player::update_avoid_effect(float delta_time) {
     if (avoid_effect_timer_ > 0.0f) {
         avoid_effect_timer_ -= delta_time / cFPS;
         if (avoid_effect_timer_ <= 0.0f) {
+            SE::play((GSuint)SEID::AvoidEnd);
             // スケールを変更
             world_->set_timescale(1.0f, 0.5f);
             Tween::color(AVOID_EFFECT_COLOR, GScolor{ 1.0f, 1.0f, 1.0f, 1.0f }, 0.5f * cFPS, [=](GScolor color) {
@@ -773,7 +786,8 @@ void Player::add_attack_animation_event(const PlayerInfo& info) {
             // イベントを登録
             mesh_.add_animation_event(motion, param.time, [=] { generate_attack_collider(
                 param.offset, param.radius, info.skill_damage, name
-            ); });
+                );
+            });
         }
     };
 
@@ -784,7 +798,9 @@ void Player::add_attack_animation_event(const PlayerInfo& info) {
             // イベントを登録
             mesh_.add_animation_event(motion, param.time, [=] { play_effect(
                 param.effect_id, param.offset, param.rotate, param.scale, param.speed
-            ); });
+            );
+            SE::play_random((GSuint)SEID::Swing, 0.125f);
+            });
         }
     };
 
@@ -797,7 +813,8 @@ void Player::add_attack_animation_event(const PlayerInfo& info) {
             // イベントを登録
             mesh_.add_animation_event(motion, param.time, [=] { generate_attack_collider(
                 param.offset, param.radius, i < info.attack_param.size() ? info.attack_param[i].damage : 0, "PlayerNormalAttack"
-            ); });
+                );
+            });
         }
         // 対象のモーションの時に生成するエフェクト
         set_effect_event(motion, info.attack_effect_event[i]);

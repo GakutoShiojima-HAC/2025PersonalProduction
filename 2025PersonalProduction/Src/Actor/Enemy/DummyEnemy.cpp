@@ -4,6 +4,7 @@
 #include "GameConfig.h"
 #include "Assets.h"
 #include "Engine/Core/Collision/AttackColliderPool.h"
+#include "Engine/Sound/SE.h"
 
 #include "State/DummyEnemy/DummyEnemyState.h"
 #include "State/DummyEnemy/DummyEnemyAttackState.h"
@@ -160,6 +161,7 @@ bool DummyEnemy::is_generate_collider() const {
 void DummyEnemy::generate_attack_collider() {
 	GSvector3 position = local_to_world(generate_offset_, GSvector3::zero(), GSvector3::one()).position();
 	world_->generate_attack_collider(collider_radius_, position, this, collider_damage_, "DummyEnemyCollider", 10.0f, 0.0f);
+    SE::play_random((GSuint)SEID::Swing, transform_.position(), 0.125f);
 }
 
 void DummyEnemy::move_start() {

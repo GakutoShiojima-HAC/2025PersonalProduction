@@ -1,6 +1,7 @@
 #include "Actor/CinemaActor/CinemaActor.h"
 #include "Actor/CinemaActor/CinemaBehavior/ICinemaBehavior.h"
 #include "Engine/Core/World/IWorld.h"
+#include "Actor/Player/Player.h"
 #include "State/Player/PlayerState.h"
 
 CinemaActor::CinemaActor(IWorld* world, const std::string& timeline_name, bool is_playing_fixed_player) {
@@ -33,7 +34,8 @@ void CinemaActor::update(float delta_time) {
         if (!world_->is_playing_timeline()) {
             Character* player = world_->find_character("Player");
             if (player != nullptr) {
-                player->change_state(player_prev_state_);
+                // TODO –ß‚·‚¾‚¯‚¾‚ÆÄ¶ŽžŠÔ‚ªƒŠƒZƒbƒg‚³‚ê‚Ä‹““®•Ï‚©‚à‚µ‚ê‚È‚¢
+                player->change_state(player_prev_state_, player_prev_motion_, player_prev_motion_loop_);
             }
             world_->enable_draw_gui() = true;
             end();
@@ -53,7 +55,9 @@ void CinemaActor::update(float delta_time) {
             Character* player = world_->find_character("Player");
             if (player != nullptr) {
                 player_prev_state_ = player->current_state_num();
-                player->change_state((GSuint)PlayerStateType::Idle);
+                player_prev_motion_ = player->current_motion();
+                player_prev_motion_loop_ = player->current_motion_loop();
+                player->change_state((GSuint)PlayerStateType::Idle, PlayerMotion::Idle, true);
             }
             return;
         }
