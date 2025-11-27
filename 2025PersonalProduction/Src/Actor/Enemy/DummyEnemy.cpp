@@ -21,7 +21,7 @@
 const float INVINCIBLE_TIME{ 0.5f };
 
 DummyEnemy::DummyEnemy(IWorld* world, const GSvector3& position) :
-    navmesh_{ this, world_->navmesh() } {
+    navmesh_{ this, world->navmesh() } {
 	world_ = world;
 	tag_ = ActorTag::Enemy;
 	name_ = "DummyEnemy";
