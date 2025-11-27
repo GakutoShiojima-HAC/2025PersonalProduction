@@ -25,6 +25,18 @@ public:
     /// </summary>
     static void end();
 
+    /// <summary>
+    /// マスターボリュームを設定(0.0~1.0)
+    /// </summary>
+    /// <param name="volume">= ボリューム</param>
+    static void set_master_volume(float volume);
+
+    /// <summary>
+    /// マスターボリュームを取得
+    /// </summary>
+    /// <returns>0.0~1.0</returns>
+    static float get_master_volume();
+
 public:
 
     /// <summary>
