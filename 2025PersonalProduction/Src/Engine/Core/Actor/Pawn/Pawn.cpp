@@ -66,7 +66,7 @@ void Pawn::update_invincible(float delta_time) {
     if (invincible_timer_ <= 0.0f) return;
 
     // 無敵時間を減らす
-    invincible_timer_ = CLAMP(invincible_timer_ - delta_time / cFPS, 0.0f, FLT_MAX);
+    invincible_timer_ = CLAMP(invincible_timer_ - delta_time / world_->timescale() / cFPS, 0.0f, FLT_MAX);
 }
 
 void Pawn::update_display_hp(float delta_time) {
