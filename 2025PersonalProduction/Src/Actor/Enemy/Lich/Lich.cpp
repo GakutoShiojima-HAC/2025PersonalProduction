@@ -50,12 +50,9 @@ void Lich::take_damage(Actor& other, const int damage) {
         change_state_and_motion((GSuint)LichStateType::Dead);
     }
     else {
-        // 攻撃中なら確定で怯む
-        bool is_attacking = MyLib::is_in(state_.get_current_state(), (GSuint)LichStateType::Attack, (GSuint)LichStateType::Spell);
-        // 確率
-        bool is_falter = target_ == nullptr || MyRandom::random_float(0.0f, 1.0f) <= my_info_.falter_rate;
-
-        if (is_attacking || is_falter) {
+        // 怯む確率
+        const bool falter = world_->enable_avoid_effect() ? true : MyRandom::random_float(0.0f, 1.0f) <= my_info_.falter_rate;
+        if (target_ == nullptr || falter) {
             // 一度Idleにしてモーションをリセット
             mesh_.change_motion(Motion::Idle, true);
             change_state_and_motion((GSuint)LichStateType::Hurt);
