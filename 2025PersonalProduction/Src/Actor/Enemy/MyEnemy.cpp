@@ -20,8 +20,8 @@ MyEnemy::MyEnemy(IWorld* world, const GSvector3& position, const GSvector3& rota
 
     transform_.position(position);
     transform_.eulerAngles(rotate);
-    mesh_.transform(transform_.localToWorldMatrix());
     collide_field();
+    mesh_.transform(transform_.localToWorldMatrix());
     origin_position_ = transform_.position();
 
     // モーションによるアラートイベントの追加
