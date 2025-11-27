@@ -44,11 +44,11 @@ void LoadingScene::draw() const {
     Canvas::draw_texture(
         (GSuint)TextureID::ProgressBarEmpty,
         GSvector2{ 208, 972 },
-        GSrect{ 0.0f, 0.0f, 1504, 25 }
+        GSrect{ 0.0f, 0.0f, 1504, 10 }
     );
 
     // 進捗率描画
-    GSrect pic_rect{ 0.0f, 0.0f, 1500.0f, 21.0f };
+    GSrect pic_rect{ 0.0f, 0.0f, 1500.0f, 6.0f };
     const GSvector2 position{ 210.0f, 974.0f };
     pic_rect.right *= display_load_progress_;
     Canvas::draw_texture(
