@@ -20,13 +20,13 @@
 // 無敵時間(秒)
 const float INVINCIBLE_TIME{ 0.5f };
 
-DummyEnemy::DummyEnemy(IWorld* world, const GSvector3& position) {
+DummyEnemy::DummyEnemy(IWorld* world, const GSvector3& position) :
+    navmesh_{ this, world_->navmesh() } {
 	world_ = world;
 	tag_ = ActorTag::Enemy;
 	name_ = "DummyEnemy";
 
     init_parameter(PawnParameter::get_type("Normal"));
-
 
 	mesh_ = { (GSuint)MeshID::DummyEnemy, (GSuint)MeshID::DummyEnemy, (GSuint)MeshID::DummyEnemy };
 	add_state();
@@ -36,11 +36,8 @@ DummyEnemy::DummyEnemy(IWorld* world, const GSvector3& position) {
 	collide_field();
 	mesh_.transform(transform_.localToWorldMatrix());
 
-	// ナビメッシュ追加
-	navmesh_ = { this, world_->navmesh() };
-
 	// 攻撃アニメーションイベント
-	mesh_.add_animation_event(Motion::Attack, 35.0f, [=] {generate_attack_collider(); });
+	mesh_.add_animation_event(Motion::Attack, 35.0f, [=] { generate_attack_collider(); });
 }
 
 void DummyEnemy::update(float delta_time) {
