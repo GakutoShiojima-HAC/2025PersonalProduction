@@ -4,6 +4,7 @@
 #include "Engine/Graphics/Canvas/Canvas.h"
 #include "Assets.h"
 #include "GUI/Button/TextFunctionButton.h"
+#include "Engine/Sound/BGMManager.h"
 
 SceneGameResultState::SceneGameResultState(GameScene& owner, World* world) :
     owner_{ owner } {
@@ -41,6 +42,8 @@ void SceneGameResultState::enter() {
 
     // テキストを変える
     if (try_agein_button_ != nullptr) try_agein_button_->change_text(player_respawn_ ? "復活" : "再挑戦");
+
+    BGMManager::get_instance().play(0, 1.0f);
 }
 
 void SceneGameResultState::update(float delta_time) {
@@ -172,6 +175,8 @@ void SceneGameResultState::try_agein() {
     if (player_respawn_) {
         owner_.respawn_player();
         owner_.change_state((GSuint)SceneStateType::Original);
+        BGMManager& bgm = BGMManager::get_instance();
+        bgm.play(bgm.current());
         return;
     }
     // 再挑戦
