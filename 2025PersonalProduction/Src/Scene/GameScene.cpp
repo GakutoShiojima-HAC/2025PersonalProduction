@@ -314,7 +314,7 @@ void GameScene::game_start() {
     // 同期
     world_.update(0.0f);
 
-    BGMManager::get_instance().play((GSuint)BGMID::GameNormal, 1.0f);
+    BGMManager::get_instance().play((GSuint)BGMID::Main);
 }
 
 void GameScene::game_end() {

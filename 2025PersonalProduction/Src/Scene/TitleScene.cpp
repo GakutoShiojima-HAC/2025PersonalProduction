@@ -8,6 +8,7 @@
 #include "Engine/Graphics/Shader/GamePostEffect.h"
 #include "GameConfig.h"
 #include <gslib.h>
+#include "Engine/Sound/BGMManager.h"
 
 SceneTag NEXT_SCENE{ SceneTag::Menu };
 
@@ -22,6 +23,8 @@ void TitleScene::start() {
     // タイトル用アセットの読み込み
     AssetsLoader::load_by_json("Resource/Private/Common/Assets/title.json", AssetsLoader::TITLE_ASSET_NAME);
 
+    BGMManager::get_instance().play((GSuint)BGMID::Main);
+
     // 別スレッドで読み込み処理を行う
     gslib::Game::run_thread([=] {
         load_data();
@@ -34,6 +37,7 @@ void TitleScene::update(float delta_time) {
     // ロードが終了して何かのボタンを押したら遷移(シーン処理が少ないかつ、たまにしか来ないシーンのため毎回取得)
     if (is_load_end_ && Input::get_instance().action(InputAction::MENU_ANY)) {
         is_end_ = true;
+        BGMManager::get_instance().play(0, 1.0f);
         return;
     }
 

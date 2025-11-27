@@ -6,6 +6,7 @@
 #include "Engine/Core/Tween/Tween.h"
 #include "Engine/Graphics/Shader/GameShader.h"
 #include "Engine/Graphics/Shader/GamePostEffect.h"
+#include "Engine/Sound/BGMManager.h"
 
 #ifdef _DEBUG
 #include <imgui/imgui.h>
@@ -40,6 +41,7 @@ void MenuScene::start() {
     // レンダーターゲットの作成
     game_post_effect_.create();
 
+    BGMManager::get_instance().play((GSuint)BGMID::Main);
     change_state((GSuint)SceneStateType::Start);
 }
 
