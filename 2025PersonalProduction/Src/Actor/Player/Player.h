@@ -151,11 +151,11 @@ private:
 
 	void add_state() override;
 
-    void update_mesh(float delta_time) override;
-
 	void on_air() override;
 
 	void on_ground() override;
+
+    bool is_root_motion_state() const override;
 
 public:
 	/// <summary>
@@ -295,12 +295,6 @@ private:
 	/// </summary>
 	/// <param name="info">= 生成情報</param>
 	void add_attack_animation_event(const PlayerInfo& info);
-
-    /// <summary>
-    /// ルートモーションを使う状態かどうか
-    /// </summary>
-    /// <returns>ルートモーションを使うなら真を返却</returns>
-    bool is_root_motion_state() const;
 
 private:
 	// プレイヤーカメラ
