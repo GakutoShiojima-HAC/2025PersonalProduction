@@ -36,8 +36,6 @@ private:
 
     void end_game();
 
-    void end_result();
-
 private:
     GameScene& owner_;
 

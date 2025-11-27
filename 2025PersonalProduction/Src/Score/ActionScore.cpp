@@ -43,7 +43,7 @@ void ActionScore::update(float delta_time) {
 
     // SE
     if (play_add_score_se_) {
-        SE::play_random((GSuint)SEID::AddScore, 0.25f);
+        SE::play((GSuint)SEID::AddScore);
         play_add_score_se_ = false;
     }
 }

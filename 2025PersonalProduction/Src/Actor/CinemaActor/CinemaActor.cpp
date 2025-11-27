@@ -34,8 +34,8 @@ void CinemaActor::update(float delta_time) {
         if (!world_->is_playing_timeline()) {
             Character* player = world_->find_character("Player");
             if (player != nullptr) {
-                // TODO –ß‚·‚¾‚¯‚¾‚ÆÄ¶ŽžŠÔ‚ªƒŠƒZƒbƒg‚³‚ê‚Ä‹““®•Ï‚©‚à‚µ‚ê‚È‚¢
-                player->change_state(player_prev_state_, player_prev_motion_, player_prev_motion_loop_);
+                player->velocity() = GSvector3{ 0.0f, 0.0f, 0.0f };
+                player->change_state((GSuint)PlayerStateType::Move, PlayerMotion::Idle, true);
             }
             world_->enable_draw_gui() = true;
             end();
@@ -54,9 +54,6 @@ void CinemaActor::update(float delta_time) {
         if (is_player_fixed_) {
             Character* player = world_->find_character("Player");
             if (player != nullptr) {
-                player_prev_state_ = player->current_state_num();
-                player_prev_motion_ = player->current_motion();
-                player_prev_motion_loop_ = player->current_motion_loop();
                 player->change_state((GSuint)PlayerStateType::Idle, PlayerMotion::Idle, true);
             }
             return;

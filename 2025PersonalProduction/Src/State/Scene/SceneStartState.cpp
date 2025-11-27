@@ -17,13 +17,12 @@ void SceneStartState::enter() {
 void SceneStartState::update(float delta_time) {
     owner_.original_update(delta_time);
 
-    // 1•b‚©‚¯‚Ä‘JˆÚ
-    if (end_timer_ >= 1.0f) {
+    if (end_timer_ >= 0.5f) {
         owner_.change_state((GSuint)SceneStateType::Original);
         return;
     }
 
-    GamePostEffect::get_instance().dissolve_threshold() = end_timer_ * 2.0f;
+    GamePostEffect::get_instance().dissolve_threshold() = end_timer_ * 3.0f;
     end_timer_ += delta_time / cFPS;
 }
 

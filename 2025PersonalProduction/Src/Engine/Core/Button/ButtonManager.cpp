@@ -7,6 +7,7 @@ ButtonManager::~ButtonManager() {
 
 void ButtonManager::start() {
     select_index_ = 0;
+    if (!buttons_.empty()) buttons_[0]->init_select();
 }
 
 void ButtonManager::update(float delta_time) {

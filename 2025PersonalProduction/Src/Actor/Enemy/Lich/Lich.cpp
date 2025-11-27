@@ -6,6 +6,7 @@
 #include "Engine/Utils/MyRandom.h"
 #include "Actor/Magic/FireBall/FireBall.h"
 #include "Actor/Magic/ExplodeRoad/ExplodeRoad.h"
+#include "Engine/Sound/SE.h"
 
 #include "State/Lich/LichState.h"
 #include "State/Lich/LichIdleState.h"
@@ -28,11 +29,17 @@ Lich::Lich(IWorld* world, const GSvector3& position, const GSvector3& rotate, co
     mesh_.add_animation_event(Motion::Spell1, 36.0f, [=] { generate_spell_a(); });
     mesh_.add_animation_event(Motion::Spell2, 23.0f, [=] { generate_spell_b(); });
 
-    mesh_.add_animation_event(Motion::Attack1, CLAMP(35.0f - 15.0f, 0.0f, FLT_MAX), [=] { play_danger_signal_effect(my_info_.critical_bone_num); });
-    mesh_.add_animation_event(Motion::Attack2, CLAMP(44.0f - 15.0f, 0.0f, FLT_MAX), [=] { play_danger_signal_effect(my_info_.critical_bone_num); });
-    mesh_.add_animation_event(Motion::Spell1, CLAMP(36.0f - 15.0f, 0.0f, FLT_MAX), [=] { play_danger_signal_effect(my_info_.critical_bone_num); });
-    mesh_.add_animation_event(Motion::Spell2, CLAMP(23.0f - 15.0f, 0.0f, FLT_MAX), [=] { play_danger_signal_effect(my_info_.critical_bone_num); });
+    auto alert = [=](GSuint motion, float time) {
+        mesh_.add_animation_event(motion, CLAMP(time - 15.0f, 0.0f, FLT_MAX), [=] {
+            play_danger_signal_effect(my_info_.critical_bone_num);
+            SE::play((GSuint)SEID::Alert);
+        });
+    };
 
+    alert(Motion::Attack1, 35.0f);
+    alert(Motion::Attack2, 44.0f);
+    alert(Motion::Spell1, 36.0f);
+    alert(Motion::Spell2, 23.0f);
 
     change_state_and_motion((GSuint)LichStateType::Idle);
     save_current_state();

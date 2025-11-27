@@ -4,6 +4,7 @@
 #include <GSeffect.h>
 #include "GameConfig.h"
 #include "Engine/Utils/Line.h"
+#include "Engine/Sound/SE.h"
 
 constexpr float RADIUS{ 0.4f };
 
@@ -28,6 +29,7 @@ FireBall::FireBall(IWorld* world, const GSvector3& position, const GSvector3& ve
     collider_ = BoundingSphere{ RADIUS };
 
     effect_handle_ = play_effect((GSuint)EffectID::FireBall, transform_.position());
+    SE::play_random((GSuint)SEID::FireBallSummon, transform_.position(), 0.125f);
 }
 
 void FireBall::update(float delta_time) {
@@ -92,4 +94,5 @@ void FireBall::hit() {
     world_->generate_attack_collider(RADIUS * 2.0f, transform_.position(), owner_, damage_, "Attack", 0.1f, 0.0f);
     play_effect((GSuint)EffectID::ExplosionSmall, GSvector3::zero());
     world_->camera_shake(CameraShakeType::HandShake, 0.5f, 25.0f, false);
+    SE::play_random((GSuint)SEID::Explosion, transform_.position(), 0.125f);
 }

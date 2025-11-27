@@ -14,6 +14,14 @@ void SE::end() {
     SEManager::get_instance().end();
 }
 
+void SE::set_master_volume(float volume) {
+    SEManager::get_instance().set_master_volume(volume);
+}
+
+float SE::get_master_volume() {
+    return SEManager::get_instance().get_master_volume();
+}
+
 bool SE::load(unsigned int id, const std::string& path, int pool_count) {
     return SEManager::get_instance().load(id, path, pool_count);
 }

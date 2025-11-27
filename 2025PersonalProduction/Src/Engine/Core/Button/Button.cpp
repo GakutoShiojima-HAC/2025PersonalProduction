@@ -1,11 +1,18 @@
 #include "Engine/Core/Button/Button.h"
 #include <gslib.h>
+#include "Assets.h"
+#include "Engine/Sound/SE.h"
+
+void Button::init_select() {
+    is_selected_ = true;
+}
 
 void Button::update(float delta_time, bool is_selected) {
     // 今回が初めてなら更新
     if (is_selected && !is_selected_) {
         is_selected_ = true;
         select();
+        SE::play((GSuint)SEID::ButtonSelect);
     }
     // 前回まで選択中なら更新
     if (!is_selected && is_selected_) {
@@ -36,7 +43,10 @@ void Button::update(float delta_time, const GSvector2& cursor_position) {
 
 void Button::on_input_decision() {
     // 選択中のボタンなら呼び出す
-    if (is_selected_) input();
+    if (is_selected_) {
+        input();
+        SE::play((GSuint)SEID::ButtonInput);
+    }
 }
 
 bool Button::is_selected() const {

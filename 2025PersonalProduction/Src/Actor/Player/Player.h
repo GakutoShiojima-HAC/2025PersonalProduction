@@ -144,6 +144,8 @@ public:
 
 	bool is_dead_state() const override;
 
+    void on_jump() override;
+
 private:
 	void react(Actor& other) override;
 

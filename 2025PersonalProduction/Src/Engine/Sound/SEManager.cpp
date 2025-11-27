@@ -131,3 +131,11 @@ void SEManager::end() {
     clear();
     ma_engine_uninit(&engine);
 }
+
+void SEManager::set_master_volume(float volume) {
+    ma_engine_set_volume(&engine, volume);
+}
+
+float SEManager::get_master_volume() {
+    return ma_engine_get_volume(&engine);
+}
