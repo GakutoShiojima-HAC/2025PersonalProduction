@@ -1,6 +1,7 @@
 #include "Engine/Core/Collision/AttackCollider.h"
 #include "Engine/Core/Actor/Pawn/Pawn.h"
 #include "Assets.h"
+#include "Engine/Sound/SE.h"
 
 AttackCollider::AttackCollider(float radius, const GSvector3& center, Actor* owner, int damage, const std::string& name, float lifespan, float delay) {
 	tag_ = ActorTag::Collider;
@@ -48,6 +49,7 @@ void AttackCollider::react(Actor& other) {
         GSvector3 center = (other.collider().center - transform_.position()) / 2;
         play_effect((GSuint)EffectID::HitAttack, center);
     }
+    SE::play_random((GSuint)SEID::AttackHit, transform_.position(), 0.25f);
 	// 衝突したら削除
 	die();
 }
