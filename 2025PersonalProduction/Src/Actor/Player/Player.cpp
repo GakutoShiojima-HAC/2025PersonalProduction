@@ -250,8 +250,7 @@ void Player::take_damage(Actor& other, const int damage) {
 		(GSuint)PlayerStateType::Dead,
 		(GSuint)PlayerStateType::Skill	// スキル中も無敵
 	)) return;
-    if (invincible_timer() > 0.0f) return;
-    if (avoid_effect_timer_ > 0.0f) return; // 回避演出中は無敵とし、延長不可
+    if (invincible_timer() > 0.0f || avoid_effect_timer_ > 0.0f) return;
 
 	hp_ = CLAMP(hp_ - damage, 0, INT_MAX);
 	invincible_timer_ = INVINCIBLE_TIME;
@@ -602,6 +601,7 @@ void Player::on_avoid() {
     SE::play_random((GSuint)SEID::Avoid, 0.25f);
 
     // 回避演出に入るかどうか(近くに攻撃動作に入っている敵がいるかどうか)
+    if (avoid_effect_timer_ > 0.0f) return;
     std::vector<Pawn*> enemys = world_->find_pawn_with_tag(ActorTag::Enemy);
     if (enemys.empty()) return;
     for (const auto& enemy : enemys) {
@@ -675,6 +675,8 @@ GSuint Player::get_current_motion() const {
 
 void Player::avoid_effect_start() {
     if (avoid_effect_timer_ > 0.0f) return;
+
+    invincible_timer_ = INVINCIBLE_TIME;
 
     // 回避演出のマスクを適用
     world_->enable_avoid_effect() = true;
