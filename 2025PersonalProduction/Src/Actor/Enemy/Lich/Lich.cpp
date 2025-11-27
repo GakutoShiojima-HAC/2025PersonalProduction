@@ -16,7 +16,7 @@
 #include "State/Lich/LichSpellState.h"
 
 // –³“GŽžŠÔ(•b)
-const float INVINCIBLE_TIME{ 0.5f };
+const float INVINCIBLE_TIME{ 0.25f };
 
 Lich::Lich(IWorld* world, const GSvector3& position, const GSvector3& rotate, const MyEnemyInfo& my_info, const LichInfo& info) :
     MyEnemy{ world, position, rotate, my_info },

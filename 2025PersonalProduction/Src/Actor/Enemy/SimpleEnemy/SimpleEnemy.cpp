@@ -15,7 +15,7 @@
 #include "State/SimpleEnemy/SimpleEnemySearchState.h"
 
 // –³“GŽžŠÔ(•b)
-const float INVINCIBLE_TIME{ 0.5f };
+const float INVINCIBLE_TIME{ 0.25f };
 
 SimpleEnemy::SimpleEnemy(IWorld* world, const GSvector3& position, const GSvector3& rotate, const MyEnemyInfo& my_info, const SimpleEnemyInfo& info) :
     MyEnemy{ world, position, rotate, my_info },

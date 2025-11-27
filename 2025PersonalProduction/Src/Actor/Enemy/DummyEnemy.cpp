@@ -18,7 +18,7 @@
 #endif
 
 // 無敵時間(秒)
-const float INVINCIBLE_TIME{ 0.5f };
+const float INVINCIBLE_TIME{ 0.25f };
 
 DummyEnemy::DummyEnemy(IWorld* world, const GSvector3& position) :
     navmesh_{ this, world->navmesh() } {
