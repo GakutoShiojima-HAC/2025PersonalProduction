@@ -166,7 +166,7 @@ int GameScene::get_current_load_stage() const {
 
 void GameScene::load_data() {
     // 読み込み処理の数から一つの処理分の進捗率を計算
-    const int count = 11;
+    const int count = 12;
     const float progress = 1.0f / (float)count;
 
     // 進捗率更新
@@ -213,6 +213,9 @@ void GameScene::load_data() {
     world_.timeline().init(&world_, false); // エディタ無効
 #endif
     world_.timeline().load(folder_path + "/timeline.json");                                                                     next();
+
+    // 静的エフェクトデータの読み込み
+    world_.load_static_effect(folder_path + "/static_effect.json");                                                             next();
 }
 
 void GameScene::game_start() {
@@ -301,6 +304,9 @@ void GameScene::game_start() {
     // エディタでの動的生成のためにデバッグ中はデータを残しておく
     actor_generator_.clear_no_respawn();
 #endif
+
+    // 静的エフェクトの生成
+    world_.generate_static_effect();
 
     // シェーダー上書きを開始
     GameShader::get_instance().begin();

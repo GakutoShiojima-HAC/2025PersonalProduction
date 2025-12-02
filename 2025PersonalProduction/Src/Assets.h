@@ -104,6 +104,7 @@
     X(DustLarge) \
     X(FireBall) \
     X(ExplosionSmall) \
+    X(Fire) \
     X(MAX_SIZE) // 要素数
 #pragma endregion
 
