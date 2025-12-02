@@ -24,6 +24,7 @@
 #include "Score/ActionScore.h"
 #include "GameTimer/GameTimer.h"
 #include "Actor/Player/PlayerRespawner.h"
+#include "Engine/Core/Field/StaticEffect.h"
 
 class AttackColliderPool;
 
@@ -100,6 +101,17 @@ public:
     /// </summary>
     /// <returns>参照</returns>
     PlayerRespawner& player_respawner();
+
+    /// <summary>
+    /// 静的エフェクトを読み込む
+    /// </summary>
+    /// <param name="json_file">= データ</param>
+    void load_static_effect(const std::string& json_file);
+
+    /// <summary>
+    /// 静的エフェクトを生成
+    /// </summary>
+    void generate_static_effect();
 
 public:
     void add_actor(Actor* actor) override;
@@ -208,6 +220,8 @@ protected:
     float timescale_{ 1.0f };
     // プレイヤーリスポーンマネージャー
     PlayerRespawner player_respawner_;
+    // 静的エフェクトマネージャー
+    StaticEffect static_effect_;
 
 };
 

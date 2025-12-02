@@ -90,6 +90,7 @@ void World::draw() const {
 }
 
 void World::clear() {
+    static_effect_.clear();
 	delete field_;
 	field_ = nullptr;
 	delete light_;
@@ -131,6 +132,10 @@ void World::add_navmesh(NavMeshSurface* navmesh) {
 	navmesh_ = navmesh;
 }
 
+void World::generate_static_effect() {
+    static_effect_.generate();
+}
+
 void World::add_actor(Actor* actor) {
 	actor_.add(actor);
 }
@@ -160,6 +165,10 @@ Timeline& World::timeline() {
 
 PlayerRespawner& World::player_respawner() {
     return player_respawner_;
+}
+
+void World::load_static_effect(const std::string& json_file) {
+    static_effect_.load(json_file);
 }
 
 bool& World::enable_draw_gui() {
