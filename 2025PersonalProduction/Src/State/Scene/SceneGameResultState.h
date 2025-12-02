@@ -54,6 +54,11 @@ private:
     // プレイヤーの復活は可能か
     bool player_respawn_{ false };
 
+    // 最終スコア
+    int final_score_{ 0 };
+    // 前のスコア
+    int prev_score_{ 0 };
+
 };
 
 #endif
