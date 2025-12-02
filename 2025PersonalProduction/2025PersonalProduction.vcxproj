@@ -294,6 +294,7 @@
     <ClCompile Include="Src\State\Lich\LichAttackState.cpp" />
     <ClCompile Include="Src\State\Lich\LichSpellState.cpp" />
     <ClCompile Include="Src\Engine\Sound\BGMManager.cpp" />
+    <ClCompile Include="Src\Engine\Core\Field\StaticEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Actor\CinemaActor\CinemaActor.h" />
@@ -483,6 +484,7 @@
     <ClInclude Include="Src\State\Lich\LichAttackState.h" />
     <ClInclude Include="Src\State\Lich\LichSpellState.h" />
     <ClInclude Include="Src\Engine\Sound\BGMManager.h" />
+    <ClInclude Include="Src\Engine\Core\Field\StaticEffect.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Private\Shader\Dissolve.frag" />
