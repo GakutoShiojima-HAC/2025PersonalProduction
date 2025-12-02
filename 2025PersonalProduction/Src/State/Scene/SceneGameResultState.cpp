@@ -43,6 +43,11 @@ void SceneGameResultState::enter() {
     // テキストを変える
     if (try_agein_button_ != nullptr) try_agein_button_->change_text(player_respawn_ ? "復活" : "再挑戦");
 
+    // スコアを計算
+    if (stage_clear_) {
+        final_score_ = world_->game_save_data().calc_final_score(world_->action_score().get_total_score(), world_->time().get_elapsed_time(), world_->player_respawner().respawn_count());
+        prev_score_ = world_->game_save_data().get_stage_score(owner_.get_current_load_stage());
+    }
     BGMManager::get_instance().play(0, 1.0f);
 }
 
@@ -101,7 +106,6 @@ void SceneGameResultState::draw() const {
             const float text_y{ 55.0f };
 
             ActionScore& score = world_->action_score();
-            const int respawn_count = world_->player_respawner().respawn_count();
 
             draw_text(
                 "クリアタイム",
@@ -117,7 +121,7 @@ void SceneGameResultState::draw() const {
                 GSvector2{ -450.0f, sub_text_y + text_y * 1 }, 40, Anchor::TopCenter, Anchor::CenterLeft
             );
             draw_text(
-                std::to_string(respawn_count),
+                std::to_string(world_->player_respawner().respawn_count()),
                 GSvector2{ 450.0f, sub_text_y + text_y * 1 }, 40, Anchor::TopCenter, Anchor::CenterRight
             );
 
@@ -153,9 +157,15 @@ void SceneGameResultState::draw() const {
                 GSvector2{ 0.0f, 670.0f }, 60, Anchor::TopCenter, Anchor::Center
             );
             draw_text(
-                std::to_string(world_->game_save_data().calc_final_score(score.get_total_score(), world_->time().get_elapsed_time(), respawn_count)),
+                std::to_string(final_score_),
                 GSvector2{ 0.0f, 740.0f }, 70, Anchor::TopCenter, Anchor::Center
             );
+            if (final_score_ > prev_score_) {
+                draw_text(
+                    "新記録！",
+                    GSvector2{ 200.0f, 675.0f }, 50, Anchor::TopCenter, Anchor::Center
+                );
+            }
         }
     }
 
@@ -194,7 +204,7 @@ void SceneGameResultState::end_game() {
     world_->set_blur_effect_power() = 0.0f;
     if (stage_clear_) {
         // クリアしたのでセーブする
-        world_->game_save_data().set_clear_stage(owner_.get_current_load_stage());
+        world_->game_save_data().set_clear_stage(owner_.get_current_load_stage(), final_score_);
     }
     // ロビーに戻る
     owner_.set_next_stage(0);
