@@ -3,11 +3,13 @@
 
 #include <string>
 #include <vector>
+#include <unordered_map>
 #include "Item/Inventory.h"
 
 struct SaveData {
     int stage{ -1 };    // -1でチュートリアル未クリア 0以上ならindex + 1のステージに挑戦できる
     int player_level{ 1 };
+    std::unordered_map<int, int> score; // key = stage num, value = score point
 };
 
 class GameSaveData {
@@ -52,12 +54,20 @@ public:
     /// <returns>全てのセーブデータファイル</returns>
     std::vector<string> get_all_save_file() const;
 
+    /// <summary>
+    /// ステージ番号から、そのステージの最大スコアを取得
+    /// </summary>
+    /// <param name="stage_num">= ステージ番号</param>
+    /// <returns>最大スコア</returns>
+    int get_stage_score(int stage_num) const;
+
 public:
     /// <summary>
-    /// クリアしたステージ番号を保存
+    /// クリアしたステージを保存
     /// </summary>
     /// <param name="stage_num">= クリアしたステージ番号</param>
-    void set_clear_stage(int stage_num);
+    /// <param name="score">= 獲得したスコア</param>
+    void set_clear_stage(int stage_num, int score);
 
 public:
     /// <summary>

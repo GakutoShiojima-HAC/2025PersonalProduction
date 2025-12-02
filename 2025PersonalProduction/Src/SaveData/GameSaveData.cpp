@@ -16,6 +16,10 @@ void GameSaveData::load(const std::string& file_path) {
     {
         save_data_.stage = MyJson::get_int(j, "Stage");
         save_data_.player_level = MyJson::get_int(j, "PlayerLevel", 1);
+
+        if (j.contains("Score") && j["Score"].is_array()) {
+            for (const auto& item : j["Score"]) save_data_.score[item[0].get<int>()] = item[1].get<int>();
+        }
     }
     // インベントリの読み込み
     {
@@ -31,6 +35,7 @@ void GameSaveData::save() {
     ordered_json data;
     data["Stage"] = save_data_.stage;
     data["PlayerLevel"] = save_data_.player_level;
+    for (const auto& [key, value] : save_data_.score) data["Score"].push_back({ key, value });
 
     data["Inventory"] = inventory_.save_object();
 
@@ -54,7 +59,13 @@ std::vector<string> GameSaveData::get_all_save_file() const {
     return MyLib::get_all_file_path(SAVE_FOLDER_PATH, "json");
 }
 
-void GameSaveData::set_clear_stage(int stage_num) {
+int GameSaveData::get_stage_score(int stage_num) const {
+    auto it = save_data_.score.find(stage_num);
+    if (it != save_data_.score.end()) return it->second;
+    return 0;
+}
+
+void GameSaveData::set_clear_stage(int stage_num, int score) {
     if (stage_num == -1) {
         save_data_.stage = stage_num + 1;
     }
@@ -63,6 +74,13 @@ void GameSaveData::set_clear_stage(int stage_num) {
     }
     else {
         // -1未満は不要
+    }
+
+    // スコア保存
+    if (stage_num >= -1) {
+        auto it = save_data_.score.find(stage_num);
+        if (it != save_data_.score.end()) it->second = score > it->second ? score : it->second;
+        else save_data_.score[stage_num] = score;
     }
 }
 
