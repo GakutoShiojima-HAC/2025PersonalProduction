@@ -4,6 +4,7 @@
 
 void TypeWriter::update(float delta_time) {
     if (state_ == State::Idle) return;
+    if (state_ == State::Display && is_wait_) return;
 
     // タイマーを進める
     timer_ -= delta_time / cFPS;
@@ -80,6 +81,7 @@ void TypeWriter::next_text() {
     write_tempo_ = 0.1f;
     display_time_ = 1.0f;
     hide_time_ = 0.25f;
+    is_wait_ = false;
 }
 
 void TypeWriter::next_index() {
@@ -178,6 +180,9 @@ void TypeWriter::apply_tag(const std::string& tag) {
         }
         else if (key == "tempo") {
             write_tempo_ = val;
+        }
+        else if (key == "wait") {
+            is_wait_ = val != 0.0f;
         }
     }
 }

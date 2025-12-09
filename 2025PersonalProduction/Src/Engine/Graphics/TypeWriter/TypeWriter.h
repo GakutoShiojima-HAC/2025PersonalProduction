@@ -88,6 +88,9 @@ private:
     // 非表示する時間
     float hide_time_{ 0.25f };
 
+    // スキップ入力を待つかどうか
+    bool is_wait_{ false };
+
 public:
     // コピー禁止
     TypeWriter(const TypeWriter& other) = delete;
