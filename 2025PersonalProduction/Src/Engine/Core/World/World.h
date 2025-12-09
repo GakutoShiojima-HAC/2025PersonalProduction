@@ -25,6 +25,7 @@
 #include "GameTimer/GameTimer.h"
 #include "Actor/Player/PlayerRespawner.h"
 #include "Engine/Core/Field/StaticEffect.h"
+#include "Engine/Graphics/TypeWriter/TypeWriterLabel.h"
 
 class AttackColliderPool;
 
@@ -184,6 +185,12 @@ public:
 
     void update_check_point(const GSvector3& position, const GSvector3& rotate) override;
 
+    void skip_type_writer() override;
+
+    void set_type_writer(const std::string& text, TextCode code = TextCode::UTF8) override;
+
+    void set_type_writer(const std::vector<std::string>& text, TextCode code = TextCode::UTF8) override;
+
 protected:
     // GUIを描画するかどうか
     bool enable_draw_gui_{ true };
@@ -222,6 +229,8 @@ protected:
     PlayerRespawner player_respawner_;
     // 静的エフェクトマネージャー
     StaticEffect static_effect_;
+    // 文字送りシステム
+    TypeWriterLabel type_writer_label_;
 
 };
 

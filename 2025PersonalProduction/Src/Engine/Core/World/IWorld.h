@@ -16,6 +16,7 @@
 #include "Camera/CameraTag.h"
 #include "Actor/ActorTag.h"
 #include "Engine/Core/Camera/CameraShakeType.h"
+#include "TextCode.h"
 
 class Field;
 class FieldActor;
@@ -268,6 +269,25 @@ public:
     /// <param name="position">= 復活時の座標</param>
     /// <param name="rotate">= 復活時の回転</param>
     virtual void update_check_point(const GSvector3& position, const GSvector3& rotate) = 0;
+
+    /// <summary>
+    /// 文字送りスキップ
+    /// </summary>
+    virtual void skip_type_writer() = 0;
+
+    /// <summary>
+    /// 文字送りテキストを設定
+    /// </summary>
+    /// <param name="text">= テキスト</param>
+    /// <param name="code">= 文字コード</param>
+    virtual void set_type_writer(const std::string& text, TextCode code = TextCode::UTF8) = 0;
+
+    /// <summary>
+    /// 文字送りテキストを負数設定
+    /// </summary>
+    /// <param name="text">= テキスト</param>
+    /// <param name="code">= 文字コード</param>
+    virtual void set_type_writer(const std::vector<std::string>& text, TextCode code = TextCode::UTF8) = 0;
 
 public:
 	// コピー禁止
