@@ -53,10 +53,8 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ImportGroup Label="ExtensionSettings">
-  </ImportGroup>
-  <ImportGroup Label="Shared">
-  </ImportGroup>
+  <ImportGroup Label="ExtensionSettings"></ImportGroup>
+  <ImportGroup Label="Shared"></ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -297,6 +295,8 @@
     <ClCompile Include="Src\State\Lich\LichSpellState.cpp" />
     <ClCompile Include="Src\Engine\Sound\BGMManager.cpp" />
     <ClCompile Include="Src\Engine\Core\Field\StaticEffect.cpp" />
+    <ClCompile Include="Src\Engine\Core\Timeline\Editor\TypeWriterTimelineEditor.cpp" />
+    <ClCompile Include="Src\Engine\Core\Timeline\Parameters\TypeWriterTimelineParameter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Actor\CinemaActor\CinemaActor.h" />
@@ -490,6 +490,8 @@
     <ClInclude Include="Src\State\Lich\LichSpellState.h" />
     <ClInclude Include="Src\Engine\Sound\BGMManager.h" />
     <ClInclude Include="Src\Engine\Core\Field\StaticEffect.h" />
+    <ClInclude Include="Src\Engine\Core\Timeline\Editor\TypeWriterTimelineEditor.h" />
+    <ClInclude Include="Src\Engine\Core\Timeline\Parameters\TypeWriterTimelineParameter.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Private\Shader\Dissolve.frag" />
@@ -512,6 +514,5 @@
     <None Include="Resource\Private\Shader\SSAOCombine.frag" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-  </ImportGroup>
+  <ImportGroup Label="ExtensionTargets"></ImportGroup>
 </Project>
