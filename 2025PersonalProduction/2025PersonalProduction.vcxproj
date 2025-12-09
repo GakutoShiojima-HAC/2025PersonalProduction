@@ -217,6 +217,8 @@
     <ClCompile Include="Src\Engine\Graphics\Shader\PostEffects\BloomEffect.cpp" />
     <ClCompile Include="Src\Engine\Graphics\Shader\PostEffects\BlurEffect.cpp" />
     <ClCompile Include="Src\Engine\Graphics\Shader\PostEffects\SSAOEffect.cpp" />
+    <ClCompile Include="Src\Engine\Graphics\TypeWriter\TypeWriter.cpp" />
+    <ClCompile Include="Src\Engine\Graphics\TypeWriter\TypeWriterLabel.cpp" />
     <ClCompile Include="Src\Engine\Sound\SE.cpp" />
     <ClCompile Include="Src\Engine\Sound\SEManager.cpp" />
     <ClCompile Include="Src\GameTimer\GameTimer.cpp" />
@@ -349,6 +351,9 @@
     <ClInclude Include="Src\Engine\Core\Timeline\Timeline.h" />
     <ClInclude Include="Src\Engine\Core\Timeline\TimelineEditor.h" />
     <ClInclude Include="Src\Engine\Graphics\Shader\PostEffects\DissolveEffect.h" />
+    <ClInclude Include="Src\TextCode.h" />
+    <ClInclude Include="Src\Engine\Graphics\TypeWriter\TypeWriter.h" />
+    <ClInclude Include="Src\Engine\Graphics\TypeWriter\TypeWriterLabel.h" />
     <ClInclude Include="Src\Engine\Sound\SE.h" />
     <ClInclude Include="Src\Engine\Sound\SEManager.h" />
     <ClInclude Include="Src\Engine\Utils\MyMath.h" />
