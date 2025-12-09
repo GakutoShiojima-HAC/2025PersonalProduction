@@ -47,6 +47,7 @@
     X(Skybox) \
     X(ProgressBar) \
     X(ProgressBarEmpty) \
+    X(TypeWriterBG) \
     X(TitleLogo) \
     X(MenuLogo) \
     X(SafeArea) \
