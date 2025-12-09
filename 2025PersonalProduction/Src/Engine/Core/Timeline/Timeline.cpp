@@ -6,9 +6,11 @@
 #include "Parameters/CameraTimelineParameter.h"
 #include "Parameters/SendMessageTimelineParameter.h"
 #include "Parameters/PlayBGMTimelineParameter.h"
+#include "Parameters/TypeWriterTimelineParameter.h"
 #include "Editor/CameraTimelineEditor.h"
 #include "Editor/SendMessageTimelineEditor.h"
 #include "Editor/PlayBGMTimelineEditor.h"
+#include "Editor/TypeWriterTimelineEditor.h"
 
 Timeline::~Timeline() {
     clear();
@@ -42,12 +44,15 @@ void Timeline::init(World* world, bool enable_editor) {
     timelines_.push_back(sendmessage_timeline);
     PlayBGMTimelineParameter* playbgm_timeline = new PlayBGMTimelineParameter(world);
     timelines_.push_back(playbgm_timeline);
+    TypeWriterTimelineParameter* typewriter_timeline = new TypeWriterTimelineParameter(world);
+    timelines_.push_back(typewriter_timeline);
 
     if (!enable_editor) return;
     // エディタを追加
     editor_.add(new CameraTimelineEditor(*camera_timeline));
     editor_.add(new SendMessageTimelineEditor(*sendmessage_timeline));
     editor_.add(new PlayBGMTimelineEditor(*playbgm_timeline));
+    editor_.add(new TypeWriterTimelineEditor(*typewriter_timeline));
 }
 
 void Timeline::load(const std::string& json_file) {
