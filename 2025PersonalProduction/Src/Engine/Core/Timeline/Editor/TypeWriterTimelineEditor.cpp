@@ -29,7 +29,7 @@ void TypeWriterTimelineEditor::update_select_keyframe() {
 
     // 時間を編集
     ImGui::PushItemWidth(80);
-    if (ImGui::InputFloat("time##2", &key_frame->time)) {
+    if (ImGui::InputFloat(ToUTF8("キーフレームの時間").c_str(), &key_frame->time)) {
         sort_timeline();
         auto it = find(timeline.begin(), timeline.end(), key_frame);
         if (it != timeline.end()) edit_keyframe_index_ = distance(timeline.begin(), it);
@@ -48,7 +48,7 @@ void TypeWriterTimelineEditor::update_select_keyframe() {
         }
 
         ImGui::SameLine();
-        if (ImGui::Button(ToUTF8("削除").c_str())) {
+        if (ImGui::Button(ToUTF8("この行を削除").c_str())) {
             key_frame->text.erase(key_frame->text.begin() + i);
             ImGui::PopID();
             break;
@@ -62,7 +62,7 @@ void TypeWriterTimelineEditor::update_select_keyframe() {
     }
 
     // キーフレームを削除
-    if (ImGui::Button("Delete KeyFrame")) remove_keyframe(edit_keyframe_index_);
+    if (ImGui::Button(ToUTF8("選択中のキーフレームを削除").c_str())) remove_keyframe(edit_keyframe_index_);
 }
 
 std::string TypeWriterTimelineEditor::name() const {

@@ -1,4 +1,5 @@
 #include "CameraTimelineEditor.h"
+#include "Engine/Utils/MyString.h"
 
 // 参照返しのエラー回避用
 static float EMPTY_TIME{ 0.0f };
@@ -28,18 +29,18 @@ void CameraTimelineEditor::update_select_keyframe() {
 
     // カメラ有効化と無効化時の遷移時間を設定
     ImGui::PushItemWidth(80);
-    ImGui::InputFloat("start transition time", &data_->start_transition_time());
+    ImGui::InputFloat(ToUTF8("カメラ有効化時の遷移時間").c_str(), &data_->start_transition_time());
     ImGui::PopItemWidth();
 
     // カメラ終了の遷移時間の設定
     ImGui::SameLine();
     ImGui::PushItemWidth(80);
-    ImGui::InputFloat("end transition time", &data_->end_transition_time());
+    ImGui::InputFloat(ToUTF8("カメラ無効化時の遷移時間").c_str(), &data_->end_transition_time());
     ImGui::PopItemWidth();
 
     // 時間を編集
     ImGui::PushItemWidth(80);
-    if (ImGui::InputFloat("time##2", &key_frame->time)) {
+    if (ImGui::InputFloat(ToUTF8("キーフレームの時間").c_str(), &key_frame->time)) {
         sort_timeline();
         auto it = find(timeline.begin(), timeline.end(), key_frame);
         if (it != timeline.end()) edit_keyframe_index_ = distance(timeline.begin(), it);
@@ -49,20 +50,20 @@ void CameraTimelineEditor::update_select_keyframe() {
     // ターゲットを編集
     ImGui::SameLine();
     ImGui::PushItemWidth(200);
-    ImGui::InputText("origin target##2", &key_frame->target);
+    ImGui::InputText(ToUTF8("原点とするアクター名").c_str(), &key_frame->target);
     ImGui::PopItemWidth();
 
     // 座標を編集
     ImGui::PushItemWidth(200);
-    ImGui::DragFloat3("position", key_frame->position, 0.1f);
+    ImGui::DragFloat3(ToUTF8("座標").c_str(), key_frame->position, 0.1f);
     // 注視点方向を編集
-    ImGui::DragFloat3("lookat", key_frame->lookat, 0.1f);
+    ImGui::DragFloat3(ToUTF8("注視点").c_str(), key_frame->lookat, 0.1f);
     // 傾きを編集
-    ImGui::DragFloat("angle", &key_frame->angle, 0.1f);
+    ImGui::DragFloat(ToUTF8("角度").c_str(), &key_frame->angle, 0.1f);
     ImGui::PopItemWidth();
 
     // 現在のカメラの座標を適用
-    if (ImGui::Button("Apply Current Camera Location")) {
+    if (ImGui::Button(ToUTF8("現在のカメラ位置を適用").c_str())) {
         Camera* camera = parameter_.get_world()->get_camera();
         Actor* target = parameter_.get_world()->find_actor(key_frame->target);
         if (camera != nullptr) {
@@ -79,7 +80,7 @@ void CameraTimelineEditor::update_select_keyframe() {
 
     // キーフレームを削除
     ImGui::SameLine();
-    if (ImGui::Button("Delete KeyFrame")) remove_keyframe(edit_keyframe_index_);
+    if (ImGui::Button(ToUTF8("選択中のキーフレームを削除").c_str())) remove_keyframe(edit_keyframe_index_);
 }
 
 std::string CameraTimelineEditor::name() const {
