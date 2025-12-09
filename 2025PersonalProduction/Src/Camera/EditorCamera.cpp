@@ -1,10 +1,11 @@
 #include "Camera/EditorCamera.h"
 #include <imgui/imgui.h>
 #include "Engine/Core/World/IWorld.h"
+#include "Engine/Utils/MyString.h"
 
-// ã‚«ãƒ¡ãƒ©ã®ç§»å‹•é€Ÿåº¦
+// ƒJƒƒ‰‚ÌˆÚ“®‘¬“x
 const float MOVE_SPEED{ 0.025f };
-// ã‚«ãƒ¡ãƒ©ã®è¦–ç‚¹ç§»å‹•é€Ÿåº¦
+// ƒJƒƒ‰‚Ì‹“_ˆÚ“®‘¬“x
 const float SENSITIVITY{ 0.05f };
 
 EditorCamera::EditorCamera(IWorld* world) {
@@ -14,7 +15,7 @@ EditorCamera::EditorCamera(IWorld* world) {
 	transform_.position(GSvector3{ 0.0f, 0.0f, 0.0f });
 	transform_.lookAt(GSvector3{ 0.0f, 0.0f, 0.0f });
 
-	// ã‚‚ã—ä½¿ç”¨ä¸­ãªã‚‰
+	// ‚à‚µg—p’†‚È‚ç
 	if (is_using_) is_active_ = true;
 }
 
@@ -23,7 +24,7 @@ void EditorCamera::update(float delta_time) {
 
 #ifdef _DEBUG
 	ImGui::Begin("EditorCamera Window");
-	string button_text = is_active_ ? "to InActive" : "to Active";
+	std::string button_text = is_active_ ? ToUTF8("”ñƒAƒNƒeƒBƒu‚É‚·‚é") : ToUTF8("ƒAƒNƒeƒBƒu‚É‚·‚é");
 	if (ImGui::Button(button_text.c_str())) toggle_camera();
 
 	if (!is_active_) {
@@ -31,49 +32,49 @@ void EditorCamera::update(float delta_time) {
 		return;
 	};
 
-	ImGui::Text("Right click to move.");
+	ImGui::Text(ToUTF8("‰EƒNƒŠƒbƒN‚Å‘€ì").c_str());
 
-	// è¡¨ç¤ºç”¨ã« -180ã€œ180 ã«å¤‰æ›
+	// •\¦—p‚É -180?180 ‚É•ÏŠ·
 	float display_angle = angle_;
 	if (display_angle > 180.0f) display_angle -= 360.0f;
-	if (ImGui::SliderFloat("Angle", &display_angle, -180.0f, 180.0f)) {
-		// å…¥åŠ›å€¤ã‚’ 0ã€œ360 ã«å†å¤‰æ›ã™ã‚‹
+	if (ImGui::SliderFloat("angle", &display_angle, -180.0f, 180.0f)) {
+		// “ü—Í’l‚ğ 0?360 ‚ÉÄ•ÏŠ·‚·‚é
 		angle_ = display_angle;
 		if (angle_ < 0.0f) angle_ += 360.0f;
 	}
-	if (ImGui::Button("Angle Reset")) angle_ = 0.0f;
+	if (ImGui::Button("angle reset")) angle_ = 0.0f;
 	
 	ImGui::End();
 
-	// å³ã‚¯ãƒªãƒƒã‚¯æ™‚ã ã‘æ“ä½œã‚’å—ã‘ä»˜ã‘ã‚‹
+	// ‰EƒNƒŠƒbƒN‚¾‚¯‘€ì‚ğó‚¯•t‚¯‚é
 	if(input_.action(InputAction::DEBUG_CameraActive)) {
-		// ã‚«ãƒ¡ãƒ©åŸºæº–ã®å‰æ–¹å‘ã‚’å–å¾—
+		// ƒJƒƒ‰Šî€‚Ì‘O•ûŒü‚ğæ“¾
 		GSvector3 forward = transform_.forward();
 		forward.y = 0.0f;
-		// ã‚«ãƒ¡ãƒ©åŸºæº–ã®å³æ–¹å‘ã‚’å–å¾—
+		// ƒJƒƒ‰Šî€‚Ì‰E•ûŒü‚ğæ“¾
 		GSvector3 right = transform_.right();
 		right.y = 0.0f;
 
-		// å…¥åŠ›ã‹ã‚‰ç§»å‹•ãƒ™ã‚¯ãƒˆãƒ«ã‚’ç®—å‡º
+		// “ü—Í‚©‚çˆÚ“®ƒxƒNƒgƒ‹‚ğZo
 		GSvector3 velocity{ 0.0f, 0.0f, 0.0f };
 		GSvector2 input = input_.debug_left_axis();
 		velocity += right * input.x;
 		velocity += forward * input.y;
 		velocity.y += (input_.action(InputAction::DEBUG_Up) ? 1.0f : input_.action(InputAction::DEBUG_Down) ? -1.0f : 0.0f);
 		velocity = velocity.normalized() * (input_.action(InputAction::DEBUG_Sprint) ? MOVE_SPEED * 10.0f: MOVE_SPEED) * delta_time;
-		// ç§»å‹•
+		// ˆÚ“®
 		transform_.translate(velocity, GStransform::Space::World);
 
-		// è¦–ç‚¹ç§»å‹•
+		// ‹“_ˆÚ“®
 		input = input_.debug_right_axis();
 		yaw_ -= input.x * SENSITIVITY;
 		pitch_ -= input.y * SENSITIVITY;
 		pitch_ = CLAMP(pitch_, -89.0f, 89.0f);
 	}
-	// æ–¹å‘
+	// •ûŒü
 	GSquaternion rotation = GSquaternion::euler(pitch_, yaw_, 0.0f);
 	transform_.rotation(rotation);
-	// å‚¾ã
+	// ŒX‚«
 	transform_.rotation(transform_.rotation() * GSquaternion::angleAxis(angle_, GSvector3::forward()));
 #endif
 }
@@ -81,14 +82,14 @@ void EditorCamera::update(float delta_time) {
 void EditorCamera::exit() {
 	if (is_play_timeline() || !is_active_) return;
 
-	// ã‚‚ã—ã»ã‹ã®ã‚«ãƒ¡ãƒ©ã«åˆ‡ã‚Šæ›¿ã‚ã£ã¦ã‚‚ä¸Šæ›¸ãã™ã‚‹å‡¦ç†
+	// ‚à‚µ‚Ù‚©‚ÌƒJƒƒ‰‚ÉØ‚è‘Ö‚í‚Á‚Ä‚àã‘‚«‚·‚éˆ—
 	is_active_ = true;
 	prev_ = world_->get_camera();
 	world_->camera_transition(this, 0.0f);
 }
 
 void EditorCamera::die() {
-	// å¤–éƒ¨ã‹ã‚‰æ­»äº¡åˆ¤å®šã«ã§ããªã„ã‚ˆã†ã«ã™ã‚‹
+	// ŠO•”‚©‚ç€–S”»’è‚É‚Å‚«‚È‚¢‚æ‚¤‚É‚·‚é
 }
 
 bool EditorCamera::is_play_timeline() const {

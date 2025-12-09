@@ -3,6 +3,7 @@
 
 #ifdef _DEBUG
 #include <imgui/imgui.h>
+#include "Engine/Utils/MyString.h"
 #endif
 
 ActorManager::~ActorManager() {
@@ -20,8 +21,8 @@ void ActorManager::update(float delta_time, float scale_time) {
 
 #ifdef _DEBUG
 	ImGui::Begin("Game Window");
-	// è¡çªåˆ¤å®šã‚’æç”»ã™ã‚‹ã‹ã©ã†ã‹
-	if (ImGui::Button("draw collision detection")) draw_collision_detection_ = !draw_collision_detection_;
+	// ƒRƒ‰ƒCƒ_[‚ð•`‰æ‚·‚é‚©‚Ç‚¤‚©
+	if (ImGui::Button(ToUTF8("ƒRƒ‰ƒCƒ_[‚Ì•`‰æØ‚è‘Ö‚¦").c_str())) draw_collision_detection_ = !draw_collision_detection_;
 	ImGui::End();
 #endif
 }
@@ -56,7 +57,7 @@ void ActorManager::draw_gui() const {
 }
 
 void ActorManager::collide() {
-	// ãã‚“ãªã‚¢ã‚¯ã‚¿ãƒ¼è¿½åŠ ã™ã‚‹äºˆå®šãªã„ã®ã§ã‚·ãƒ³ãƒ—ãƒ«ã«ç·å½“ãŸã‚Š
+	// ‚»‚ñ‚ÈƒAƒNƒ^[’Ç‰Á‚·‚é—\’è‚È‚¢‚Ì‚ÅƒVƒ“ƒvƒ‹‚É‘“–‚½‚è
 	for (auto i = actors_.begin(); i != actors_.end(); ++i) {
 		for (auto j = std::next(i); j != actors_.end(); ++j) {
 			(*i)->collide(**j);

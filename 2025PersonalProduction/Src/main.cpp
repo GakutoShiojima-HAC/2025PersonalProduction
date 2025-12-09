@@ -70,6 +70,11 @@ public:
 
 private:
     void start() override {
+#ifdef _DEBUG
+        ImGuiIO& io = ImGui::GetIO();
+        io.Fonts->AddFontFromFileTTF("Resource/Assets/Font/HackGen35Console-Regular.ttf", 16.0f, nullptr, io.Fonts->GetGlyphRangesJapanese());
+#endif
+
         // シーンを追加
         scene_manager_.add(new LoadingScene{});
         scene_manager_.add(new TitleScene{});

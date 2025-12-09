@@ -33,6 +33,7 @@ void World::update(float delta_time) {
 	actor_.remove();
 
     action_score_.update(delta_time);
+    type_writer_label_.update(delta_time);
 
     if(camera_.current() != nullptr) SE::listener(camera_.current()->transform());
 }
@@ -79,6 +80,7 @@ void World::draw() const {
         actor_.draw_gui();
         action_score_.draw();
         game_timer_.draw();
+        type_writer_label_.draw();
 
         game_post_effect_.end_gui();
     }
@@ -105,6 +107,7 @@ void World::clear() {
 	actor_.clear();
 	camera_.clear();
     player_respawner_.clear();
+    type_writer_label_.clear();
 }
 
 void World::shadow_map_callback(void* param, const GSmatrix4* view, const GSmatrix4* projection) {
@@ -134,6 +137,18 @@ void World::add_navmesh(NavMeshSurface* navmesh) {
 
 void World::generate_static_effect() {
     static_effect_.generate();
+}
+
+void World::skip_type_writer() {
+    type_writer_label_.skip();
+}
+
+void World::set_type_writer(const std::string& text, TextCode code) {
+    type_writer_label_.set(text, code);
+}
+
+void World::set_type_writer(const std::vector<std::string>& text, TextCode code) {
+    type_writer_label_.set(text, code);
 }
 
 void World::add_actor(Actor* actor) {

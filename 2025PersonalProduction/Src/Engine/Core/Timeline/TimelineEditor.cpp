@@ -3,6 +3,7 @@
 #include "Editor/ITimelineEditor.h"
 #include "Engine/Utils/MyJson.h"
 #include "Engine/Utils/Folder.h"
+#include "Engine/Utils/MyString.h"
 
 TimelineEditor::~TimelineEditor() {
     clear();
@@ -42,28 +43,27 @@ void TimelineEditor::add(ITimelineEditor* editor) {
 
 void TimelineEditor::update_main_gui() {
     // 再生ボタン
-    if (ImGui::Button("Play##1")) on_play();
+    if (ImGui::Button(ToUTF8("再生").c_str())) on_play();
     // ロードボタン
     ImGui::SameLine();
-    if (ImGui::Button("Load##1")) ImGui::OpenPopup("Load##2");
+    if (ImGui::Button(ToUTF8("読み込み").c_str())) ImGui::OpenPopup("Load##2");
     if (ImGui::BeginPopupModal("Load##2", NULL, ImGuiWindowFlags_AlwaysAutoResize)) on_load();
     // 保存ボタン
     ImGui::SameLine();
-    if (ImGui::Button("Save##1")) on_save();
+    if (ImGui::Button(ToUTF8("保存").c_str())) on_save();
     //リセットボタン
     ImGui::SameLine();
-    if (ImGui::Button("Reset##1")) on_reset();
+    if (ImGui::Button(ToUTF8("リセット").c_str())) on_reset();
 
     // タイムラインデータの名前入力フィールド
     ImGui::PushItemWidth(200);
-    ImGui::InputText("Data Name##1", &name_);
+    ImGui::InputText(ToUTF8("名前").c_str(), &name_);
     ImGui::PopItemWidth();
 }
 
 void TimelineEditor::update_add_keyframe() {
-    ImGui::Text("KeyFrame");
     // キーフレームの追加ボタン
-    if (ImGui::Button("Add##1")) {
+    if (ImGui::Button(ToUTF8("キーフレームを追加").c_str())) {
         editors_[select_parameter_index_]->add_keyframe(add_keyframe_time_);
     }
 
@@ -73,7 +73,7 @@ void TimelineEditor::update_add_keyframe() {
     const std::string current_parameter_name = editors_[select_parameter_index_]->name();
     // ドロップダウンリスト
     ImGui::PushItemWidth(160);
-    if (ImGui::BeginCombo("Parameters##1", current_parameter_name.c_str())) {
+    if (ImGui::BeginCombo(ToUTF8("パラメータを選択").c_str(), current_parameter_name.c_str())) {
         // 全パラメータを選択肢にする
         for (unsigned int i = 0; i < editors_.size(); ++i) {
             bool is_selected = (select_parameter_index_ == i);
@@ -89,12 +89,12 @@ void TimelineEditor::update_add_keyframe() {
     // キーフレームの追加時間を入力
     ImGui::SameLine();
     ImGui::PushItemWidth(80);
-    ImGui::InputFloat("Time##1", &add_keyframe_time_);
+    ImGui::InputFloat(ToUTF8("キーフレームを追加する時間").c_str(), &add_keyframe_time_);
     ImGui::PopItemWidth();
 
     // パラメータの初期値を設定
     ImGui::Separator();
-    ImGui::Text("Initial Parameter");
+    ImGui::Text(ToUTF8("キーフレームの初期値").c_str());
     editors_[select_parameter_index_]->update_keyframe_initial_parameters();
 }
 
@@ -219,7 +219,7 @@ void TimelineEditor::update_timeline_view() {
 
     // 選択中のキーフレームのパラメータを編集
     ImGui::Separator();
-    ImGui::Text("Edit Parameter");
+    ImGui::Text(ToUTF8("キーフレームの編集").c_str());
     editors_[edit_parameter_index_]->update_select_keyframe();
 }
 
@@ -244,13 +244,13 @@ void TimelineEditor::on_reset() {
 }
 
 void TimelineEditor::on_load() {
-    ImGui::Text("please specify the continuation of Resource/Private/Behavior/Timeline/ (no extension)");
+    ImGui::Text(ToUTF8("Resource/Private/Behavior/Timeline/ にあるファイル名を入力してください。（拡張子なし）").c_str());
 
     ImGui::Separator();
 
-    ImGui::InputText("file name##2", &load_file_name_);
+    ImGui::InputText(ToUTF8("ファイル名").c_str(), &load_file_name_);
 
-    if (ImGui::Button("load##3", ImVec2(120, 0))) {
+    if (ImGui::Button(ToUTF8("読み込み").c_str(), ImVec2(120, 0))) {
         // 読み込む
         json j;
         if (!MyJson::is_json("Resource/Private/Behavior/Timeline/" + load_file_name_ + ".json", j)) {
@@ -272,7 +272,7 @@ void TimelineEditor::on_load() {
         ImGui::CloseCurrentPopup(); // ポップアップを閉じる
     }
     ImGui::SameLine();
-    if (ImGui::Button("cancel##2", ImVec2(120, 0))) {
+    if (ImGui::Button(ToUTF8("キャンセル").c_str(), ImVec2(120, 0))) {
         ImGui::CloseCurrentPopup(); // ポップアップを閉じる
     }
     ImGui::EndPopup();

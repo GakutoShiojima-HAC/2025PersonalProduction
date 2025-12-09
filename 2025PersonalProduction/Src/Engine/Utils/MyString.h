@@ -15,7 +15,7 @@
 
 namespace MyString {
     /// <summary>
-    /// utf8のstringをshiftjisで取得
+    /// utf8のstringをshiftjisに変換
     /// </summary>
     /// <param name="value">= utf8の文字列</param>
     /// <returns>shiftjisの文字列</returns>
@@ -32,6 +32,30 @@ namespace MyString {
 
         return std::string(sjis_text.data());
     }
+
+    /// <summary>
+    /// shiftjisのstringをutf8に変換
+    /// </summary>
+    /// <param name="value">= shiftjisの文字列</param>
+    /// <returns>utf8の文字列</returns>
+    inline std::string shiftjis_to_utf8(const std::string& value) {
+        // Shift-JISをwide文字列に変換
+        int wlen = MultiByteToWideChar(932, 0, value.c_str(), -1, nullptr, 0);
+        std::wstring wide_text(wlen, 0);
+        MultiByteToWideChar(932, 0, value.c_str(), -1, &wide_text[0], wlen);
+
+        // Wide文字列をUTF-8に変換
+        int utf8len = WideCharToMultiByte(CP_UTF8, 0, wide_text.c_str(), -1, nullptr, 0, nullptr, nullptr);
+        std::string utf8(utf8len, 0);
+        WideCharToMultiByte(CP_UTF8, 0, wide_text.c_str(), -1, &utf8[0], utf8len, nullptr, nullptr);
+        if (!utf8.empty() && utf8.back() == '\0')utf8.pop_back();
+
+        return utf8;
+    }
 }
+
+inline std::string ToUTF8(const std::string& sjis) { return MyString::shiftjis_to_utf8(sjis); }
+
+inline std::string ToSJIS(const std::string& utf8) { return MyString::utf8_to_shiftjis(utf8); }
 
 #endif

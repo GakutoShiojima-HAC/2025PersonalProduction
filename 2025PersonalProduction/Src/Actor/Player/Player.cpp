@@ -1,17 +1,19 @@
 #include "Actor/Player/Player.h"
 #include "Assets.h"
-#include "Engine/Core/World/IWorld.h"
-#include "State/Player/PlayerState.h"
-#include "Engine/Core/Camera/Camera.h"
+#include "GameConfig.h"
 #include "Camera/PlayerCamera.h"
+#include "Engine/Core/World/IWorld.h"
+#include "Engine/Core/Camera/Camera.h"
+#include "Engine/Core/Tween/Tween.h"
+#include "Engine/Core/Vibration/Vibration.h"
 #include "Engine/Utils/Check.h"
 #include "Engine/Utils/Calc.h"
-#include "Engine/Core/Tween/Tween.h"
-#include "GameConfig.h"
-#include "Engine/Core/Vibration/Vibration.h"
-#include "GUI/PlayerUI.h"
-#include "Engine/Sound/SE.h"
 #include "Engine/Utils/MyRandom.h"
+#include "Engine/Sound/SE.h"
+#include "GUI/PlayerUI.h"
+#include "GUI/InteractUI.h"
+#include "Score/ActionScore.h"
+#include "State/Player/PlayerState.h"
 
 #include "State/Player/PlayerAttackState.h"
 #include "State/Player/PlayerAvoidState.h"
@@ -29,12 +31,10 @@
 #include <imgui/imgui.h>
 #include "Engine/Core/Screen/Screen.h"
 #include "Engine/Core/Setting/Setting.h"
+#include "Engine/Utils/MyString.h"
 #endif
 
 #include "Engine/Graphics/Canvas/Canvas.h"	// tmp
-
-#include "GUI/InteractUI.h"
-#include "Score/ActionScore.h"
 
 // 移動時のカメラ向きへの回転角度
 constexpr float TURN_SPEED{ 18.0f };
@@ -156,23 +156,21 @@ void Player::update(float delta_time) {
 		}
 	};
 	ImGui::Begin("Player Window");
-	ImGui::Text("current position is X:%.3f Y:%.3f Z:%.3f", transform_.position().x, transform_.position().y, transform_.position().z);
-	ImGui::Text("current state is %s.", state_string(PlayerStateType(state_.get_current_state())));
-	ImGui::Text("current motion is %d.", (int)motion_);
+	ImGui::Text("position: X:%.3f Y:%.3f Z:%.3f", transform_.position().x, transform_.position().y, transform_.position().z);
+	ImGui::Text("state: %s", state_string(PlayerStateType(state_.get_current_state())));
+	ImGui::Text("motion: %d", (int)motion_);
     int motion = motion_;
-    ImGui::SliderInt("motion",&motion, 0, 255);
+    ImGui::SliderInt("motion", &motion, 0, 255);
     motion_ = motion;
-    ImGui::InputFloat("timescale", &world_->timescale(), 0.1f);
+    ImGui::InputFloat(ToUTF8("タイムスケール").c_str(), &world_->timescale(), 0.1f);
 	ImGui::End();
 
 	ImGui::Begin("App Window");
 	const ScreenData& screen = Screen::get_instance().get_current_data();
 	ImGui::Text("fps %d", (int)std::round(screen.refresh_rate / delta_time));
 	ImGui::Text("width %d height %d", screen.width_px, screen.height_px);
-	std::string input_type = "input ";
-	if (input_.is_pad()) input_type += "gamepad";
-	else input_type += "keyboard + mouse";
-	ImGui::Text("%s", input_type.c_str());
+    if (input_.is_pad()) ImGui::Text(ToUTF8("入力タイプ: ゲームパッド").c_str());
+    else ImGui::Text(ToUTF8("入力タイプ: キーボード + マウス").c_str());
 
     Setting& setting = Setting::get_instance();
     std::string ssao = "ssao: ";
@@ -194,12 +192,6 @@ void Player::update(float delta_time) {
     std::string vibration = "vibration: ";
     vibration += setting.is_vibration() ? "on" : "off";
     if (ImGui::Button(vibration.c_str())) setting.enable_vibration() = !setting.enable_vibration();
-
-    static GSvector3 position;
-    static GSvector3 rotate;
-    ImGui::InputFloat3("EffectPosition", position);
-    ImGui::InputFloat3("EffectRotation", rotate);
-    if (ImGui::Button("Play Effect")) play_effect(Assets::to_effect_id("PlayerSlash"), position, rotate, GSvector3{ 0.6, 0.6, 0.6});
 
 	ImGui::End();
 #endif

@@ -1,30 +1,30 @@
-#include "SendMessageTimelineEditor.h"
+#include "TypeWriterTimelineEditor.h"
 #include "Engine/Utils/MyString.h"
 
 // 参照返しのエラー回避用
 static float EMPTY_TIME{ 0.0f };
 
-SendMessageTimelineEditor::SendMessageTimelineEditor(SendMessageTimelineParameter& parameter) :
+TypeWriterTimelineEditor::TypeWriterTimelineEditor(TypeWriterTimelineParameter& parameter) :
     parameter_{ parameter } {
 
 }
 
-SendMessageTimelineEditor::~SendMessageTimelineEditor() {
+TypeWriterTimelineEditor::~TypeWriterTimelineEditor() {
     clear();
 }
 
-void SendMessageTimelineEditor::clear() {
+void TypeWriterTimelineEditor::clear() {
     if (data_ != nullptr) data_->clear();
     delete data_;
     data_ = nullptr;
     edit_keyframe_index_ = 0;
 }
 
-void SendMessageTimelineEditor::update_select_keyframe() {
+void TypeWriterTimelineEditor::update_select_keyframe() {
     if (data_ == nullptr) return;
-    vector<SendMessageTimelineKeyFrame*>& timeline = data_->get();
+    vector<TypeWriterTimelineKeyFrame*>& timeline = data_->get();
     if (timeline.empty()) return;
-    SendMessageTimelineKeyFrame* key_frame = timeline[edit_keyframe_index_];
+    TypeWriterTimelineKeyFrame* key_frame = timeline[edit_keyframe_index_];
     if (key_frame == nullptr) return;
 
     // 時間を編集
@@ -36,63 +36,77 @@ void SendMessageTimelineEditor::update_select_keyframe() {
     }
     ImGui::PopItemWidth();
 
-    // ターゲットを編集
-    ImGui::PushItemWidth(200);
-    ImGui::InputText(ToUTF8("送信先のアクター名").c_str(), &key_frame->target);
-    ImGui::PopItemWidth();
+    for (int i = 0; i < key_frame->text.size(); i++)
+    {
+        ImGui::PushID(i);
 
-    // メッセージを編集
-    ImGui::PushItemWidth(200);
-    ImGui::InputText(ToUTF8("送信するメッセージ").c_str(), &key_frame->message);
-    ImGui::PopItemWidth();
+        char buf[256];
+        std::snprintf(buf, sizeof(buf), "%s", key_frame->text[i].c_str());
+
+        if (ImGui::InputText("text##1", buf, sizeof(buf))) {
+            key_frame->text[i] = buf;
+        }
+
+        ImGui::SameLine();
+        if (ImGui::Button(ToUTF8("この行を削除").c_str())) {
+            key_frame->text.erase(key_frame->text.begin() + i);
+            ImGui::PopID();
+            break;
+        }
+
+        ImGui::PopID();
+    }
+
+    if (ImGui::Button(ToUTF8("テキストを追加").c_str())) {
+        key_frame->text.push_back("");
+    }
 
     // キーフレームを削除
     if (ImGui::Button(ToUTF8("選択中のキーフレームを削除").c_str())) remove_keyframe(edit_keyframe_index_);
 }
 
-std::string SendMessageTimelineEditor::name() const {
+std::string TypeWriterTimelineEditor::name() const {
     return parameter_.name();
 }
 
-bool SendMessageTimelineEditor::is_empty() const {
+bool TypeWriterTimelineEditor::is_empty() const {
     if (data_ == nullptr) return true;
     return data_->get().empty();
 }
 
-unsigned int SendMessageTimelineEditor::count_keyframe() const {
+unsigned int TypeWriterTimelineEditor::count_keyframe() const {
     if (data_ == nullptr) return 0;
     return data_->get().size();
 }
 
-float& SendMessageTimelineEditor::get_keyframe_time(unsigned int index)
-{
+float& TypeWriterTimelineEditor::get_keyframe_time(unsigned int index) {
     if (data_ == nullptr) return EMPTY_TIME;
-    std::vector<SendMessageTimelineKeyFrame*>& data = data_->get();
+    std::vector<TypeWriterTimelineKeyFrame*>& data = data_->get();
     if (data.empty() || index >= data.size()) return EMPTY_TIME;
     return data[index]->time;
 }
 
-void SendMessageTimelineEditor::sort_timeline() {
+void TypeWriterTimelineEditor::sort_timeline() {
     if (data_ == nullptr) return;
-    vector<SendMessageTimelineKeyFrame*>& timeline = data_->get();
+    vector<TypeWriterTimelineKeyFrame*>& timeline = data_->get();
     if (timeline.empty()) return;
 
-    sort(timeline.begin(), timeline.end(), [](const SendMessageTimelineKeyFrame* a, const SendMessageTimelineKeyFrame* b) {
+    sort(timeline.begin(), timeline.end(), [](const TypeWriterTimelineKeyFrame* a, const TypeWriterTimelineKeyFrame* b) {
         return a->time < b->time;  // 昇順にソート
     });
 }
 
-void SendMessageTimelineEditor::add_keyframe(float time) {
+void TypeWriterTimelineEditor::add_keyframe(float time) {
     // キーフレームを作成
-    SendMessageTimelineKeyFrame* keyframe = new SendMessageTimelineKeyFrame{ time, "", "" };
+    TypeWriterTimelineKeyFrame* keyframe = new TypeWriterTimelineKeyFrame{ time, std::vector<std::string>{} };
 
     // データが無ければ作成
     if (data_ == nullptr) {
-        std::vector<SendMessageTimelineKeyFrame*> timeline;
-        data_ = new SendMessageTimelineParameter::SendMessageTimelineData(timeline);
+        std::vector<TypeWriterTimelineKeyFrame*> timeline;
+        data_ = new TypeWriterTimelineParameter::TypeWriterTimelineData(timeline);
     }
 
-    vector<SendMessageTimelineKeyFrame*>& timeline = data_->get();
+    vector<TypeWriterTimelineKeyFrame*>& timeline = data_->get();
     if (timeline.empty()) {
         timeline.push_back(keyframe);
         edit_keyframe_index_ = 0;
@@ -104,17 +118,17 @@ void SendMessageTimelineEditor::add_keyframe(float time) {
         timeline.end(),
         keyframe,
         [](
-            const SendMessageTimelineKeyFrame* lhs,
-            const SendMessageTimelineKeyFrame* rhs) {
+            const TypeWriterTimelineKeyFrame* lhs,
+            const TypeWriterTimelineKeyFrame* rhs) {
                 return lhs->time < rhs->time;
         }
     );
     timeline.insert(it, keyframe);
 }
 
-void SendMessageTimelineEditor::remove_keyframe(unsigned int index) {
+void TypeWriterTimelineEditor::remove_keyframe(unsigned int index) {
     if (data_ == nullptr) return;
-    vector<SendMessageTimelineKeyFrame*>& timeline = data_->get();
+    vector<TypeWriterTimelineKeyFrame*>& timeline = data_->get();
 
     if (index < timeline.size()) {
         delete timeline[index];
@@ -129,7 +143,7 @@ void SendMessageTimelineEditor::remove_keyframe(unsigned int index) {
     }
 }
 
-ordered_json SendMessageTimelineEditor::save_data() {
+ordered_json TypeWriterTimelineEditor::save_data() {
     ordered_json data;
 
     if (data_ == nullptr || data_->get().empty()) return data;
@@ -137,19 +151,18 @@ ordered_json SendMessageTimelineEditor::save_data() {
     for (const auto* kf : data_->get()) {
         ordered_json item;
         item["time"] = kf->time;
-        item["target"] = kf->target;
-        item["message"] = kf->message;
+        item["text"] = kf->text;
         data["timeline"].push_back(item);
     }
     return data;
 }
 
-void SendMessageTimelineEditor::load(const json& j) {
+void TypeWriterTimelineEditor::load(const json& j) {
     clear();
     data_ = parameter_.create_data(j);
 }
 
-void SendMessageTimelineEditor::play() {
+void TypeWriterTimelineEditor::play() {
     if (data_ == nullptr) return;
     parameter_.play(data_);
 }
