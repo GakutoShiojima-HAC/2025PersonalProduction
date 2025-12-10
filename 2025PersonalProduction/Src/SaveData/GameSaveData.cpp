@@ -90,7 +90,7 @@ int GameSaveData::calc_final_score(int action_score, float time, int respawn_cou
     // 復活回数分基礎を減らす
     final_score -= final_score * respawn_count * 0.1f;
     // 時間を引く
-    final_score -= time * 0.5f;
+    final_score -= time * 1.5f;
 
     return CLAMP((int)final_score, 0, INT_MAX);
 }
