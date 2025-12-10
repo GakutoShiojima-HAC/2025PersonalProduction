@@ -2,6 +2,8 @@
 #include <imgui/imgui.h>
 #include "Engine/Core/World/IWorld.h"
 #include "Engine/Utils/MyString.h"
+#include "Engine/Core/Actor/Pawn/Character/Character.h"
+#include "State/Player/PlayerState.h"
 
 // カメラの移動速度
 const float MOVE_SPEED{ 0.025f };
@@ -98,12 +100,22 @@ bool EditorCamera::is_play_timeline() const {
 
 void EditorCamera::toggle_camera() {
 	is_active_ = !is_active_;
+    // カメラを有効にする
 	if (is_active_) {
 		prev_ = world_->get_camera();
 		world_->camera_transition(this, 0.0f);
+
+        for (auto& player : world_->find_character_with_tag(ActorTag::Player)) {
+            player->change_state((GSuint)PlayerStateType::Idle);
+        }
 	}
+    // カメラを無効にする
 	else {
 		world_->camera_transition(prev_, 0.0f);
 		prev_ = nullptr;
+
+        for (auto& player : world_->find_character_with_tag(ActorTag::Player)) {
+            player->change_state((GSuint)PlayerStateType::Move);
+        }
 	}
 }
