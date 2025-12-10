@@ -166,6 +166,12 @@ public:
     /// <returns>受けるなら真を返却</returns>
     bool is_enable_timescale() const;
 
+    /// <summary>
+    /// タイムスケールを有効にするかどうか
+    /// </summary>
+    /// <returns>参照</returns>
+    bool& enable_timescale();
+
 protected:
 	/// <summary>
 	/// 地形との衝突判定
