@@ -227,10 +227,34 @@ public:
     virtual void set_mask_color(const GScolor& color) = 0;
 
     /// <summary>
-    /// 回避演出用ポストエフェクトを描画するかどうか
+    /// マスクエフェクトを描画しているかどうか
     /// </summary>
-    /// <returns>参照</returns>
-    virtual bool& enable_avoid_effect() = 0;
+    /// <returns>していたら真を返却</returns>
+    virtual bool is_draw_mask() const = 0;
+
+    /// <summary>
+    /// 回避エフェクトの開始
+    /// </summary>
+    /// <param name="time">= 時間</param>
+    /// <param name="time_scale">= = タイムスケール (指定なしで変えない)</param>
+    virtual void start_avoid_effect(float time, float time_scale = -1.0f) = 0;
+
+    /// <summary>
+    /// 回避エフェクトの一時停止
+    /// </summary>
+    /// <param name="time">= 再開までの時間 (指定なしで自動で再開しない)</param>
+    virtual void pause_avoid_effect(float time = -1.0f) = 0;
+
+    /// <summary>
+    /// 回避エフェクトの再開
+    /// </summary>
+    virtual void resume_avoid_effect() = 0;
+
+    /// <summary>
+    /// 回避エフェクト中かどうか
+    /// </summary>
+    /// <returns>回避エフェクト中なら真を返却</returns>
+    virtual bool is_avoid_effect() const = 0;
 
     /// <summary>
     /// シーン描画をどれだけぼかすかどうかを設定(0.0~1.0)

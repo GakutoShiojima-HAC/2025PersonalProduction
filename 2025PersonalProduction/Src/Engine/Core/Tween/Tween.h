@@ -39,6 +39,9 @@ public:
     // 指定された名前のTweenをキャンセル（削除）する
     static void cancel(const std::string& name);
 
+    // 指定された名前のTweenのタイムスケールを変更する
+    static void change_timescale(const std::string& name, bool enabled);
+
 private:
     // インスタンス生成禁止
     Tween() = delete;

@@ -58,6 +58,6 @@ void PlayerAvoidState::update(float delta_time) {
 }
 
 void PlayerAvoidState::exit() {
-    owner_.enable_timescale() = false;  // 戻す
+
 }
 
