@@ -154,6 +154,9 @@ void GameScene::respawn_player() {
     PlayerRespawner& respawner = world_.player_respawner();
     actor_generator_.generate("Player", respawner.respawn_position(), respawner.respawn_rotate());
     respawner.respawn_countup();    // カウントアップ
+
+    // 入力可能状態を初期化
+    input_.reset_disable_action();
 }
 
 void GameScene::set_next_stage(int id) {
@@ -333,6 +336,9 @@ void GameScene::game_end() {
     Tween::clear();
     // 全てのエフェクトを停止する
     gsStopAllEffects();
+
+    // 入力可能状態を初期化
+    input_.reset_disable_action();
 
     // シェーダー上書きを終了
     GameShader::get_instance().end();

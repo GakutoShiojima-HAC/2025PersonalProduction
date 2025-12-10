@@ -179,3 +179,7 @@ bool Input::action(InputAction action) const {
 bool& Input::disable_action(InputAction action) {
     return action_disable_map_[action];
 }
+
+void Input::reset_disable_action() {
+    action_disable_map_.clear();
+}

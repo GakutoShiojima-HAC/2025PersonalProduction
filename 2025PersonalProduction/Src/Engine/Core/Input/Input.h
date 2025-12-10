@@ -133,6 +133,11 @@ public:
     /// <returns>参照</returns>
     bool& disable_action(InputAction action);
 
+    /// <summary>
+    /// アクションの無効化をリセット
+    /// </summary>
+    void reset_disable_action();
+
 private:
     // PAD接続中かどうか
     bool is_pad_{ false };
