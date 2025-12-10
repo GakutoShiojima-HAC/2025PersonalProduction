@@ -593,7 +593,7 @@ void Player::on_avoid() {
     SE::play_random((GSuint)SEID::Avoid, 0.25f);
 
     // 回避演出に入るかどうか(近くに攻撃動作に入っている敵がいるかどうか)
-    if (avoid_effect_timer_ > 0.0f) return;
+    if (world_->enable_avoid_effect()) return;
     std::vector<Pawn*> enemys = world_->find_pawn_with_tag(ActorTag::Enemy);
     if (enemys.empty()) return;
     for (const auto& enemy : enemys) {
@@ -610,7 +610,7 @@ void Player::on_avoid() {
 void Player::on_avoid_attack() {
     look_target();
     // 回避が成功していたら回避成功攻撃とする
-    if (avoid_effect_timer_ > 0.0f) {
+    if (world_->enable_avoid_effect()) {
         change_state((GSuint)PlayerStateType::Skill, Motion::AvoidSuccessAttack, false);
         world_->play_timeline("AvoidSuccessAttack");
     }
@@ -666,7 +666,7 @@ GSuint Player::get_current_motion() const {
 }
 
 void Player::avoid_effect_start() {
-    if (avoid_effect_timer_ > 0.0f) return;
+    if (world_->enable_avoid_effect()) return;
 
     invincible_timer_ = INVINCIBLE_TIME;
 
@@ -689,7 +689,7 @@ void Player::avoid_effect_start() {
 
 void Player::update_avoid_effect(float delta_time) {
     // 回避演出タイマーの更新
-    if (avoid_effect_timer_ > 0.0f) {
+    if (world_->enable_avoid_effect()) {
         avoid_effect_timer_ -= delta_time / cFPS;
         if (avoid_effect_timer_ <= 0.0f) {
             SE::play((GSuint)SEID::AvoidEffectEnd);
