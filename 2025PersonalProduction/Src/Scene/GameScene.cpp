@@ -19,7 +19,6 @@
 
 // 一時的 ローダーやマネージャーを作ったら不要
 #include "Actor/Enemy/DummyEnemy.h"	// アクターローダーを作るべし
-#include "Actor/ItemActor/ItemActor.h"  //アクターローダーを作るべし
 
 #ifdef _DEBUG
 #include "Camera/EditorCamera.h"
@@ -282,12 +281,8 @@ void GameScene::game_start() {
     // ダミーの追加
     // TODO 生成を外部から行う
 #ifdef _DEBUG
-    world_.add_character(new DummyEnemy{ &world_, GSvector3{ 0.0f, 0.0f, 2.0f } });
+    //world_.add_character(new DummyEnemy{ &world_, GSvector3{ 0.0f, 0.0f, 2.0f } });
 #endif
-
-    // アイテムの生成
-    // TODO 生成を外部から行う
-    world_.add_actor(new ItemActor{ &world_, GSvector3{ 0.0f, 0.0f, 3.0f }, ItemData::Data{ ItemType::Weapon, 1 } });
 
     /*
      *  END
