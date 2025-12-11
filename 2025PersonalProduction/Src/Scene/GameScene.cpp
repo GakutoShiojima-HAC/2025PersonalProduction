@@ -261,13 +261,13 @@ void GameScene::game_start() {
     // フィールドの追加
     world_.add_field(new Field{ (GSuint)OctreeID::Mesh, (GSuint)OctreeID::Collider, (GSuint)TextureID::Skybox });
     // ライトの追加
-    world_.add_light(new Light{ config.light_angle });
+    world_.add_light(new Light{ config.light_angle, GScolor{ 0.05f, 0.05f, 0.05f, 1.0f } });
 
     // アタックコライダーのプールを追加
     world_.add_attack_collider_pool(new AttackColliderPool{ &world_ });
 
     // デフォルトカメラの追加
-    //world_.add_camera(new FixedCamera{ &world_, GSvector3{ 0.0f, 3.0f, -10.0f }, GSvector3{ 0.0f, 2.0f, 0.0f } });    // 11/14 いる？
+    world_.add_camera(new FixedCamera{ &world_, GSvector3{ 0.0f, 3.0f, -10.0f }, GSvector3{ 0.0f, 2.0f, 0.0f } });
     // タイムライン用カメラの追加
     world_.add_camera(new TimelineCamera{ &world_ });
     // エディタカメラの追加
@@ -318,6 +318,7 @@ void GameScene::game_start() {
 
     // GUIの描画を有効化
     world_.enable_draw_gui() = true;
+    world_.enable_draw_game_info_gui() = true;
     // タイムスケールを初期化
     world_.timescale() = 1.0f;
     // 同期
