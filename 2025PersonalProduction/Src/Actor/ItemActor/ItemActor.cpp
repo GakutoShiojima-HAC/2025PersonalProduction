@@ -26,7 +26,7 @@ ItemActor::ItemActor(IWorld* world, const GSvector3& position, ItemData::Data da
 }
 
 ItemActor::~ItemActor() {
-    gsStopEffect(effect_handle_);
+
 }
 
 void ItemActor::update(float delta_time) {
@@ -35,18 +35,13 @@ void ItemActor::update(float delta_time) {
         die();
         return;
     }
-
-    GSvector3 effect_position = transform_.position();
-    gsSetEffectPosition(effect_handle_, &effect_position);
-
-    //update_mesh(delta_time);
 }
 
 void ItemActor::draw() const {
-    //glPushMatrix();
-    //glMultMatrixf(transform_.localToWorldMatrix());
-    //gsDrawMesh();
-    //glPopMatrix();
+    glPushMatrix();
+    glMultMatrixf(transform_.localToWorldMatrix());
+    gsDrawMesh((GSuint)MeshID::Item);
+    glPopMatrix();
 }
 
 void ItemActor::die() {
@@ -73,9 +68,5 @@ void ItemActor::init() {
     tag_ = ActorTag::Item;
     name_ = interact_text_;
     enable_collider_ = false;
-    effect_handle_ = play_effect((GSuint)EffectID::Item, transform_.position(), GSvector3::zero(), GSvector3{ 0.5f, 0.5f, 0.5f });
 }
 
-void ItemActor::update_mesh(float delta_time) {
-    animation_timer_ += delta_time;
-}
