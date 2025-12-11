@@ -10,6 +10,7 @@
 #include "Actor/Gimmick/Barrier/BarrierGenerator.h"
 #include "Actor/Enemy/SimpleEnemy/SimpleEnemyGenerator.h"
 #include "Actor/Enemy/Lich/LichGenerator.h"
+#include "Tutorial/Enemy/TutorialFacilitatorGenerator.h"
 
 namespace fs = std::experimental::filesystem;
 
@@ -50,6 +51,7 @@ void ActorGenerator::load(World* world) {
         else if (key == BarrierGeneratorKey) add_generator(name, new BarrierGenerator(j, world));
         else if (key == SimpleEnemyGeneratorKey) add_generator(name, new SimpleEnemyGenerator(j, world));
         else if (key == LichGeneratorKey) add_generator(name, new LichGenerator{ j, world });
+        else if (key == TutorialFacilitatorGeneratorKey) add_generator(name, new TutorialFacilitatorGenerator{ j, world });
     }
 }
 
