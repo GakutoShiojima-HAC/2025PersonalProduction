@@ -124,7 +124,6 @@ void Player::update(float delta_time) {
 	update_state(delta_time);
 	update_gravity(delta_time);
 	update_mesh(delta_time);
-    update_avoid_effect(delta_time);
 
 #ifdef _DEBUG
 	auto state_string = [](PlayerStateType s) {
@@ -224,6 +223,8 @@ void Player::draw_gui() const {
     }
 #endif
 
+    if (state_.get_current_state() == (GSuint)PlayerStateType::Idle) return;
+
     // インタラクトUIの描画
     InteractUI::draw(interact_actors_, interact_target_index_);
 
@@ -242,7 +243,7 @@ void Player::take_damage(Actor& other, const int damage) {
 		(GSuint)PlayerStateType::Dead,
 		(GSuint)PlayerStateType::Skill	// スキル中も無敵
 	)) return;
-    if (invincible_timer() > 0.0f || avoid_effect_timer_ > 0.0f) return;
+    if (invincible_timer() > 0.0f || world_->is_avoid_effect()) return;
 
 	hp_ = CLAMP(hp_ - damage, 0, INT_MAX);
 	invincible_timer_ = INVINCIBLE_TIME;
@@ -558,14 +559,9 @@ void Player::on_avoid() {
 		motion = Motion::AvoidF;
 	}
 
-    // 負傷中なら
-    const bool is_hurt = state_.get_current_state() == (GSuint)PlayerStateType::Hurt && avoid_effect_timer_ <= 0.0f;
-    if (is_hurt) {
-        // タイムスケールを少し遅く
-        world_->set_timescale(0.25f);
-        world_->set_timescale(1.0f, mesh_.motion_end_time());
-        enable_timescale_ = true;   // 自分も受ける
-
+    const bool is_avoid_effect = world_->is_avoid_effect();
+    const bool is_normal_hurt = state_.get_current_state() == (GSuint)PlayerStateType::Hurt && !is_avoid_effect;
+    if (is_normal_hurt) {
         // ボーナス
         world_->action_score().add_score(100, mesh_.motion_end_time() * 5.0f, 0.5f);
         world_->action_score().set_action_text("緊急回避！");
@@ -579,7 +575,7 @@ void Player::on_avoid() {
 	// 移動
 	float move_time = mesh_.motion_end_time();
 	Tween::vector3(avoid_velocity, GSvector3::zero(), move_time, [&](GSvector3 pos) {
-		non_penetrating_move(pos); }).ease(EaseType::EaseOutCubic).name("PlayerAvoid").enable_timescale(is_hurt);
+		non_penetrating_move(pos); }).ease(EaseType::EaseOutCubic).name("PlayerAvoid");
 	// 強制回転
 	transform_.lookAt(transform_.position() + (is_lockon ? forward : avoid_velocity));
 
@@ -593,7 +589,7 @@ void Player::on_avoid() {
     SE::play_random((GSuint)SEID::Avoid, 0.25f);
 
     // 回避演出に入るかどうか(近くに攻撃動作に入っている敵がいるかどうか)
-    if (avoid_effect_timer_ > 0.0f) return;
+    if (is_avoid_effect) return;
     std::vector<Pawn*> enemys = world_->find_pawn_with_tag(ActorTag::Enemy);
     if (enemys.empty()) return;
     for (const auto& enemy : enemys) {
@@ -610,7 +606,7 @@ void Player::on_avoid() {
 void Player::on_avoid_attack() {
     look_target();
     // 回避が成功していたら回避成功攻撃とする
-    if (avoid_effect_timer_ > 0.0f) {
+    if (world_->is_avoid_effect()) {
         change_state((GSuint)PlayerStateType::Skill, Motion::AvoidSuccessAttack, false);
         world_->play_timeline("AvoidSuccessAttack");
     }
@@ -639,9 +635,6 @@ float Player::get_enter_next_attack_max_time() const {
     return attack_param_[attack_count_].next_end;
 }
 
-bool& Player::enable_timescale() {
-    return enable_timescale_;
-}
 
 void Player::set_draw_weapon(bool enabled) {
     // 描画が切り替わったら
@@ -666,40 +659,19 @@ GSuint Player::get_current_motion() const {
 }
 
 void Player::avoid_effect_start() {
-    if (avoid_effect_timer_ > 0.0f) return;
-
     invincible_timer_ = INVINCIBLE_TIME;
 
-    // 回避演出のマスクを適用
-    world_->enable_avoid_effect() = true;
-    world_->set_mask_color(AVOID_EFFECT_COLOR);
-    avoid_effect_timer_ = AVOID_EFFECT_TIME;
+    // 回避演出開始
+    world_->start_avoid_effect(3.0f, 0.25f);
     SE::play((GSuint)SEID::AvoidEffectStart);
-    // タイムスケールを変更
-    world_->set_timescale(0.25f);
-    enable_timescale_ = false;
     gsSetEffectSpeed(avoid_effect_handle_, 1.0f / 0.25f); // タイムスケールを受けないようにする
+    enable_timescale_ = false;
 
     // ボーナス
     world_->action_score().add_score(250, mesh_.motion_end_time() * 5.0f, 2.0f);
     world_->action_score().set_action_text("回避成功！");
     // コントローラーを振動させる
     if (input_.is_pad()) Vibration::get_instance().start(0.25f, 1.0f);
-}
-
-void Player::update_avoid_effect(float delta_time) {
-    // 回避演出タイマーの更新
-    if (avoid_effect_timer_ > 0.0f) {
-        avoid_effect_timer_ -= delta_time / cFPS;
-        if (avoid_effect_timer_ <= 0.0f) {
-            SE::play((GSuint)SEID::AvoidEffectEnd);
-            // スケールを変更
-            world_->set_timescale(1.0f, 0.5f);
-            Tween::color(AVOID_EFFECT_COLOR, GScolor{ 1.0f, 1.0f, 1.0f, 1.0f }, 0.5f * cFPS, [=](GScolor color) {
-                world_->set_mask_color(color);
-                }).on_complete([=] { world_->enable_avoid_effect() = false; });
-        }
-    }
 }
 
 void Player::update_interact() {

@@ -11,7 +11,7 @@ SceneGameResultState::SceneGameResultState(GameScene& owner, World* world) :
     world_ = world;
     // ƒ{ƒ^ƒ“‚Ì’Ç‰Á
     {
-        TextFunctionButton* button = new TextFunctionButton{ "–ß‚é", GSvector2{ 0.0f, 860.0f }, 64, Anchor::TopCenter, Anchor::Center };
+        TextFunctionButton* button = new TextFunctionButton{ "’¬‚Ö", GSvector2{ 0.0f, 860.0f }, 64, Anchor::TopCenter, Anchor::Center };
         button->on_input([=] { end_game(); });
         button_one_.add(button);
     }

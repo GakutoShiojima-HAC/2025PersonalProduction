@@ -6,6 +6,7 @@
 #define INPUT_H_
 
 #include <gslib.h>
+#include <unordered_map>
 
 enum class InputAction {
     APP_Pause,          // ポーズ画面
@@ -17,6 +18,9 @@ enum class InputAction {
     MENU_DOWN,          // 下
     MENU_LEFT,          // 左
     MENU_RIGHT,         // 右
+
+    GAME_Move,          // 移動
+    GAME_Camera,        // カメラ
 
     GAME_Attack,        // 攻撃
     GAME_Jump,          // ジャンプ
@@ -122,6 +126,18 @@ public:
     /// <returns>行っているなら真を返却</returns>
     bool action(InputAction action) const;
 
+    /// <summary>
+    /// アクションを無効にするかどうか
+    /// </summary>
+    /// <param name="action">アクション</param>
+    /// <returns>参照</returns>
+    bool& disable_action(InputAction action);
+
+    /// <summary>
+    /// アクションの無効化をリセット
+    /// </summary>
+    void reset_disable_action();
+
 private:
     // PAD接続中かどうか
     bool is_pad_{ false };
@@ -139,6 +155,9 @@ private:
     GSvector2 cursor_position_;
     // PAD状態のカーソル移動速度
     float pad_cursor_speed_{ 1.0f };
+
+    // アクションの無効マップ
+    std::unordered_map<InputAction, bool> action_disable_map_;
 
 public:
     // コピー禁止

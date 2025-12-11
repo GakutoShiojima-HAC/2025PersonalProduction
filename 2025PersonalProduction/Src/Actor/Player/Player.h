@@ -246,12 +246,6 @@ public:
     float get_enter_next_attack_max_time() const;
 
     /// <summary>
-    /// タイムスケールを受けるかどうか
-    /// </summary>
-    /// <returns>参照</returns>
-    bool& enable_timescale();
-
-    /// <summary>
     /// 武器を描画するかどうかを設定
     /// </summary>
     /// <param name="enabled">= 描画するなら真</param>
@@ -270,11 +264,6 @@ private:
     /// 回避演出スタート
     /// </summary>
     void avoid_effect_start();
-
-    /// <summary>
-    /// 回避演出の更新
-    /// </summary>
-    void update_avoid_effect(float delta_time);
 
     /// <summary>
     /// インタラクトを更新
@@ -331,9 +320,7 @@ private:
     // 通常攻撃のパラメータ
     std::vector<PlayerAttackParam> attack_param_;
 
-	// 回避演出のタイマー
-	float avoid_effect_timer_{ 0.0f };
-    // 回避演出ハンドル
+    // 回避入力時のエフェクトハンドル
     int avoid_effect_handle_{ 0 };
 };
 

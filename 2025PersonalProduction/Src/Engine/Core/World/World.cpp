@@ -9,6 +9,10 @@
 #include "Engine/Core/Tween/Tween.h"
 #include "Engine/Sound/SE.h"
 
+World::World() {
+    avoid_effect_ = AvoidEffectManager{ this };
+}
+
 World::~World() {
 	clear();
 }
@@ -32,6 +36,7 @@ void World::update(float delta_time) {
 	pawn_.remove();
 	actor_.remove();
 
+    avoid_effect_.update(delta_time);
     action_score_.update(delta_time);
     type_writer_label_.update(delta_time);
 
@@ -78,9 +83,11 @@ void World::draw() const {
         game_post_effect_.begin_gui(current);
 
         actor_.draw_gui();
-        action_score_.draw();
-        game_timer_.draw();
-        type_writer_label_.draw();
+        if (enable_draw_game_info_gui_) {
+            action_score_.draw();
+            game_timer_.draw();
+            type_writer_label_.draw();
+        }
 
         game_post_effect_.end_gui();
     }
@@ -92,6 +99,7 @@ void World::draw() const {
 }
 
 void World::clear() {
+    avoid_effect_.clear();
     static_effect_.clear();
 	delete field_;
 	field_ = nullptr;
@@ -151,6 +159,10 @@ void World::set_type_writer(const std::vector<std::string>& text, TextCode code)
     type_writer_label_.set(text, code);
 }
 
+bool& World::enable_mask_avoid_effect() {
+    return game_post_effect_.enable_draw_avoid_effect();
+}
+
 void World::add_actor(Actor* actor) {
 	actor_.add(actor);
 }
@@ -188,6 +200,10 @@ void World::load_static_effect(const std::string& json_file) {
 
 bool& World::enable_draw_gui() {
     return enable_draw_gui_;
+}
+
+bool& World::enable_draw_game_info_gui() {
+    return enable_draw_game_info_gui_;
 }
 
 Field* World::get_field() {
@@ -296,8 +312,24 @@ void World::set_mask_color(const GScolor& color) {
     game_post_effect_.set_mask_color(color);
 }
 
-bool& World::enable_avoid_effect() {
-    return game_post_effect_.enable_draw_avoid_effect();
+bool World::is_draw_mask() const {
+    return game_post_effect_.is_draw_mask();
+}
+
+void World::start_avoid_effect(float time, float time_scale) {
+    avoid_effect_.start(time, time_scale);
+}
+
+void World::pause_avoid_effect(float time) {
+    avoid_effect_.pause(time);
+}
+
+void World::resume_avoid_effect() {
+    avoid_effect_.resume();
+}
+
+bool World::is_avoid_effect() const {
+    return avoid_effect_.is_effect();
 }
 
 float& World::set_blur_effect_power() {

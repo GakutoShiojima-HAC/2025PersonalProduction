@@ -5,6 +5,9 @@
 // PAD接続中判定に使用する識別番号
 const int USE_PAD_NUM{ 0 };
 
+// 無効
+const GSvector2 DISABLE{ 0.0f, 0.0f };
+
 Input& Input::get_instance() {
 	// static変数のインスタンスは１つ
 	// インスタンス化も１回のみ
@@ -52,10 +55,16 @@ void Input::update(float delta_time) {
 }
 
 const GSvector2& Input::left_axis() {
+    auto it = action_disable_map_.find(InputAction::GAME_Move);
+    if (it != action_disable_map_.end() && it->second) return DISABLE;
+
 	return left_axis_;
 }
 
 const GSvector2& Input::right_axis() {
+    auto it = action_disable_map_.find(InputAction::GAME_Camera);
+    if (it != action_disable_map_.end() && it->second) return DISABLE;
+
 	return right_axis_;
 }
 
@@ -107,6 +116,10 @@ void Input::draw_cursor() const {
 }
 
 bool Input::action(InputAction action) const {
+    // 無効マップに登録されていて、無効状態なら
+    auto it = action_disable_map_.find(action);
+    if (it != action_disable_map_.end() && it->second) return false;
+
 	switch (action) {
 	case InputAction::APP_Pause:
 		return is_pad_ ? gsXBoxPadButtonTrigger(USE_PAD_NUM, GS_XBOX_PAD_START) : gsGetKeyTrigger(GKEY_TAB);
@@ -161,4 +174,12 @@ bool Input::action(InputAction action) const {
 	}
 
 	return false;
+}
+
+bool& Input::disable_action(InputAction action) {
+    return action_disable_map_[action];
+}
+
+void Input::reset_disable_action() {
+    action_disable_map_.clear();
 }

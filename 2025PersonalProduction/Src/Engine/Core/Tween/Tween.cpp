@@ -96,3 +96,9 @@ void Tween::cancel(const std::string& name) {
         if (unit->name() == name) unit->cancel();
     }
 }
+
+void Tween::change_timescale(const std::string& name, bool enabled) {
+    for (const auto& unit : units_) {
+        if (unit->name() == name) unit->enable_timescale(enabled);
+    }
+}

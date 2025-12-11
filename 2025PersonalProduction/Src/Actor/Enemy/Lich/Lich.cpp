@@ -51,7 +51,7 @@ void Lich::take_damage(Actor& other, const int damage) {
     }
     else {
         // 怯む確率
-        const bool falter = world_->enable_avoid_effect() ? true : MyRandom::random_float(0.0f, 1.0f) <= my_info_.falter_rate;
+        const bool falter = world_->is_avoid_effect() ? true : MyRandom::random_float(0.0f, 1.0f) <= my_info_.falter_rate;
         if (target_ == nullptr || falter) {
             // 一度Idleにしてモーションをリセット
             mesh_.change_motion(Motion::Idle, true);

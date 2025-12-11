@@ -26,12 +26,13 @@
 #include "Actor/Player/PlayerRespawner.h"
 #include "Engine/Core/Field/StaticEffect.h"
 #include "Engine/Graphics/TypeWriter/TypeWriterLabel.h"
+#include "Engine/Core/World/AvoidEffectManager.h"
 
 class AttackColliderPool;
 
 class World : public IWorld {
 public:
-	World() = default;
+	World();
 
 	virtual ~World();
 
@@ -114,10 +115,18 @@ public:
     /// </summary>
     void generate_static_effect();
 
+    /// <summary>
+    /// 回避エフェクトを有効化するかどうか
+    /// </summary>
+    /// <returns>参照</returns>
+    bool& enable_mask_avoid_effect();
+
 public:
     void add_actor(Actor* actor) override;
 
     bool& enable_draw_gui() override;
+
+    bool& enable_draw_game_info_gui() override;
 
 	Field* get_field() override;
 
@@ -171,7 +180,15 @@ public:
 
     void set_mask_color(const GScolor& color) override;
 
-	bool& enable_avoid_effect() override;
+    bool is_draw_mask() const override;
+
+    void start_avoid_effect(float time, float time_scale = -1.0f) override;
+
+    void pause_avoid_effect(float time = -1.0f) override;
+
+    void resume_avoid_effect() override;
+
+    bool is_avoid_effect() const override;
 
     float& set_blur_effect_power() override;
 
@@ -194,6 +211,7 @@ public:
 protected:
     // GUIを描画するかどうか
     bool enable_draw_gui_{ true };
+    bool enable_draw_game_info_gui_{ true };
 
 	// フィールド
 	Field* field_{ nullptr };
@@ -231,7 +249,8 @@ protected:
     StaticEffect static_effect_;
     // 文字送りシステム
     TypeWriterLabel type_writer_label_;
-
+    // 回避エフェクトマネージャー
+    AvoidEffectManager avoid_effect_;
 };
 
 #endif
