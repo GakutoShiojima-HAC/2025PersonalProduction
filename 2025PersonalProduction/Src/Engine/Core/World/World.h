@@ -176,7 +176,7 @@ public:
 
     bool is_playing_timeline() const override;
 
-	void generate_attack_collider(float radius, const GSvector3& center, Actor* owner, int damage, const std::string& name, float lifespan = 1.0f, float delay = 0.0f) override;
+	void generate_attack_collider(float radius, const GSvector3& center, Actor* owner, int damage, const std::string& name, float lifespan = 1.0f, float delay = 0.0f, const GSvector3& external_velocity = GSvector3{ 0.0f, 0.0f, 0.0f }) override;
 
     void set_mask_color(const GScolor& color) override;
 

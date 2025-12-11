@@ -3,6 +3,8 @@
 #include "Assets.h"
 #include "Engine/Sound/SE.h"
 
+constexpr float FOOT_OFFSET{ 0.125f };
+
 MyEnemy::MyEnemy(IWorld* world, const GSvector3& position, const GSvector3& rotate, const MyEnemyInfo& info) :
     my_info_{ info },
     navmesh_{ this, world->navmesh() } {
@@ -31,8 +33,10 @@ MyEnemy::MyEnemy(IWorld* world, const GSvector3& position, const GSvector3& rota
 }
 
 void MyEnemy::update(float delta_time) {
+    is_navmesh_update_ = false; // リセット
     update_invincible(delta_time);
     update_state(delta_time);
+    update_external_velocity(delta_time);
     update_gravity(delta_time);
     update_mesh(delta_time);
 }
@@ -64,6 +68,83 @@ bool MyEnemy::is_attack_soon() const {
 
 void MyEnemy::react(Actor& other) {
     if (other.tag() == ActorTag::Enemy) collide_actor(other);
+}
+
+void MyEnemy::collide_field() {
+    // x,z軸の回転を無効にする
+    transform_.rotation(GSquaternion(0.0f, transform_.rotation().y, 0.0f, transform_.rotation().w));
+
+    // 壁との衝突判定（球体との判定)
+    GSvector3 center; // 押し戻し後の球体の中心座標
+    if (world_->get_field()->collide(collider(), &center)) {
+        // 外的移動量よって吹き飛ばされたかどうか
+        bool is_external = std::abs(external_velocity_.x) + std::abs(external_velocity_.z) > 0.001f;
+        // 外的移動量を0にする
+        external_velocity_.x = 0.0f;
+        external_velocity_.z = 0.0f;
+
+        // NavMeshによる移動をしていなければ補正する
+        if (!is_navmesh_update_ || is_external) {
+            // y座標は変更しない
+            center.y = transform_.position().y;
+            // 補正後の座標に変更する
+            transform_.position(center);
+        }
+    }
+
+    // 地面との衝突判定（線分との交差判定)
+    // 地面との交点
+    GSvector3 intersect;
+    // 衝突したフィールド用アクター
+    Actor* field_actor{ nullptr };
+    // 親をリセットしておく
+    transform_.parent(nullptr);
+
+    // 判定座標
+    GSvector3 position_head = transform_.position();
+    GSvector3 position_foot = transform_.position();
+    Line head_line;
+    head_line.start = position_head + collider_.center;
+    head_line.end = position_head + GSvector3{ 0.0f, height_, 0.0f };
+    Line foot_line;
+    foot_line.start = position_foot + collider_.center;
+    foot_line.end = position_foot + GSvector3{ 0.0f, -FOOT_OFFSET, 0.0f };
+
+    // 天井判定
+    if (world_->get_field()->collide(head_line, &intersect, nullptr, &field_actor)) {
+        // TODO intersect分yを下げる
+
+        // 座標を変更する
+        transform_.position(position_head);
+        // 重力を初期化する
+        velocity_.y = 0.0f;
+    }
+
+    // 地面判定
+    if (world_->get_field()->collide(foot_line, &intersect, nullptr, &field_actor)) {
+        // 交差した点からy座標のみ補正する
+        position_foot.y = intersect.y;
+        // 座標を変更する
+        transform_.position(position_foot);
+        // 重力を初期化する
+        velocity_.y = 0.0f;
+        // フィールド用のアクタークラスと衝突したか
+        if (field_actor != nullptr) {
+            // 衝突したフィールド用のアクターを親のトランスフォームクラスとして設定
+            transform_.parent(&field_actor->transform());
+        }
+        // 着地状態の更新
+        on_ground();
+        is_ground_ = true;
+    }
+    else {
+        // 空中状態の更新
+        on_air();
+        is_ground_ = false;
+    }
+
+    // 死亡判定
+    if (!is_dead_state() && transform_.position().y < -100.0f) die();
 }
 
 void MyEnemy::save_current_state() {
@@ -132,6 +213,7 @@ bool MyEnemy::start_move(const GSvector3& to) {
 
 void MyEnemy::update_move(float delta_time) {
     navmesh_.update_move(delta_time, my_info_.move_speed, 3.0f);
+    is_navmesh_update_ = true;
 }
 
 bool MyEnemy::is_move_end() const {

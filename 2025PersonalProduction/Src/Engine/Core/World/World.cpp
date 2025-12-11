@@ -302,10 +302,10 @@ bool World::is_playing_timeline() const {
 	return timeline_.is_playing();
 }
 
-void World::generate_attack_collider(float radius, const GSvector3& center, Actor* owner, int damage, const std::string& name, float lifespan, float delay) {
+void World::generate_attack_collider(float radius, const GSvector3& center, Actor* owner, int damage, const std::string& name, float lifespan, float delay, const GSvector3& external_velocity) {
 	// オブジェクトプールがあるならプール管理する
-	if (attack_collider_pool_ != nullptr) attack_collider_pool_->generate(radius, center, owner, damage, name, lifespan, delay);
-	else add_actor(new AttackCollider{ radius, center, owner, damage, name, lifespan, delay });
+	if (attack_collider_pool_ != nullptr) attack_collider_pool_->generate(radius, center, owner, damage, name, lifespan, delay, external_velocity);
+	else add_actor(new AttackCollider{ radius, center, owner, damage, name, lifespan, delay, external_velocity });
 }
 
 void World::set_mask_color(const GScolor& color) {

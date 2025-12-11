@@ -288,7 +288,8 @@ private:
     /// <param name="radius">= 半径</param>
     /// <param name="damage">= ダメージ</param>
     /// <param name="name">= 識別名</param>
-    void generate_attack_collider(const GSvector3& offset, float radius, int damage, const std::string& name);
+    /// <param name="external_velocity">= 外的移動量</param>
+    void generate_attack_collider(const GSvector3& offset, float radius, int damage, const std::string& name, const GSvector3& external_velocity);
 
 private:
 	// プレイヤーカメラ

@@ -122,6 +122,7 @@ Player::Player(IWorld* world, const GSvector3& position, const GSvector3& rotate
 void Player::update(float delta_time) {
 	update_invincible(delta_time);
 	update_state(delta_time);
+    update_external_velocity(delta_time);
 	update_gravity(delta_time);
 	update_mesh(delta_time);
 
@@ -162,6 +163,7 @@ void Player::update(float delta_time) {
     ImGui::SliderInt("motion", &motion, 0, 255);
     motion_ = motion;
     ImGui::InputFloat(ToUTF8("タイムスケール").c_str(), &world_->timescale(), 0.1f);
+
 	ImGui::End();
 
 	ImGui::Begin("App Window");
@@ -752,11 +754,11 @@ void Player::get_interact_actor_list() {
 
 void Player::add_attack_animation_event(const PlayerInfo& info) {
     // 対象のモーションのときに生成する判定
-    auto set_generate_collider = [&](GSuint motion, const std::string& name, const std::vector<PlayerGenerateAttackColliderEvent>& events) {
+    auto set_generate_collider = [&](GSuint motion, const std::string& name, const std::vector<PlayerGenerateAttackColliderEvent>& events, const GSvector3& external_velocity) {
         for (const auto& param : events) {
             // イベントを登録
             mesh_.add_animation_event(motion, param.time, [=] { generate_attack_collider(
-                param.offset, param.radius, info.skill_damage, name
+                param.offset, param.radius, info.skill_damage, name, external_velocity
                 );
             });
         }
@@ -783,7 +785,7 @@ void Player::add_attack_animation_event(const PlayerInfo& info) {
         for (const auto& param : info.attack_event[i]) {
             // イベントを登録
             mesh_.add_animation_event(motion, param.time, [=] { generate_attack_collider(
-                param.offset, param.radius, i < info.attack_param.size() ? info.attack_param[i].damage : 0, "PlayerNormalAttack"
+                param.offset, param.radius, i < info.attack_param.size() ? info.attack_param[i].damage : 0, "PlayerNormalAttack", GSvector3::zero()
                 );
             });
         }
@@ -792,29 +794,30 @@ void Player::add_attack_animation_event(const PlayerInfo& info) {
     }
 
     // スキルのアニメーションイベントを追加
-    set_generate_collider(Motion::Skill, "PlayerNormalSkill", info.skill_event);
+    set_generate_collider(Motion::Skill, "PlayerNormalSkill", info.skill_event, GSvector3{ 0.0f, 0.0f, 0.0f });
     set_effect_event(Motion::Skill, info.skill_effect_event);
     
     // 回避攻撃のアニメーションイベントを追加
-    set_generate_collider(Motion::AvoidAttack, "PlayerAvoidAttack", info.avoid_attack_event);
+    set_generate_collider(Motion::AvoidAttack, "PlayerAvoidAttack", info.avoid_attack_event, GSvector3{ 1.0f, 0.0f, 1.0f } * 0.2f);
     set_effect_event(Motion::AvoidAttack, info.avoid_attack_effect_event);
 
     // 回避成功攻撃のアニメーションイベントを追加
-    set_generate_collider(Motion::AvoidSuccessAttack, "PlayerAvoidSuccessAttack", info.avoid_success_attack_event);
+    set_generate_collider(Motion::AvoidSuccessAttack, "PlayerAvoidSuccessAttack", info.avoid_success_attack_event, GSvector3{ 1.0f, 0.0f, 1.0f } * 0.3f);
     set_effect_event(Motion::AvoidSuccessAttack, info.avoid_success_attack_effect_event);
 
     // 回避成功スキルのアニメーションイベントを追加
-    set_generate_collider(Motion::AvoidSuccessSkill, "PlayerSuccessSkill", info.avoid_success_skill_event);
+    set_generate_collider(Motion::AvoidSuccessSkill, "PlayerSuccessSkill", info.avoid_success_skill_event, GSvector3{ 0.0f, 0.0f, 0.0f });
     set_effect_event(Motion::AvoidSuccessSkill, info.avoid_success_skill_effect_event);
 }
 
-void Player::generate_attack_collider(const GSvector3& offset, float radius, int damage, const std::string& name) {
+void Player::generate_attack_collider(const GSvector3& offset, float radius, int damage, const std::string& name, const GSvector3& external_velocity) {
     GSmatrix4 m = local_to_world(offset, GSvector3::zero(), GSvector3::one());
+    GSvector3 ev = transform_.forward() * external_velocity;
 
     WeaponData::Data weapon = world_->game_save_data().inventory().weapon();
     int dmg = (weapon.is_empty() ? 0 : weapon.damage) + damage;
 
-    world_->generate_attack_collider(radius, m.position(), this, dmg, name, 0.1f, 0.0f);
+    world_->generate_attack_collider(radius, m.position(), this, dmg, name, 0.1f, 0.0f, ev.sqrMagnitude() > 0.01f ? ev : GSvector3::zero());
 }
 
 bool Player::is_root_motion_state() const {

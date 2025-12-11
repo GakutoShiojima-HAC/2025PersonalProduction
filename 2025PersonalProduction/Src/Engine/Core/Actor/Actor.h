@@ -117,6 +117,16 @@ public:
 	/// </summary>
 	GSvector3& velocity();
 
+    /// <summary>
+    /// 外的移動量を返却(const)
+    /// </summary>
+    GSvector3 external_velocity() const;
+
+    /// <summary>
+    /// 外的移動量を返却
+    /// </summary>
+    GSvector3& external_velocity();
+
 	/// <summary>
 	/// 衝突判定データを取得
 	/// </summary>
@@ -192,6 +202,11 @@ protected:
 	virtual void non_penetrating_move(const GSvector3& velocity, GSvector3* foward = nullptr, float trun_angle = 1.0f);
 
 protected:
+    /// <summary>
+    /// 重力の更新
+    /// </summary>
+    void update_gravity(float delta_time);
+
 	/// <summary>
 	/// エフェクシアのエフェクトを再生
 	/// </summary>
@@ -201,6 +216,11 @@ protected:
 	/// <param name="scale">= ローカル拡縮量</param>
     /// <param name="speed">= 再生速度</param>
 	int play_effect(GSuint effect_id, const GSvector3& position, const GSvector3& rotate = GSvector3{ 0.0f, 0.0f, 0.0f }, const GSvector3& scale = GSvector3{ 1.0f, 1.0f, 1.0f }, float speed = 1.0f) const;
+
+    /// <summary>
+    /// 外的移動量を更新
+    /// </summary>
+    void update_external_velocity(float delta_time);
 
 protected:
 	// ワールド
@@ -221,6 +241,10 @@ protected:
 	GStransform transform_;
 	// 移動量
 	GSvector3 velocity_{ 0.0f, 0.0f, 0.0f };
+    // 外的移動量
+    GSvector3 external_velocity_{ 0.0f, 0.0f, 0.0 };
+    // 重力値
+    float gravity_{ 9.8f };
 
 	// 衝突判定を行うかどうか
 	bool enable_collider_{ true };

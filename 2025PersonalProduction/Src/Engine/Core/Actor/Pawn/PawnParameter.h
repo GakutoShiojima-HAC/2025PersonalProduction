@@ -25,8 +25,8 @@ namespace PawnParameter {
     /// <returns>”¼Œa</returns>
     inline float radius(Type type) {
         switch (type) {
-        case PawnParameter::Type::Big: return 0.6f;
-        default: return 0.4f;
+        case PawnParameter::Type::Big: return 0.62f;
+        default: return 0.42f;
         }
     }
 

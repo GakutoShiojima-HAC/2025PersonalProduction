@@ -10,9 +10,9 @@ AttackColliderPool::~AttackColliderPool() {
 	clear();
 }
 
-void AttackColliderPool::generate(float radius, const GSvector3& center, Actor* owner, int damage, const std::string& name, float lifespan, float delay) {
+void AttackColliderPool::generate(float radius, const GSvector3& center, Actor* owner, int damage, const std::string& name, float lifespan, float delay, const GSvector3& external_velocity) {
 	AttackCollider* collider = colliders_.get();
-	collider->reactivate(radius, center, owner, damage, name, lifespan, delay, true);
+	collider->reactivate(radius, center, owner, damage, name, lifespan, delay, external_velocity, true);
 	active_colliders_.push_back(collider);
 	world_->add_actor(collider);
 }
