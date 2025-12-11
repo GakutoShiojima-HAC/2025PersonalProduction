@@ -83,9 +83,11 @@ void World::draw() const {
         game_post_effect_.begin_gui(current);
 
         actor_.draw_gui();
-        action_score_.draw();
-        game_timer_.draw();
-        type_writer_label_.draw();
+        if (enable_draw_game_info_gui_) {
+            action_score_.draw();
+            game_timer_.draw();
+            type_writer_label_.draw();
+        }
 
         game_post_effect_.end_gui();
     }
@@ -198,6 +200,10 @@ void World::load_static_effect(const std::string& json_file) {
 
 bool& World::enable_draw_gui() {
     return enable_draw_gui_;
+}
+
+bool& World::enable_draw_game_info_gui() {
+    return enable_draw_game_info_gui_;
 }
 
 Field* World::get_field() {

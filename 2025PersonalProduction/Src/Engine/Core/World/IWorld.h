@@ -50,6 +50,12 @@ public:
     /// <returns>参照</returns>
     virtual bool& enable_draw_gui() = 0;
 
+    /// <summary>
+    /// ゲーム情報のGUI描画を行うかどうか (例: アクションスコア、タイマー) アクターの描画を制御することはできない
+    /// </summary>
+    /// <returns>参照</returns>
+    virtual bool& enable_draw_game_info_gui() = 0;
+
 	/// <summary>
 	/// フィールドの取得
 	/// </summary>

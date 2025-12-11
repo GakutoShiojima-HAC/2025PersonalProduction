@@ -223,6 +223,8 @@ void Player::draw_gui() const {
     }
 #endif
 
+    if (state_.get_current_state() == (GSuint)PlayerStateType::Idle) return;
+
     // インタラクトUIの描画
     InteractUI::draw(interact_actors_, interact_target_index_);
 

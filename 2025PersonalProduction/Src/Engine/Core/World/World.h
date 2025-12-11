@@ -126,6 +126,8 @@ public:
 
     bool& enable_draw_gui() override;
 
+    bool& enable_draw_game_info_gui() override;
+
 	Field* get_field() override;
 
 	Light* get_light() override;
@@ -209,6 +211,7 @@ public:
 protected:
     // GUIを描画するかどうか
     bool enable_draw_gui_{ true };
+    bool enable_draw_game_info_gui_{ true };
 
 	// フィールド
 	Field* field_{ nullptr };
