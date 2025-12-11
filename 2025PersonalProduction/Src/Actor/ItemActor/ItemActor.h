@@ -52,22 +52,13 @@ protected:
     /// </summary>
     void init();
 
-    /// <summary>
-    /// アイテムメッシュの更新
-    /// </summary>
-    void update_mesh(float delta_time);
-
 protected:
     // アイテムデータ
     ItemData::Data data_{};
     // インタラクト時のテキスト
     std::string interact_text_{ "" };
-    // アイテムアニメーションタイマー
-    float animation_timer_{ 0.0f };
     // インタラクトされたかどうか
     bool is_interact_{ false };
-    // エフェクトハンドル
-    int effect_handle_{ 0 };
 
 };
 

@@ -223,7 +223,7 @@ protected:
 
     MyEnemyInfo my_info_;
 
-    int alert_effect_handle_{ 0 };
+    int alert_effect_handle_{ -1 };
     int alert_effect_bone_num_{ 0 };
 };        
 

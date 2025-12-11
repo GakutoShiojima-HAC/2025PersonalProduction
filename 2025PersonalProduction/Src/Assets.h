@@ -27,6 +27,7 @@
     X(WeaponSword1) \
     X(WeaponSword2) \
     X(TreasureChest) \
+    X(Item) \
     X(MAX_SIZE) // 要素数
 
 // テクスチャ 
@@ -105,7 +106,6 @@
     X(Avoid) \
     X(OnGroundSmoke) \
     X(DangerSignal) \
-    X(Item) \
     X(HitAttack) \
     X(PlayerSlash) \
     X(DustLarge) \
