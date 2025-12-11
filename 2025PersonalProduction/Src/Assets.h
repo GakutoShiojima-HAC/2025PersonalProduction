@@ -26,6 +26,7 @@
     X(GimmickElevator) \
     X(WeaponSword1) \
     X(WeaponSword2) \
+    X(TreasureChest) \
     X(MAX_SIZE) // 要素数
 
 // テクスチャ 
@@ -111,6 +112,7 @@
     X(FireBall) \
     X(ExplosionSmall) \
     X(Fire) \
+    X(LootBox) \
     X(MAX_SIZE) // 要素数
 #pragma endregion
 
