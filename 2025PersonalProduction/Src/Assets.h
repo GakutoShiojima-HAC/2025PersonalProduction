@@ -38,12 +38,17 @@
     X(PauseWindowTexture) \
     X(SettingWindowTexture) \
     X(GameGuideWindowTexture) \
+    X(TutorialAttackInputTexture) \
+    X(TutorialAvoidInputTexture) \
     X(ButtonSelectMouseTexture) \
     X(ButtonSelectGamePadTexture) \
+    X(ButtonDecisionGamePadTexture) \
+    X(ButtonDecisionMouseTexture) \
     X(GearIconTexture) \
     X(GamePadIconTexture) \
     X(ArrowIconTexture) \
     X(DotIconTexture) \
+    X(TutorialIconTexture) \
     X(Skybox) \
     X(ProgressBar) \
     X(ProgressBarEmpty) \
