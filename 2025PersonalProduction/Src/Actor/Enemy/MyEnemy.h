@@ -63,6 +63,8 @@ public:
 protected:
     virtual void react(Actor& other) override;
 
+    virtual void collide_field() override;
+
 public:
     /// <summary>
     /// 指定したステートと対応したモーションに変更
@@ -214,6 +216,8 @@ protected:
     Character* target_{ nullptr };
 
     NavMeshAgent navmesh_;
+
+    bool is_navmesh_update_{ false };
 
     GSvector3 origin_position_{ 0.0f, 0.0f, 0.0f };
 

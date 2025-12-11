@@ -95,12 +95,13 @@ public:
 	/// <returns></returns>
 	float current_motion_end_time() const;
 
-protected:
-	/// <summary>
-	/// 重力の更新
-	/// </summary>
-	void update_gravity(float delta_time);
+    /// <summary>
+    /// 外的移動量を受け付けるかどうか
+    /// </summary>
+    /// <returns>受け付けるなら真を返却</returns>
+    bool is_receive_external_velocity() const;
 
+protected:
 	/// <summary>
 	/// 無敵時間の更新
 	/// </summary>
@@ -160,12 +161,13 @@ protected:
 	int hp_{ 1 };
     // 描画用のHP
     float display_hp_{ 1.0f };
-	// 重力値
-	float gravity_{ 9.8f };
 	// ジャンプ力
 	float jump_power_{ 2.0f };
 	// 無敵時間タイマー(秒)
 	float invincible_timer_{ 0.0f };
+
+    // 外的移動量を受け付けるかどうか
+    bool receive_external_velocity_{ true };
 
 	// 身長
 	float height_{ 2.0f };

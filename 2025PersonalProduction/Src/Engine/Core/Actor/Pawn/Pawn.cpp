@@ -52,13 +52,8 @@ float Pawn::current_motion_end_time() const {
     return mesh_.motion_end_time();
 }
 
-void Pawn::update_gravity(float delta_time) {
-    // 重力を加える
-    velocity_.y -= gravity_ * 0.1f / cFPS * delta_time;
-    // 重力を反映
-    transform_.translate(0.0f, velocity_.y, 0.0f);
-    // 衝突判定
-    collide_field();
+bool Pawn::is_receive_external_velocity() const {
+    return receive_external_velocity_;
 }
 
 void Pawn::update_invincible(float delta_time) {
@@ -111,6 +106,9 @@ void Pawn::collide_field() {
         center.y = transform_.position().y;
         // 補正後の座標に変更する
         transform_.position(center);
+        // 外的移動量を0にする
+        external_velocity_.x = 0.0f;
+        external_velocity_.z = 0.0f;
     }
 
     // 地面との衝突判定（線分との交差判定)

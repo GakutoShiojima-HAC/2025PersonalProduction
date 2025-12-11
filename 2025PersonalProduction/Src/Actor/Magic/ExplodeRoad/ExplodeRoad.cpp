@@ -4,6 +4,7 @@
 #include <GSeffect.h>
 #include "GameConfig.h"
 #include "Engine/Sound/SE.h"
+#include "Engine/Utils/MyRandom.h"
 
 constexpr float RADIUS{ 1.0f };
 
@@ -32,7 +33,8 @@ void ExplodeRoad::update(float delta_time) {
         timer_ = 0.0f;
         ++counter_;
 
-        world_->generate_attack_collider(RADIUS, transform_.position() + GSvector3{ 0.0f, RADIUS, 0.0f }, owner_, damage_, "Attack", 0.1f, 0.0f);
+        world_->generate_attack_collider(RADIUS, transform_.position() + GSvector3{ 0.0f, RADIUS, 0.0f }, owner_, damage_, "Attack", 0.1f, 0.0f,
+            MyRandom::random_vec3(GSvector3{ -0.25f, 0.0f, -0.25f }, GSvector3{ 0.25f, 0.0f, 0.25f }));
         play_effect((GSuint)EffectID::ExplosionSmall, GSvector3::zero());
         world_->camera_shake(CameraShakeType::HandShake, 0.5f, 15.0f, false);
         SE::play_random((GSuint)SEID::Explosion, transform_.position(), 0.125f);

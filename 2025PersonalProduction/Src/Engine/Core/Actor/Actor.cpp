@@ -77,6 +77,14 @@ GSvector3& Actor::velocity() {
 	return velocity_;
 }
 
+GSvector3 Actor::external_velocity() const {
+	return external_velocity_;
+}
+
+GSvector3& Actor::external_velocity() {
+    return external_velocity_;
+}
+
 BoundingSphere Actor::collider() const {
 	return collider_.transform(transform_.localToWorldMatrix());
 }
@@ -161,12 +169,65 @@ void Actor::non_penetrating_move(const GSvector3& velocity, GSvector3* foward, f
 	collide_field();
 }
 
+void Actor::update_gravity(float delta_time) {
+    // 重力を加える
+    velocity_.y -= gravity_ * 0.1f / cFPS * delta_time;
+    // 重力を反映
+    transform_.translate(0.0f, velocity_.y, 0.0f);
+    // 衝突判定
+    collide_field();
+}
+
 int Actor::play_effect(GSuint effect_id, const GSvector3& position, const GSvector3& rotate, const GSvector3& scale, float speed) const {
 	// エフェクトを再生する
 	const GSmatrix4 mat = local_to_world(position, rotate, scale);
     int handle = gsPlayEffectEx(effect_id, &mat);
     gsSetEffectSpeed(handle, speed);
     return handle;
+}
+
+void Actor::update_external_velocity(float delta_time) {
+    // 移動量がなければ終了
+    if (external_velocity_.sqrMagnitude() <= 0.00001f) {
+        return;
+    }
+
+    // 減衰処理のラムダ式
+    auto dampen_axis = [&](float& external_v, float v) {
+        // 外的移動量と移動量が逆向きなら
+        if (external_v * v < 0.0f) {
+            const float reduction = v * delta_time;
+            // 加算
+            const float next_val = external_v + reduction;
+            // 加速防止
+            if ((external_v > 0.0f && next_val < 0.0f) || (external_v < 0.0f && next_val > 0.0f)) {
+                external_v = 0.0f;
+            }
+            else {
+                external_v = next_val;
+            }
+        }
+    };
+
+    // 移動
+    non_penetrating_move(GSvector3{ external_velocity_.x , 0.0f, external_velocity_.z } * delta_time, nullptr);
+
+    // 減速
+    float friction_factor = 1.0f - (0.2f * delta_time);
+    if (friction_factor < 0.0f) friction_factor = 0.0f;
+    external_velocity_.x *= friction_factor;
+    external_velocity_.z *= friction_factor;
+
+    dampen_axis(external_velocity_.x, velocity_.x);
+    dampen_axis(external_velocity_.z, velocity_.z);
+
+    if (std::abs(external_velocity_.y) <= 0.001f) {
+        return;
+    }
+
+    // 重力に置き換える
+    velocity_.y+= external_velocity_.y;
+    external_velocity_.y = 0.0f;
 }
 
 void Actor::draw_collider() const {

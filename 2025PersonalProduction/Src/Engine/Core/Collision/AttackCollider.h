@@ -22,7 +22,8 @@ public:
         int damage = 0,
         const std::string& name = "AttackCollider",
         float lifespan = 1.0f,
-        float delay = 0.0f
+        float delay = 0.0f,
+        const GSvector3& external_velocity = GSvector3{ 0.0f, 0.0f, 0.0f }
     );
 
 public:
@@ -43,6 +44,7 @@ public:
     /// <param name="name">= 識別名</param>
 	/// <param name="lifespan">= 判定の寿命</param>
 	/// <param name="delay">= 判定が有効になるまでの遅延</param>
+    /// <param name="external_velocity">= 外的移動量</param>
 	/// <param name="disable_clear">= マネージャーからのメモリ解放対象から除外するかどうか</param>
 	void reactivate(
         float radius = 0.0f,
@@ -52,6 +54,7 @@ public:
         const std::string& name = "AttackCollider",
         float lifespan = 1.0f,
         float delay = 0.0f,
+        const GSvector3& external_velocity = GSvector3{ 0.0f, 0.0f, 0.0f },
         bool disable_clear = false
     );
 
@@ -65,6 +68,7 @@ private:
 
 	// ダメージ
 	int damage_{ 0 };
+
 };
 
 #endif
