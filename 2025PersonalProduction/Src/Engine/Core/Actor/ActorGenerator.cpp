@@ -11,6 +11,7 @@
 #include "Actor/Enemy/SimpleEnemy/SimpleEnemyGenerator.h"
 #include "Actor/Enemy/Lich/LichGenerator.h"
 #include "Tutorial/Enemy/TutorialFacilitatorGenerator.h"
+#include "Actor/Gimmick/TreasureChest/TreasureChestGenerator.h"
 
 namespace fs = std::experimental::filesystem;
 
@@ -52,6 +53,7 @@ void ActorGenerator::load(World* world) {
         else if (key == SimpleEnemyGeneratorKey) add_generator(name, new SimpleEnemyGenerator(j, world));
         else if (key == LichGeneratorKey) add_generator(name, new LichGenerator{ j, world });
         else if (key == TutorialFacilitatorGeneratorKey) add_generator(name, new TutorialFacilitatorGenerator{ j, world });
+        else if (key == TreasureChestGeneratorKey) add_generator(name, new TreasureChestGenerator{ j, world });
     }
 }
 
