@@ -161,7 +161,7 @@ private:
 
 int main() {
 #ifdef _DEBUG
-    return MyGame(1920, 1080, false, cFPS).run();
+    return MyGame(1920, 1080, true, cFPS).run();
 #else
     return MyGame(1920, 1080, true, cFPS).run();
 #endif
