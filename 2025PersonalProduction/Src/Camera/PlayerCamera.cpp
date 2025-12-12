@@ -9,8 +9,8 @@ const GSvector3 LOOKAT_ORIGIN_TO_OFFSET{ 0.0f, 1.35f, 0.0f };
 // 注視点からの位置
 const GSvector3 CAMERA_OFFSET{ 0.0f, 1.3f, -4.0f };
 // 視点移動速度
-constexpr float SENSITIVITY_X{ 0.095f };
-constexpr float SENSITIVITY_Y{ 0.075f };
+constexpr float SENSITIVITY_X{ 0.3f };
+constexpr float SENSITIVITY_Y{ 0.135f };
 
 // スムースダンプ補間時間
 constexpr float SMOOTH_TIME{ 6.0f };
