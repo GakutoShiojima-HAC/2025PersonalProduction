@@ -19,6 +19,8 @@ void TutorialFacilitatorEventState::enter() {
     }
     input_.disable_action(InputAction::GAME_Camera) = true;
     owner_.enable_game_info_gui() = false;
+
+    timer_ = 0.0f;
 }
 
 void TutorialFacilitatorEventState::update(float delta_time) {
@@ -28,7 +30,14 @@ void TutorialFacilitatorEventState::update(float delta_time) {
     }
     
     // 決定入力でイベント開始
-    if (input_.action(InputAction::MENU_Decision)) {
+    if (input_.action(InputAction::MENU_Decision_State)) {
+        timer_ += delta_time / cFPS;
+    }
+    else {
+        timer_ = 0.0f;
+    }
+
+    if (timer_ >= 0.75f) {
         owner_.change_prev_state(); //イベントが格納されている前提
         return;
     }
