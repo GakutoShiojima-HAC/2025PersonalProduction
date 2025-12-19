@@ -34,6 +34,8 @@ private:
 
     unsigned int player_prev_state_{ 0 };
 
+    float timer_{ 0.0f };
+
 };
 
 #endif
