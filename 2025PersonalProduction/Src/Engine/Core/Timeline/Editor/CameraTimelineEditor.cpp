@@ -27,17 +27,6 @@ void CameraTimelineEditor::update_select_keyframe() {
     CameraTimelineKeyFrame* key_frame = timeline[edit_keyframe_index_];
     if (key_frame == nullptr) return;
 
-    // カメラ有効化と無効化時の遷移時間を設定
-    ImGui::PushItemWidth(80);
-    ImGui::InputFloat(ToUTF8("カメラ有効化時の遷移時間").c_str(), &data_->start_transition_time());
-    ImGui::PopItemWidth();
-
-    // カメラ終了の遷移時間の設定
-    ImGui::SameLine();
-    ImGui::PushItemWidth(80);
-    ImGui::InputFloat(ToUTF8("カメラ無効化時の遷移時間").c_str(), &data_->end_transition_time());
-    ImGui::PopItemWidth();
-
     // 時間を編集
     ImGui::PushItemWidth(80);
     if (ImGui::InputFloat(ToUTF8("キーフレームの時間").c_str(), &key_frame->time)) {
@@ -81,10 +70,28 @@ void CameraTimelineEditor::update_select_keyframe() {
     // キーフレームを削除
     ImGui::SameLine();
     if (ImGui::Button(ToUTF8("選択中のキーフレームを削除").c_str())) remove_keyframe(edit_keyframe_index_);
+
+    ImGui::Separator();
+    ImGui::Text(ToUTF8("遷移時間の編集").c_str());
+
+    // カメラ有効化と無効化時の遷移時間を設定
+    ImGui::PushItemWidth(80);
+    ImGui::InputFloat(ToUTF8("カメラ有効化時の遷移時間").c_str(), &data_->start_transition_time());
+    ImGui::PopItemWidth();
+
+    // カメラ終了の遷移時間の設定
+    ImGui::SameLine();
+    ImGui::PushItemWidth(80);
+    ImGui::InputFloat(ToUTF8("カメラ無効化時の遷移時間").c_str(), &data_->end_transition_time());
+    ImGui::PopItemWidth();
 }
 
 std::string CameraTimelineEditor::name() const {
     return parameter_.name();
+}
+
+float CameraTimelineEditor::play_time() const {
+    return parameter_.play_time();
 }
 
 bool CameraTimelineEditor::is_empty() const {

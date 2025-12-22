@@ -54,6 +54,10 @@ std::string SendMessageTimelineEditor::name() const {
     return parameter_.name();
 }
 
+float SendMessageTimelineEditor::play_time() const {
+    return parameter_.play_time();
+}
+
 bool SendMessageTimelineEditor::is_empty() const {
     if (data_ == nullptr) return true;
     return data_->get().empty();
