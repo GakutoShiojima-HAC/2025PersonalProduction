@@ -66,6 +66,12 @@ public:
     /// <returns>エディタ用 IWorldで返す</returns>
     virtual IWorld* get_world() { return world_; }
 
+    /// <summary>
+    /// 再生中なら現在の再生タイマーを返却
+    /// </summary>
+    /// <returns></returns>
+    virtual float play_time() const { return is_playing_ ? timer_ : -1.0f; };
+
 protected:
     // ワールド
     World* world_{ nullptr };

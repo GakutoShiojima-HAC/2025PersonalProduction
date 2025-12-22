@@ -29,6 +29,8 @@ public:
 
     std::string name() const override;
 
+    float play_time() const override;
+
     virtual bool is_empty() const override;
 
     unsigned int count_keyframe() const override;

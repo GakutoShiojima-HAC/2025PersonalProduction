@@ -69,6 +69,10 @@ std::string TypeWriterTimelineEditor::name() const {
     return parameter_.name();
 }
 
+float TypeWriterTimelineEditor::play_time() const {
+    return parameter_.play_time();
+}
+
 bool TypeWriterTimelineEditor::is_empty() const {
     if (data_ == nullptr) return true;
     return data_->get().empty();

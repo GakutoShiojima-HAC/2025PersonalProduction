@@ -32,9 +32,15 @@ public:
     virtual std::string name() const = 0;
 
     /// <summary>
-    /// キーフレームが一つでもあるかどうか
+    /// 再生タイマーを取得
     /// </summary>
-    /// <returns>あれば真を返却</returns>
+    /// <returns></returns>
+    virtual float play_time() const = 0;
+
+    /// <summary>
+    /// キーフレームが存在しないかどうか
+    /// </summary>
+    /// <returns>存在しなければ真を返却</returns>
     virtual bool is_empty() const = 0;
 
     /// <summary>

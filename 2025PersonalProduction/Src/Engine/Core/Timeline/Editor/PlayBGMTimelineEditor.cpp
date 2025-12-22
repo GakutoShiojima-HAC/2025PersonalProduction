@@ -54,6 +54,10 @@ std::string PlayBGMTimelineEditor::name() const {
     return parameter_.name();
 }
 
+float PlayBGMTimelineEditor::play_time() const {
+    return parameter_.play_time();
+}
+
 bool PlayBGMTimelineEditor::is_empty() const {
     if (data_ == nullptr) return true;
     return data_->get().empty();
