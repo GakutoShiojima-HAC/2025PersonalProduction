@@ -5,6 +5,9 @@
 #include "Engine/Utils/Folder.h"
 #include "Engine/Utils/MyString.h"
 
+const ImVec2 IM_BUTTON_SIZE{ 100.0f, 20.0f };
+const ImVec2 IM_BUTTON_BIG_SIZE{ 200.0f, 20.0f };
+
 TimelineEditor::~TimelineEditor() {
     clear();
 }
@@ -12,7 +15,7 @@ TimelineEditor::~TimelineEditor() {
 void TimelineEditor::update(float delta_time) {
     if (editors_.empty()) return;
 
-    ImGui::Begin("Timeline Window");
+    ImGui::Begin("Timeline Editor Window");
 
     // メインGUI
     update_main_gui();
@@ -43,27 +46,27 @@ void TimelineEditor::add(ITimelineEditor* editor) {
 
 void TimelineEditor::update_main_gui() {
     // 再生ボタン
-    if (ImGui::Button(ToUTF8("再生").c_str())) on_play();
+    if (ImGui::Button(ToUTF8("再生").c_str(), IM_BUTTON_SIZE)) on_play();
     // ロードボタン
     ImGui::SameLine();
-    if (ImGui::Button(ToUTF8("読み込み").c_str())) ImGui::OpenPopup("Load##2");
+    if (ImGui::Button(ToUTF8("読み込み").c_str(), IM_BUTTON_SIZE)) ImGui::OpenPopup("Load##2");
     if (ImGui::BeginPopupModal("Load##2", NULL, ImGuiWindowFlags_AlwaysAutoResize)) on_load();
     // 保存ボタン
     ImGui::SameLine();
-    if (ImGui::Button(ToUTF8("保存").c_str())) on_save();
+    if (ImGui::Button(ToUTF8("保存").c_str(), IM_BUTTON_SIZE)) on_save();
     //リセットボタン
     ImGui::SameLine();
-    if (ImGui::Button(ToUTF8("リセット").c_str())) on_reset();
+    if (ImGui::Button(ToUTF8("リセット").c_str(), IM_BUTTON_SIZE)) on_reset();
 
     // タイムラインデータの名前入力フィールド
     ImGui::PushItemWidth(200);
-    ImGui::InputText(ToUTF8("名前").c_str(), &name_);
+    ImGui::InputText(ToUTF8("データ・ファイル名").c_str(), &name_);
     ImGui::PopItemWidth();
 }
 
 void TimelineEditor::update_add_keyframe() {
     // キーフレームの追加ボタン
-    if (ImGui::Button(ToUTF8("キーフレームを追加").c_str())) {
+    if (ImGui::Button(ToUTF8("キーフレームを追加").c_str(), IM_BUTTON_BIG_SIZE)) {
         editors_[select_parameter_index_]->add_keyframe(add_keyframe_time_);
     }
 
@@ -72,7 +75,7 @@ void TimelineEditor::update_add_keyframe() {
     // 現在のパラメータ
     const std::string current_parameter_name = editors_[select_parameter_index_]->name();
     // ドロップダウンリスト
-    ImGui::PushItemWidth(160);
+    ImGui::PushItemWidth(200);
     if (ImGui::BeginCombo(ToUTF8("パラメータを選択").c_str(), current_parameter_name.c_str())) {
         // 全パラメータを選択肢にする
         for (unsigned int i = 0; i < editors_.size(); ++i) {
@@ -87,8 +90,7 @@ void TimelineEditor::update_add_keyframe() {
     ImGui::PopItemWidth();
 
     // キーフレームの追加時間を入力
-    ImGui::SameLine();
-    ImGui::PushItemWidth(80);
+    ImGui::PushItemWidth(100);
     ImGui::InputFloat(ToUTF8("キーフレームを追加する時間").c_str(), &add_keyframe_time_);
     ImGui::PopItemWidth();
 
@@ -100,127 +102,230 @@ void TimelineEditor::update_add_keyframe() {
 
 void TimelineEditor::update_timeline_view() {
     ImDrawList* draw_list = ImGui::GetWindowDrawList();
-    ImVec2 canvas_pos;
-    ImVec2 canvas_size;
-    const float canvas_pos_x = ImGui::GetCursorScreenPos().x;
 
-    const float MAX_TIME{ 10.0f };  // 一度に表示する時間の範囲
-    const float TIMELINE_HEIGHT{ 20.0f };   // 高さ
-    const unsigned int KEYFRAME_NOMOVE{ 999999 }; // キーフレームを動かしていないときの番号
-
-    // 時間からX座標へ変換
-    auto time_to_screen_x = [&](float absolute_time) {
-        float relative_time = absolute_time - timeline_view_start_time_;
-        return canvas_pos.x + (relative_time / MAX_TIME) * canvas_size.x;
-    };
-
-    // X座標から時間へ変換
-    auto screen_x_to_time = [&](float x) {
-        float ratio = (x - canvas_pos.x) / canvas_size.x;
-        return timeline_view_start_time_ + (ratio * MAX_TIME);
-    };
+    // パラメータラベルの幅
+    const float LABEL_WIDTH{ 120.0f };
+    // 行の高さ
+    const float ROW_HEIGHT{ 25.0f };
+    // 一度に表示する時間の範囲
+    const float MAX_TIME{ 10.0f };
+    // キーフレームの半径
+    const float KF_RADIUS{ 7.0f };
 
     // タイムラインビューの先頭時間のスライダー
-    if (ImGui::SliderFloat(" ##10", &timeline_view_start_time_, 0.0, 100.0f)) {
+    if (ImGui::SliderFloat(ToUTF8("トラックの表示時間を変更").c_str(), &timeline_view_start_time_, 0.0, 100.0f)) {
         timeline_view_start_time_ = (int)timeline_view_start_time_;
     }
 
-    // 秒数を描画したかどうか
-    bool is_draw_time{ false };
+    // ヘッダーのサイズ
+    const ImVec2 HEADER_POS = ImGui::GetCursorScreenPos();
+    const float CANVAS_WIDTH = ImGui::GetContentRegionAvail().x - LABEL_WIDTH - 20.0f;
 
-    // 全パラメータを描画する
+    // ヘッダーの描画
+    for (float t_offset = 0.0f; t_offset <= MAX_TIME; t_offset += 1.0f) {
+        const float abs_t = timeline_view_start_time_ + t_offset;
+        // ヘッダー位置基準のX座標計算
+        const float x = HEADER_POS.x + LABEL_WIDTH + (t_offset / MAX_TIME) * CANVAS_WIDTH;
+
+        char time_str[16];
+        snprintf(time_str, sizeof(time_str), "%.0fs", abs_t);
+        draw_list->AddText(ImVec2(x, HEADER_POS.y), IM_COL32(200, 200, 200, 255), time_str);
+    }
+    ImGui::Dummy(ImVec2(0, 20)); // 時間表示用のスペース確保
+    ImGui::Separator();
+
+    // パラメータの描画開始位置
+    std::vector<ImVec2> row_start_positions;
+    row_start_positions.reserve(editors_.size());
+
+    // トラック
     for (unsigned int i = 0; i < editors_.size(); ++i) {
-        const auto& editor = editors_[i];
-        // キーフレームがないなら描画しない
-        if (editor->is_empty()) continue;
+        auto& editor = editors_[i];
 
-        canvas_pos = ImGui::GetCursorScreenPos();       // 描画を始める座標(左上)
-        canvas_pos.x = canvas_pos_x + 100.0f;
-        canvas_size = ImGui::GetContentRegionAvail();   // 描画範囲
-        canvas_size.x -= 20.0f;
-        canvas_size.y = TIMELINE_HEIGHT;
+        const ImVec2 current_row_pos = ImGui::GetCursorScreenPos(); // 現在の行の左上座標
+        row_start_positions.push_back(current_row_pos);             // 座標を保存
 
-        // 編集対象を選択
-        if (ImGui::Button((editor->name() + "##1").c_str())) {
-            edit_parameter_index_ = i;
-            move_key_frame_index_ = KEYFRAME_NOMOVE;
+        ImGui::BeginGroup();
+        // 選択中のパラメータラベル
+        if (edit_parameter_index_ == i) {
+            ImGui::Text("%s", editor->name().c_str());
         }
-        ImGui::SameLine();
+        // 非選択中のパラメータラベル
+        else {
+            ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 0.65f), "%s", editor->name().c_str());
+        }
+        ImGui::EndGroup();
 
-        // 背景の描画
-        draw_list->AddRectFilled(canvas_pos, ImVec2(canvas_pos.x + canvas_size.x, canvas_pos.y + canvas_size.y), edit_parameter_index_ == i ? IM_COL32(50, 50, 50, 255) : IM_COL32(25, 25, 25, 255));
+        // パラメータの基本情報
+        ImGui::SameLine(LABEL_WIDTH);
+        const ImVec2 timeline_start = ImGui::GetCursorScreenPos();
+        const ImVec2 timeline_size(CANVAS_WIDTH, ROW_HEIGHT);
 
-        // 目盛りの描画
+        // 背景
+        const ImU32 bg_col = (edit_parameter_index_ == i) ? IM_COL32(50, 50, 50, 255) : IM_COL32(30, 30, 30, 255);
+        draw_list->AddRectFilled(timeline_start, ImVec2(timeline_start.x + CANVAS_WIDTH, timeline_start.y + ROW_HEIGHT), bg_col);
+
+        // 縦線
         for (float t_offset = 0.0f; t_offset <= MAX_TIME; t_offset += 1.0f) {
-            // 現在の目盛りの絶対時間を計算
-            float absolute_tick_time = timeline_view_start_time_ + t_offset;
-            // 絶対時間を座標に変換
-            float x = time_to_screen_x(absolute_tick_time);
-            // 描画処理
-            draw_list->AddLine(ImVec2(x, canvas_pos.y), ImVec2(x, canvas_pos.y + canvas_size.y), IM_COL32(100, 100, 100, 255));
+            float x = timeline_start.x + (t_offset / MAX_TIME) * CANVAS_WIDTH;
+            draw_list->AddLine(ImVec2(x, timeline_start.y), ImVec2(x, timeline_start.y + ROW_HEIGHT), IM_COL32(60, 60, 60, 255));
+        }
 
-            // 一番上のパラメータだけ秒数を描画する
-            if (!is_draw_time) {
-                char time_str[16];
-                snprintf(time_str, sizeof(time_str), "%.0fs", absolute_tick_time);
-                draw_list->AddText(ImVec2(x + 3, canvas_pos.y), IM_COL32(200, 200, 200, 255), time_str);
+        // エディタの再生時間を取得
+        const float current_play_time = editor->play_time();
+        // 再生ヘッドの描画
+        if (current_play_time >= 0.0f) {
+            // 表示範囲の時間に変換
+            const float relative_play_time = current_play_time - timeline_view_start_time_;
+            // 表示範囲に入っているか
+            if (relative_play_time >= 0.0f && relative_play_time <= MAX_TIME) {
+                // 時間からX座標を計算
+                const float head_x = timeline_start.x + (relative_play_time / MAX_TIME) * CANVAS_WIDTH;
+
+                draw_list->AddLine(
+                    ImVec2(head_x, timeline_start.y), ImVec2(head_x, timeline_start.y + ROW_HEIGHT),
+                    IM_COL32(255, 25, 25, 255), 1.5f
+                );
             }
         }
-        is_draw_time = true;
 
-        // キーフレームの描画
-        unsigned int& edit_keyframe = editor->edit_keyframe();
-        for (int j = 0; j < editor->count_keyframe(); ++j) {
-            // キーフレームの座標を取得
-            const float key_time = editor->get_keyframe_time(j);
-            const float marker_x = time_to_screen_x(key_time);
-            ImVec2 marker_pos(marker_x, canvas_pos.y + TIMELINE_HEIGHT / 2.0f);
-
-            // 範囲外ならスキップ
-            if (marker_pos.x < canvas_pos.x || marker_pos.x > canvas_pos.x + canvas_size.x) continue;
-
-            // キーフレーム描画
-            const float marker_radius = 6.0f;
-            ImU32 marker_color = (edit_parameter_index_ == i) && (j == edit_keyframe) ? IM_COL32(255, 255, 255, 255) : IM_COL32(25, 255, 255, 100);
-            draw_list->AddCircleFilled(marker_pos, marker_radius, marker_color);
-
-            // 編集中ならクリック検知
-            if (edit_parameter_index_ != i) continue;
-            // マウスがキーフレームをクリックしたかどうか
-            if (move_key_frame_index_ == KEYFRAME_NOMOVE && ImGui::IsMouseHoveringRect(
-                ImVec2(marker_pos.x - marker_radius, marker_pos.y - marker_radius),
-                ImVec2(marker_pos.x + marker_radius, marker_pos.y + marker_radius)
-            )) {
-                // キーフレームをドラッグ移動対象とする
-                if (ImGui::IsMouseClicked(ImGuiMouseButton_Left)) edit_keyframe = move_key_frame_index_ = j;
+        // トラックをクリックでパラメータを選択
+        ImGui::PushID(i);
+        if (ImGui::InvisibleButton("RowTrigger", timeline_size)) {
+            // 念のため、ドラッグ移動中なら保存
+            if (drag_key_frame_index_ != NO_DRAG) {
+                editors_[edit_parameter_index_]->sort_timeline();
+                drag_key_frame_index_ = NO_DRAG;
             }
+
+            edit_parameter_index_ = i;
         }
-        
-        // 編集中ならドラッグ移動
-        if (edit_parameter_index_ == i && move_key_frame_index_ != KEYFRAME_NOMOVE) {
-            /*
-            // マウス位置から再生時間を更新
-            if (ImGui::IsMouseDragging(ImGuiMouseButton_Left, 0.0f)) {
-                editor->get_keyframe_time(move_key_frame_index_) = screen_x_to_time(ImGui::GetMousePos().x);
-                if (editor->get_keyframe_time(move_key_frame_index_) < 0.0f) editor->get_keyframe_time(move_key_frame_index_) = 0.0f;
-            }
-            */
-            // ドラッグを終了
-            if (ImGui::IsMouseReleased(ImGuiMouseButton_Left)) {
-                editor->sort_timeline();
-                move_key_frame_index_ = KEYFRAME_NOMOVE;
-            }
-        }
-        // 編集中のパラメータ描画範囲はマウス入力を無効化する
-        if (edit_parameter_index_ == i) ImGui::InvisibleButton("timeline_canvas", canvas_size);
+        ImGui::PopID();
 
+        // 次の行へ
+        ImGui::SetCursorScreenPos(ImVec2(current_row_pos.x, current_row_pos.y + ROW_HEIGHT));
         ImGui::Separator();
     }
 
+    // レイアウト終了位置を保存
+    ImVec2 layout_end_pos = ImGui::GetCursorScreenPos();
+
+    // キーフレーム
+    for (unsigned int i = 0; i < editors_.size(); ++i) {
+        auto& editor = editors_[i];
+
+        // 保存しておいた座標から座標を取得
+        const ImVec2 row_pos = row_start_positions[i];
+        const ImVec2 timeline_start = ImVec2(row_pos.x + LABEL_WIDTH, row_pos.y);
+
+        for (int j = 0; j < editor->count_keyframe(); ++j) {
+            const float key_time = editor->get_keyframe_time(j);
+            const float relative_time = key_time - timeline_view_start_time_;
+            // 表示範囲外なら無視
+            if (relative_time < 0.0f || relative_time > MAX_TIME) continue;
+
+            // 座標計算
+            const float kf_x = timeline_start.x + (relative_time / MAX_TIME) * CANVAS_WIDTH;
+            const ImVec2 kf_pos(kf_x, timeline_start.y + ROW_HEIGHT / 2.0f);
+
+            // キーフレームを選択中
+            if (ImGui::IsMouseHoveringRect(
+                ImVec2(kf_pos.x - KF_RADIUS, kf_pos.y - KF_RADIUS),
+                ImVec2(kf_pos.x + KF_RADIUS, kf_pos.y + KF_RADIUS)
+            ) && ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
+                // 未選択のキーフレームを選択
+                if (editor->edit_keyframe() != j) {
+                    editor->edit_keyframe() = j;
+                    edit_parameter_index_ = i;          // 行も選択状態に
+                    drag_key_frame_index_ = NO_DRAG;    // 念のため既存の選択を解除
+                }
+                // キーフレームを再選択
+                else if (edit_parameter_index_ == i && editor->edit_keyframe() == j) {
+                    drag_key_frame_index_ = j;  // 選択中にする
+                }
+            }
+
+            // 選択したキーフレームのドラッグ移動
+            if (edit_parameter_index_ == i && drag_key_frame_index_ != NO_DRAG) {
+                // ドラッグでキーフレームを移動
+                if (ImGui::IsMouseDragging(ImGuiMouseButton_Left, 0.0f)) {
+                    // マウス座標から時間を計算
+                    const float mouse_x = ImGui::GetMousePos().x;
+                    const float offset_x = mouse_x - timeline_start.x;
+                    const float ratio = offset_x / CANVAS_WIDTH;
+                    float current_time = timeline_view_start_time_ + (ratio * MAX_TIME);
+                    if (current_time < 0.0f) current_time = 0.0f;
+
+                    // キーフレームに適用
+                    editor->get_keyframe_time(drag_key_frame_index_) = current_time;
+                }
+            }
+            // 選択したキーフレームのドラッグ移動を終了
+            if (ImGui::IsMouseReleased(ImGuiMouseButton_Left) && drag_key_frame_index_ != NO_DRAG) {
+                editor->sort_timeline();
+                drag_key_frame_index_ = NO_DRAG;
+            }
+        }
+    }
+
+    // ドラッグ
+    if (drag_key_frame_index_ != NO_DRAG) {
+        auto& current_editor = editors_[edit_parameter_index_];
+        // 移動
+        if (ImGui::IsMouseDragging(ImGuiMouseButton_Left, 0.0f)) {
+            // 現在の座標を取得
+            const ImVec2 row_pos = row_start_positions[edit_parameter_index_];
+            const ImVec2 timeline_start = ImVec2(row_pos.x + LABEL_WIDTH, row_pos.y);
+            // マウス座標から時間を計算
+            const float mouse_x = ImGui::GetMousePos().x;
+            const float offset_x = mouse_x - timeline_start.x;
+            const float ratio = offset_x / CANVAS_WIDTH;
+            float current_time = timeline_view_start_time_ + (ratio * MAX_TIME);
+            if (current_time < 0.0f) current_time = 0.0f;
+
+            // キーフレームに適用
+            current_editor->get_keyframe_time(drag_key_frame_index_) = current_time;
+        }
+        // 終了
+        if (ImGui::IsMouseReleased(ImGuiMouseButton_Left)) {
+            current_editor->sort_timeline();
+            drag_key_frame_index_ = NO_DRAG;
+        }
+    }
+
+    // キーフレームの描画
+    for (unsigned int i = 0; i < editors_.size(); ++i) {
+        auto& editor = editors_[i];
+
+        // 保存しておいた座標から座標を取得
+        const ImVec2 row_pos = row_start_positions[i];
+        const ImVec2 timeline_start = ImVec2(row_pos.x + LABEL_WIDTH, row_pos.y);
+
+        for (int j = 0; j < editor->count_keyframe(); ++j) {
+            const float key_time = editor->get_keyframe_time(j);
+            const float relative_time = key_time - timeline_view_start_time_;
+            // 表示範囲外なら無視
+            if (relative_time < 0.0f || relative_time > MAX_TIME) continue;
+
+            // 座標計算
+            const float kf_x = timeline_start.x + (relative_time / MAX_TIME) * CANVAS_WIDTH;
+            const ImVec2 kf_pos(kf_x, timeline_start.y + ROW_HEIGHT / 2.0f);
+
+            // キーフレームの描画
+            const bool is_selected = (edit_parameter_index_ == i && editor->edit_keyframe() == j);
+            const ImU32 kf_col = is_selected ? IM_COL32(255, 255, 255, 255) : IM_COL32(0, 200, 200, 180);
+            draw_list->AddCircleFilled(kf_pos, KF_RADIUS, kf_col);
+        }
+    }
+
+    // カーソル位置を戻す
+    ImGui::SetCursorScreenPos(layout_end_pos);
+
     // 選択中のキーフレームのパラメータを編集
-    ImGui::Separator();
-    ImGui::Text(ToUTF8("キーフレームの編集").c_str());
-    editors_[edit_parameter_index_]->update_select_keyframe();
+    if (!editors_[edit_parameter_index_]->is_empty()) {
+        ImGui::Text(ToUTF8("キーフレームの編集").c_str());
+        editors_[edit_parameter_index_]->update_select_keyframe();
+    }
 }
 
 void TimelineEditor::on_play() {
@@ -240,7 +345,7 @@ void TimelineEditor::on_reset() {
     edit_parameter_index_ = 0;
     add_keyframe_time_ = 0.0f;
     timeline_view_start_time_ = 0.0f;
-    move_key_frame_index_ = 999999;
+    drag_key_frame_index_ = 999999;
 }
 
 void TimelineEditor::on_load() {

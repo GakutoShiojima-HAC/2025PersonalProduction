@@ -59,8 +59,11 @@ private:
     float add_keyframe_time_{ 0.0f };
     // タイムラインビューの開始時間(左端の時間)
     float timeline_view_start_time_{ 0.0f };
-    // 操作中のキーフレームインデックス
-    unsigned int move_key_frame_index_{ 999999 };
+    // ドラッグしていない
+    const unsigned int NO_DRAG{ 999999 };
+    // ドラッグ中のキーフレームインデックス
+    unsigned int drag_key_frame_index_{ NO_DRAG };
+    
 
 public:
     // コピー禁止
