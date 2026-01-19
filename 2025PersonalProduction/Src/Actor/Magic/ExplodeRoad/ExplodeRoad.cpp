@@ -20,6 +20,8 @@ ExplodeRoad::ExplodeRoad(IWorld* world, const GSvector3& position, const GSvecto
     interval_ = interval;
     timer_ = interval;  // Å‰‚Í‘¦oŒ»
 
+    use_gravity_ = false;
+
     velocity_ = velocity;
     transform_.position(position);
     transform_.rotation(GSquaternion::lookRotation(velocity));
@@ -34,7 +36,7 @@ void ExplodeRoad::update(float delta_time) {
         ++counter_;
 
         world_->generate_attack_collider(RADIUS, transform_.position() + GSvector3{ 0.0f, RADIUS, 0.0f }, owner_, damage_, "Attack", 0.1f, 0.0f,
-            MyRandom::random_vec3(GSvector3{ -0.25f, 0.0f, -0.25f }, GSvector3{ 0.25f, 0.0f, 0.25f }));
+            MyRandom::random_vec3(GSvector3{ -0.05f, 0.15f, -0.05f }, GSvector3{ 0.05f, 0.2f, 0.05f }));
         play_effect((GSuint)EffectID::ExplosionSmall, GSvector3::zero());
         world_->camera_shake(CameraShakeType::HandShake, 0.5f, 15.0f, false);
         SE::play_random((GSuint)SEID::Explosion, transform_.position(), 0.125f);

@@ -22,6 +22,8 @@ FireBall::FireBall(IWorld* world, const GSvector3& position, const GSvector3& ve
     timer_ = 0.0f;
     damage_ = damage;
 
+    use_gravity_ = false;
+
     velocity_ = velocity;
 	transform_.position(position);
     transform_.rotation(GSquaternion::lookRotation(velocity));
@@ -93,7 +95,7 @@ void FireBall::hit() {
     is_dead_ = true;
     gsStopEffect(effect_handle_);
     world_->generate_attack_collider(RADIUS * 2.0f, transform_.position(), owner_, damage_, "Attack", 0.1f, 0.0f,
-        MyRandom::random_vec3(GSvector3{ -0.25f, 0.0f, -0.25f }, GSvector3{ 0.25f, 0.0f, 0.25f }));
+        MyRandom::random_vec3(GSvector3{ -0.05f, 0.15f, -0.05f }, GSvector3{ 0.05f, 0.2f, 0.05f }));
     play_effect((GSuint)EffectID::ExplosionSmall, GSvector3::zero());
     world_->camera_shake(CameraShakeType::HandShake, 0.5f, 25.0f, false);
     SE::play_random((GSuint)SEID::Explosion, transform_.position(), 0.125f);
