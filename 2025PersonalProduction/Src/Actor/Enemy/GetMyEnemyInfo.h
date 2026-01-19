@@ -38,6 +38,7 @@ namespace GetMyEnemyInfo {
             data.damage = MyJson::get_int(obj, "Damage", 0);
             data.detection_radius = MyJson::get_float(obj, "DetectionRadius");
             data.bone = MyJson::get_int(obj, "Bone", 0);
+            data.effect = MyJson::get_boolean(obj, "Effect", true);
 
             info.attack_data[motion] = data;
         }

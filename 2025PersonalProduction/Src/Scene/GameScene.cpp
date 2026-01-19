@@ -260,7 +260,7 @@ void GameScene::game_start() {
     // フィールドの追加
     world_.add_field(new Field{ (GSuint)OctreeID::Mesh, (GSuint)OctreeID::Collider, (GSuint)TextureID::Skybox });
     // ライトの追加
-    world_.add_light(new Light{ config.light_angle, GScolor{ 0.05f, 0.05f, 0.05f, 1.0f } });
+    world_.add_light(new Light{ config.light_angle, config.light_color });
 
     // アタックコライダーのプールを追加
     world_.add_attack_collider_pool(new AttackColliderPool{ &world_ });

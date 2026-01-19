@@ -144,8 +144,6 @@ public:
 
 	bool is_dead_state() const override;
 
-    void on_jump() override;
-
 private:
 	void react(Actor& other) override;
 
@@ -211,6 +209,11 @@ public:
 	/// 通常攻撃の開始
 	/// </summary>
 	void attack_start();
+
+    /// <summary>
+    /// ジャンプ処理
+    /// </summary>
+    void on_jump();
 
 	/// <summary>
 	/// 回避処理
@@ -297,6 +300,8 @@ private:
 
 	// 最後の移動速度
 	float move_speed_{ 0.0f };
+    // 最後の移動量
+    GSvector3 prev_velocity_{ 0.0f, 0.0f, 0.0f };
 
 private:
 	Input& input_ = Input::get_instance();

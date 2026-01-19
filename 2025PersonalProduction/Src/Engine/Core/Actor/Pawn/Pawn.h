@@ -39,11 +39,6 @@ public:
     virtual void on_hit_attack(AttackCollider& collider);
 
 	/// <summary>
-	/// ジャンプ処理
-	/// </summary>
-	virtual void on_jump();
-
-	/// <summary>
 	/// 死亡状態かどうか
 	/// </summary>
 	/// <returns>死亡状態なら真を返却</returns>
@@ -60,11 +55,6 @@ public:
 	/// HPを取得
 	/// </summary>
 	int& hp();
-
-	/// <summary>
-	/// 重力値を取得
-	/// </summary>
-	float& gravity();
 
 	/// <summary>
 	/// 無敵時間を取得
@@ -95,12 +85,6 @@ public:
 	/// <returns></returns>
 	float current_motion_end_time() const;
 
-    /// <summary>
-    /// 外的移動量を受け付けるかどうか
-    /// </summary>
-    /// <returns>受け付けるなら真を返却</returns>
-    bool is_receive_external_velocity() const;
-
 protected:
 	/// <summary>
 	/// 無敵時間の更新
@@ -123,26 +107,6 @@ protected:
     /// </summary>
     virtual void update_mesh(float delta_time);
 
-	/// <summary>
-	/// 地形との衝突判定
-	/// </summary>
-	virtual void collide_field() override;
-
-	/// <summary>
-	/// アクターとの衝突判定
-	/// </summary>
-	virtual void collide_actor(Actor& other) override;
-
-    /// <summary>
-    /// 接地しなくなった瞬間
-    /// </summary>
-    virtual void on_air() {};
-
-    /// <summary>
-    /// 接地する瞬間
-    /// </summary>
-    virtual void on_ground() {};
-
     /// <summary>
     /// ルートモーションを使う状態かどうか
     /// </summary>
@@ -161,19 +125,8 @@ protected:
 	int hp_{ 1 };
     // 描画用のHP
     float display_hp_{ 1.0f };
-	// ジャンプ力
-	float jump_power_{ 2.0f };
 	// 無敵時間タイマー(秒)
 	float invincible_timer_{ 0.0f };
-
-    // 外的移動量を受け付けるかどうか
-    bool receive_external_velocity_{ true };
-
-	// 身長
-	float height_{ 2.0f };
-	
-	// 接地しているか
-	bool is_ground_{ false };
 
     // 攻撃動作に入っているか
     bool is_attack_soon_{ false };

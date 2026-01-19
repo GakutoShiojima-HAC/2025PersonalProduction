@@ -1,8 +1,15 @@
 #include "Engine/Core/Actor/Actor.h"
+#include "Engine/Core/World/IWorld.h"
+#include "Engine/Core/Field/Field.h"
+#include "Engine/Utils/Line.h"
+#include "GameConfig.h"
 #include <GSeffect.h>
 
-void Actor::update(float delta_time) {
+constexpr float FOOT_OFFSET{ 0.125f };
 
+void Actor::update(float delta_time) {
+    update_physics(delta_time);
+    collide_field();
 }
 
 void Actor::late_update(float delta_time) {
@@ -77,12 +84,40 @@ GSvector3& Actor::velocity() {
 	return velocity_;
 }
 
-GSvector3 Actor::external_velocity() const {
-	return external_velocity_;
+bool Actor::is_grounded() const {
+    return is_grounded_;
 }
 
-GSvector3& Actor::external_velocity() {
-    return external_velocity_;
+bool& Actor::grounded() {
+    return is_grounded_;
+}
+
+bool& Actor::use_gravity() {
+    return use_gravity_;
+}
+
+bool Actor::use_gravity() const {
+    return use_gravity_;
+}
+
+float Actor::gravity() const {
+    return gravity_;
+}
+
+void Actor::add_force(const GSvector3& force, ForceMode mode) {
+    if (!use_force_external_) return;
+
+    switch (mode) {
+    case ForceMode::Force:
+        velocity_ += force / mass_;
+        break;
+    case ForceMode::Impulse:
+        velocity_ += force / mass_;
+        break;
+    case ForceMode::VelocityChange:
+        velocity_ += force;
+        break;
+    }
 }
 
 BoundingSphere Actor::collider() const {
@@ -122,11 +157,97 @@ bool& Actor::enable_timescale() {
 }
 
 void Actor::collide_field() {
+    // x,z軸の回転を無効にする
+    transform_.rotation(GSquaternion(0.0f, transform_.rotation().y, 0.0f, transform_.rotation().w));
 
+    // 壁との衝突判定（球体との判定)
+    GSvector3 center; // 押し戻し後の球体の中心座標
+    if (world_->get_field()->collide(collider(), &center)) {
+        // y座標は変更しない
+        center.y = transform_.position().y;
+        // 補正後の座標に変更する
+        transform_.position(center);
+        // ぶつかったら止まる
+        velocity_.x = 0.0f;
+        velocity_.z = 0.0f;
+    }
+
+    // 地面との衝突判定（線分との交差判定)
+    // 地面との交点
+    GSvector3 intersect;
+    // 衝突したフィールド用アクター
+    Actor* field_actor{ nullptr };
+    // 親をリセットしておく
+    transform_.parent(nullptr);
+
+    // 判定座標
+    GSvector3 position_head = transform_.position();
+    GSvector3 position_foot = transform_.position();
+    Line head_line;
+    head_line.start = position_head + collider_.center;
+    head_line.end = position_head + GSvector3{ 0.0f, height_, 0.0f };
+    Line foot_line;
+    foot_line.start = position_foot + collider_.center;
+    foot_line.end = position_foot + GSvector3{ 0.0f, -FOOT_OFFSET, 0.0f };
+
+    // 天井判定
+    if (world_->get_field()->collide(head_line, &intersect, nullptr, &field_actor)) {
+        // TODO intersect分yを下げる
+
+        // 座標を変更する
+        transform_.position(position_head);
+        // 重力を初期化する
+        velocity_.y = 0.0f;
+    }
+
+    // 地面判定
+    if (world_->get_field()->collide(foot_line, &intersect, nullptr, &field_actor)) {
+        // 交差した点からy座標のみ補正する
+        position_foot.y = intersect.y;
+        // 座標を変更する
+        transform_.position(position_foot);
+        // 重力を初期化する
+        velocity_.y = 0.0f;
+        // フィールド用のアクタークラスと衝突したか
+        if (field_actor != nullptr) {
+            // 衝突したフィールド用のアクターを親のトランスフォームクラスとして設定
+            transform_.parent(&field_actor->transform());
+        }
+        // 着地状態の更新
+        on_ground();
+        is_grounded_ = true;
+    }
+    else {
+        // 空中状態の更新
+        on_air();
+        is_grounded_ = false;
+    }
+
+    // 死亡判定
+    if (transform_.position().y < -100.0f) die();
 }
 
 void Actor::collide_actor(Actor& other) {
+    // 自身と対象の座標を取得
+    GSvector3 position = transform_.position();
+    position.y = 0.0f;
+    GSvector3 target = other.transform().position();
+    target.y = 0.0f;
+    // 距離を求める
+    float distance = GSvector3::distance(position, target);
 
+    // 衝突判定球の半径同士を加えた長さを取得
+    float length = collider_.radius + other.collider().radius;
+
+    // 衝突判定の重なっている長さの取得
+    float overlap = length - distance;
+
+    // 重なっている部分の半分の距離だけ離れる
+    GSvector3 v = (position - target).getNormalized() * overlap * 0.5f;
+    transform_.translate(v, GStransform::Space::World);
+
+    // フィールドとの衝突判定を再度行う
+    collide_field();
 }
 
 void Actor::non_penetrating_move(const GSvector3& velocity, GSvector3* foward, float trun_angle) {
@@ -169,13 +290,29 @@ void Actor::non_penetrating_move(const GSvector3& velocity, GSvector3* foward, f
 	collide_field();
 }
 
-void Actor::update_gravity(float delta_time) {
-    // 重力を加える
-    velocity_.y -= gravity_ * 0.1f / cFPS * delta_time;
-    // 重力を反映
-    transform_.translate(0.0f, velocity_.y, 0.0f);
-    // 衝突判定
-    collide_field();
+void Actor::update_physics(float delta_time) {
+    // 重力
+    if (use_gravity_ && !is_grounded_) {
+        velocity_.y -= gravity_ * delta_time / cFPS;
+    }
+
+    if (is_grounded_) {
+        // 速度減衰係数
+        float damping_factor = std::max(0.0f, 1.0f - (10.0f * delta_time / cFPS));
+
+        velocity_.x *= damping_factor;
+        velocity_.z *= damping_factor;
+        if (std::abs(velocity_.x) < 0.001f) velocity_.x = 0.0f;
+        if (std::abs(velocity_.z) < 0.001f) velocity_.z = 0.0f;
+    }
+
+    // 移動量の更新
+    if (velocity_.sqrMagnitude() > 0.00001f) {
+        GSvector3 move_amount = velocity_ * delta_time;
+
+        // 移動反映
+        transform().translate(move_amount, GStransform::Space::World);
+    }
 }
 
 int Actor::play_effect(GSuint effect_id, const GSvector3& position, const GSvector3& rotate, const GSvector3& scale, float speed) const {
@@ -184,50 +321,6 @@ int Actor::play_effect(GSuint effect_id, const GSvector3& position, const GSvect
     int handle = gsPlayEffectEx(effect_id, &mat);
     gsSetEffectSpeed(handle, speed);
     return handle;
-}
-
-void Actor::update_external_velocity(float delta_time) {
-    // 移動量がなければ終了
-    if (external_velocity_.sqrMagnitude() <= 0.00001f) {
-        return;
-    }
-
-    // 減衰処理のラムダ式
-    auto dampen_axis = [&](float& external_v, float v) {
-        // 外的移動量と移動量が逆向きなら
-        if (external_v * v < 0.0f) {
-            const float reduction = v * delta_time;
-            // 加算
-            const float next_val = external_v + reduction;
-            // 加速防止
-            if ((external_v > 0.0f && next_val < 0.0f) || (external_v < 0.0f && next_val > 0.0f)) {
-                external_v = 0.0f;
-            }
-            else {
-                external_v = next_val;
-            }
-        }
-    };
-
-    // 移動
-    non_penetrating_move(GSvector3{ external_velocity_.x , 0.0f, external_velocity_.z } * delta_time, nullptr);
-
-    // 減速
-    float friction_factor = 1.0f - (0.2f * delta_time);
-    if (friction_factor < 0.0f) friction_factor = 0.0f;
-    external_velocity_.x *= friction_factor;
-    external_velocity_.z *= friction_factor;
-
-    dampen_axis(external_velocity_.x, velocity_.x);
-    dampen_axis(external_velocity_.z, velocity_.z);
-
-    if (std::abs(external_velocity_.y) <= 0.001f) {
-        return;
-    }
-
-    // 重力に置き換える
-    velocity_.y+= external_velocity_.y;
-    external_velocity_.y = 0.0f;
 }
 
 void Actor::draw_collider() const {

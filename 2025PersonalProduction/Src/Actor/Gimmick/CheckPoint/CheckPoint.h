@@ -11,9 +11,9 @@
 #ifndef CHECK_POINT_H_
 #define CHECK_POINT_H_
 
-#include "Engine/Core/Actor/FieldActor/FieldActor.h"
+#include "Engine/Core/Actor/Actor.h"
 
-class CheckPoint : public FieldActor {
+class CheckPoint : public Actor {
 public:
     CheckPoint(IWorld* world, const GSvector3& position, const GSvector3& rotate, float radius);
 
@@ -23,7 +23,6 @@ public:
     void react(Actor& other) override;
 
     void die() override;
-
 
 };
 

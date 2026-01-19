@@ -28,6 +28,8 @@ struct StageConfigData {
 
     // ライトの角度(Unity基準)
     GSvector3 light_angle{ 0.0f, 0.0f, 0.0f };
+    // シーンライト
+    GSvector4 light_color{ 0.05f, 0.05f, 0.05f, 1.0f };
 
     // タイマーを使用するかどうか
     bool use_timer{ true };

@@ -22,6 +22,7 @@
     X(EnemySlimeManToxic) \
     X(EnemyRockGolemMud) \
     X(EnemyLich) \
+    X(EnemyViking) \
     X(GimmickBarrier) \
     X(GimmickElevator) \
     X(WeaponSword1) \
@@ -98,6 +99,7 @@
     X(Alert) \
     X(FireBallSummon) \
     X(Explosion) \
+    X(HardLand) \
     X(MAX_SIZE) // 要素数
 
 // エフェクト
