@@ -23,13 +23,13 @@ Lich::Lich(IWorld* world, const GSvector3& position, const GSvector3& rotate, co
     info_{ info } {
     add_state();
 
+    use_force_external_ = false;
+
     // 攻撃アニメーションイベントを生成
     set_motion_attack_event(Motion::Attack1, my_info_.attack_data[Motion::Attack1]);
     set_motion_attack_event(Motion::Attack2, my_info_.attack_data[Motion::Attack2]);
     mesh_.add_animation_event(Motion::Spell1, 36.0f, [=] { generate_spell_a(); });
     mesh_.add_animation_event(Motion::Spell2, 23.0f, [=] { generate_spell_b(); });
-
-    receive_external_velocity_ = false;
 
     change_state_and_motion((GSuint)LichStateType::Idle);
     save_current_state();
