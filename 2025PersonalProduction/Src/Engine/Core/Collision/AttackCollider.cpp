@@ -3,12 +3,12 @@
 #include "Assets.h"
 #include "Engine/Sound/SE.h"
 
-AttackCollider::AttackCollider(float radius, const GSvector3& center, Actor* owner, int damage, const std::string& name, float lifespan, float delay, const GSvector3& external_velocity) {
+AttackCollider::AttackCollider(float radius, const GSvector3& center, Actor* owner, int damage, const std::string& name, float lifespan, float delay, const GSvector3& force) {
 	tag_ = ActorTag::Collider;
     name_ = name;
 	owner_ = owner;
 	damage_ = damage;
-    external_velocity_ = external_velocity;
+    force_ = force;
 
 	lifespan_timer_ = lifespan;
 	delay_timer_ = delay;
@@ -42,8 +42,7 @@ void AttackCollider::react(Actor& other) {
     if (target != nullptr && !target->is_dead_state()) {
         target->take_damage(*owner_, damage_);
 
-        // 外的移動量を付与
-        if (target->is_receive_external_velocity()) target->external_velocity() = external_velocity_;
+        target->add_force(force_, Actor::ForceMode::Impulse);
 
         // 生成主にコールバック
         Pawn* owner = dynamic_cast<Pawn*>(owner_);
@@ -59,12 +58,12 @@ void AttackCollider::react(Actor& other) {
 	die();
 }
 
-void AttackCollider::reactivate(float radius, const GSvector3& center, Actor* owner, int damage, const std::string& name, float lifespan, float delay, const GSvector3& external_velocity, bool disable_clear) {
+void AttackCollider::reactivate(float radius, const GSvector3& center, Actor* owner, int damage, const std::string& name, float lifespan, float delay, const GSvector3& force, bool disable_clear) {
 	is_dead_ = false;
     name_ = name;
 	owner_ = owner;
 	damage_ = damage;
-    external_velocity_ = external_velocity;
+    force_ = force;
 
 	lifespan_timer_ = lifespan;
 	delay_timer_ = delay;
