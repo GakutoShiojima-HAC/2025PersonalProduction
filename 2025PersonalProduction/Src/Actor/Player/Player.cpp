@@ -50,6 +50,8 @@ constexpr float DECELERATION_SPEED{ 0.75f };
 constexpr float INVINCIBLE_TIME{ 0.5f };
 // 回避移動速度
 constexpr float AVOID_SPEED{ 10.0f };
+// ジャンプ力
+constexpr float JUMP_POWER{ 0.215f };
 
 // 回避演出の時間
 constexpr float AVOID_EFFECT_TIME{ 3.0f };
@@ -122,8 +124,8 @@ Player::Player(IWorld* world, const GSvector3& position, const GSvector3& rotate
 void Player::update(float delta_time) {
 	update_invincible(delta_time);
 	update_state(delta_time);
-    update_external_velocity(delta_time);
-	update_gravity(delta_time);
+    update_physics(delta_time);
+    collide_field();
 	update_mesh(delta_time);
 
 #ifdef _DEBUG
@@ -351,8 +353,8 @@ void Player::update_move(float delta_time) {
 		velocity = velocity.normalized() * move_speed_ * delta_time;
 	}
 	else {
-		velocity.x = velocity_.x;
-		velocity.z = velocity_.z;
+		velocity.x = prev_velocity_.x;
+		velocity.z = prev_velocity_.z;
 		// 減速
         if (velocity.magnitude() > 0.01f) {
             move_speed_ = move_speed_ * DECELERATION_SPEED;
@@ -365,8 +367,8 @@ void Player::update_move(float delta_time) {
         }
 	}
 	// 移動量を更新
-	velocity_.x = velocity.x;
-	velocity_.z = velocity.z;
+    prev_velocity_.x = velocity.x;
+    prev_velocity_.z = velocity.z;
 
 	// 非貫通移動
 	non_penetrating_move(velocity, is_lockon ? &forward : &velocity, TURN_SPEED * delta_time);
@@ -415,13 +417,13 @@ void Player::update_move_air(float delta_time) {
 	rotate_velocity += forward * input.y; 
 
 	// 前の移動量を取得
-	GSvector3 prev_velocity = velocity_;
+	GSvector3 prev_velocity = prev_velocity_;
 	prev_velocity.y = 0.0f;
 	prev_velocity = prev_velocity.normalized() * move_speed_ * delta_time;
 
 	// 移動量を更新
-	velocity_.x = prev_velocity.x;
-	velocity_.z = prev_velocity.z;
+    prev_velocity_.x = prev_velocity.x;
+    prev_velocity_.z = prev_velocity.z;
 
 	// 非貫通移動
 	non_penetrating_move(prev_velocity, camera_->is_lockon() ? nullptr : &rotate_velocity, AIR_TURN_SPEED * delta_time);
@@ -511,6 +513,16 @@ void Player::attack_start() {
 	attack_count_ = 0;
 }
 
+void Player::on_jump() {
+    add_force(GSvector3{ 0.0f, JUMP_POWER, 0.0f }, Actor::ForceMode::Impulse);
+
+    int handle = play_effect((GSuint)EffectID::OnGroundSmoke, GSvector3::zero());
+    const GScolor color{ 1.0f, 1.0f, 1.0f, 0.25f };
+    gsSetEffectColor(handle, &color);
+
+    SE::play((GSuint)SEID::Jump);
+}
+
 void Player::on_avoid() {
 	// 一定時間無敵にする
 	invincible_timer_ = INVINCIBLE_TIME;
@@ -581,8 +593,8 @@ void Player::on_avoid() {
 	// 強制回転
 	transform_.lookAt(transform_.position() + (is_lockon ? forward : avoid_velocity));
 
-	velocity_.x = 0.0f;
-	velocity_.z = 0.0f;
+    prev_velocity_.x = 0.0f;
+    prev_velocity_.z = 0.0f;
 
     // 回避エフェクトを再生
     avoid_effect_handle_ = world_->camera_effect_play_foward((GSuint)EffectID::Avoid, 0.25f);
@@ -831,16 +843,6 @@ bool Player::is_root_motion_state() const {
     return false;
 }
 
-void Player::on_jump() {
-    velocity_.y = jump_power_ * 0.1f + gravity_ * 0.1f / cFPS;	// 重力を加算することで初速を維持
-
-    int handle = play_effect((GSuint)EffectID::OnGroundSmoke, GSvector3::zero());
-    const GScolor color{ 1.0f, 1.0f, 1.0f, 0.25f };
-    gsSetEffectColor(handle, &color);
-
-    SE::play((GSuint)SEID::Jump);
-}
-
 void Player::on_air() {
     if (MyLib::is_in(
         state_.get_current_state(),
@@ -857,7 +859,7 @@ void Player::on_air() {
 }
 
 void Player::on_ground() {
-	if (is_ground_) return;
+	if (is_grounded_) return;
 	if (MyLib::is_in(
 		state_.get_current_state(),
 		(GSuint)PlayerStateType::Idle,
