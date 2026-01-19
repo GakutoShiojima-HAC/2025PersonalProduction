@@ -79,8 +79,7 @@ void NavMeshAgent::update_move(float delta_time, float move_speed, float rotate_
             target_->transform().rotation(rotation);
         }
         // ‘S‘Ì‚ÌˆÚ“®—Ê‚ðŒvŽZ
-        GSvector3& velocity = target_->velocity();
-        velocity = direction * move_speed * delta_time;
+        GSvector3 velocity = direction * move_speed * delta_time;
 
         // ‚à‚µˆÚ“®—Ê‚ªs‚«æ‚Ü‚Å‚Ì’·‚³‚ð’´‚¦‚Ä‚¢‚½‚ç
         if (velocity.magnitude() >= direction_distance) {
