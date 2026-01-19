@@ -13,6 +13,11 @@ StageLoadConfigData StageData::load(const std::string& folder_path) {
     // 構成データ読み込み
     data_.name = MyJson::get_string(j, "Name");
     data_.light_angle = MyJson::get_vector3(j, "LightAngle");
+    const GSvector3 color = MyJson::get_vector3(j, "LightColor", GSvector3{ 0.05f, 0.05f, 0.05f });
+    data_.light_color.r = color.x;
+    data_.light_color.g = color.y;
+    data_.light_color.b = color.z;
+    data_.light_color.a = 1.0f;
     data_.use_timer = MyJson::get_boolean(j, "Timer");
     data_.use_result = MyJson::get_boolean(j, "Result");
     data_.use_normal_enemy_counter = MyJson::get_boolean(j, "EnemyCounter");
