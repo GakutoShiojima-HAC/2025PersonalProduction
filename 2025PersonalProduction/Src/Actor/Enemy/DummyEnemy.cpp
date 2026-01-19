@@ -43,7 +43,8 @@ DummyEnemy::DummyEnemy(IWorld* world, const GSvector3& position) :
 void DummyEnemy::update(float delta_time) {
 	update_invincible(delta_time);
 	update_state(delta_time);
-	update_gravity(delta_time);
+    update_physics(delta_time);
+    collide_field();
 	update_mesh(delta_time);
 
 #ifdef _DEBUG
