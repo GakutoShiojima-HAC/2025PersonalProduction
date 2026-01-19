@@ -24,6 +24,7 @@ struct MyEnemyAttackData {
     int damage{ 0 };                        // 攻撃ダメージ
     float detection_radius{ 0.0f };         // 攻撃判定を生成できる距離
     GSuint bone{ 0 };                       // 攻撃を行うボーン(演出用)
+    bool effect{ true };                    // 演出エフェクトを出すかどうか
 };
 
 struct MyEnemyInfo {
@@ -119,6 +120,12 @@ public:
     void update_move(float delta_time);
 
     /// <summary>
+    /// 移動の更新
+    /// </summary>
+    /// <param name="move_speed">= 移動速度の上書き</param>
+    void update_move(float delta_time, float move_speed);
+
+    /// <summary>
     /// 移動が終了したかどうか
     /// </summary>
     /// <returns>終了してたら真を返却</returns>
@@ -209,16 +216,22 @@ protected:
     void update_alert_effect();
 
 protected:
+    // 最後のステート番号
     GSuint prev_state_num_{ 0 };
+    // 最後のモーション番号
     GSuint prev_motion_num_{ 0 };
+    // 最後のモーションループ
     bool prev_motion_loop_{ false };
 
+    // ターゲット
     Character* target_{ nullptr };
 
+    // 経路探索
     NavMeshAgent navmesh_;
-
+    // 経路探索の更新をしたかどうか
     bool is_navmesh_update_{ false };
 
+    // 召喚時の座標
     GSvector3 origin_position_{ 0.0f, 0.0f, 0.0f };
 
     MyEnemyInfo my_info_;

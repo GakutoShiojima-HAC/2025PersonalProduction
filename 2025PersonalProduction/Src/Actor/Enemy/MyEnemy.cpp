@@ -28,6 +28,7 @@ MyEnemy::MyEnemy(IWorld* world, const GSvector3& position, const GSvector3& rota
 
     // モーションによるアラートイベントの追加
     for (const auto& data : info.attack_data) {
+        if (!data.second.effect) continue;
         set_motion_alert_event(data.first, data.second.start_time, data.second.bone);
     }
 }
@@ -36,8 +37,8 @@ void MyEnemy::update(float delta_time) {
     is_navmesh_update_ = false; // リセット
     update_invincible(delta_time);
     update_state(delta_time);
-    update_external_velocity(delta_time);
-    update_gravity(delta_time);
+    update_physics(delta_time);
+    collide_field();
     update_mesh(delta_time);
 }
 
@@ -77,19 +78,17 @@ void MyEnemy::collide_field() {
     // 壁との衝突判定（球体との判定)
     GSvector3 center; // 押し戻し後の球体の中心座標
     if (world_->get_field()->collide(collider(), &center)) {
-        // 外的移動量よって吹き飛ばされたかどうか
-        bool is_external = std::abs(external_velocity_.x) + std::abs(external_velocity_.z) > 0.001f;
-        // 外的移動量を0にする
-        external_velocity_.x = 0.0f;
-        external_velocity_.z = 0.0f;
-
         // NavMeshによる移動をしていなければ補正する
-        if (!is_navmesh_update_ || is_external) {
+        if (!is_navmesh_update_) {
             // y座標は変更しない
             center.y = transform_.position().y;
             // 補正後の座標に変更する
             transform_.position(center);
         }
+
+        // ぶつかったら止まる
+        velocity_.x = 0.0f;
+        velocity_.z = 0.0f;
     }
 
     // 地面との衝突判定（線分との交差判定)
@@ -135,12 +134,12 @@ void MyEnemy::collide_field() {
         }
         // 着地状態の更新
         on_ground();
-        is_ground_ = true;
+        is_grounded_ = true;
     }
     else {
         // 空中状態の更新
         on_air();
-        is_ground_ = false;
+        is_grounded_ = false;
     }
 
     // 死亡判定
@@ -213,6 +212,11 @@ bool MyEnemy::start_move(const GSvector3& to) {
 
 void MyEnemy::update_move(float delta_time) {
     navmesh_.update_move(delta_time, my_info_.move_speed, 3.0f);
+    is_navmesh_update_ = true;
+}
+
+void MyEnemy::update_move(float delta_time, float move_speed) {
+    navmesh_.update_move(delta_time, move_speed, 3.0f);
     is_navmesh_update_ = true;
 }
 
