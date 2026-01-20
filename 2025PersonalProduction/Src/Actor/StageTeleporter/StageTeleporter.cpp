@@ -42,12 +42,13 @@ void StageTereporter::late_update(float delta_time) {
 }
 
 void StageTereporter::draw() const {
-    if (enable_collider_) {
-        glPushMatrix();
-        glMultMatrixf(transform_.localToWorldMatrix());
-        gsDrawMesh((GSuint)MeshID::Tereporter);
-        glPopMatrix();
-    }
+     glPushMatrix();
+     if (enable_collider_) glColor4f(0.0f, 0.9f, 0.3f, 0.4f);
+     else glColor4f(0.1f, 0.1f, 0.1f, 0.4f);
+     glMultMatrixf(transform_.localToWorldMatrix());
+     gsDrawMesh((GSuint)MeshID::Tereporter);
+     glColor4f(1.0f, 1.0f, 1.0f, 1.0f); // color reset
+     glPopMatrix();
 }
 
 void StageTereporter::react(Actor& other) {
