@@ -50,6 +50,12 @@ public:
     /// <returns>入っていたら真を返却</returns>
     virtual bool is_attack_soon() const { return false; }
 
+    /// <summary>
+    /// 急所のワールド座標を取得
+    /// </summary>
+    /// <returns>急所のワールド座標</returns>
+    virtual GSmatrix4 critical_position() const;
+
 public:
 	/// <summary>
 	/// HPを取得

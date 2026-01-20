@@ -16,6 +16,7 @@ StageTereporter::StageTereporter(IWorld* world, const GSvector3& position, const
     enable_collider_ = stage_id <= world_->game_save_data().get().stage + 1;
 
     if (enable_collider_) {
+        is_tp_ = false;
         collider_ = BoundingSphere{ 0.5f, GSvector3{ 0.0f, 1.0f, 0.0f } };
     }
 }
@@ -28,10 +29,10 @@ void StageTereporter::late_update(float delta_time) {
     if (is_touch_) {
         timer_ += delta_time / cFPS;
 
-        if (timer_ > 0.5f && !is_dead_) {
+        if (timer_ > 0.5f && !is_tp_) {
             std::any data = stage_id_;
             SceneManager::get_instance().send_message(SceneTag::Game, "RequestTereport", data);
-            is_dead_ = true;
+            is_tp_ = true;
             return;
         }
     }
@@ -50,7 +51,7 @@ void StageTereporter::draw() const {
 }
 
 void StageTereporter::react(Actor& other) {
-    if (other.tag() == ActorTag::Player) {
+    if (other.tag() == ActorTag::Player && !is_tp_) {
         is_touch_ = true;
     }
 }

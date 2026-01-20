@@ -27,6 +27,7 @@ private:
 
     bool is_touch_{ false };
 
+    bool is_tp_{ false };
 };
 
 
