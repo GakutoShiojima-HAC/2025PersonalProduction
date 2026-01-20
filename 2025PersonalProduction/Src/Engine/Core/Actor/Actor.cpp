@@ -8,8 +8,8 @@
 constexpr float FOOT_OFFSET{ 0.125f };
 
 void Actor::update(float delta_time) {
-    update_physics(delta_time);
-    collide_field();
+    //update_physics(delta_time);
+    //collide_field();
 }
 
 void Actor::late_update(float delta_time) {
