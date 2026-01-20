@@ -61,6 +61,8 @@ public:
 
     virtual bool is_attack_soon() const override;
 
+    virtual GSmatrix4 critical_position() const override;
+
 protected:
     virtual void react(Actor& other) override;
 

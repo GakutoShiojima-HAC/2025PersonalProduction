@@ -17,6 +17,10 @@ bool Pawn::is_dead_state() const {
     return false;
 }
 
+GSmatrix4 Pawn::critical_position() const {
+    return transform_.localToWorldMatrix();
+}
+
 int& Pawn::hp() {
     return hp_;
 }

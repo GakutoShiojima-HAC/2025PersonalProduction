@@ -67,6 +67,10 @@ bool MyEnemy::is_attack_soon() const {
     return state_timer_ >= it->second.start_time && state_timer_ < it->second.attack_time;
 }
 
+GSmatrix4 MyEnemy::critical_position() const {
+    return mesh_.bone_matrices(my_info_.critical_bone_num);
+}
+
 void MyEnemy::react(Actor& other) {
     if (other.tag() == ActorTag::Enemy) collide_actor(other);
 }
