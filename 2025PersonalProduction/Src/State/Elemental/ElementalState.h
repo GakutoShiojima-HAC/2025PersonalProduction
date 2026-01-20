@@ -1,56 +1,46 @@
 // -----------------------------------------------------------------------------------------
-//  File          : VikingState.h
+//  File          : ElementalState.h
 //  Author        : Shiojima Gakuto
-//  Created       : 2026/01/18
+//  Created       : 2026/01/20
 //  Updated       : 2026/01/20
-//  Description   : バイキングの状態定義クラス
+//  Description   : エレメンタルの状態定義クラス
 //
 //  注意：本ソースコードの無断転載・コードのコピー・貼り付けによる流用・再配布を禁止します。
 // -----------------------------------------------------------------------------------------
 
-#ifndef VIKING_STATE_H_
-#define VIKING_STATE_H_
+#ifndef ELEMENTAL_STATE_H_
+#define ELEMENTAL_STATE_H_
 
 #include "Engine/Core/StateMachine/IState.h"
 
-class Viking;
+class Elemental;
 
-class VikingState : public IState {
+class ElementalState : public IState {
 public:
-    VikingState(Viking& owner) : owner_{ owner } {};
+    ElementalState(Elemental& owner) : owner_{ owner } {};
 
 public:
     enum class State {
         Idle,
         Angry,
-        Move,
-        Retreat,
+        MoveF,
         Hurt,
         Dead,
 
-        Block,
-        BlockHit,
+        Attack1,
+        Attack2,
 
-        Attack,
-
-        JumpStart,
-        Jumping,
-        JumpEnd,
-
-        RushCharge,
-        RushStart,
-        RushMove,
-        RushEnd,
+        Spell,
 
 
         MAX_SIZE	    // 要素数
     };
 
 protected:
-    Viking& owner_;
+    Elemental& owner_;
 
 };
 
-using VikingStateType = VikingState::State;
+using ElementalStateType = ElementalState::State;
 
 #endif

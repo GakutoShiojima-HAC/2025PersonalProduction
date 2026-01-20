@@ -15,8 +15,6 @@
 #include "State/Actor/MyEnemy/MyEnemyRetreatState.h"
 #include "State/Actor/Character/CharacterLandingToAnyState.h"
 
-#include <imgui/imgui.h>
-
 // 無敵時間(秒)
 const float INVINCIBLE_TIME{ 0.35f };
 
@@ -36,10 +34,6 @@ Viking::Viking(IWorld* world, const GSvector3& position, const GSvector3& rotate
 
 void Viking::draw_gui() const {
     draw_boss_bar();
-
-    ImGui::Begin("Viking");
-    ImGui::Text("state: %d, motion: %d", state_.get_current_state(), motion_);
-    ImGui::End();
 }
 
 void Viking::take_damage(Actor& other, const int damage) {
