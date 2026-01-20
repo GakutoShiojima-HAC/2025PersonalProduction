@@ -20,21 +20,28 @@ public:
 public:
     void update(float delta_time) override;
 
+    void draw() const override;
+
     void message(const std::string& message, std::any& param) override;
 
 private:
     enum class BarrierBreakType {
         None,
-        Down
+        Down,
+        Fade,
     };
 
 private:
     BarrierBreakType break_type_{ BarrierBreakType::None };
 
+    // 破壊状態かどうか
     bool is_break_{ false };
-
+    // 壊れるまでの時間
+    float break_time_{ 0.0f };
+    // 完全に壊れるまでのタイマー
     float timer_{ 0.0f };
 
+    // 破壊タイプ用パラメータ
     float parameter_{ 0.0f };
 
     GSvector3 origin_position_{ 0.0f, 0.0f, 0.0f };

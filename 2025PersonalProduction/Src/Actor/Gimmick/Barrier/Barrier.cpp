@@ -16,10 +16,12 @@ Barrier::Barrier(IWorld* world, const GSvector3& position, const std::string& br
     mesh_ = (GSuint)MeshID::GimmickBarrier;
     mesh_collider_ = (GSuint)MeshID::GimmickBarrier;
 
+    break_time_ = break_time;
     timer_ = break_time;
     parameter_ = parameter;
 
     if (break_type == "Down") break_type_ = BarrierBreakType::Down;
+    else if (break_type == "Fade") break_type_ = BarrierBreakType::Fade;
 }
 
 void Barrier::update(float delta_time) {
@@ -27,22 +29,58 @@ void Barrier::update(float delta_time) {
         timer_ -= delta_time / cFPS;
 
         if (timer_ <= 0.0f) {
-            if (break_type_ == BarrierBreakType::Down) gsPlayEffect((GSuint)EffectID::DustLarge, &origin_position_);
+            switch (break_type_) {
+            case Barrier::BarrierBreakType::Down:
+                gsPlayEffect((GSuint)EffectID::DustLarge, &origin_position_);
+                break;
+            case Barrier::BarrierBreakType::Fade:
+
+                break;
+            default:
+
+                break;
+            }
 
             die();
             return;
         }
 
-        // ”j‰ó‰‰o
-        if (break_type_ == BarrierBreakType::Down) {
+        // Œo‰ß‰‰o
+        switch (break_type_) {
+        case Barrier::BarrierBreakType::Down:
             transform_.translate(GSvector3{ 0.0f, -parameter_ * delta_time, 0.0f });
+            break;
+        case Barrier::BarrierBreakType::Fade:
+            break;
+        default:
+            break;
         }
     }
+}
+
+void Barrier::draw() const {
+    const float alpha = is_break_ ? timer_ / break_time_ : 1.0f;
+
+    glPushMatrix();
+    glMultMatrixf(transform_.localToWorldMatrix());
+    glColor4f(1.0f, 1.0f, 1.0f, alpha);
+    gsDrawMesh(mesh_);
+    glColor4f(1.0f, 1.0f, 1.0f, 1.0f); // color reset
+    glPopMatrix();
 }
 
 void Barrier::message(const std::string& message, std::any& param) {
     if (message == "ByTimeline") {
         is_break_ = true;
-        gsPlayEffect((GSuint)EffectID::DustLarge, &origin_position_);
+
+        switch (break_type_) {
+        case Barrier::BarrierBreakType::Down:
+            gsPlayEffect((GSuint)EffectID::DustLarge, &origin_position_);
+            break;
+        case Barrier::BarrierBreakType::Fade:
+            break;
+        default:
+            break;
+        }
     }
 }
