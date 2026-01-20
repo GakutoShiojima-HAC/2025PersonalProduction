@@ -23,6 +23,7 @@
     X(EnemyRockGolemMud) \
     X(EnemyLich) \
     X(EnemyViking) \
+    X(EnemyLavaElemental) \
     X(GimmickBarrier) \
     X(GimmickElevator) \
     X(WeaponSword1) \
