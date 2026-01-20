@@ -150,6 +150,7 @@ void Viking::generate_land_attack() {
     const GScolor color{ 1.0f, 1.0f, 1.0f, 0.25f };
     gsSetEffectColor(handle, &color);
 
+    world_->camera_shake(CameraShakeType::HandShake, 0.5f, 15.0f, false);
     SE::play((GSuint)SEID::HardLand);
 }
 
