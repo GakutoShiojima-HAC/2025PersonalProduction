@@ -53,10 +53,14 @@ constexpr float AVOID_SPEED{ 10.0f };
 // ジャンプ力
 constexpr float JUMP_POWER{ 0.215f };
 
+// 回避成功判定距離
+constexpr float AVOID_MAX_RANGE{ 3.0f };
 // 回避演出の時間
 constexpr float AVOID_EFFECT_TIME{ 3.0f };
 // 回避演出の色
 const GScolor AVOID_EFFECT_COLOR{ 0.592f, 0.627f, 1.0f, 1.0f };
+// 回避攻撃のクリティカルポイントからのオフセット
+const GSvector3 AVOID_ATTACK_OFFSET{ 0.75f, 0.0f, 1.125f };
 
 // 右手のボーン番号
 constexpr int RIGHT_HAND_BONE_NUM{ 114 };
@@ -480,6 +484,13 @@ void Player::look_target() {
     }
     if (target == nullptr) return;
 
+    look_target(target);
+}
+
+void Player::look_target(Actor* target) {
+    if (target == nullptr) return;
+
+    const GSvector3 position = transform_.position();
     GSvector3 target_position = target->transform().position();
     target_position.y = position.y; // 向かせるだけなのでy座標は同じ
     transform_.lookAt(target_position);
@@ -602,16 +613,20 @@ void Player::on_avoid() {
     gsSetEffectColor(avoid_effect_handle_, &color);
     SE::play_random((GSuint)SEID::Avoid, 0.25f);
 
+    // 回避ターゲットをリセット
+    avoid_target_ = nullptr;
+
     // 回避演出に入るかどうか(近くに攻撃動作に入っている敵がいるかどうか)
     if (is_avoid_effect) return;
     std::vector<Pawn*> enemys = world_->find_pawn_with_tag(ActorTag::Enemy);
     if (enemys.empty()) return;
     for (const auto& enemy : enemys) {
         //近くにいなければスキップ
-        if ((enemy->transform().position() - transform_.position()).magnitude() > 5.0f) continue;
+        if ((enemy->transform().position() - transform_.position()).magnitude() > AVOID_MAX_RANGE) continue;
         // 攻撃動作に入っているか
         if (enemy->is_attack_soon()) {
             avoid_effect_start();   // 回避演出開始
+            avoid_target_ = enemy;  // 回避ターゲットを保存
             break;
         }
     }
@@ -621,6 +636,38 @@ void Player::on_avoid_attack() {
     look_target();
     // 回避が成功していたら回避成功攻撃とする
     if (world_->is_avoid_effect()) {
+
+        // ターゲットがいなければ近くの敵を探す
+        if (avoid_target_ == nullptr) {
+            // 一番近い敵を探す
+            float min_length{ 6.0f };
+            Pawn* target{ nullptr };
+            const GSvector3 position = transform_.position();
+            for (const auto& pawn : world_->find_pawn_with_tag(ActorTag::Enemy)) {
+                // 死亡していたらスキップ
+                if (pawn->is_dead_state()) continue;
+                float length = (pawn->transform().position() - position).magnitude();
+                // 一番近ければ対象を更新
+                if (length < min_length) {
+                    min_length = length;
+                    target = pawn;
+                }
+            }
+            avoid_target_ = target;
+        }
+
+        // ターゲットに対して攻撃する
+        if (avoid_target_ != nullptr) {
+            const GSvector3 world_offset = transform_.rotation() * AVOID_ATTACK_OFFSET;
+            const float current_y = transform_.position().y;
+            const GSvector3 critical = avoid_target_->critical_position().position();
+            GSvector3 position = critical - world_offset;
+            position.y = current_y;
+            transform_.position(position);
+            look_target(avoid_target_);
+            collide_field();
+        }
+
         change_state((GSuint)PlayerStateType::Skill, Motion::AvoidSuccessAttack, false);
         world_->play_timeline("AvoidSuccessAttack");
     }
@@ -628,6 +675,9 @@ void Player::on_avoid_attack() {
         change_state((GSuint)PlayerStateType::Skill, Motion::AvoidAttack, false);
         world_->play_timeline("AvoidAttack");
     }
+
+    // 回避ターゲットを開放
+    avoid_target_ = nullptr;
 }
 
 void Player::on_skill() {

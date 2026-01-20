@@ -193,6 +193,12 @@ public:
     void look_target();
 
     /// <summary>
+    /// 指定した敵を向く
+    /// </summary>
+    /// <param name="target"></param>
+    void look_target(Actor* target);
+
+    /// <summary>
     /// タイムラインを停止させる
     /// </summary>
     void stop_timeline();
@@ -303,7 +309,6 @@ private:
     // 最後の移動量
     GSvector3 prev_velocity_{ 0.0f, 0.0f, 0.0f };
 
-private:
 	Input& input_ = Input::get_instance();
 
     // アイテムデータ
@@ -328,6 +333,9 @@ private:
 
     // 回避入力時のエフェクトハンドル
     int avoid_effect_handle_{ 0 };
+
+    // 回避対象
+    Pawn* avoid_target_{ nullptr };
 };
 
 using PlayerMotion = Player::Motion;
