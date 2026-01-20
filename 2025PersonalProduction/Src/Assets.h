@@ -29,6 +29,7 @@
     X(WeaponSword2) \
     X(TreasureChest) \
     X(Item) \
+    X(Tereporter) \
     X(MAX_SIZE) // 要素数
 
 // テクスチャ 

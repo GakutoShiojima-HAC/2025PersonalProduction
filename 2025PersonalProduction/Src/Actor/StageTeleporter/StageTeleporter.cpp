@@ -1,6 +1,8 @@
 #include "Actor/StageTeleporter/StageTeleporter.h"
 #include "Engine/Core/Scene/SceneManager.h"
 #include <any>
+#include "GameConfig.h"
+#include "Assets.h"
 
 StageTereporter::StageTereporter(IWorld* world, const GSvector3& position, const GSvector3& rotate, int stage_id) {
     world_ = world;
@@ -18,11 +20,38 @@ StageTereporter::StageTereporter(IWorld* world, const GSvector3& position, const
     }
 }
 
+void StageTereporter::update(float delta_time) {
+    is_touch_ = false;  // reset
+}
+
+void StageTereporter::late_update(float delta_time) {
+    if (is_touch_) {
+        timer_ += delta_time / cFPS;
+
+        if (timer_ > 0.5f && !is_dead_) {
+            std::any data = stage_id_;
+            SceneManager::get_instance().send_message(SceneTag::Game, "RequestTereport", data);
+            is_dead_ = true;
+            return;
+        }
+    }
+    else {
+        timer_ = 0.0f;
+    }
+}
+
+void StageTereporter::draw() const {
+    if (enable_collider_) {
+        glPushMatrix();
+        glMultMatrixf(transform_.localToWorldMatrix());
+        gsDrawMesh((GSuint)MeshID::Tereporter);
+        glPopMatrix();
+    }
+}
+
 void StageTereporter::react(Actor& other) {
     if (other.tag() == ActorTag::Player) {
-        std::any data = stage_id_;
-        SceneManager::get_instance().send_message(SceneTag::Game, "RequestTereport", data);
-        die();
+        is_touch_ = true;
     }
 }
 

@@ -10,12 +10,22 @@ public:
     ~StageTereporter() = default;
 
 public:
+    void update(float delta_time) override;
+
+    void late_update(float delta_time) override;
+
+    void draw() const override;
+
     void react(Actor& other) override;
 
     void die() override;
 
 private:
     int stage_id_{ 0 };
+
+    float timer_{ 0.0f };
+
+    bool is_touch_{ false };
 
 };
 
