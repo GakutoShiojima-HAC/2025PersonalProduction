@@ -309,6 +309,8 @@ void Player::on_hit_attack(AttackCollider& collider) {
         world_->camera_shake(CameraShakeType::Shake, 0.15f, 5.0f, false);
         // コントローラーを振動させる
         if (input_.is_pad()) Vibration::get_instance().start(0.25f, 1.0f);
+        // インパクト
+        world_->impact_effect_start(0.2f);
     }
 }
 
@@ -612,7 +614,7 @@ void Player::on_avoid() {
 
     // 回避エフェクトを再生
     avoid_effect_handle_ = world_->camera_effect_play_foward((GSuint)EffectID::Avoid, 0.25f);
-    const GScolor color{ 1.0f, 1.0f, 1.0f, 0.2f };
+    const GScolor color{ 1.0f, 1.0f, 1.0f, 0.15f };
     gsSetEffectColor(avoid_effect_handle_, &color);
     SE::play_random((GSuint)SEID::Avoid, 0.25f);
 

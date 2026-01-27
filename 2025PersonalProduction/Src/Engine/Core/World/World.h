@@ -27,6 +27,7 @@
 #include "Engine/Core/Field/StaticEffect.h"
 #include "Engine/Graphics/TypeWriter/TypeWriterLabel.h"
 #include "Engine/Core/World/AvoidEffectManager.h"
+#include "Engine/Core//World/ImpactEffectManager.h"
 
 class AttackColliderPool;
 
@@ -208,6 +209,8 @@ public:
 
     void set_type_writer(const std::vector<std::string>& text, TextCode code = TextCode::UTF8) override;
 
+    void impact_effect_start(float time) override;
+
 protected:
     // GUIを描画するかどうか
     bool enable_draw_gui_{ true };
@@ -251,6 +254,8 @@ protected:
     TypeWriterLabel type_writer_label_;
     // 回避エフェクトマネージャー
     AvoidEffectManager avoid_effect_;
+    // インパクトエフェクトマネージャー
+    ImpactEffectManager impact_effect_;
 };
 
 #endif

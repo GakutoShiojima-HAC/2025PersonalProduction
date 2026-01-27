@@ -18,6 +18,11 @@ World::~World() {
 }
 
 void World::update(float delta_time) {
+    if (impact_effect_.is_active()) {
+        impact_effect_.update(delta_time);
+        return;
+    }
+
     const float scale_time = delta_time * timescale_;
 
     game_timer_.update(delta_time);
@@ -99,6 +104,7 @@ void World::draw() const {
 }
 
 void World::clear() {
+    impact_effect_.clear();
     avoid_effect_.clear();
     static_effect_.clear();
 	delete field_;
@@ -157,6 +163,10 @@ void World::set_type_writer(const std::string& text, TextCode code) {
 
 void World::set_type_writer(const std::vector<std::string>& text, TextCode code) {
     type_writer_label_.set(text, code);
+}
+
+void World::impact_effect_start(float time) {
+    impact_effect_.start(time);
 }
 
 bool& World::enable_mask_avoid_effect() {

@@ -30,6 +30,8 @@ enum {
     Rt_FXAA,				// アンチエイリアシング処理
 
     Rt_Dissolve,            // ディゾルブ
+
+    Rt_Impact,              // インパクトエフェクト
 };
 
 // シェーダー
@@ -50,6 +52,7 @@ enum {
     Shader_FXAA,			// アンチエイリアシング
 
     Shader_Dissolve,        // ディゾルブ
+    Shader_Impact,          // インパクトエフェクト
 };
 
 #endif

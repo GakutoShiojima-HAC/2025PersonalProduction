@@ -320,6 +320,12 @@ public:
     /// <param name="code">= 文字コード</param>
     virtual void set_type_writer(const std::vector<std::string>& text, TextCode code = TextCode::UTF8) = 0;
 
+    /// <summary>
+    /// インパクトエフェクトの開始
+    /// </summary>
+    /// <param name="time">= 時間</param>
+    virtual void impact_effect_start(float time) = 0;
+
 public:
 	// コピー禁止
 	IWorld(const IWorld& other) = delete;
