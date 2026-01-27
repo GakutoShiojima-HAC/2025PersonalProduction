@@ -669,11 +669,11 @@ void Player::on_avoid_attack() {
         }
 
         change_state((GSuint)PlayerStateType::Skill, Motion::AvoidSuccessAttack, false);
-        world_->play_timeline("AvoidSuccessAttack");
+        if (!world_->is_playing_timeline()) world_->play_timeline("AvoidSuccessAttack");
     }
     else {
         change_state((GSuint)PlayerStateType::Skill, Motion::AvoidAttack, false);
-        world_->play_timeline("AvoidAttack");
+        if (!world_->is_playing_timeline()) world_->play_timeline("AvoidAttack");
     }
 
     // 回避ターゲットを開放
