@@ -70,6 +70,10 @@ void MenuScene::draw() const {
 
     game_post_effect_.begin_gui(current);
 
+    // ”wŒi•`‰æ
+    ScreenData& data = Screen::get_instance().get_current_data();
+    Canvas::draw_texture((GSuint)TextureID::MenuBackGroundTexture, GSvector2::zero(), GSrect{ 0.0f, 0.0f, (float)data.width_px, (float)data.height_px });
+
     state_.draw();
 
     game_post_effect_.end_gui();

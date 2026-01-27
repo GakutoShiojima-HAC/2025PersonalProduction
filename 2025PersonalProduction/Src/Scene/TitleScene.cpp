@@ -49,7 +49,7 @@ void TitleScene::update(float delta_time) {
 void TitleScene::draw() const {
     // 背景描画
     ScreenData& data = Screen::get_instance().get_current_data();
-    Canvas::draw_texture((GSuint)TextureID::BackGround, GSvector2::zero(), GSrect{ 0.0f, 0.0f, (float)data.width_px, (float)data.height_px });
+    Canvas::draw_texture((GSuint)TextureID::TitleBackGroundTexture, GSvector2::zero(), GSrect{ 0.0f, 0.0f, (float)data.width_px, (float)data.height_px });
 
     // テキストの描画
     if (is_load_end_) {
@@ -71,7 +71,7 @@ void TitleScene::draw() const {
 	{
 		const GSrect rect{ 0.0f, 0.0f, 720.0f, 174.0f };
 		const GSvector2 center{ rect.right / 2.0f, rect.bottom / 2.0f };
-        Canvas::draw_texture((GSuint)TextureID::TitleLogo, GSvector2{ 0.0f, -100.0f }, rect, center, GSvector2::one(), GScolor{ 1.0f, 1.0f, 1.0f, 1.0f }, 0.0f, Anchor::Center);
+        Canvas::draw_texture((GSuint)TextureID::TitleLogo, GSvector2{ 0.0f, -250.0f }, rect, center, GSvector2{ 1.25f, 1.25f }, GScolor{1.0f, 1.0f, 1.0f, 1.0f}, 0.0f, Anchor::Center);
 	}
 }
 
