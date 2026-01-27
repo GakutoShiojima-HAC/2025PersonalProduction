@@ -150,6 +150,8 @@
     <ClCompile Include="Src\Actor\CinemaActor\CinemaBehavior\PlayReact.cpp" />
     <ClCompile Include="Src\Actor\Enemy\Elemental\Elemental.cpp" />
     <ClCompile Include="Src\Actor\Enemy\Elemental\ElementalGenerator.cpp" />
+    <ClCompile Include="Src\Actor\Enemy\LeapEnemy\LeapEnemy.cpp" />
+    <ClCompile Include="Src\Actor\Enemy\LeapEnemy\LeapEnemyGenerator.cpp" />
     <ClCompile Include="Src\Actor\Enemy\MyEnemy.cpp" />
     <ClCompile Include="Src\Actor\Enemy\SimpleEnemy\SimpleEnemy.cpp" />
     <ClCompile Include="Src\Actor\Enemy\SimpleEnemy\SimpleEnemyGenerator.cpp" />
@@ -268,6 +270,8 @@
     <ClCompile Include="Src\State\Elemental\ElementalAttack1State.cpp" />
     <ClCompile Include="Src\State\Elemental\ElementalIdleState.cpp" />
     <ClCompile Include="Src\State\Elemental\ElementalMoveState.cpp" />
+    <ClCompile Include="Src\State\LeapEnemy\LeapEnemyIdleState.cpp" />
+    <ClCompile Include="Src\State\LeapEnemy\LeapEnemyMoveState.cpp" />
     <ClCompile Include="Src\State\Player\PlayerAttackState.cpp" />
     <ClCompile Include="Src\State\Player\PlayerAvoidState.cpp" />
     <ClCompile Include="Src\State\Player\PlayerDeadState.cpp" />
@@ -338,6 +342,8 @@
     <ClInclude Include="Src\Actor\Enemy\Elemental\ElementalGenerator.h" />
     <ClInclude Include="Src\Actor\Enemy\GetMyEnemyInfo.h" />
     <ClInclude Include="Src\Actor\Enemy\Elemental\Elemental.h" />
+    <ClInclude Include="Src\Actor\Enemy\LeapEnemy\LeapEnemy.h" />
+    <ClInclude Include="Src\Actor\Enemy\LeapEnemy\LeapEnemyGenerator.h" />
     <ClInclude Include="Src\Actor\Enemy\MyEnemy.h" />
     <ClInclude Include="Src\Actor\Enemy\Viking\VikingGenerator.h" />
     <ClInclude Include="Src\Actor\Gimmick\Barrier\Barrier.h" />
@@ -394,6 +400,9 @@
     <ClInclude Include="Src\State\Elemental\ElementalIdleState.h" />
     <ClInclude Include="Src\State\Elemental\ElementalMoveState.h" />
     <ClInclude Include="Src\State\Elemental\ElementalState.h" />
+    <ClInclude Include="Src\State\LeapEnemy\LeapEnemyIdleState.h" />
+    <ClInclude Include="Src\State\LeapEnemy\LeapEnemyMoveState.h" />
+    <ClInclude Include="Src\State\LeapEnemy\LeapEnemyState.h" />
     <ClInclude Include="Src\State\Viking\VikingState.h" />
     <ClInclude Include="Src\TextCode.h" />
     <ClInclude Include="Src\Engine\Graphics\TypeWriter\TypeWriter.h" />
