@@ -126,6 +126,9 @@ Player::Player(IWorld* world, const GSvector3& position, const GSvector3& rotate
 }
 
 void Player::update(float delta_time) {
+    // 回避成功時は倍速
+    if (world_->is_avoid_effect()) delta_time *= 1.2f;
+
 	update_invincible(delta_time);
 	update_state(delta_time);
     update_physics(delta_time);
@@ -346,7 +349,7 @@ void Player::update_move(float delta_time) {
 	velocity += forward * input.y;
 	
 	// 歩行か疾走か
-    const bool is_sprint = ABS(input.x) > 0.95f || ABS(input.y) > 0.95f;
+    const bool is_sprint = ABS(input.magnitude()) > 0.65f;
 
 	// ロックオン中かどうかを取得
 	const bool is_lockon = camera_->is_lockon();
@@ -669,11 +672,11 @@ void Player::on_avoid_attack() {
         }
 
         change_state((GSuint)PlayerStateType::Skill, Motion::AvoidSuccessAttack, false);
-        world_->play_timeline("AvoidSuccessAttack");
+        if (!world_->is_playing_timeline()) world_->play_timeline("AvoidSuccessAttack");
     }
     else {
         change_state((GSuint)PlayerStateType::Skill, Motion::AvoidAttack, false);
-        world_->play_timeline("AvoidAttack");
+        if (!world_->is_playing_timeline()) world_->play_timeline("AvoidAttack");
     }
 
     // 回避ターゲットを開放

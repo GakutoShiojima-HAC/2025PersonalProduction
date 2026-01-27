@@ -48,7 +48,9 @@ void SceneGameResultState::enter() {
         final_score_ = world_->game_save_data().calc_final_score(world_->action_score().get_total_score(), world_->time().get_elapsed_time(), world_->player_respawner().respawn_count());
         prev_score_ = world_->game_save_data().get_stage_score(owner_.get_current_load_stage());
     }
-    BGMManager::get_instance().play(0, 1.0f);
+    BGMManager& bgm = BGMManager::get_instance();
+    bgm_handle_ = bgm.current();
+    bgm.play(0, 1.0f);
 }
 
 void SceneGameResultState::update(float delta_time) {
@@ -186,7 +188,7 @@ void SceneGameResultState::try_agein() {
         owner_.respawn_player();
         owner_.change_state((GSuint)SceneStateType::Original);
         BGMManager& bgm = BGMManager::get_instance();
-        bgm.play(bgm.current());
+        bgm.play(bgm_handle_, 0.1f);
         return;
     }
     // Ä’§í

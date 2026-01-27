@@ -25,5 +25,7 @@ const float cFAR{ 1000.0f };
 
 // 共通フォント
 const std::string cFONT{ "DelaSuko Gothic One" };
+// 共通フォント(テキスト用)
+const std::string cFONT_TEXT{ "HackGen35 Console" };
 
 #endif

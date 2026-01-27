@@ -59,6 +59,7 @@ private:
     // 前のスコア
     int prev_score_{ 0 };
 
+    int bgm_handle_{ 0 };
 };
 
 #endif
