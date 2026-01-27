@@ -11,6 +11,7 @@
 #include "Engine/Graphics/Shader/PostEffects/BloomEffect.h"
 #include "Engine/Graphics/Shader/PostEffects/FXAAEffect.h"
 #include "Engine/Graphics/Shader/PostEffects/DissolveEffect.h"
+#include "Engine/Graphics/Shader/PostEffects/ImpactEffect.h"
 
 // ブルームエフェクトの対象にするテクセルの輝度のしきい値
 const float BLOOM_THRESHOLD{ 0.65f };
@@ -37,6 +38,7 @@ void GamePostEffect::load() {
     gsLoadShader(Shader_BloomCombine, "Resource/Private/Shader/RenderTexture.vert", "Resource/Private/Shader/BloomCombine.frag");
     gsLoadShader(Shader_FXAA, "Resource/Private/Shader/RenderTexture.vert", "Resource/Private/Shader/FXAA.frag");
     gsLoadShader(Shader_Dissolve, "Resource/Private/Shader/RenderTexture.vert", "Resource/Private/Shader/Dissolve.frag");
+    gsLoadShader(Shader_Impact, "Resource/Private/Shader/RenderTexture.vert", "Resource/Private/Shader/ImpactEffect.frag");
 }
 
 void GamePostEffect::clear() {
@@ -52,6 +54,7 @@ void GamePostEffect::clear() {
     gsDeleteShader(Shader_BloomCombine);
     gsDeleteShader(Shader_FXAA);
     gsDeleteShader(Shader_Dissolve);
+    gsDeleteShader(Shader_Impact);
 }
 
 void GamePostEffect::create() {
@@ -103,6 +106,9 @@ void GamePostEffect::create() {
     // ディゾルブ用のレンダーターゲットの作成
     gsCreateRenderTarget(Rt_Dissolve, width_, height_, GS_TRUE, GS_FALSE, GS_TRUE);
 
+    // インパクトエフェクト用のレンダーターゲットの作成
+    gsCreateRenderTarget(Rt_Impact, width_, height_, GS_TRUE, GS_FALSE, GS_TRUE);
+
     // SSAO用データの作成
     PostEffect::SSAO::create_sample_kernel(ssao_sample_kernel_, KERNEL_SIZE);
     PostEffect::SSAO::create_noise_texture(ssao_noise_texture_);
@@ -111,6 +117,7 @@ void GamePostEffect::create() {
     draw_avoid_effect_ = false;
     blur_power_ = 0.0f;
     threshold_ = 1.0f;
+    impact_power_ = 0.0f;
 }
 
 void GamePostEffect::release() {
@@ -139,6 +146,7 @@ void GamePostEffect::release() {
     gsDeleteRenderTarget(Rt_BloomCombine);
     gsDeleteRenderTarget(Rt_FXAA);
     gsDeleteRenderTarget(Rt_Dissolve);
+    gsDeleteRenderTarget(Rt_Impact);
 }
 
 void GamePostEffect::draw(GSuint source) const {
@@ -189,6 +197,11 @@ GSuint GamePostEffect::apply(const GSmatrix4& projection) const {
     // アンチエイリアシング
     if (setting_.is_draw_fxaa()) {
         current = PostEffect::FXAA::fxaa(current, screen_size);
+    }
+
+    // インパクトエフェクト
+    if (impact_power_ > 0.0f) {
+        current = PostEffect::Impact::apply(current, impact_power_);
     }
 
     // シーンをぼかす
@@ -286,6 +299,10 @@ float& GamePostEffect::blur_power() {
 
 float& GamePostEffect::dissolve_threshold() {
     return threshold_;
+}
+
+float& GamePostEffect::impact_power() {
+    return impact_power_;
 }
 
 GSvector2 GamePostEffect::get_screen_size() const {

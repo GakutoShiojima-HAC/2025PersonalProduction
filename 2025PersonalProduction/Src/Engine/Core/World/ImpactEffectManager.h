@@ -28,6 +28,7 @@ public:
 private:
     float timer_{ 0.0f };
 
+    float time_{ 0.0f };
 };
 
 #endif

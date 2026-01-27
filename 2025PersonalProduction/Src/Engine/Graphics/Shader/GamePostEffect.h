@@ -125,10 +125,16 @@ public:
     float& blur_power();
 
     /// <summary>
-    /// ディゾルブエフェクトのしきい値を指定
+    /// ディゾルブエフェクトのしきい値を指定(0.0~1.0)
     /// </summary>
     /// <returns>参照</returns>
     float& dissolve_threshold();
+
+    /// <summary>
+    /// インパクトエフェクトの強さを指定(0.0~1.0)
+    /// </summary>
+    /// <returns>参照</returns>
+    float& impact_power();
 
 private:
     /// <summary>
@@ -160,6 +166,8 @@ private:
 
     // ディゾルブのしきい値(0.0~1.0)
     float threshold_{ 1.0f };
+    // インパクトの強さ
+    float impact_power_{ 0.0f };
 
 public:
     // コピー禁止
