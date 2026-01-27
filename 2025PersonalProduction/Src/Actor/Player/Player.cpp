@@ -346,7 +346,7 @@ void Player::update_move(float delta_time) {
 	velocity += forward * input.y;
 	
 	// 歩行か疾走か
-    const bool is_sprint = ABS(input.x) > 0.95f || ABS(input.y) > 0.95f;
+    const bool is_sprint = ABS(input.magnitude()) > 0.65f;
 
 	// ロックオン中かどうかを取得
 	const bool is_lockon = camera_->is_lockon();
