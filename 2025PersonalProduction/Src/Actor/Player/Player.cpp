@@ -54,7 +54,7 @@ constexpr float AVOID_SPEED{ 10.0f };
 constexpr float JUMP_POWER{ 0.215f };
 
 // ‰ñ”ğ¬Œ÷”»’è‹——£
-constexpr float AVOID_MAX_RANGE{ 3.0f };
+constexpr float AVOID_MAX_RANGE{ 3.5f };
 // ‰ñ”ğ‰‰o‚ÌŠÔ
 constexpr float AVOID_EFFECT_TIME{ 3.0f };
 // ‰ñ”ğ‰‰o‚ÌF
