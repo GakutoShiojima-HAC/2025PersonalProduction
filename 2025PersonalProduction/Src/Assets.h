@@ -21,6 +21,7 @@
     X(EnemySlimeToxic) \
     X(EnemySlimeManToxic) \
     X(EnemyRockGolemMud) \
+    X(EnemyBear) \
     X(EnemyLich) \
     X(EnemyViking) \
     X(EnemyLavaElemental) \
