@@ -40,6 +40,8 @@
     X(BackGround) \
     X(DissolveMask) \
     X(Cursor) \
+    X(TitleBackGroundTexture) \
+    X(MenuBackGroundTexture) \
     X(MenuWindowTexture) \
     X(PauseWindowTexture) \
     X(SettingWindowTexture) \

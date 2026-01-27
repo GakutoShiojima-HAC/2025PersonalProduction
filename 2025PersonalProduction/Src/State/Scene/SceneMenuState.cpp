@@ -52,10 +52,10 @@ void SceneMenuState::draw() const {
     const GSrect logo_rect{ 0.0f, 0.0f, 720.0f, 174.0f };
     Canvas::draw_texture(
         (GSuint)TextureID::MenuLogo,
-        GSvector2{ 0.0f, -200.0f },
+        GSvector2{ 0.0f, -250.0f },
         logo_rect,
         GSvector2{ logo_rect.right / 2.0f, logo_rect.bottom / 2.0f },
-        GSvector2{ 1.0f, 1.0f },
+        GSvector2{ 1.25f, 1.25f },
         GScolor{ 1.0f, 1.0f, 1.0f, 1.0f },
         0.0f,
         Anchor::Center
