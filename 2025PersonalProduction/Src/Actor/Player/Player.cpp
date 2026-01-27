@@ -126,6 +126,9 @@ Player::Player(IWorld* world, const GSvector3& position, const GSvector3& rotate
 }
 
 void Player::update(float delta_time) {
+    // ‰ñ”ð¬Œ÷Žž‚Í”{‘¬
+    if (world_->is_avoid_effect()) delta_time *= 1.2f;
+
 	update_invincible(delta_time);
 	update_state(delta_time);
     update_physics(delta_time);
