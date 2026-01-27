@@ -310,7 +310,7 @@ void Player::on_hit_attack(AttackCollider& collider) {
         // コントローラーを振動させる
         if (input_.is_pad()) Vibration::get_instance().start(0.25f, 1.0f);
         // インパクト
-        world_->impact_effect_start(0.1f);
+        world_->impact_effect_start(0.2f);
     }
 }
 
