@@ -214,11 +214,13 @@
     <ClCompile Include="Src\Engine\Core\Tween\Vector3Unit.cpp" />
     <ClCompile Include="Src\Engine\Core\Vibration\Vibration.cpp" />
     <ClCompile Include="Src\Engine\Core\World\AvoidEffectManager.cpp" />
+    <ClCompile Include="Src\Engine\Core\World\ImpactEffectManager.cpp" />
     <ClCompile Include="Src\Engine\Graphics\Shader\GamePostEffect.cpp" />
     <ClCompile Include="Src\Engine\Graphics\Shader\GameShader.cpp" />
     <ClCompile Include="Src\Engine\Graphics\Shader\PostEffects\DissolveEffect.cpp" />
     <ClCompile Include="Src\Engine\Graphics\Shader\PostEffects\FogEffect.cpp" />
     <ClCompile Include="Src\Engine\Graphics\Shader\PostEffects\FXAAEffect.cpp" />
+    <ClCompile Include="Src\Engine\Graphics\Shader\PostEffects\ImpactEffect.cpp" />
     <ClCompile Include="Src\Engine\Graphics\Shader\PostEffects\MaskEffect.cpp" />
     <ClCompile Include="Src\Engine\Graphics\Shader\PostEffects\BloomEffect.cpp" />
     <ClCompile Include="Src\Engine\Graphics\Shader\PostEffects\BlurEffect.cpp" />
@@ -391,7 +393,9 @@
     <ClInclude Include="Src\Engine\Core\Timeline\Timeline.h" />
     <ClInclude Include="Src\Engine\Core\Timeline\TimelineEditor.h" />
     <ClInclude Include="Src\Engine\Core\World\AvoidEffectManager.h" />
+    <ClInclude Include="Src\Engine\Core\World\ImpactEffectManager.h" />
     <ClInclude Include="Src\Engine\Graphics\Shader\PostEffects\DissolveEffect.h" />
+    <ClInclude Include="Src\Engine\Graphics\Shader\PostEffects\ImpactEffect.h" />
     <ClInclude Include="Src\State\Actor\Character\CharacterLandingToAnyState.h" />
     <ClInclude Include="Src\State\Actor\MyEnemy\MyEnemyLeapAttackState.h" />
     <ClInclude Include="Src\State\Actor\Character\CharacterMotionEndToDieState.h" />
@@ -567,6 +571,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\Private\Shader\Dissolve.frag" />
+    <None Include="Resource\Private\Shader\ImpactEffect.frag" />
     <None Include="Resource\Private\Shader\MaskEffect.frag" />
     <None Include="Resource\Private\Shader\BloomCombine.frag" />
     <None Include="Resource\Private\Shader\BloomExtract.frag" />
