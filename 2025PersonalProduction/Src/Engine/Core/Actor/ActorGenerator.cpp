@@ -9,6 +9,7 @@
 #include "Actor/Gimmick/Elevator/ElevatorGenerator.h"
 #include "Actor/Gimmick/Barrier/BarrierGenerator.h"
 #include "Actor/Enemy/SimpleEnemy/SimpleEnemyGenerator.h"
+#include "Actor/Enemy/LeapEnemy/LeapEnemyGenerator.h"
 #include "Actor/Enemy/Elemental/ElementalGenerator.h"
 #include "Actor/Enemy/Lich/LichGenerator.h"
 #include "Actor/Enemy/Viking/VikingGenerator.h"
@@ -53,6 +54,7 @@ void ActorGenerator::load(World* world) {
         else if (key == ElevatorGeneratorKey) add_generator(name, new ElevatorGenerator(j, world));
         else if (key == BarrierGeneratorKey) add_generator(name, new BarrierGenerator(j, world));
         else if (key == SimpleEnemyGeneratorKey) add_generator(name, new SimpleEnemyGenerator(j, world));
+        else if (key == LeapEnemyGeneratorKey) add_generator(name, new LeapEnemyGenerator(j, world));
         else if (key == ElementalGeneratorKey) add_generator(name, new ElementalGenerator(j, world));
         else if (key == LichGeneratorKey) add_generator(name, new LichGenerator{ j, world });
         else if (key == VikingGeneratorKey) add_generator(name, new VikingGenerator{ j, world });

@@ -126,7 +126,7 @@ void Elemental::generate_spell_attack() {
     case ElementalSpellType::ExplodeRoad:
         to = target_ == nullptr ? transform_.forward() : target_->collider().center;
         to.y = position.y;
-        velocity = (to - position).normalized() * 2.1f;
+        velocity = (to - position).normalized() * 2.2f;
         world_->add_actor(new ExplodeRoad{ world_, position, velocity, this, damage, 5, 0.25f });
         break;
 
