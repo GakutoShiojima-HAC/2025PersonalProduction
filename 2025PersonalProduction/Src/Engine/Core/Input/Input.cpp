@@ -138,13 +138,13 @@ bool Input::action(InputAction action) const {
             gsGetMouseButtonTrigger(GMOUSE_BUTTON_2) ||
             gsGetKeyTrigger(gsGetKey());
     case InputAction::MENU_UP:
-        return is_pad_ ? gsXBoxPadButtonTrigger(USE_PAD_NUM, GS_XBOX_PAD_UP) : gsGetKeyTrigger(GKEY_W);
-	case InputAction::MENU_DOWN:
-        return is_pad_ ? gsXBoxPadButtonTrigger(USE_PAD_NUM, GS_XBOX_PAD_DOWN) : gsGetKeyTrigger(GKEY_S);
 	case InputAction::MENU_LEFT:
-		break;
+        return is_pad_ ? gsXBoxPadButtonTrigger(USE_PAD_NUM, GS_XBOX_PAD_UP) || gsXBoxPadButtonTrigger(USE_PAD_NUM, GS_XBOX_PAD_LEFT) :
+            gsGetKeyTrigger(GKEY_W) || gsGetKeyTrigger(GKEY_A);
+	case InputAction::MENU_DOWN:
 	case InputAction::MENU_RIGHT:
-		break;
+        return is_pad_ ? gsXBoxPadButtonTrigger(USE_PAD_NUM, GS_XBOX_PAD_DOWN) || gsXBoxPadButtonTrigger(USE_PAD_NUM, GS_XBOX_PAD_RIGHT) :
+            gsGetKeyTrigger(GKEY_S) || gsGetKeyTrigger(GKEY_D);
 	case InputAction::GAME_Attack:
 		return is_pad_ ? gsXBoxPadButtonTrigger(USE_PAD_NUM, GS_XBOX_PAD_B) : gsGetMouseButtonTrigger(GMOUSE_BUTTON_1);
 	case InputAction::GAME_Jump:
