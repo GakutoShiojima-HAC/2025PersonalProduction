@@ -614,7 +614,7 @@ void Player::on_avoid() {
 
     // 回避エフェクトを再生
     avoid_effect_handle_ = world_->camera_effect_play_foward((GSuint)EffectID::Avoid, 0.25f);
-    const GScolor color{ 1.0f, 1.0f, 1.0f, 0.2f };
+    const GScolor color{ 1.0f, 1.0f, 1.0f, 0.15f };
     gsSetEffectColor(avoid_effect_handle_, &color);
     SE::play_random((GSuint)SEID::Avoid, 0.25f);
 
