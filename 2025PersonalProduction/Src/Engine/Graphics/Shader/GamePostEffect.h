@@ -135,6 +135,11 @@ public:
     /// </summary>
     /// <returns>参照</returns>
     float& impact_power();
+    /// <summary>
+    /// インパクトのスクリーン座標を指定
+    /// </summary>
+    /// <returns>参照</returns>
+    GSvector2& impact_position();
 
 private:
     /// <summary>
@@ -168,6 +173,8 @@ private:
     float threshold_{ 1.0f };
     // インパクトの強さ
     float impact_power_{ 0.0f };
+    // インパクトの位置
+    GSvector2 impact_position_{ 0.0f, 0.0f };
 
 public:
     // コピー禁止

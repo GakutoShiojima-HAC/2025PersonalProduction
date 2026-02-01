@@ -12,9 +12,6 @@ GSuint PostEffect::Fog::fog(GSuint source, const GScolor& color, float start, fl
     // デプスバッファテクスチャの設定
     gsSetShaderParamTexture("u_DepthTexture", 31);
     gsBindRenderTargetDepthEx(source, 31);
-    // zバッファパラメータの設定
-    GSvector4 zparams = zbuffer_params(cNEAR, cFAR);
-    gsSetShaderParam4f("u_ZBufferParams", &zparams);
     // フォグのカラーの設定
     gsSetShaderParam4f("u_FogColor", &color);
     // フォグの開始位置の設定

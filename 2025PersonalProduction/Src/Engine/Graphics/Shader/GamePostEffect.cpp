@@ -14,9 +14,9 @@
 #include "Engine/Graphics/Shader/PostEffects/ImpactEffect.h"
 
 // ブルームエフェクトの対象にするテクセルの輝度のしきい値
-const float BLOOM_THRESHOLD{ 0.65f };
+const float BLOOM_THRESHOLD{ 0.5f };
 // ブルームエフェクトの強さ
-const float BLOOM_INTENSITY{ 0.15f };
+const float BLOOM_INTENSITY{ 0.25f };
 
 // SSAOのカーネル数
 const int KERNEL_SIZE{ 64 };
@@ -163,6 +163,8 @@ GSuint GamePostEffect::apply(const GSmatrix4& projection) const {
 
     const GSvector2 screen_size = get_screen_size();
 
+    const bool is_impact = impact_power_ > 0.0f;
+
     // アンビエントオクルージョン
     if (setting_.is_draw_ssao()) {
         // AOマップの取得
@@ -174,7 +176,7 @@ GSuint GamePostEffect::apply(const GSmatrix4& projection) const {
     }
 
     // マスク
-    if (is_draw_mask()) {
+    if (is_draw_mask() && !is_impact) {
         current = PostEffect::Mask::mask(current, Rt_Mask, mask_color_);
     }
 
@@ -200,8 +202,8 @@ GSuint GamePostEffect::apply(const GSmatrix4& projection) const {
     }
 
     // インパクトエフェクト
-    if (impact_power_ > 0.0f) {
-        current = PostEffect::Impact::apply(current, impact_power_);
+    if (is_impact) {
+        current = PostEffect::Impact::apply(current, Rt_Base, impact_power_, screen_size.x / screen_size.y, GSvector2{ impact_position_.x / screen_size.x, 1.0f - impact_position_.y / screen_size.y });
     }
 
     // シーンをぼかす
@@ -303,6 +305,10 @@ float& GamePostEffect::dissolve_threshold() {
 
 float& GamePostEffect::impact_power() {
     return impact_power_;
+}
+
+GSvector2& GamePostEffect::impact_position() {
+    return impact_position_;
 }
 
 GSvector2 GamePostEffect::get_screen_size() const {
