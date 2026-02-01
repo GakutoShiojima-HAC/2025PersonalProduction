@@ -324,7 +324,8 @@ public:
     /// インパクトエフェクトの開始
     /// </summary>
     /// <param name="time">= 時間</param>
-    virtual void impact_effect_start(float time) = 0;
+    /// <param name="impact_screen_position">= インパクト位置(スクリーン座標)</param>
+    virtual void impact_effect_start(float time, const GSvector2& impact_screen_position) = 0;
 
 public:
 	// コピー禁止

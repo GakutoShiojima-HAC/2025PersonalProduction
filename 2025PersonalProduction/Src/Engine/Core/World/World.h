@@ -209,7 +209,7 @@ public:
 
     void set_type_writer(const std::vector<std::string>& text, TextCode code = TextCode::UTF8) override;
 
-    void impact_effect_start(float time) override;
+    void impact_effect_start(float time, const GSvector2& impact_screen_position) override;
 
 protected:
     // GUIを描画するかどうか
