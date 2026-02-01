@@ -28,6 +28,9 @@ private:
 
     void exit() override;
 
+private:
+    float attack_time_{ 0.0f };
+
 };
 
 #endif

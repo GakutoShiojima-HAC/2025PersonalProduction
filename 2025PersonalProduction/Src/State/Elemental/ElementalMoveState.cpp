@@ -21,6 +21,7 @@ void ElementalMoveState::update(float delta_time) {
     if (owner_.state_timer() / cFPS > 5.0f) {
         owner_.look_target();
         owner_.change_state_and_motion((GSuint)ElementalStateType::Spell);
+        attack_time_ = 0.0f;    // UŒ‚˜A‘±‚³‚¹‚È‚¢
         return;
     }
 
@@ -33,13 +34,15 @@ void ElementalMoveState::update(float delta_time) {
         return;
     }
     // UŒ‚‹——£‚É“ü‚Á‚½‚çUŒ‚‚Ö
-    if (to_target_length < owner_.my_info().attack_data.find(owner_.info().motion_attack1)->second.detection_radius) {
+    if (attack_time_ > 2.0f && to_target_length < owner_.my_info().attack_data.find(owner_.info().motion_attack1)->second.detection_radius) {
         owner_.look_target();
         owner_.change_state_and_motion((GSuint)ElementalStateType::Attack1);
+        attack_time_ = 0.0f;    // UŒ‚˜A‘±‚³‚¹‚È‚¢
         return;
     }
 
     owner_.update_move(delta_time);
+    attack_time_ += delta_time / cFPS;
 }
 
 void ElementalMoveState::exit() {
