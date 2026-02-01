@@ -80,6 +80,8 @@ void PlayBGMTimelineParameter::play(const std::string& name) {
 void PlayBGMTimelineParameter::stop() {
     is_playing_ = false;
     current_ = nullptr;
+    timer_ = 0.0f;
+    key_frame_ = 0;
 }
 
 void PlayBGMTimelineParameter::play(PlayBGMTimelineData* data) {

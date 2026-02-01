@@ -86,6 +86,8 @@ void SendMessageTimelineParameter::play(const std::string& name) {
 void SendMessageTimelineParameter::stop() {
     is_playing_ = false;
     current_ = nullptr;
+    timer_ = 0.0f;
+    key_frame_ = 0;
 }
 
 void SendMessageTimelineParameter::play(SendMessageTimelineData* data) {
