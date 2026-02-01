@@ -20,6 +20,8 @@ World::~World() {
 void World::update(float delta_time) {
     if (impact_effect_.is_active()) {
         impact_effect_.update(delta_time);
+        camera_.update(delta_time);
+        if (camera_.current() != nullptr) SE::listener(camera_.current()->transform());
         return;
     }
 
@@ -84,7 +86,8 @@ void World::draw() const {
     GSuint current = game_post_effect_.apply(camera_.get_projection_matrix());
 
     // GUIの描画
-    if (enable_draw_gui_) {
+    const bool is_impact = game_post_effect_.impact_power() > 0.0f;
+    if (enable_draw_gui_ && !is_impact) {
         game_post_effect_.begin_gui(current);
 
         actor_.draw_gui();
@@ -165,8 +168,8 @@ void World::set_type_writer(const std::vector<std::string>& text, TextCode code)
     type_writer_label_.set(text, code);
 }
 
-void World::impact_effect_start(float time) {
-    impact_effect_.start(time);
+void World::impact_effect_start(float time, const GSvector2& impact_screen_position) {
+    impact_effect_.start(time, impact_screen_position);
 }
 
 bool& World::enable_mask_avoid_effect() {

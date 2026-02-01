@@ -77,6 +77,8 @@ void TypeWriterTimelineParameter::play(const std::string& name) {
 void TypeWriterTimelineParameter::stop() {
     is_playing_ = false;
     current_ = nullptr;
+    timer_ = 0.0f;
+    key_frame_ = 0;
 }
 
 void TypeWriterTimelineParameter::play(TypeWriterTimelineData* data) {

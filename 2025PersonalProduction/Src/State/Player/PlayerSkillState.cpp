@@ -19,5 +19,5 @@ void PlayerSkillState::update(float delta_time) {
 }
 
 void PlayerSkillState::exit() {
-    owner_.stop_timeline();
+
 }

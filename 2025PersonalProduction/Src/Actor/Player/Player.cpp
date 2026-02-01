@@ -68,6 +68,8 @@ constexpr int RIGHT_HAND_BONE_NUM{ 114 };
 // 基礎体力
 constexpr int BASIC_HP{ 10 };
 
+constexpr float ATTACK_STEP_POWER{ 0.075f };
+
 // 攻撃モーション
 constexpr GSuint ATTACK_MOTION_MAX = 5;
 constexpr GSuint ATTACK_MOTION[] = {
@@ -306,11 +308,14 @@ void Player::on_hit_attack(AttackCollider& collider) {
     if (name == "PlayerAvoidSuccessAttack") {
         world_->action_score().add_score(250, mesh_.motion_end_time() * 5.0f, 1.5f);
         // カメラを揺らす
-        world_->camera_shake(CameraShakeType::Shake, 0.15f, 5.0f, false);
+        world_->camera_shake(CameraShakeType::HandShake, 0.3f, 15.0f, false);
         // コントローラーを振動させる
         if (input_.is_pad()) Vibration::get_instance().start(0.25f, 1.0f);
         // インパクト
-        world_->impact_effect_start(0.2f);
+        GSvector2 screen;
+        GSvector3 world_position = collider.collider().center;
+        gsCalculateScreen(&screen, &world_position);
+        world_->impact_effect_start(0.25f, screen);
     }
 }
 
@@ -832,15 +837,20 @@ void Player::add_attack_animation_event(const PlayerInfo& info) {
     };
 
     // 対象のモーションのときに生成するエフェクト
-    auto set_effect_event = [&](GSuint motion, const std::vector<PlayerGenerateEffectEvent>& events) {
+    auto set_effect_event = [&](GSuint motion, const std::vector<PlayerGenerateEffectEvent>& events, const bool is_move_foward = false) {
         for (const auto& param : events) {
             if (!param.enabled) continue;
             // イベントを登録
-            mesh_.add_animation_event(motion, param.time, [=] { play_effect(
-                param.effect_id, param.offset, param.rotate, param.scale, param.speed
-            );
-            SE::play_random((GSuint)SEID::Swing, 0.125f);
+            mesh_.add_animation_event(motion, param.time, [=] {
+                play_effect(param.effect_id, param.offset, param.rotate, param.scale, param.speed);
+                SE::play_random((GSuint)SEID::Swing, 0.125f);
             });
+            // イベントを登録
+            if (is_move_foward) {
+                mesh_.add_animation_event(motion, param.time, [=] {
+                    add_force(transform_.forward() * ATTACK_STEP_POWER, Actor::ForceMode::Impulse);
+                });
+            }
         }
     };
 
@@ -857,7 +867,7 @@ void Player::add_attack_animation_event(const PlayerInfo& info) {
             });
         }
         // 対象のモーションの時に生成するエフェクト
-        set_effect_event(motion, info.attack_effect_event[i]);
+        set_effect_event(motion, info.attack_effect_event[i], true);
     }
 
     // スキルのアニメーションイベントを追加

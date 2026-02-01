@@ -46,6 +46,7 @@ void CinemaActor::update(float delta_time) {
     // Ä¶ğŒ‚ğ–‚½‚µ‚½‚ç
     if (behavior_->is_start()) {
         play_start_ = true;
+        world_->stop_timeline();
         world_->play_timeline(timeline_name_);
         behavior_->enter();
         world_->enable_draw_gui() = false;

@@ -111,7 +111,11 @@ void CameraTimelineParameter::stop() {
     current_ = nullptr;
     camera_ = nullptr;
     prev_camera_ = nullptr;
-    
+    current_ = nullptr;
+    timer_ = 0.0f;
+    key_frame_ = 0;
+
+    printf("STOP!\n");
 }
 
 void CameraTimelineParameter::play(CameraTimelineData* data) {
