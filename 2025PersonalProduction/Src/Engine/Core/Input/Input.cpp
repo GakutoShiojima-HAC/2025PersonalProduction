@@ -129,6 +129,8 @@ bool Input::action(InputAction action) const {
         return is_pad_ ? gsXBoxPadButtonState(USE_PAD_NUM, GS_XBOX_PAD_B) : (gsGetMouseButtonState(GMOUSE_BUTTON_1) | gsGetKeyState(GKEY_SPACE));
 	case InputAction::MENU_Decision:
 		return is_pad_ ? gsXBoxPadButtonTrigger(USE_PAD_NUM, GS_XBOX_PAD_B) : (gsGetMouseButtonTrigger(GMOUSE_BUTTON_1) | gsGetKeyTrigger(GKEY_SPACE));
+    case InputAction::MENU_Cancel:
+        return is_pad_ ? gsXBoxPadButtonTrigger(USE_PAD_NUM, GS_XBOX_PAD_A) : gsGetKeyTrigger(GKEY_TAB);
     case InputAction::MENU_ANY:
         return is_pad_ ? gsXBoxPadButtonTrigger(USE_PAD_NUM, GS_XBOX_PAD_A) ||
             gsXBoxPadButtonTrigger(USE_PAD_NUM, GS_XBOX_PAD_B) ||

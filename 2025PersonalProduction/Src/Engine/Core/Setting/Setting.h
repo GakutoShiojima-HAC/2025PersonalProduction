@@ -90,6 +90,9 @@ public:
     bool is_vibration() const;
     bool& enable_vibration();
 
+    float sens_ratio() const;
+    float& sens_ratio();
+
 private:
     SettingWindow* window_{ nullptr };
     
@@ -101,6 +104,8 @@ private:
     bool enable_draw_safearea_{ false };
 
     bool enable_vibration_{ true };
+
+    float sens_{ 1.0f };
 
 public:
 	// コピー禁止

@@ -13,6 +13,7 @@
 
 #include "Engine/Core/Camera/Camera.h"
 #include "Engine/Core/Input/Input.h"
+#include "Engine/Core/Setting/Setting.h"
 
 class Pawn;
 
@@ -52,6 +53,8 @@ public:
 
 private:
 	Input& input_ = Input::get_instance();
+
+    Setting& setting_ = Setting::get_instance();
 
 	// カメラの基点とするポーン
 	Pawn* owner_{ nullptr };

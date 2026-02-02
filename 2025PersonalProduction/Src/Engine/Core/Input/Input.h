@@ -13,6 +13,7 @@ enum class InputAction {
     APP_ForceEnd,       // アプリケーション強制終了
 
     MENU_Decision,      // 決定
+    MENU_Cancel,        // キャンセル
     MENU_Decision_State,// 決定長押し
     MENU_ANY,           // いずれかのボタン / キー
     MENU_UP,            // 上
