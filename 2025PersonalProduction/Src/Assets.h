@@ -46,12 +46,17 @@
     X(PauseWindowTexture) \
     X(SettingWindowTexture) \
     X(GameGuideWindowTexture) \
+    X(SelectSaveDataWindowTexture) \
     X(TutorialAttackInputTexture) \
     X(TutorialAvoidInputTexture) \
     X(ButtonSelectMouseTexture) \
     X(ButtonSelectGamePadTexture) \
+    X(ButtonSelect2GamePadTexture) \
+    X(ButtonSelect2MouseTexture) \
     X(ButtonDecisionGamePadTexture) \
     X(ButtonDecisionMouseTexture) \
+    X(SaveDataBarTexture) \
+    X(SaveDataIconTexture) \
     X(GearIconTexture) \
     X(GamePadIconTexture) \
     X(ArrowIconTexture) \

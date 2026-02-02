@@ -19,14 +19,14 @@ SettingWindow::SettingWindow(Setting& owner) :
     setting_{ owner } {
     // ƒ{ƒ^ƒ“‚Ì’Ç‰Á
     {
-        //TextureFunctionButton* button = new TextureFunctionButton{ (GSuint)TextureID::ArrowIconTexture, GSvector2{ 1461.0f, 265.0f }, GSrect{ 0.0f, 0.0f, 27.0f, 27.0f }, TextureFunctionButton::Angle::Rotate180 };
-        //button->on_input([=] { ; });
-        //button_.add(button);
+        TextureFunctionButton* button = new TextureFunctionButton{ (GSuint)TextureID::ArrowIconTexture, GSvector2{ 1461.0f, 265.0f }, GSrect{ 0.0f, 0.0f, 27.0f, 27.0f }, TextureFunctionButton::Angle::Rotate180 };
+        button->on_input([=] { setting_.sens_ratio() = CLAMP(setting_.sens_ratio() - 0.1f, 0.0f, 2.0f); });
+        button_.add(button);
     }
     {
-        //TextureFunctionButton* button = new TextureFunctionButton{ (GSuint)TextureID::ArrowIconTexture, GSvector2{ 1605.0f, 239.0f }, GSrect{ 0.0f, 0.0f, 27.0f, 27.0f } };
-        //button->on_input([=] { ; });
-        //button_.add(button);
+        TextureFunctionButton* button = new TextureFunctionButton{ (GSuint)TextureID::ArrowIconTexture, GSvector2{ 1605.0f, 239.0f }, GSrect{ 0.0f, 0.0f, 27.0f, 27.0f } };
+        button->on_input([=] { setting_.sens_ratio() = CLAMP(setting_.sens_ratio() + 0.1f, 0.0f, 2.0f); });
+        button_.add(button);
     }
     {
         TextureFunctionButton* button = new TextureFunctionButton{ (GSuint)TextureID::ArrowIconTexture, GSvector2{ 1461.0f, 383.0f }, GSrect{ 0.0f, 0.0f, 27.0f, 27.0f }, TextureFunctionButton::Angle::Rotate180 };
@@ -113,6 +113,7 @@ void SettingWindow::draw() const {
             Anchor::Center
         );
     };
+    draw_ratio(setting_.sens_ratio(), GSvector2{ 1534.0f, 252.0f });
     draw_ratio(gsGetVolumeBGM(), GSvector2{ 1534.0f, 370.0f });
     draw_ratio(SE::get_master_volume(), GSvector2{ 1534.0f, 456.0f });
 

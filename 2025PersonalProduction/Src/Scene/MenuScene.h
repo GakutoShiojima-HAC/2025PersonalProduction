@@ -14,6 +14,13 @@
 #include "Engine/Core/Scene/StandardScene.h"
 #include "Engine/Graphics/Shader/GamePostEffect.h"
 
+struct MenuSceneSaveDataInfo {
+    std::string name{ "" };
+    std::string time{ "" };
+    int stage{ -1 };
+    int level{ 1 };
+};
+
 class MenuScene : public StandardScene {
 public:
 	MenuScene();
@@ -41,16 +48,38 @@ public:
 
     void original_draw() const override;
 
+public:
+    /// <summary>
+    /// セーブデータの情報を取得
+    /// </summary>
+    /// <returns></returns>
+    const std::vector<MenuSceneSaveDataInfo>& get_save_data() const;
+
+    /// <summary>
+    /// セーブデータのインデックス
+    /// </summary>
+    /// <returns>参照</returns>
+    int& select_save_data_index();
+
 private:
     /// <summary>
     /// データロード用
     /// </summary>
     void load_data();
 
+    /// <summary>
+    /// セーブデータの情報を読み込む
+    /// </summary>
+    void load_save_data_info();
+
 private:
     // ゲームポストエフェクト
     GamePostEffect& game_post_effect_ = GamePostEffect::get_instance();
 
+    // セーブデータ情報
+    std::vector<MenuSceneSaveDataInfo> save_data_info_;
+    // どのセーブデータを選ぶか
+    int select_save_data_index_{ -1 };
 };
 
 #endif

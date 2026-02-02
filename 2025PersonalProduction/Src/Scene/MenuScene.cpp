@@ -7,6 +7,7 @@
 #include "Engine/Graphics/Shader/GameShader.h"
 #include "Engine/Graphics/Shader/GamePostEffect.h"
 #include "Engine/Sound/BGMManager.h"
+#include "Engine/Utils/MyTime.h"
 
 #ifdef _DEBUG
 #include <imgui/imgui.h>
@@ -18,6 +19,7 @@
 #include "State/Scene/SceneOriginalState.h"
 #include "State/Scene/SceneSettingState.h"
 #include "State/Scene/SceneMenuState.h"
+#include "State/Scene/SceneSelectSaveDataState.h"
 
 MenuScene::MenuScene() {
     add_state();
@@ -101,10 +103,20 @@ void MenuScene::end() {
     }
     // セーブデータのフォルダ
     {
-        std::string folder = "test";
+        // 条件
+        const bool is_new = select_save_data_index_ < 0;
+        const bool is_empty = save_data_info_.empty() || select_save_data_index_>= save_data_info_.size();
+
+        const std::string time = MyLib::get_time_info().time_info_to_filename_string();
+
+        const std::string folder = is_new ? time : is_empty ? time : save_data_info_[select_save_data_index_].name;
         std::any data = folder;
         scene_manager_.send_message(SceneTag::Game, "LoadSaveDataName", data);
-    }
+    }    
+
+    // セーブデータの情報を破棄
+    save_data_info_.clear();
+    select_save_data_index_ = -1;
 
     // 初期化
     is_load_end_ = false;
@@ -125,6 +137,7 @@ void MenuScene::add_state() {
     state_.add_state((GSuint)SceneStateType::End, make_shared<SceneEndState>(*this));
     state_.add_state((GSuint)SceneStateType::Setting, make_shared<SceneSettingState>(*this, SceneStateType::MenuScene));
     state_.add_state((GSuint)SceneStateType::MenuScene, make_shared<SceneMenuState>(*this));
+    state_.add_state((GSuint)SceneStateType::MenuSaveDataSelect, make_shared<SceneSelectSaveDataState>(*this));
 }
 
 void MenuScene::original_update(float delta_time) {
@@ -136,13 +149,55 @@ void MenuScene::original_draw() const {
     // GUIでの固定描画があるならここへ
 }
 
+const std::vector<MenuSceneSaveDataInfo>& MenuScene::get_save_data() const {
+    return save_data_info_;
+}
+
+int& MenuScene::select_save_data_index() {
+    return select_save_data_index_;
+}
+
 void MenuScene::load_data() {
     // 読み込み処理の数から一つの処理分の進捗率を計算
-    const int count = 1;
+    const int count = 2;
     const float progress = 1.0f / (float)count;
 
 
     // アセットの読み込み
     AssetsLoader::load_by_json("Resource/Private/Common/Assets/menu.json", AssetsLoader::MENU_ASSET_NAME);
     load_progress_ += progress;
+
+    // セーブデータの情報の読み込み
+    load_save_data_info();
+    load_progress_ += progress;
+}
+
+void MenuScene::load_save_data_info() {
+    save_data_info_.clear();
+    select_save_data_index_ = -1;
+
+    std::vector<std::string> paths;
+    for (const auto& entry : fs::recursive_directory_iterator("SaveData/")) {
+        const fs::path& p = entry.path();
+        if (fs::is_regular_file(p)) {
+            const std::string file_ext = entry.path().extension().string();
+            if (file_ext == ".json") paths.push_back(entry.path().string());
+        }
+    }
+    if (paths.empty()) return;
+
+    for (const auto& path : paths) {
+        json j;
+        if (!MyJson::is_json(path, j)) continue;
+
+        MenuSceneSaveDataInfo info;
+
+        fs::path p(path);
+        info.name = p.stem().string();
+        info.time = MyJson::get_string(j, "Time", "XXXX/XX/XX/ XX:XX:XX");
+        info.stage = MyJson::get_int(j, "Stage", -1);
+        info.level = MyJson::get_int(j, "PlayerLevel", 1);
+
+        save_data_info_.push_back(info);
+    }
 }

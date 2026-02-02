@@ -22,6 +22,7 @@ public:
         Original,       // シーン独自の画面
 
         MenuScene,      // メニューシーン用画面
+        MenuSaveDataSelect, // メニューシーンセーブデータ選択
 
         GamePause,      // ゲーム中のポーズ画面
         GameResult,     // ゲーム中のリザルト表示画面

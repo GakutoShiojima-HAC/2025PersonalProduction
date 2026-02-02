@@ -49,6 +49,7 @@ void Setting::reset() {
     enable_draw_safearea_ = false;
     // デバイス関係
     enable_vibration_ = true;
+    sens_ = 1.0f;
 }
 
 void Setting::save() {
@@ -74,3 +75,11 @@ bool& Setting::enable_draw_safearea() { return enable_draw_safearea_; }
 bool Setting::is_vibration() const { return enable_vibration_; }
 
 bool& Setting::enable_vibration() { return enable_vibration_; }
+
+float Setting::sens_ratio() const {
+    return sens_;
+}
+
+float& Setting::sens_ratio() {
+    return sens_;
+}
