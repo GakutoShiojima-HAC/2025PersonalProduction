@@ -1,21 +1,24 @@
 #include "State/Scene/SceneMenuState.h"
-#include "Engine/Core/Scene/StandardScene.h"
+#include "Scene/MenuScene.h"
 #include "Engine/Graphics/Canvas/Canvas.h"
 #include "Assets.h"
 #include "GUI/Button/TextFunctionButton.h"
 #include "Engine/Core/Input/Input.h"
 
-SceneMenuState::SceneMenuState(StandardScene& owner) :
+SceneMenuState::SceneMenuState(MenuScene& owner) :
     owner_{ owner } {
     // ボタンの追加
     {
         TextFunctionButton* button = new TextFunctionButton{ "最初から", GSvector2{ 960.0f, 679.0f }, 42, Anchor::TopLeft, Anchor::Center };
-        button->on_input([=] { owner_.change_state((GSuint)SceneStateType::End); });
+        button->on_input([=] {
+            owner_.select_save_data_index() = -1;   // 新規データを選択
+            owner_.change_state((GSuint)SceneStateType::End);
+            });
         button_.add(button);
     }
     {
-        TextFunctionButton* button = new TextFunctionButton{ "続きから(未実装)", GSvector2{ 960.0f, 765.0f }, 42, Anchor::TopLeft, Anchor::Center };
-        button->on_input([=] { owner_.change_state((GSuint)SceneStateType::End); });
+        TextFunctionButton* button = new TextFunctionButton{ "続きから", GSvector2{ 960.0f, 765.0f }, 42, Anchor::TopLeft, Anchor::Center };
+        button->on_input([=] { owner_.change_state((GSuint)SceneStateType::MenuSaveDataSelect); });
         button_.add(button);
     }
     {

@@ -45,6 +45,20 @@ namespace MyLib {
                 << setw(2) << second;
             return oss.str();
         }
+
+        /// <summary>
+        /// "YYYY_MM_DD_HHMM" の形式で日時情報を文字列に変換したものを返却
+        /// </summary>
+        string time_info_to_filename_string() const {
+            ostringstream oss;
+            oss << setfill('0')  // 0埋め
+                << setw(4) << year << "_"
+                << setw(2) << month << "_"
+                << setw(2) << day << "_"
+                << setw(2) << hour
+                << setw(2) << minute;
+            return oss.str();
+        }
     };
 
     /// <summary>

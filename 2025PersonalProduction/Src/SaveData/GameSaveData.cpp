@@ -1,12 +1,13 @@
 #include "SaveData/GameSaveData.h"
 #include "Engine/Utils/Folder.h"
 #include "Engine/Utils/MyJson.h"
+#include "Engine/Utils/MyTime.h"
 
 const std::string SAVE_FOLDER_PATH{ "SaveData/" };
 
 void GameSaveData::load(const std::string& file_path) {
     // 初期化
-    save_file_path_ = "SaveData/test.json"; // TODO file_pathを使う get_all_save_file()を使ってから
+    save_file_path_ = "SaveData/" + file_path + ".json";
     clear();
 
     json j;
@@ -33,6 +34,7 @@ void GameSaveData::save() {
 
     // データを保存
     ordered_json data;
+    data["Time"] = MyLib::get_time_info().time_info_to_string();
     data["Stage"] = save_data_.stage;
     data["PlayerLevel"] = save_data_.player_level;
     for (const auto& [key, value] : save_data_.score) data["Score"].push_back({ key, value });
