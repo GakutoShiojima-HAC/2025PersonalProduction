@@ -75,6 +75,11 @@ public:
     /// <returns>武器データ</returns>
     const WeaponData::Data& weapon() const;
 
+    /// <summary>
+    /// 武器を変える
+    /// </summary>
+    void change_weapon();
+
 private:
     /// <summary>
     /// アイテムIDが範囲内かどうか
