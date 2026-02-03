@@ -136,6 +136,26 @@ const VikingInfo& Viking::info() const {
     return info_;
 }
 
+void Viking::dash_effect_start() {
+    if (dash_effect_enabled_) return;
+    dash_effect_enabled_ = true;
+    dash_effect_handle_ = play_effect((GSuint)EffectID::DashSonic, GSvector3{ 0.0f, 3.0f, 0.0f });
+}
+
+void Viking::dash_effect_end() {
+    if (!dash_effect_enabled_) return;
+    dash_effect_enabled_ = false;
+    gsStopEffect(dash_effect_handle_);
+}
+
+void Viking::update_dash_effect(float delta_time) {
+    if (dash_effect_enabled_) {
+        // エフェクトに自身のワールド変換行列を設定
+        GSmatrix4 world = local_to_world(GSvector3{ 0.0f, 3.0f, 0.0f }, GSvector3::zero(), GSvector3::one());
+        gsSetEffectMatrix(dash_effect_handle_, &world);
+    }
+}
+
 void Viking::generate_land_attack() {
     const GSvector3 pos = transform_.position();
     const GSvector3 v = MyRandom::random_vec3(GSvector3{ -0.075f, 0.15f, -0.075f }, GSvector3{ 0.075f, 0.2f, 0.075f });

@@ -123,6 +123,7 @@
     X(DustLarge) \
     X(FireBall) \
     X(ExplosionSmall) \
+    X(DashSonic) \
     X(Fire) \
     X(LootBox) \
     X(MAX_SIZE) // 要素数
