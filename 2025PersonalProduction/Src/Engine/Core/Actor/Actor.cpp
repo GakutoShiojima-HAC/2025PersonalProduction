@@ -28,6 +28,16 @@ void Actor::draw_gui() const {
 
 }
 
+#ifdef _DEBUG
+void Actor::debug_update(float delta_time) {
+    // 名前
+    std::string text = "name: " + name_;
+    ImGui::Text(text.c_str());
+    // 座標
+    ImGui::Text("position: X:%.3f Y:%.3f Z:%.3f", transform_.position().x, transform_.position().y, transform_.position().z);
+}
+#endif
+
 void Actor::die() {
 	is_dead_ = true;
 }
@@ -102,6 +112,10 @@ bool Actor::use_gravity() const {
 
 float Actor::gravity() const {
     return gravity_;
+}
+
+float Actor::height() const {
+    return height_;
 }
 
 void Actor::add_force(const GSvector3& force, ForceMode mode) {

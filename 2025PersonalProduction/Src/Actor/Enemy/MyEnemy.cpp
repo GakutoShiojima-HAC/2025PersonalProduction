@@ -59,6 +59,23 @@ void MyEnemy::draw_gui() const {
     draw_hp_gauge();
 }
 
+void MyEnemy::debug_update(float delta_time) {
+    // 名前
+    std::string text = "name: " + name_;
+    ImGui::Text(text.c_str());
+    // 座標
+    ImGui::Text("position: X:%.3f Y:%.3f Z:%.3f", transform_.position().x, transform_.position().y, transform_.position().z);
+    // ステート番号
+    ImGui::Text("state: %d",(int)state_.get_current_state());
+    // モーション番号
+    ImGui::Text("motion: %d", (int)motion_);
+    // ターゲット名
+    {
+        std::string text = "target: " + (target_ == nullptr ? "none" : target_->name());
+        ImGui::Text(text.c_str());
+    }
+}
+
 bool MyEnemy::is_attack_soon() const {
     auto it = my_info_.attack_data.find(motion_);
     if (it == my_info_.attack_data.end()) return false;

@@ -109,8 +109,12 @@ protected:
     std::list<Actor*> actors_;
 
 #ifdef _DEBUG
-    // 衝突判定を描画するかどうか
+    // コライダーを描画するかどうか
     bool draw_collision_detection_{ false };
+    // アクターパラメータを描画するかどうか
+    bool draw_actor_parameter_{ false };
+    // どのアクターのデバッグ画面を描画するか
+    int debug_actor_index_{ 0 };
 #endif
 
 public:

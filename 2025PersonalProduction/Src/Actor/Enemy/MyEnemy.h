@@ -59,6 +59,10 @@ public:
 
     virtual void draw_gui() const override;
 
+#ifdef _DEBUG
+    virtual void debug_update(float delta_time) override;
+#endif
+
     virtual bool is_attack_soon() const override;
 
     virtual GSmatrix4 critical_position() const override;

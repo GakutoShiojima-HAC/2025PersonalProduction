@@ -138,45 +138,6 @@ void Player::update(float delta_time) {
 	update_mesh(delta_time);
 
 #ifdef _DEBUG
-	auto state_string = [](PlayerStateType s) {
-		switch (s) {
-		case PlayerStateType::Idle:
-			return "idle";
-		case PlayerStateType::Fall:
-			return "fall";
-		case PlayerStateType::Land:
-			return "land";
-		case PlayerStateType::Move:
-			return "move";
-		case PlayerStateType::Interact:
-			return "interact";
-		case PlayerStateType::Attack:
-			return "attack";
-		case PlayerStateType::Skill:
-			return "skill";
-		case PlayerStateType::Jump:
-			return "jump";
-		case PlayerStateType::Avoid:
-			return "avoid";
-		case PlayerStateType::Hurt:
-			return "hurt";
-		case PlayerStateType::Dead:
-			return "dead";
-		default:
-			return "other";
-		}
-	};
-	ImGui::Begin("Player Window");
-	ImGui::Text("position: X:%.3f Y:%.3f Z:%.3f", transform_.position().x, transform_.position().y, transform_.position().z);
-	ImGui::Text("state: %s", state_string(PlayerStateType(state_.get_current_state())));
-	ImGui::Text("motion: %d", (int)motion_);
-    int motion = motion_;
-    ImGui::SliderInt("motion", &motion, 0, 255);
-    motion_ = motion;
-    ImGui::InputFloat(ToUTF8("タイムスケール").c_str(), &world_->timescale(), 0.1f);
-
-	ImGui::End();
-
 	ImGui::Begin("App Window");
 	const ScreenData& screen = Screen::get_instance().get_current_data();
 	ImGui::Text("fps %d", (int)std::round(screen.refresh_rate / delta_time));
@@ -248,6 +209,50 @@ void Player::draw_gui() const {
 
 	// state_.draw_gui();
 }
+
+#ifdef _DEBUG
+void Player::debug_update(float delta_time) {
+    auto state_string = [](PlayerStateType s) {
+        switch (s) {
+        case PlayerStateType::Idle:
+            return "idle";
+        case PlayerStateType::Fall:
+            return "fall";
+        case PlayerStateType::Land:
+            return "land";
+        case PlayerStateType::Move:
+            return "move";
+        case PlayerStateType::Interact:
+            return "interact";
+        case PlayerStateType::Attack:
+            return "attack";
+        case PlayerStateType::Skill:
+            return "skill";
+        case PlayerStateType::Jump:
+            return "jump";
+        case PlayerStateType::Avoid:
+            return "avoid";
+        case PlayerStateType::Hurt:
+            return "hurt";
+        case PlayerStateType::Dead:
+            return "dead";
+        default:
+            return "other";
+        }
+    };
+    // 名前
+    std::string text = "name: " + name_;
+    ImGui::Text(text.c_str());
+    // 座標
+    ImGui::Text("position: X:%.3f Y:%.3f Z:%.3f", transform_.position().x, transform_.position().y, transform_.position().z);
+    // ステート番号
+    ImGui::Text("state: %s", state_string(PlayerStateType(state_.get_current_state())));
+    // モーション番号
+    ImGui::Text("motion: %d", (int)motion_);
+    // タイムスケール
+    ImGui::InputFloat(ToUTF8("タイムスケール").c_str(), &world_->timescale(), 0.1f);
+}
+#endif
 
 void Player::take_damage(Actor& other, const int damage) {
 	if (MyLib::is_in(

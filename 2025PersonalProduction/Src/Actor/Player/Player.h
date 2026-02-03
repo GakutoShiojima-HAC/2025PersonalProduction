@@ -137,6 +137,10 @@ public:
 
 	void draw_gui() const override;
 
+#ifdef _DEBUG
+    void debug_update(float delta_time) override;
+#endif
+
 public:
 	void take_damage(Actor& other, const int damage) override;
 

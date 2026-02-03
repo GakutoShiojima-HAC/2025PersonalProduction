@@ -1,9 +1,12 @@
 #include "Engine/Core/Actor/ActorManager.h"
 #include "Engine/Core/Actor/Actor.h"
+#include <iterator>
+#include <cassert>
 
 #ifdef _DEBUG
 #include <imgui/imgui.h>
 #include "Engine/Utils/MyString.h"
+#include "Engine/Utils/DebugMarker.h"
 #endif
 
 ActorManager::~ActorManager() {
@@ -20,10 +23,34 @@ void ActorManager::update(float delta_time, float scale_time) {
 	}
 
 #ifdef _DEBUG
-	ImGui::Begin("Game Window");
-	// コライダーを描画するかどうか
-	if (ImGui::Button(ToUTF8("コライダーの描画切り替え").c_str())) draw_collision_detection_ = !draw_collision_detection_;
-	ImGui::End();
+    ImGui::Begin("ActorDebugWindow");
+    // アクターのコライダーを描画するかどうか
+    {
+        const std::string text = draw_collision_detection_ ? "Actorのコライダーを描画しない" : "Actorのコライダーを描画する";
+        if (ImGui::Button(ToUTF8(text).c_str())) draw_collision_detection_ = !draw_collision_detection_;
+    }
+    // アクターのパラメータを描画するかどうか
+    {
+        const std::string text = draw_actor_parameter_ ? "Actorのパラメータを描画しない" : "Actorのパラメータを描画する";
+        if (ImGui::Button(ToUTF8(text).c_str())) draw_actor_parameter_ = !draw_actor_parameter_;
+    }
+    ImGui::Separator();
+    // デバッグ画面を表示するアクターの切り替え
+    {
+        ImGui::Text(ToUTF8("デバッグ対象のActorのIndex").c_str());
+        std::string text = "max: " + std::to_string(actors_.size() - 1);
+        ImGui::InputInt(text.c_str(), &debug_actor_index_, 1);
+        debug_actor_index_ = std::max(0, std::min(debug_actor_index_, (int)actors_.size() - 1));
+    }
+    ImGui::Separator();
+    // アクターのデバッグ画面を表示
+    if (debug_actor_index_ > -1 && debug_actor_index_ < actors_.size() && !actors_.empty()) {
+        auto it = actors_.begin();
+        std::advance(it, debug_actor_index_);
+        auto actor = *it;
+        if (actor != nullptr) actor->debug_update(delta_time);
+    }
+    ImGui::End();
 #endif
 }
 
@@ -38,8 +65,53 @@ void ActorManager::draw() const {
 		actor->draw();
 
 #ifdef _DEBUG
-		if (!draw_collision_detection_) continue;
-		if (actor->is_collision()) actor->draw_collider();
+        // コライダーを描画
+		if (draw_collision_detection_ && actor->is_collision()) actor->draw_collider();
+        // パラメータを描画
+        if (draw_actor_parameter_) {
+            GSmatrix4 mat = actor->transform().localToWorldMatrix();
+            GSvector3 position = mat.position();
+            GSvector3 left = position + mat.left() * mat.scale().x * 0.5f;
+            GSvector3 up = position + mat.up() * mat.scale().y * 0.5f;
+            GSvector3 forward = position + mat.forward() * mat.scale().z * 0.5f;
+
+            // ライティングを無効にする
+            glDisable(GL_LIGHTING);
+            // 線の太さを変更
+            glLineWidth(4.0f);
+
+            glColor3f(1.0f, 0.0f, 0.0f);	// 赤（左手方向）
+            glBegin(GL_LINES);
+            glVertex3f(position.x, position.y, position.z);
+            glVertex3f(left.x, left.y, left.z);
+            glEnd();
+            glColor3f(0.0f, 1.0f, 0.0f);	// 緑（上方向）
+            glBegin(GL_LINES);
+            glVertex3f(position.x, position.y, position.z);
+            glVertex3f(up.x, up.y, up.z);
+            glEnd();
+            glColor3f(0.0f, 0.0f, 1.0f);	// 青（前方向）
+            glBegin(GL_LINES);
+            glVertex3f(position.x, position.y, position.z);
+            glVertex3f(forward.x, forward.y, forward.z);
+            glEnd();
+
+            // 白に戻す
+            glColor3f(1.0f, 1.0f, 1.0f);
+            // 線の太さを戻す
+            glLineWidth(1.0f);
+            // ライティングを有効にする
+            glEnable(GL_LIGHTING);
+
+            // 頭
+            GSvector3 head = position + GSvector3{ 0.0f, actor->height(), 0.0f };
+            MyLib::draw_sphere(head, 0.08f, GScolor{ 0.9f, 0.5f, 0.0f, 1.0f });
+            // 足元
+            GSvector3 foot = position + GSvector3{ 0.0f, -0.125f, 0.0f };
+            MyLib::draw_sphere(foot, 0.08f, GScolor{ 0.9f, 0.5f, 0.0f, 1.0f });
+            // 繋ぐ
+            MyLib::draw_line(head, foot, GScolor{ 0.9f, 0.5f, 0.0f, 1.0f });
+        }
 #endif
 	}
 }
