@@ -1,5 +1,6 @@
 #include "CharacterLandingToAnyState.h"
 #include "Engine/Core/Actor/Pawn/Character/Character.h"
+#include "CharacterIdleState.h"
 
 CharacterLandingToAnyState::CharacterLandingToAnyState(Character& owner, unsigned int next_state, unsigned int next_motion, bool motion_loop) :
     owner_{ owner } {

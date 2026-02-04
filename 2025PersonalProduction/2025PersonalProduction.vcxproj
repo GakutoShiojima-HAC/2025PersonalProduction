@@ -162,9 +162,13 @@
     <ClCompile Include="Src\Actor\Gimmick\CheckPoint\CheckPointGenerator.cpp" />
     <ClCompile Include="Src\Actor\Gimmick\Elevator\Elevator.cpp" />
     <ClCompile Include="Src\Actor\Gimmick\Elevator\ElevatorGenerator.cpp" />
+    <ClCompile Include="Src\Actor\Gimmick\Heal\Heal.cpp" />
+    <ClCompile Include="Src\Actor\Gimmick\Heal\HealGenerator.cpp" />
     <ClCompile Include="Src\Actor\ItemActor\ItemActor.cpp" />
     <ClCompile Include="Src\Actor\Magic\ExplodeRoad\ExplodeRoad.cpp" />
     <ClCompile Include="Src\Actor\Magic\FireBall\FireBall.cpp" />
+    <ClCompile Include="Src\Actor\NPC\NPC.cpp" />
+    <ClCompile Include="Src\Actor\NPC\NPCGenerator.cpp" />
     <ClCompile Include="Src\Actor\Player\PlayerGenerator.cpp" />
     <ClCompile Include="Src\Actor\Player\PlayerRespawner.cpp" />
     <ClCompile Include="Src\Actor\StageTeleporter\StageTeleporter.cpp" />
@@ -262,6 +266,7 @@
     <ClCompile Include="Src\Engine\Core\Actor\ActorGenerator.cpp" />
     <ClCompile Include="Src\Stage\StageData.cpp" />
     <ClCompile Include="Src\Stage\StageFile.cpp" />
+    <ClCompile Include="Src\State\Actor\Character\CharacterIdleState.cpp" />
     <ClCompile Include="Src\State\Actor\Character\CharacterLandingToAnyState.cpp" />
     <ClCompile Include="Src\State\Actor\MyEnemy\MyEnemyLeapAttackState.cpp" />
     <ClCompile Include="Src\State\Actor\MyEnemy\MyEnemyRetreatState.cpp" />
@@ -274,6 +279,7 @@
     <ClCompile Include="Src\State\Elemental\ElementalMoveState.cpp" />
     <ClCompile Include="Src\State\LeapEnemy\LeapEnemyIdleState.cpp" />
     <ClCompile Include="Src\State\LeapEnemy\LeapEnemyMoveState.cpp" />
+    <ClCompile Include="Src\State\NPC\NPCActionState.cpp" />
     <ClCompile Include="Src\State\Player\PlayerAttackState.cpp" />
     <ClCompile Include="Src\State\Player\PlayerAvoidState.cpp" />
     <ClCompile Include="Src\State\Player\PlayerDeadState.cpp" />
@@ -355,8 +361,12 @@
     <ClInclude Include="Src\Actor\Gimmick\CheckPoint\CheckPointGenerator.h" />
     <ClInclude Include="Src\Actor\Gimmick\Elevator\Elevator.h" />
     <ClInclude Include="Src\Actor\Gimmick\Elevator\ElevatorGenerator.h" />
+    <ClInclude Include="Src\Actor\Gimmick\Heal\Heal.h" />
+    <ClInclude Include="Src\Actor\Gimmick\Heal\HealGenerator.h" />
     <ClInclude Include="Src\Actor\Magic\ExplodeRoad\ExplodeRoad.h" />
     <ClInclude Include="Src\Actor\Magic\FireBall\FireBall.h" />
+    <ClInclude Include="Src\Actor\NPC\NPC.h" />
+    <ClInclude Include="Src\Actor\NPC\NPCGenerator.h" />
     <ClInclude Include="Src\Actor\Player\PlayerRespawner.h" />
     <ClInclude Include="Src\Engine\Core\Actor\Pawn\PawnParameter.h" />
     <ClInclude Include="Src\Actor\ActorTag.h" />
@@ -397,6 +407,7 @@
     <ClInclude Include="Src\Engine\Core\World\ImpactEffectManager.h" />
     <ClInclude Include="Src\Engine\Graphics\Shader\PostEffects\DissolveEffect.h" />
     <ClInclude Include="Src\Engine\Graphics\Shader\PostEffects\ImpactEffect.h" />
+    <ClInclude Include="Src\State\Actor\Character\CharacterIdleState.h" />
     <ClInclude Include="Src\State\Actor\Character\CharacterLandingToAnyState.h" />
     <ClInclude Include="Src\State\Actor\MyEnemy\MyEnemyLeapAttackState.h" />
     <ClInclude Include="Src\State\Actor\Character\CharacterMotionEndToDieState.h" />
@@ -408,6 +419,8 @@
     <ClInclude Include="Src\State\LeapEnemy\LeapEnemyIdleState.h" />
     <ClInclude Include="Src\State\LeapEnemy\LeapEnemyMoveState.h" />
     <ClInclude Include="Src\State\LeapEnemy\LeapEnemyState.h" />
+    <ClInclude Include="Src\State\NPC\NPCActionState.h" />
+    <ClInclude Include="Src\State\NPC\NPCState.h" />
     <ClInclude Include="Src\State\Scene\SceneSelectSaveDataState.h" />
     <ClInclude Include="Src\State\Viking\VikingState.h" />
     <ClInclude Include="Src\TextCode.h" />
