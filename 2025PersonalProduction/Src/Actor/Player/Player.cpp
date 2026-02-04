@@ -132,6 +132,7 @@ void Player::update(float delta_time) {
     if (world_->is_avoid_effect()) delta_time *= 1.2f;
 
 	update_invincible(delta_time);
+    update_inventory();
 	update_state(delta_time);
     update_physics(delta_time);
     collide_field();
@@ -329,7 +330,7 @@ bool Player::is_dead_state() const {
 }
 
 void Player::react(Actor& other) {
-	if (other.tag() == ActorTag::Enemy) collide_actor(other);
+	if (other.tag() == ActorTag::Enemy || other.tag() == ActorTag::NPC) collide_actor(other);
 }
 
 void Player::add_state() {
@@ -890,6 +891,27 @@ void Player::add_attack_animation_event(const PlayerInfo& info) {
     // 回避成功スキルのアニメーションイベントを追加
     set_generate_collider(Motion::AvoidSuccessSkill, "PlayerSuccessSkill", info.avoid_success_skill_event, GSvector3{ 0.0f, 0.0f, 0.0f });
     set_effect_event(Motion::AvoidSuccessSkill, info.avoid_success_skill_effect_event);
+}
+
+void Player::update_inventory() {
+    // 武器変更
+    if (!draw_weapon_ && input_.action(InputAction::GAME_WeaponChange)) {
+        const int prev_id = inventory_.weapon().id;
+        inventory_.change_weapon();
+        // 武器が変わった
+        if (prev_id != inventory_.weapon().id) {
+
+        }
+        // 変わっていない
+        else {
+
+        }
+    }
+    // ユーティリティ変更
+    /*
+    if (input_.action(InputAction::GAME_UtilChange)) {
+
+    }*/
 }
 
 void Player::generate_attack_collider(const GSvector3& offset, float radius, int damage, const std::string& name, const GSvector3& external_velocity) {
