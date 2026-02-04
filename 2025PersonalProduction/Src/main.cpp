@@ -66,6 +66,7 @@ public:
 
         // フォントを読み込む
         AddFontResourceExA("Resource/Assets/Font/DelaSukoGothicOne-R.ttf", FR_PRIVATE, NULL);
+        AddFontResourceExA("Resource/Assets/Font/HackGen35Console-Regular.ttf", FR_PRIVATE, NULL);
     }
 
 private:
@@ -115,6 +116,7 @@ private:
 
         // フォントを破棄
         RemoveFontResourceExA("Resource/Assets/Font/DelaSukoGothicOne-R.ttf", FR_PRIVATE, NULL);
+        RemoveFontResourceExA("Resource/Assets/Font/HackGen35Console-Regular.ttf", FR_PRIVATE, NULL);
         // Tweenの破棄
         Tween::clear();
         // シェーダーの破棄
@@ -161,7 +163,7 @@ private:
 
 int main() {
 #ifdef _DEBUG
-    return MyGame(1920, 1080, true, cFPS).run();
+    return MyGame(1920, 1080, false, cFPS).run();
 #else
     return MyGame(1920, 1080, true, cFPS).run();
 #endif
