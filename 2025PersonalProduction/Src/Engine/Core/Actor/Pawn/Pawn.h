@@ -86,6 +86,12 @@ public:
     GSuint current_motion() const;
 
     /// <summary>
+    /// 現在のモーションの再生時間
+    /// </summary>
+    /// <returns></returns>
+    float currnent_motion_time() const;
+
+    /// <summary>
     /// 現在のモーションがループしているか
     /// </summary>
     /// <returns>ループの状態</returns>
@@ -96,6 +102,12 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	float current_motion_end_time() const;
+
+    /// <summary>
+    /// モーションを停止
+    /// </summary>
+    /// <returns>参照</returns>
+    bool& freeze_motion();
 
 protected:
 	/// <summary>
@@ -144,6 +156,9 @@ protected:
 
     // 攻撃動作に入っているか
     bool is_attack_soon_{ false };
+
+    // モーションを止めるかどうか
+    bool is_motion_freeze_{ false };
 
 };
 
