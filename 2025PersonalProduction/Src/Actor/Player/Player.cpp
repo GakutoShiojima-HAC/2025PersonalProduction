@@ -250,8 +250,11 @@ void Player::debug_update(float delta_time) {
     ImGui::Text("state: %s", state_string(PlayerStateType(state_.get_current_state())));
     // モーション番号
     ImGui::Text("motion: %d", (int)motion_);
+    // モーションタイマー
+    ImGui::Text("motion timer: %f", mesh_.current_motion_time());
     // タイムスケール
     ImGui::InputFloat(ToUTF8("タイムスケール").c_str(), &world_->timescale(), 0.1f);
+
 }
 #endif
 
