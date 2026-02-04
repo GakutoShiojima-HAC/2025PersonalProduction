@@ -20,8 +20,13 @@ Barrier::Barrier(IWorld* world, const GSvector3& position, const std::string& br
     timer_ = break_time;
     parameter_ = parameter;
 
-    if (break_type == "Down") break_type_ = BarrierBreakType::Down;
-    else if (break_type == "Fade") break_type_ = BarrierBreakType::Fade;
+    if (break_type == "Down") {
+        break_type_ = BarrierBreakType::Down;
+    }
+    else if (break_type == "Fade") {
+        break_type_ = BarrierBreakType::Fade;
+        enable_cast_shadow_ = false;
+    }
 }
 
 void Barrier::update(float delta_time) {
