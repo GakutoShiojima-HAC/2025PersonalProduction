@@ -2,6 +2,7 @@
 #include "Engine/Utils/MyMath.h"
 #include "Assets.h"
 #include "Engine/Sound/SE.h"
+#include "Engine/Utils/MyString.h"
 
 constexpr float FOOT_OFFSET{ 0.125f };
 
@@ -60,6 +61,7 @@ void MyEnemy::draw_gui() const {
     draw_hp_gauge();
 }
 
+#ifdef _DEBUG
 void MyEnemy::debug_update(float delta_time) {
     // 名前
     std::string text = "name: " + name_;
@@ -75,14 +77,20 @@ void MyEnemy::debug_update(float delta_time) {
         std::string text = "target: " + (target_ == nullptr ? "none" : target_->name());
         ImGui::Text(text.c_str());
     }
+    // 攻撃ステート
+    {
+        std::string text = is_attack_soon() ? "攻撃動作中" : "通常動作中";
+        ImGui::Text(ToUTF8(text).c_str());
+    }
 }
+#endif
 
 bool MyEnemy::is_attack_soon() const {
     auto it = my_info_.attack_data.find(motion_);
     if (it == my_info_.attack_data.end()) return false;
 
     // アラート開始から攻撃判定生成までを真とする
-    return state_timer_ >= it->second.start_time && state_timer_ < it->second.attack_time;
+    return mesh_.current_motion_time() >= it->second.start_time && mesh_.current_motion_time() < it->second.attack_time;
 }
 
 GSmatrix4 MyEnemy::critical_position() const {
