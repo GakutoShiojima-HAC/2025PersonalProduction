@@ -25,6 +25,7 @@
     X(EnemyLich) \
     X(EnemyViking) \
     X(EnemyLavaElemental) \
+    X(EnemyMechaBot) \
     X(GimmickBarrier) \
     X(GimmickElevator) \
     X(WeaponSword1) \
