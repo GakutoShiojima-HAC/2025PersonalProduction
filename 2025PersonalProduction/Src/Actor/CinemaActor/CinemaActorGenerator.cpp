@@ -11,7 +11,7 @@ CinemaActorGenerator::CinemaActorGenerator(const json& j, World* world) {
 }
 
 Actor* CinemaActorGenerator::generate(const GSvector3& position, const GSvector3& rotate, int hp, int damage, const json& param) {
-    CinemaActor* p = new CinemaActor{ world_, MyJson::get_string(param, "Timeline"), MyJson::get_boolean(param, "FixedPlayer", true)};
+    CinemaActor* p = new CinemaActor{ world_, MyJson::get_string(param, "Timeline"), MyJson::get_boolean(param, "FixedPlayer", true), MyJson::get_boolean(param, "DisableGUI", true) };
 
     // ÉpÉâÉÅÅ[É^Çí«â¡
     const int type = MyJson::get_int(param, "Type");

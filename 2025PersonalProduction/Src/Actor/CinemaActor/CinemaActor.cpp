@@ -4,7 +4,7 @@
 #include "Actor/Player/Player.h"
 #include "State/Player/PlayerState.h"
 
-CinemaActor::CinemaActor(IWorld* world, const std::string& timeline_name, bool is_playing_fixed_player) {
+CinemaActor::CinemaActor(IWorld* world, const std::string& timeline_name, bool is_playing_fixed_player, bool disable_gui) {
     world_ = world;
     tag_ = ActorTag::Object;
     name_ = "CinemaActor";
@@ -13,6 +13,7 @@ CinemaActor::CinemaActor(IWorld* world, const std::string& timeline_name, bool i
     is_player_fixed_ = is_playing_fixed_player;
     enable_timescale_ = false;
     enable_collider_ = false;
+    disable_gui_ = disable_gui;
 }
 
 CinemaActor::~CinemaActor() {
@@ -37,7 +38,7 @@ void CinemaActor::update(float delta_time) {
                 player->velocity() = GSvector3{ 0.0f, 0.0f, 0.0f };
                 player->change_state((GSuint)PlayerStateType::Move, PlayerMotion::Idle, true);
             }
-            world_->enable_draw_gui() = true;
+            if (disable_gui_) world_->enable_draw_gui() = true;
             end();
         }
         return;
@@ -49,7 +50,7 @@ void CinemaActor::update(float delta_time) {
         world_->stop_timeline();
         world_->play_timeline(timeline_name_);
         behavior_->enter();
-        world_->enable_draw_gui() = false;
+        if (disable_gui_) world_->enable_draw_gui() = false;
 
         // ƒvƒŒƒCƒ„[‚ğŒÅ’è‚·‚é‚©‚Ç‚¤‚©
         if (is_player_fixed_) {

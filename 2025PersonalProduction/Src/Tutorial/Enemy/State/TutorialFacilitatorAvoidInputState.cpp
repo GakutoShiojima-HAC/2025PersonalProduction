@@ -36,6 +36,8 @@ void TutorialFacilitatorAvoidInputState::update(float delta_time) {
         // 動かなくなる
         owner_.freeze_motion() = true;
         owner_.target()->freeze_motion() = true;
+
+        owner_.enable_draw_game_info_gui() = false;
     }
 
     // タイマー
@@ -75,4 +77,6 @@ void TutorialFacilitatorAvoidInputState::exit() {
 
     owner_.freeze_motion() = false;
     owner_.target()->freeze_motion() = false;
+
+    owner_.enable_draw_game_info_gui() = true;
 }

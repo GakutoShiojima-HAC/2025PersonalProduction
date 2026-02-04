@@ -56,6 +56,8 @@ public:
     /// </summary>
     bool is_avoid_effect() const;
 
+    bool& enable_draw_game_info_gui();
+
     /// <summary>
     /// 回避エフェクトを一時停止
     /// </summary>

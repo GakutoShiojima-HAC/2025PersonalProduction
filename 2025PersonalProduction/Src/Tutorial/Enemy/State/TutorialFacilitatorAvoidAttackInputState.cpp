@@ -29,6 +29,8 @@ void TutorialFacilitatorAvoidAttackInputState::update(float delta_time) {
 
         input.disable_action(InputAction::GAME_Attack) = true;
         is_attack_disable_ = true;
+
+        owner_.enable_draw_game_info_gui() = false;
     }
 
     // ‰ñ”ğ‹óŠÔ‚É“ü‚ç‚È‚©‚Á‚½‚Æ‚«—p
@@ -77,4 +79,6 @@ void TutorialFacilitatorAvoidAttackInputState::exit() {
     owner_.target()->freeze_motion() = false;
 
     owner_.resume_avoid_effect();   // ÄŠJ
+
+    owner_.enable_draw_game_info_gui() = true;
 }

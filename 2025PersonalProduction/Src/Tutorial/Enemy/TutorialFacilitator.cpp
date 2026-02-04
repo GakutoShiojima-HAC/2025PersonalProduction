@@ -110,6 +110,10 @@ bool TutorialFacilitator::is_avoid_effect() const {
     return world_->is_avoid_effect();
 }
 
+bool& TutorialFacilitator::enable_draw_game_info_gui() {
+    return world_->enable_draw_game_info_gui();
+}
+
 void TutorialFacilitator::pause_avoid_effect() {
     world_->pause_avoid_effect();
 }
