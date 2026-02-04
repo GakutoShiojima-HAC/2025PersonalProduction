@@ -15,6 +15,8 @@
 #include "Actor/Enemy/Viking/VikingGenerator.h"
 #include "Tutorial/Enemy/TutorialFacilitatorGenerator.h"
 #include "Actor/Gimmick/TreasureChest/TreasureChestGenerator.h"
+#include "Actor/Gimmick/Heal/HealGenerator.h"
+#include "Actor/NPC/NPCGenerator.h"
 
 namespace fs = std::experimental::filesystem;
 
@@ -60,6 +62,8 @@ void ActorGenerator::load(World* world) {
         else if (key == VikingGeneratorKey) add_generator(name, new VikingGenerator{ j, world });
         else if (key == TutorialFacilitatorGeneratorKey) add_generator(name, new TutorialFacilitatorGenerator{ j, world });
         else if (key == TreasureChestGeneratorKey) add_generator(name, new TreasureChestGenerator{ j, world });
+        else if (key == HealGeneratorKey) add_generator(name, new HealGenerator{ j, world });
+        else if (key == NPCGeneratorKey) add_generator(name, new NPCGenerator{ j, world });
     }
 }
 

@@ -34,6 +34,8 @@ enum class InputAction {
     GAME_Interact_Up,   // インタラクト上選択
     GAME_Interact_Down, // インタラクト下選択
     GAME_Inventory,     // インベントリ
+    GAME_WeaponChange,  // 武器切り替え
+    GAME_UtilChange,    // ユーティリティ切り替え
 
     DEBUG_CameraActive, // カメラ有効化
     DEBUG_Up,           // 上昇

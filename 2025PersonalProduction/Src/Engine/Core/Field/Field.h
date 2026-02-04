@@ -43,6 +43,11 @@ public:
 	/// </summary>
 	void draw_field_actor() const;
 
+    /// <summary>
+    /// フィールドアクターの影用描画
+    /// </summary>
+    void draw_field_actor_shadow() const;
+
 	/// <summary>
 	/// フィールドアクターの追加
 	/// </summary>

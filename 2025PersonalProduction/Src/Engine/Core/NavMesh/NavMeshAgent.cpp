@@ -8,7 +8,7 @@
 #endif
 
 // Ä’Tõ‚ÌŠÔ
-constexpr float RE_FIND_TIME{ 1.0f };
+constexpr float RE_FIND_TIME{ 0.5f };
 
 NavMeshAgent::NavMeshAgent(Actor* target, NavMeshSurface* navmesh) {
 	target_ = target;

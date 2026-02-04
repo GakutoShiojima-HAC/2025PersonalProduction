@@ -5,6 +5,7 @@
 #include "Engine/Core//Input/Input.h"
 #include "GUI/Button/TextFunctionButton.h"
 #include "Assets.h"
+#include "Engine/Sound/SE.h"
 
 // âΩå¬UIÇï`âÊÇ∑ÇÈÇ©
 const int DRAW_DATA_LIST{ 4 };
@@ -58,36 +59,46 @@ void SceneSelectSaveDataState::update(float delta_time) {
     Input& input = Input::get_instance();
     const bool is_pad = input.is_pad();
 
+    const std::vector<MenuSceneSaveDataInfo>& infos = owner_.get_save_data();
+
     if (is_pad) {
-        button_empty_.update(delta_time);
+        if (input.action(InputAction::MENU_Decision)) {
+            start_game();
+            SE::play((GSuint)SEID::ButtonInput);
+        }
+        if (input.action(InputAction::MENU_Cancel)) {
+            return_state();
+            SE::play((GSuint)SEID::ButtonInput);
+        }
     }
     else {
         button_.update(delta_time);
         button_empty_.update(delta_time);
     }
 
-    const std::vector<MenuSceneSaveDataInfo>& infos = owner_.get_save_data();
-    if (!infos.empty()) {
-        
+    if (!infos.empty()) {    
         int index = (int)select_index_;
         if (input.action(InputAction::GAME_Interact_Up)) {
             --index;
+            SE::play((GSuint)SEID::ButtonSelect);
             if (index < 0) index = 0;
         }
         else if (input.action(InputAction::GAME_Interact_Down)) {
             ++index;
+            SE::play((GSuint)SEID::ButtonSelect);
             if (index > infos.size() - 1) index = infos.size() - 1;
         }
         select_index_ = index;
     }
 
+    // ÉfÅ[É^ÉAÉCÉRÉìÇÃâÒì]
     rotate_icon_ += delta_time * ICON_ROTATE_SPEED;
 }
 
 void SceneSelectSaveDataState::draw() const {
     owner_.original_draw();
 
-    // É{É^ÉìîwåiÇÃï`âÊ
+    // îwåiÇÃï`âÊ
     Canvas::draw_texture(
         (GSuint)TextureID::SelectSaveDataWindowTexture,
         GSvector2{ 0.0f, 0.0f },
@@ -101,11 +112,18 @@ void SceneSelectSaveDataState::draw() const {
         draw_select_save_data();
     }
 
-    Canvas::draw_texture((GSuint)TextureID::SaveDataIconTexture, GSvector2{ 272.0f, 188.0f }, GSrect{ 0.0f, 0.0f, 96.0f, 96.0f },
-        GSvector2{ 96.0f / 2.0f, 96.0f / 2.0f }, GSvector2::one(), GScolor{ 1.0f, 1.0f, 1.0f, 1.0f }, rotate_icon_);
+    // ÉfÅ[É^ÉAÉCÉRÉìÇÃï`âÊ
+    Canvas::draw_texture(
+        (GSuint)TextureID::SaveDataIconTexture,
+        GSvector2{ 272.0f, 188.0f },
+        GSrect{ 0.0f, 0.0f, 96.0f, 96.0f },
+        GSvector2{ 96.0f / 2.0f, 96.0f / 2.0f },
+        GSvector2::one(),
+        GScolor{ 1.0f, 1.0f, 1.0f, 1.0f },
+        rotate_icon_
+    );
 
     Input::get_instance().draw_cursor();
-
 }
 
 void SceneSelectSaveDataState::draw_empty_save_data() const {

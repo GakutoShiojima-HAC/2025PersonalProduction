@@ -165,6 +165,10 @@ bool Input::action(InputAction action) const {
         return is_pad_ ? gsXBoxPadButtonTrigger(USE_PAD_NUM, GS_XBOX_PAD_DOWN) : scroll_ < 0;
     case InputAction::GAME_Inventory:
 		break;
+    case InputAction::GAME_WeaponChange:
+        return is_pad_ ? gsXBoxPadButtonTrigger(USE_PAD_NUM, GS_XBOX_PAD_RIGHT) : gsGetKeyTrigger(GKEY_F);
+    case InputAction::GAME_UtilChange:
+        return is_pad_ ? gsXBoxPadButtonTrigger(USE_PAD_NUM, GS_XBOX_PAD_LEFT) : gsGetKeyTrigger(GKEY_Q);
 	case InputAction::DEBUG_CameraActive:
 		return gsGetMouseButtonState(GMOUSE_BUTTON_2);
 	case InputAction::DEBUG_Up:

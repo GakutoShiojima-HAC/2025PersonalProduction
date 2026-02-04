@@ -130,9 +130,9 @@ void World::clear() {
 void World::shadow_map_callback(void* param, const GSmatrix4* view, const GSmatrix4* projection) {
 	World* self = (World*)param;
 	// シャドウマップにアクターを描画
-	self->actor_.draw();
+	self->actor_.draw_shadow();
 	// シャドウマップにフィールド用のアクターを描画
-	self->field_->draw_field_actor();
+	self->field_->draw_field_actor_shadow();
 	// シャドウマップにフィールド全体を描画（フィード用のアクターも含む）
 	//self->field_->draw(); // これ使う場合はフィールド用のアクター描画をコメントアウト
 }

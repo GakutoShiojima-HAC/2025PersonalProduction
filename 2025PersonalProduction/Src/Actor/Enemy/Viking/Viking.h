@@ -69,11 +69,20 @@ public:
     /// <returns>参照</returns>
     const VikingInfo& info() const;
 
+    void dash_effect_start();
+
+    void dash_effect_end();
+
+    void update_dash_effect(float delta_time);
+
 private:
     void generate_land_attack();
 
 private:
     VikingInfo info_;
+
+    int dash_effect_handle_{ 0 };
+    bool dash_effect_enabled_{ false };
 
 };
 

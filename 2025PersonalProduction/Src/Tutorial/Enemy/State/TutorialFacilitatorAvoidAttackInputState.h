@@ -24,9 +24,16 @@ private:
 
     void draw() const override {};
 
-    void draw_gui() const override {};
+    void draw_gui() const override;
 
 	void exit() override;
+
+private:
+    // ‰ğœ‚µ‚½‚©‚Ç‚¤‚©
+    bool is_attack_disable_{ true };
+
+    // ‹óŠÔ‚É“ü‚Á‚½‚©‚Ç‚¤‚©
+    bool is_in_avoid_effect_{ false };
 
 };
 

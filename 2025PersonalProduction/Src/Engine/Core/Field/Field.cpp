@@ -53,6 +53,10 @@ void Field::draw_field_actor() const {
 	actors_.draw();
 }
 
+void Field::draw_field_actor_shadow() const {
+    actors_.draw_shadow();
+}
+
 void Field::add(FieldActor* field_actor) {
 	actors_.add(field_actor);
 }

@@ -137,6 +137,10 @@ public:
 
 	void draw_gui() const override;
 
+#ifdef _DEBUG
+    void debug_update(float delta_time) override;
+#endif
+
 public:
 	void take_damage(Actor& other, const int damage) override;
 
@@ -291,6 +295,11 @@ private:
 	void add_attack_animation_event(const PlayerInfo& info);
 
     /// <summary>
+    /// インベントリの更新
+    /// </summary>
+    void update_inventory();
+
+    /// <summary>
     /// 攻撃判定を作成
     /// </summary>
     /// <param name="offset">= オフセット</param>
@@ -322,9 +331,6 @@ private:
 
     // 武器を描画するかどうか
     bool draw_weapon_{ false };
-
-    // 最大HP
-    int max_hp_{ 0 };
 
 	// 通常攻撃段数
 	int attack_count_{ 0 };

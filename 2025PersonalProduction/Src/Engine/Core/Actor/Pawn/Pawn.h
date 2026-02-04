@@ -62,6 +62,12 @@ public:
 	/// </summary>
 	int& hp();
 
+    /// <summary>
+    /// 最大HPを取得
+    /// </summary>
+    /// <returns></returns>
+    int max_hp() const;
+
 	/// <summary>
 	/// 無敵時間を取得
 	/// </summary>
@@ -80,6 +86,12 @@ public:
     GSuint current_motion() const;
 
     /// <summary>
+    /// 現在のモーションの再生時間
+    /// </summary>
+    /// <returns></returns>
+    float currnent_motion_time() const;
+
+    /// <summary>
     /// 現在のモーションがループしているか
     /// </summary>
     /// <returns>ループの状態</returns>
@@ -90,6 +102,12 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	float current_motion_end_time() const;
+
+    /// <summary>
+    /// モーションを停止
+    /// </summary>
+    /// <returns>参照</returns>
+    bool& freeze_motion();
 
 protected:
 	/// <summary>
@@ -131,11 +149,16 @@ protected:
 	int hp_{ 1 };
     // 描画用のHP
     float display_hp_{ 1.0f };
+    // 最大HP
+    int max_hp_{ 1 };
 	// 無敵時間タイマー(秒)
 	float invincible_timer_{ 0.0f };
 
     // 攻撃動作に入っているか
     bool is_attack_soon_{ false };
+
+    // モーションを止めるかどうか
+    bool is_motion_freeze_{ false };
 
 };
 

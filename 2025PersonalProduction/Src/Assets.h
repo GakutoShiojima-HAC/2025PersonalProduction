@@ -32,6 +32,8 @@
     X(TreasureChest) \
     X(Item) \
     X(Tereporter) \
+    X(HealTree) \
+    X(NPCGuide) \
     X(MAX_SIZE) // 要素数
 
 // テクスチャ 
@@ -47,6 +49,9 @@
     X(SettingWindowTexture) \
     X(GameGuideWindowTexture) \
     X(SelectSaveDataWindowTexture) \
+    X(TutorialPAttackTexture) \
+    X(TutorialEAttackTexture) \
+    X(TutorialAvoidAttackTexture) \
     X(TutorialAttackInputTexture) \
     X(TutorialAvoidInputTexture) \
     X(ButtonSelectMouseTexture) \
@@ -110,6 +115,7 @@
     X(FireBallSummon) \
     X(Explosion) \
     X(HardLand) \
+    X(Heal) \
     X(MAX_SIZE) // 要素数
 
 // エフェクト
@@ -123,8 +129,10 @@
     X(DustLarge) \
     X(FireBall) \
     X(ExplosionSmall) \
+    X(DashSonic) \
     X(Fire) \
     X(LootBox) \
+    X(Heal) \
     X(MAX_SIZE) // 要素数
 #pragma endregion
 

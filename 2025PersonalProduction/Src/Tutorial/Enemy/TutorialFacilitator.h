@@ -29,6 +29,8 @@ public:
     };
 
 public:
+    void update(float delta_time) override;
+
     void draw_gui() const override;
 
 public:
@@ -40,31 +42,38 @@ public:
 
     void change_state_and_motion(const GSuint state_num) override;
 
+private:
+    void add_state() override;
+
 public:
     /// <summary>
-    /// 回避演出中かどうか
+    /// チュートリアルを初期化
     /// </summary>
-    /// <returns>演出中なら真を返却</returns>
+    void init_tutorial();
+
+    /// <summary>
+    /// 回避空間に入っているかどうか
+    /// </summary>
     bool is_avoid_effect() const;
 
     /// <summary>
-    /// 攻撃チュートリアルイベントの開始
+    /// 回避エフェクトを一時停止
     /// </summary>
-    void on_attack_input_event();
+    void pause_avoid_effect();
 
     /// <summary>
-    /// 回避チュートリアルイベントの開始
+    /// 回避エフェクトを再開
     /// </summary>
-    void on_avoid_input_event();
-
-    /// <summary>
-    /// ゲーム情報GUIを描画するかどうか
-    /// </summary>
-    /// <returns>参照</returns>
-    bool& enable_game_info_gui();
+    void resume_avoid_effect();
 
 private:
-	void add_state() override;
+    // 回避方法を教えたかどうか
+    bool is_avoid_execute_{ false };
+    // ダメージ量で攻撃回数をカウントするかどうか
+    bool enable_damage_count_{ true };
+
+    // ターゲットの過去ステート
+    unsigned int target_prev_state_{ 0 };
 
     GSuint event_texture_id_{ 0 };
 };

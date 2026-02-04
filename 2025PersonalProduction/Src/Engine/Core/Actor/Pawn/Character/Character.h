@@ -21,6 +21,10 @@ public:
 	virtual ~Character() = default;
 
 public:
+#ifdef _DEBUG  
+    virtual void debug_update(float delta_time) override;
+#endif
+
 	/// <summary>
 	/// ステートの変更
 	/// </summary>

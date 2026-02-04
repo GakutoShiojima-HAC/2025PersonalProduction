@@ -24,10 +24,18 @@ private:
 
     void draw() const override {};
 
-    void draw_gui() const override {};
+    void draw_gui() const override;
 
 	void exit() override;
 
+private:
+    bool is_show_{ false };
+
+    // 解除したかどうか
+    bool is_avoid_disable_{ true };
+
+    // 表示タイマー
+    float timer_{ 0.0f };
 };
 
 #endif

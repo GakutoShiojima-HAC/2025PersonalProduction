@@ -2,6 +2,7 @@
 #include "Engine/Utils/MyMath.h"
 #include "Assets.h"
 #include "Engine/Sound/SE.h"
+#include "Engine/Utils/MyString.h"
 
 constexpr float FOOT_OFFSET{ 0.125f };
 
@@ -14,6 +15,7 @@ MyEnemy::MyEnemy(IWorld* world, const GSvector3& position, const GSvector3& rota
 
     hp_ = info.hp;
     display_hp_ = (float)info.hp;
+    max_hp_ = info.hp;
 
     init_parameter(PawnParameter::get_type(info.pawn_type));
     mesh_ = { info.skinmesh, info.skinmesh, info.skinmesh };
@@ -59,12 +61,36 @@ void MyEnemy::draw_gui() const {
     draw_hp_gauge();
 }
 
+#ifdef _DEBUG
+void MyEnemy::debug_update(float delta_time) {
+    // 名前
+    std::string text = "name: " + name_;
+    ImGui::Text(text.c_str());
+    // 座標
+    ImGui::Text("position: X:%.3f Y:%.3f Z:%.3f", transform_.position().x, transform_.position().y, transform_.position().z);
+    // ステート番号
+    ImGui::Text("state: %d",(int)state_.get_current_state());
+    // モーション番号
+    ImGui::Text("motion: %d", (int)motion_);
+    // ターゲット名
+    {
+        std::string text = "target: " + (target_ == nullptr ? "none" : target_->name());
+        ImGui::Text(text.c_str());
+    }
+    // 攻撃ステート
+    {
+        std::string text = is_attack_soon() ? "攻撃動作中" : "通常動作中";
+        ImGui::Text(ToUTF8(text).c_str());
+    }
+}
+#endif
+
 bool MyEnemy::is_attack_soon() const {
     auto it = my_info_.attack_data.find(motion_);
     if (it == my_info_.attack_data.end()) return false;
 
     // アラート開始から攻撃判定生成までを真とする
-    return state_timer_ >= it->second.start_time && state_timer_ < it->second.attack_time;
+    return mesh_.current_motion_time() >= it->second.start_time && mesh_.current_motion_time() < it->second.attack_time;
 }
 
 GSmatrix4 MyEnemy::critical_position() const {

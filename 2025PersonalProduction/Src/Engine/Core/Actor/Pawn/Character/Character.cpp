@@ -7,6 +7,20 @@ void Character::update_state(float delta_time) {
 	state_timer_ += delta_time;
 }
 
+#ifdef _DEBUG
+void Character::debug_update(float delta_time) {
+    // 名前
+    std::string text = "name: " + name_;
+    ImGui::Text(text.c_str());
+    // 座標
+    ImGui::Text("position: X:%.3f Y:%.3f Z:%.3f", transform_.position().x, transform_.position().y, transform_.position().z);
+    // ステート番号
+    ImGui::Text("state: %d", (int)state_.get_current_state());
+    // モーション番号
+    ImGui::Text("motion: %d", (int)motion_);
+}
+#endif  
+
 void Character::change_state(const GSuint state_num) {
 	// 状態の変更
 	state_.change_state(state_num);

@@ -64,6 +64,13 @@ public:
 	/// </summary>
 	virtual void draw_gui() const;
 
+#ifdef _DEBUG
+    /// <summary>
+    /// デバッグ用更新(DEBUGビルドのみ)
+    /// </summary>
+    virtual void debug_update(float delta_time);
+#endif
+
 	/// <summary>
 	/// アクターの寿命を終わらせる
 	/// </summary>
@@ -154,8 +161,12 @@ public:
     /// <summary>
     /// 重力値
     /// </summary>
-    /// <returns></returns>
     float gravity() const;
+
+    /// <summary>
+    /// 身長を取得
+    /// </summary>
+    float height() const;
 
     /// <summary>
     /// 力を加える
@@ -218,6 +229,12 @@ public:
     /// </summary>
     /// <returns>参照</returns>
     bool& enable_timescale();
+
+    /// <summary>
+    /// 影をつけるかどうか
+    /// </summary>
+    /// <returns></returns>
+    bool enabled_cast_shadow() const;
 
 protected:
 	/// <summary>
@@ -304,6 +321,8 @@ protected:
 
     // タイムスケールを受けるかどうか
     bool enable_timescale_{ true };
+    // 影を描画するかどうか
+    bool enable_cast_shadow_{ true };
 
 public:
 	// コピー禁止

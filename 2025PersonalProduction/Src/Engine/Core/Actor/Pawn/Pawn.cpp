@@ -25,6 +25,11 @@ int& Pawn::hp() {
     return hp_;
 }
 
+int Pawn::max_hp() const
+{
+    return max_hp_;
+}
+
 float& Pawn::invincible_timer() {
     return invincible_timer_;
 }
@@ -37,12 +42,20 @@ GSuint Pawn::current_motion() const {
     return motion_;
 }
 
+float Pawn::currnent_motion_time() const {
+    return mesh_.current_motion_time();
+}
+
 bool Pawn::current_motion_loop() const {
     return motion_loop_;
 }
 
 float Pawn::current_motion_end_time() const {
     return mesh_.motion_end_time();
+}
+
+bool& Pawn::freeze_motion() {
+    return is_motion_freeze_;
 }
 
 void Pawn::update_invincible(float delta_time) {
@@ -72,8 +85,10 @@ void Pawn::init_parameter(PawnParameter::Type type) {
 }
 
 void Pawn::update_mesh(float delta_time) {
-    // メッシュのモーションを更新
-    mesh_.update(delta_time);
+    if (!is_motion_freeze_) {
+        // メッシュのモーションを更新
+        mesh_.update(delta_time);   
+    }
     // ルートモーションを適用
     if (is_root_motion_state()) {
         mesh_.apply_root_motion(transform_);
