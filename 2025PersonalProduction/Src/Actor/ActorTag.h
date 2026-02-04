@@ -15,6 +15,7 @@ enum class ActorTag {
 	None,       // 指定なし
 	Player,
 	Enemy,
+    NPC,
 	Collider,   // 攻撃衝突判定
     Projectile, // 飛び道具の実体
     Item,

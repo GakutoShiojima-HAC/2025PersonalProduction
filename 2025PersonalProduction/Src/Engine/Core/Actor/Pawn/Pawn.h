@@ -62,6 +62,12 @@ public:
 	/// </summary>
 	int& hp();
 
+    /// <summary>
+    /// 最大HPを取得
+    /// </summary>
+    /// <returns></returns>
+    int max_hp() const;
+
 	/// <summary>
 	/// 無敵時間を取得
 	/// </summary>
@@ -131,6 +137,8 @@ protected:
 	int hp_{ 1 };
     // 描画用のHP
     float display_hp_{ 1.0f };
+    // 最大HP
+    int max_hp_{ 1 };
 	// 無敵時間タイマー(秒)
 	float invincible_timer_{ 0.0f };
 

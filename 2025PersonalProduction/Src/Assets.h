@@ -32,6 +32,8 @@
     X(TreasureChest) \
     X(Item) \
     X(Tereporter) \
+    X(HealTree) \
+    X(NPCGuide) \
     X(MAX_SIZE) // 要素数
 
 // テクスチャ 
@@ -110,6 +112,7 @@
     X(FireBallSummon) \
     X(Explosion) \
     X(HardLand) \
+    X(Heal) \
     X(MAX_SIZE) // 要素数
 
 // エフェクト
@@ -126,6 +129,7 @@
     X(DashSonic) \
     X(Fire) \
     X(LootBox) \
+    X(Heal) \
     X(MAX_SIZE) // 要素数
 #pragma endregion
 

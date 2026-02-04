@@ -170,6 +170,10 @@ bool& Actor::enable_timescale() {
     return enable_timescale_;
 }
 
+bool Actor::enabled_cast_shadow() const {
+    return enable_cast_shadow_;
+}
+
 void Actor::collide_field() {
     // x,z軸の回転を無効にする
     transform_.rotation(GSquaternion(0.0f, transform_.rotation().y, 0.0f, transform_.rotation().w));

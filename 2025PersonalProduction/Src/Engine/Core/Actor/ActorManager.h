@@ -47,6 +47,11 @@ public:
     void draw() const;
 
     /// <summary>
+    /// アクターの影用描画
+    /// </summary>
+    void draw_shadow() const;
+
+    /// <summary>
     /// アクターの半透明描画
     /// </summary>
     void draw_tranparent() const;

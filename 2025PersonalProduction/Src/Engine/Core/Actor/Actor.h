@@ -230,6 +230,12 @@ public:
     /// <returns>参照</returns>
     bool& enable_timescale();
 
+    /// <summary>
+    /// 影をつけるかどうか
+    /// </summary>
+    /// <returns></returns>
+    bool enabled_cast_shadow() const;
+
 protected:
 	/// <summary>
 	/// 地形との衝突判定
@@ -315,6 +321,8 @@ protected:
 
     // タイムスケールを受けるかどうか
     bool enable_timescale_{ true };
+    // 影を描画するかどうか
+    bool enable_cast_shadow_{ true };
 
 public:
 	// コピー禁止

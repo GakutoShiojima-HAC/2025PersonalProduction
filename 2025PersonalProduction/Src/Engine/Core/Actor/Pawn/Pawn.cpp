@@ -25,6 +25,11 @@ int& Pawn::hp() {
     return hp_;
 }
 
+int Pawn::max_hp() const
+{
+    return max_hp_;
+}
+
 float& Pawn::invincible_timer() {
     return invincible_timer_;
 }

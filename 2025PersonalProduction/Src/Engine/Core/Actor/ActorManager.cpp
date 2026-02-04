@@ -116,6 +116,12 @@ void ActorManager::draw() const {
 	}
 }
 
+void ActorManager::draw_shadow() const {
+    for (const auto& actor : actors_) {
+        if (actor->enabled_cast_shadow()) actor->draw();
+    }
+}
+
 void ActorManager::draw_tranparent() const {
 	for (const auto& actor : actors_) {
 		actor->draw_transparent();
