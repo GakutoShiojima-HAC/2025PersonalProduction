@@ -18,15 +18,19 @@ public:
 	 TutorialFacilitatorAttackInputState(TutorialFacilitator& owner);
 
 private:
-	void enter() override;
+    void enter() override;
 
 	void update(float delta_time) override;
 
     void draw() const override {};
 
-    void draw_gui() const override {};
+    void draw_gui() const override;
 
-	void exit() override;
+    void exit() override;
+
+private:
+    // ‰ğœ‚µ‚½‚©‚Ç‚¤‚©
+    bool is_attack_disable_{ true };
 
 };
 

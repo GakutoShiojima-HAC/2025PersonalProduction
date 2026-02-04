@@ -1,6 +1,10 @@
 #include "TutorialFacilitatorAvoidInputState.h"
 #include "Tutorial/Enemy/TutorialFacilitator.h"
-#include "Engine/Utils/MyMath.h"
+#include "Assets.h"
+#include "Engine/Graphics/Canvas/Canvas.h"
+
+// テロップを見なければいけない時間
+constexpr float ENABLE_INPUT_TIME{ 1.0f };
 
 TutorialFacilitatorAvoidInputState::TutorialFacilitatorAvoidInputState(TutorialFacilitator& owner) :
 	TutorialFacilitatorState(owner) {
@@ -8,56 +12,67 @@ TutorialFacilitatorAvoidInputState::TutorialFacilitatorAvoidInputState(TutorialF
 }
 
 void TutorialFacilitatorAvoidInputState::enter() {
-    owner_.start_move();
+    is_show_ = false;
+    timer_ = 0.0f;
 }
 
 void TutorialFacilitatorAvoidInputState::update(float delta_time) {
-    // ターゲットがいなかったら待機状態に戻る
-    if (!owner_.search_target()) {
-        owner_.change_state((GSuint)TutorialFacilitatorStateType::Idle, (GSuint)TutorialFacilitatorMotion::Idle, true);
+    // 攻撃態勢になったときテロップを表示する
+    if (!is_show_ && owner_.is_attack_soon()) {
+        is_show_ = true;
+
+        // 拘束
+        Input& input = Input::get_instance();
+        input.disable_action(InputAction::GAME_Camera) = true;
+        input.disable_action(InputAction::GAME_Jump) = true;
+        input.disable_action(InputAction::GAME_Skill) = true;
+        input.disable_action(InputAction::GAME_Lockon) = true;
+        input.disable_action(InputAction::GAME_Move) = true;
+        input.disable_action(InputAction::GAME_Attack) = true;
+
+        input.disable_action(InputAction::GAME_Avoid) = true;
+        is_avoid_disable_ = true;
+
+        // 動かなくなる
+        owner_.freeze_motion() = true;
+        owner_.target()->freeze_motion() = true;
+    }
+
+    // タイマー
+    if (is_show_) {
+        timer_ += delta_time / cFPS;
+    }
+
+    // 回避入力拘束の解除
+    if (is_avoid_disable_ && timer_ >= ENABLE_INPUT_TIME) {
+        is_avoid_disable_ = false;
+        Input& input = Input::get_instance();
+        input.disable_action(InputAction::GAME_Avoid) = false;
+    }
+
+    // 回避を押したら
+    if (Input::get_instance().action(InputAction::GAME_Avoid)) {
+        // 次のテロップステートへ
+        owner_.change_state((GSuint)TutorialFacilitatorStateType::AvoidAttackInput);
         return;
     }
+}
 
-    // 回避演出が起きたら次のイベントへ
-    if (owner_.is_avoid_effect()) {
-        owner_.change_state((GSuint)TutorialFacilitatorStateType::AvoidAttackInput, (GSuint)TutorialFacilitatorMotion::Move, true);
-        return;
-    }
+void TutorialFacilitatorAvoidInputState::draw_gui() const {
+    if (!is_show_) return;
+    Canvas::draw_texture((GSuint)TextureID::TutorialEAttackTexture, GSvector2{ 0.0f, 0.0f }, GSrect{ 0.0f, 0.0f, 1920.0f, 1080.0f });
 
-    bool is_in_radius{ false };
-    const GSvector3 to_target = owner_.target()->transform().position() - owner_.transform().position();
-    const float to_target_length = to_target.magnitude();
-
-    // 攻撃できるかどうか
-    if (owner_.is_attack_motion((GSuint)TutorialFacilitatorMotion::Attack)) {
-        is_in_radius = to_target_length < owner_.my_info().attack_data.find((GSuint)TutorialFacilitatorMotion::Attack)->second.detection_radius;
-    }
-
-    // 近すぎたら見る
-    if (is_in_radius) {
-        // 敵の方向を向いているかどうか
-        if (MyMath::to_target_angle(owner_.transform().position(), owner_.transform().forward(), owner_.target()->transform().position()) <= 10.0f) {
-            // 判定内なら攻撃
-            owner_.save_current_state();
-            owner_.change_state((GSuint)TutorialFacilitatorStateType::Attack, (GSuint)TutorialFacilitatorMotion::Attack, false);
-            return;
-        }
-        else {
-            owner_.update_look_target(delta_time);
-        }
-    }
-    else {
-        // 見失ったら待機状態に戻る
-        if (to_target_length > owner_.my_info().search_length * 2.5f) {
-            owner_.release_target();
-            owner_.change_state((GSuint)TutorialFacilitatorStateType::Idle, (GSuint)TutorialFacilitatorMotion::Idle, true);
-            return;
-        }
-        // 追跡
-        owner_.update_move(delta_time);
+    // 回避方法描画
+    if (timer_ >= ENABLE_INPUT_TIME) {
+        Canvas::draw_texture((GSuint)TextureID::TutorialAvoidInputTexture, GSvector2{ 0.0f, 0.0f }, GSrect{ 0.0f, 0.0f, 1920.0f, 1080.0f });
     }
 }
 
 void TutorialFacilitatorAvoidInputState::exit() {
-    owner_.move_end();
+    // 解放
+    Input& input = Input::get_instance();
+    input.reset_disable_action();
+
+    owner_.freeze_motion() = false;
+    owner_.target()->freeze_motion() = false;
 }

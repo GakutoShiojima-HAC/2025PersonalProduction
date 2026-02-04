@@ -23,10 +23,16 @@ public:
     enum class State {
         Idle,               // プレイヤーを待つ
 
-        AttackInput,        // 攻撃入力を待つ
-        AvoidInput,         // 回避入力を待つ
-        AvoidAttackInput,   // 回避攻撃入力を待つ
-        Event,              // イベント
+        AttackInput,        // 攻撃入力テロップ
+        Chase,              // 追いかける
+        AttackInputHurt,    // 攻撃入力学習中の負傷
+
+        AvoidInputChase,    // 攻撃できるまで追いかける
+        AvoidInput,         // 回避入力テロップ
+
+        AvoidAttackInput,   // 回避攻撃入力テロップ
+
+        Move,               // 移動
         Attack,             // 攻撃
         Hurt,               // 負傷
         Dead,               // 死亡(終了)

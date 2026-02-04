@@ -49,6 +49,9 @@
     X(SettingWindowTexture) \
     X(GameGuideWindowTexture) \
     X(SelectSaveDataWindowTexture) \
+    X(TutorialPAttackTexture) \
+    X(TutorialEAttackTexture) \
+    X(TutorialAvoidAttackTexture) \
     X(TutorialAttackInputTexture) \
     X(TutorialAvoidInputTexture) \
     X(ButtonSelectMouseTexture) \
