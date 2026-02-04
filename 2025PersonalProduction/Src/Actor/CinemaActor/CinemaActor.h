@@ -17,7 +17,7 @@ class ICinemaBehavior;
 
 class CinemaActor : public Actor {
 public:
-    CinemaActor(IWorld* world, const std::string& timeline_name, bool is_playing_fixed_player = true);
+    CinemaActor(IWorld* world, const std::string& timeline_name, bool is_playing_fixed_player = true, bool disable_gui = true);
 
     ~CinemaActor();
 
@@ -53,6 +53,7 @@ private:
 
     bool play_start_{ false };
 
+    bool disable_gui_{ true };
 };
 
 
