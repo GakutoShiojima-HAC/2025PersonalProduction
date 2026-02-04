@@ -139,7 +139,7 @@ const VikingInfo& Viking::info() const {
 void Viking::dash_effect_start() {
     if (dash_effect_enabled_) return;
     dash_effect_enabled_ = true;
-    dash_effect_handle_ = play_effect((GSuint)EffectID::DashSonic, GSvector3{ 0.0f, 3.0f, 0.0f });
+    dash_effect_handle_ = play_effect((GSuint)EffectID::DashSonic, GSvector3{ 1.0f, 1.5f, 0.0f });
 }
 
 void Viking::dash_effect_end() {
@@ -151,7 +151,7 @@ void Viking::dash_effect_end() {
 void Viking::update_dash_effect(float delta_time) {
     if (dash_effect_enabled_) {
         // エフェクトに自身のワールド変換行列を設定
-        GSmatrix4 world = local_to_world(GSvector3{ 0.0f, 3.0f, 0.0f }, GSvector3::zero(), GSvector3::one());
+        GSmatrix4 world = local_to_world(GSvector3{ 1.0f, 1.5f, 0.0f }, GSvector3::zero(), GSvector3::one());
         gsSetEffectMatrix(dash_effect_handle_, &world);
     }
 }

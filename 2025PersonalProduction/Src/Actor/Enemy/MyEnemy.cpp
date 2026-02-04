@@ -14,6 +14,7 @@ MyEnemy::MyEnemy(IWorld* world, const GSvector3& position, const GSvector3& rota
 
     hp_ = info.hp;
     display_hp_ = (float)info.hp;
+    max_hp_ = info.hp;
 
     init_parameter(PawnParameter::get_type(info.pawn_type));
     mesh_ = { info.skinmesh, info.skinmesh, info.skinmesh };
