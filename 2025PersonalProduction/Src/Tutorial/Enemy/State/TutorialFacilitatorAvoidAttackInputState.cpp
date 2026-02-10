@@ -11,12 +11,12 @@ TutorialFacilitatorAvoidAttackInputState::TutorialFacilitatorAvoidAttackInputSta
 void TutorialFacilitatorAvoidAttackInputState::enter() {
     is_in_avoid_effect_ = false;
     owner_.target()->freeze_motion() = false;
-    owner_.pause_avoid_effect();
 }
 
 void TutorialFacilitatorAvoidAttackInputState::update(float delta_time) {
     if (!is_in_avoid_effect_ && owner_.is_avoid_effect()) {
         is_in_avoid_effect_ = true;
+        owner_.pause_avoid_effect();
 
         // çSë©
         Input& input = Input::get_instance();

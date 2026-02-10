@@ -22,7 +22,7 @@ struct MyEnemyAttackData {
     GSvector3 offset{ 0.0f, 0.0f, 0.0f };   // 攻撃判定生成位置
     float radius{ 0.0f };                   // 攻撃判定の半径
     int damage{ 0 };                        // 攻撃ダメージ
-    float detection_radius{ 0.0f };         // 攻撃判定を生成できる距離
+    float detection_radius{ 0.0f };         // 攻撃動作に入る検知範囲
     GSuint bone{ 0 };                       // 攻撃を行うボーン(演出用)
     bool effect{ true };                    // 演出エフェクトを出すかどうか
 };
@@ -62,8 +62,6 @@ public:
 #ifdef _DEBUG
     virtual void debug_update(float delta_time) override;
 #endif
-
-    virtual bool is_attack_soon() const override;
 
     virtual GSmatrix4 critical_position() const override;
 

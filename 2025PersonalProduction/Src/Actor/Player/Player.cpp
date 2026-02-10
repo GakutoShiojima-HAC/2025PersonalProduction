@@ -14,6 +14,7 @@
 #include "GUI/InteractUI.h"
 #include "Score/ActionScore.h"
 #include "State/Player/PlayerState.h"
+#include "PlayerAvoidCollider.h"
 
 #include "State/Player/PlayerAttackState.h"
 #include "State/Player/PlayerAvoidState.h"
@@ -53,8 +54,6 @@ constexpr float AVOID_SPEED{ 10.0f };
 // ジャンプ力
 constexpr float JUMP_POWER{ 0.215f };
 
-// 回避成功判定距離
-constexpr float AVOID_MAX_RANGE{ 3.5f };
 // 回避演出の時間
 constexpr float AVOID_EFFECT_TIME{ 3.0f };
 // 回避演出の色
@@ -125,6 +124,16 @@ Player::Player(IWorld* world, const GSvector3& position, const GSvector3& rotate
 
 	// 攻撃アニメーションイベントを追加
 	add_attack_animation_event(info);
+
+    // 回避判定コライダーを追加
+    avoid_collider_ = new PlayerAvoidCollider{ world, *this };
+    avoid_collider_->enabled() = false;
+    world_->add_pawn(avoid_collider_);
+}
+
+Player::~Player() {
+    // 回避判定コライダーを消滅させる
+    if (avoid_collider_ != nullptr) if(!avoid_collider_->is_dead()) avoid_collider_->die();
 }
 
 void Player::update(float delta_time) {
@@ -265,15 +274,18 @@ void Player::take_damage(Actor& other, const int damage) {
 		(GSuint)PlayerStateType::Dead,
 		(GSuint)PlayerStateType::Skill	// スキル中も無敵
 	)) return;
+    // 無敵時間もしくは無敵空間(スロー)なら無敵判定
     if (invincible_timer() > 0.0f || world_->is_avoid_effect()) return;
 
 	hp_ = CLAMP(hp_ - damage, 0, INT_MAX);
 	invincible_timer_ = INVINCIBLE_TIME;
 
+    // 死亡
 	if (hp_ <= 0) {
 		change_state((GSuint)PlayerStateType::Dead, Motion::Dead, false);
         return;
 	}
+
 	// コライダーの位置から負傷モーションを取得
 	const GSvector3 other_dir = other.transform().position() - transform().position();
 	const int dir = MyLib::get_direction(GSvector2{ other_dir.x, other_dir.z }, GSvector2{ transform().forward().x, transform().forward().z}, 4);
@@ -603,8 +615,7 @@ void Player::on_avoid() {
 		motion = Motion::AvoidF;
 	}
 
-    const bool is_avoid_effect = world_->is_avoid_effect();
-    const bool is_normal_hurt = state_.get_current_state() == (GSuint)PlayerStateType::Hurt && !is_avoid_effect;
+    const bool is_normal_hurt = state_.get_current_state() == (GSuint)PlayerStateType::Hurt && !world_->is_avoid_effect();
     if (is_normal_hurt) {
         // ボーナス
         world_->action_score().add_score(100, mesh_.motion_end_time() * 5.0f, 0.5f);
@@ -634,21 +645,8 @@ void Player::on_avoid() {
 
     // 回避ターゲットをリセット
     avoid_target_ = nullptr;
-
-    // 回避演出に入るかどうか(近くに攻撃動作に入っている敵がいるかどうか)
-    if (is_avoid_effect) return;
-    std::vector<Pawn*> enemys = world_->find_pawn_with_tag(ActorTag::Enemy);
-    if (enemys.empty()) return;
-    for (const auto& enemy : enemys) {
-        //近くにいなければスキップ
-        if ((enemy->transform().position() - transform_.position()).magnitude() > AVOID_MAX_RANGE) continue;
-        // 攻撃動作に入っているか
-        if (enemy->is_attack_soon()) {
-            avoid_effect_start();   // 回避演出開始
-            avoid_target_ = enemy;  // 回避ターゲットを保存
-            break;
-        }
-    }
+    // 回避判定を有効化
+    avoid_collider_->enabled() = true;
 }
 
 void Player::on_avoid_attack() {
@@ -704,6 +702,31 @@ void Player::on_skill() {
 	// TODO
 }
 
+void Player::avoid_effect_start(Pawn* target) {
+    // 回避ターゲットを保存
+    avoid_target_ = target;
+
+    if (world_->is_avoid_effect()) return;
+
+    // 回避演出開始
+    world_->start_avoid_effect(AVOID_EFFECT_TIME, 0.25f);
+    SE::play((GSuint)SEID::AvoidEffectStart);
+    gsSetEffectSpeed(avoid_effect_handle_, 1.0f / 0.25f); // タイムスケールを受けないようにする
+    enable_timescale_ = false;
+
+    // ボーナス
+    world_->action_score().add_score(250, mesh_.motion_end_time() * 5.0f, 2.0f);
+    world_->action_score().set_action_text("回避成功！");
+    // コントローラーを振動させる
+    if (input_.is_pad()) Vibration::get_instance().start(0.25f, 1.0f);
+}
+
+void Player::disable_avoid_collider() {
+    if (avoid_collider_ == nullptr) return;
+    if (avoid_collider_->is_dead()) return;
+    avoid_collider_->enabled() = false;
+}
+
 int& Player::attack_count() {
 	return attack_count_;
 }
@@ -739,22 +762,6 @@ GSuint Player::get_skill_motion() const {
 
 GSuint Player::get_current_motion() const {
 	return motion_;
-}
-
-void Player::avoid_effect_start() {
-    invincible_timer_ = INVINCIBLE_TIME;
-
-    // 回避演出開始
-    world_->start_avoid_effect(3.0f, 0.25f);
-    SE::play((GSuint)SEID::AvoidEffectStart);
-    gsSetEffectSpeed(avoid_effect_handle_, 1.0f / 0.25f); // タイムスケールを受けないようにする
-    enable_timescale_ = false;
-
-    // ボーナス
-    world_->action_score().add_score(250, mesh_.motion_end_time() * 5.0f, 2.0f);
-    world_->action_score().set_action_text("回避成功！");
-    // コントローラーを振動させる
-    if (input_.is_pad()) Vibration::get_instance().start(0.25f, 1.0f);
 }
 
 void Player::update_interact() {

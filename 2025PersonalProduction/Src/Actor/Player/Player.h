@@ -17,6 +17,7 @@
 
 class PlayerCamera;
 class Inventory;
+class PlayerAvoidCollider;
 
 /// <summary>
 /// 攻撃判定作成アニメーションイベント登録用構造体
@@ -77,6 +78,8 @@ struct PlayerInfo {
 class Player : public Character {
 public:
 	Player(IWorld* world, const GSvector3& position, const GSvector3& rotate, const PlayerInfo& info);
+
+    ~Player();
 
 public:
     enum Motion {
@@ -240,6 +243,16 @@ public:
 	/// </summary>
 	void on_skill();
 
+    /// <summary>
+    /// 回避演出スタート
+    /// </summary>
+    void avoid_effect_start(Pawn* target);
+
+    /// <summary>
+    /// 回避判定を無効化
+    /// </summary>
+    void disable_avoid_collider();
+
 	/// <summary>
 	/// 現在の攻撃段数
 	/// </summary>
@@ -273,11 +286,6 @@ public:
 	GSuint get_current_motion() const;
 
 private:
-    /// <summary>
-    /// 回避演出スタート
-    /// </summary>
-    void avoid_effect_start();
-
     /// <summary>
     /// インタラクトを更新
     /// </summary>
@@ -342,6 +350,8 @@ private:
 
     // 回避対象
     Pawn* avoid_target_{ nullptr };
+    // 回避判定
+    PlayerAvoidCollider* avoid_collider_{ nullptr };
 };
 
 using PlayerMotion = Player::Motion;

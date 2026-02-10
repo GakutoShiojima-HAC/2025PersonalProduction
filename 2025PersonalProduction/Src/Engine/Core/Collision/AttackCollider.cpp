@@ -36,7 +36,13 @@ void AttackCollider::draw() const {
 
 void AttackCollider::react(Actor& other) {
 	// 自分自身と主とは衝突しない
-	if (other.tag() == tag() || other.tag() == owner_->tag() || other.tag() == ActorTag::NPC) return;
+    if (other.tag() == tag() || other.tag() == owner_->tag()) return;
+    // NPCには攻撃できない
+    if (other.tag() == ActorTag::NPC) return;
+    // プレイヤーがプレイヤー用コライダーには攻撃できない
+    if (tag() == ActorTag::Player && other.tag() == ActorTag::PlayerAvoid) return;
+    if (owner_->tag() == ActorTag::Player && other.tag() == ActorTag::PlayerAvoid) return;
+
 	// ダメージを与える
 	Pawn* target = dynamic_cast<Pawn*>(&other);
     if (target != nullptr && !target->is_dead_state()) {
