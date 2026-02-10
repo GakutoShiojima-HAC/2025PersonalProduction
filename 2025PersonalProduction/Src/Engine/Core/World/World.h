@@ -70,12 +70,6 @@ public:
 	void add_navmesh(NavMeshSurface* navmesh);
 
 	/// <summary>
-	/// ポーンの追加
-	/// </summary>
-	/// <param name="pawn">= ポーン</param>
-	void add_pawn(Pawn* pawn);
-
-	/// <summary>
 	/// キャラクターの追加
 	/// </summary>
 	/// <param name="character">= キャラクター</param>
@@ -124,6 +118,8 @@ public:
 
 public:
     void add_actor(Actor* actor) override;
+
+    void add_pawn(Pawn* pawn) override;
 
     bool& enable_draw_gui() override;
 

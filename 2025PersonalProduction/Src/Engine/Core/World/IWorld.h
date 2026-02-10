@@ -45,6 +45,12 @@ public:
     virtual void add_actor(Actor* actor) = 0;
 
     /// <summary>
+    /// ポーンの追加
+    /// </summary>
+    /// <param name="pawn">= ポーン</param>
+    virtual void add_pawn(Pawn* pawn) = 0;
+
+    /// <summary>
     /// GUIの描画を行うかどうか
     /// </summary>
     /// <returns>参照</returns>
