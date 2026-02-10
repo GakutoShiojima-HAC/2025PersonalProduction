@@ -14,6 +14,7 @@
 enum class ActorTag {
 	None,       // 指定なし
 	Player,
+    PlayerAvoid,    // プレイヤーの回避判定
 	Enemy,
     NPC,
 	Collider,   // 攻撃衝突判定
