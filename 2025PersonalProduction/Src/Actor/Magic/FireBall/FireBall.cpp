@@ -14,9 +14,6 @@ FireBall::FireBall(IWorld* world, const GSvector3& position, const GSvector3& ve
 	tag_ = ActorTag::Projectile;
     name_ = "FireBall";
 
-    if (owner != nullptr && owner->tag() == ActorTag::Enemy) target_tag_ = ActorTag::Player;
-    else target_tag_ = ActorTag::Enemy;
-
     owner_ = owner;
     life_time_ = life_time;
     timer_ = 0.0f;
@@ -85,18 +82,42 @@ void FireBall::die() {
 }
 
 void FireBall::react(Actor& other) {
-    if (other.tag() == target_tag_) {
+    if (owner_ == nullptr) {
         hit();
         return;
+    }
+
+    if (owner_->tag() == ActorTag::Enemy) {
+        if (other.tag() == ActorTag::Player) {
+            // ダメージ判定を生成
+            world_->generate_attack_collider(RADIUS * 2.0f, transform_.position(), owner_, damage_, "Attack", 0.1f, 0.0f,
+                MyRandom::random_vec3(GSvector3{ -0.05f, 0.15f, -0.05f }, GSvector3{ 0.05f, 0.2f, 0.05f }));
+            hit();
+            return;
+        }
+        else if (other.tag() == ActorTag::PlayerAvoid) {
+            // ダメージ判定を生成
+            world_->generate_attack_collider(RADIUS * 2.0f, transform_.position(), owner_, damage_, "Attack", 0.1f, 0.0f,
+                MyRandom::random_vec3(GSvector3{ -0.05f, 0.15f, -0.05f }, GSvector3{ 0.05f, 0.2f, 0.05f }));
+            // hit();   弾はそのまま飛んでいくため
+            return;
+        }
+    }
+    else if (owner_->tag() == ActorTag::Player) {
+        if (other.tag() == ActorTag::Enemy) {
+            // ダメージ判定を生成
+            world_->generate_attack_collider(RADIUS * 2.0f, transform_.position(), owner_, damage_, "Attack", 0.1f, 0.0f,
+                MyRandom::random_vec3(GSvector3{ -0.05f, 0.15f, -0.05f }, GSvector3{ 0.05f, 0.2f, 0.05f }));
+            hit();
+            return;
+        }
     }
 }
 
 void FireBall::hit() {
-    is_dead_ = true;
     gsStopEffect(effect_handle_);
-    world_->generate_attack_collider(RADIUS * 2.0f, transform_.position(), owner_, damage_, "Attack", 0.1f, 0.0f,
-        MyRandom::random_vec3(GSvector3{ -0.05f, 0.15f, -0.05f }, GSvector3{ 0.05f, 0.2f, 0.05f }));
     play_effect((GSuint)EffectID::ExplosionSmall, GSvector3::zero());
     world_->camera_shake(CameraShakeType::HandShake, 0.5f, 25.0f, false);
     SE::play_random((GSuint)SEID::Explosion, transform_.position(), 0.125f);
+    is_dead_ = true;
 }

@@ -36,8 +36,6 @@ private:
     void hit();
 
 private:
-    ActorTag target_tag_{ ActorTag::None };
-
     Actor* owner_{ nullptr };
 
     float life_time_{ 0.0f };
