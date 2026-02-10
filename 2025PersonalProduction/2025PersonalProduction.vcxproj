@@ -222,6 +222,7 @@
     <ClCompile Include="Src\Engine\Core\World\ImpactEffectManager.cpp" />
     <ClCompile Include="Src\Engine\Graphics\Shader\GamePostEffect.cpp" />
     <ClCompile Include="Src\Engine\Graphics\Shader\GameShader.cpp" />
+    <ClCompile Include="Src\Engine\Graphics\Shader\PostEffects\AvoidBlurEffect.cpp" />
     <ClCompile Include="Src\Engine\Graphics\Shader\PostEffects\DissolveEffect.cpp" />
     <ClCompile Include="Src\Engine\Graphics\Shader\PostEffects\FogEffect.cpp" />
     <ClCompile Include="Src\Engine\Graphics\Shader\PostEffects\FXAAEffect.cpp" />
@@ -406,6 +407,7 @@
     <ClInclude Include="Src\Engine\Core\Timeline\TimelineEditor.h" />
     <ClInclude Include="Src\Engine\Core\World\AvoidEffectManager.h" />
     <ClInclude Include="Src\Engine\Core\World\ImpactEffectManager.h" />
+    <ClInclude Include="Src\Engine\Graphics\Shader\PostEffects\AvoidBlurEffect.h" />
     <ClInclude Include="Src\Engine\Graphics\Shader\PostEffects\DissolveEffect.h" />
     <ClInclude Include="Src\Engine\Graphics\Shader\PostEffects\ImpactEffect.h" />
     <ClInclude Include="Src\State\Actor\Character\CharacterIdleState.h" />
@@ -585,6 +587,7 @@
     <ClInclude Include="Src\State\Actor\Character\CharacterMotionEndToAnyState.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resource\Private\Shader\AvoidBlur.frag" />
     <None Include="Resource\Private\Shader\Dissolve.frag" />
     <None Include="Resource\Private\Shader\ImpactEffect.frag" />
     <None Include="Resource\Private\Shader\MaskEffect.frag" />

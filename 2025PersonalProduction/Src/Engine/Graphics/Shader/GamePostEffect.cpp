@@ -12,6 +12,7 @@
 #include "Engine/Graphics/Shader/PostEffects/FXAAEffect.h"
 #include "Engine/Graphics/Shader/PostEffects/DissolveEffect.h"
 #include "Engine/Graphics/Shader/PostEffects/ImpactEffect.h"
+#include "Engine/Graphics/Shader/PostEffects/AvoidBlurEffect.h"
 
 // ブルームエフェクトの対象にするテクセルの輝度のしきい値
 const float BLOOM_THRESHOLD{ 0.5f };
@@ -39,6 +40,7 @@ void GamePostEffect::load() {
     gsLoadShader(Shader_FXAA, "Resource/Private/Shader/RenderTexture.vert", "Resource/Private/Shader/FXAA.frag");
     gsLoadShader(Shader_Dissolve, "Resource/Private/Shader/RenderTexture.vert", "Resource/Private/Shader/Dissolve.frag");
     gsLoadShader(Shader_Impact, "Resource/Private/Shader/RenderTexture.vert", "Resource/Private/Shader/ImpactEffect.frag");
+    gsLoadShader(Shader_AvoidBlur, "Resource/Private/Shader/RenderTexture.vert", "Resource/Private/Shader/AvoidBlur.frag");
 }
 
 void GamePostEffect::clear() {
@@ -55,6 +57,7 @@ void GamePostEffect::clear() {
     gsDeleteShader(Shader_FXAA);
     gsDeleteShader(Shader_Dissolve);
     gsDeleteShader(Shader_Impact);
+    gsDeleteShader(Shader_AvoidBlur);
 }
 
 void GamePostEffect::create() {
@@ -108,6 +111,8 @@ void GamePostEffect::create() {
 
     // インパクトエフェクト用のレンダーターゲットの作成
     gsCreateRenderTarget(Rt_Impact, width_, height_, GS_TRUE, GS_FALSE, GS_TRUE);
+    // 回避ブラー用のレンダーターゲットの作成
+    gsCreateRenderTarget(Rt_AvoidBlur, width_, height_, GS_TRUE, GS_FALSE, GS_TRUE);
 
     // SSAO用データの作成
     PostEffect::SSAO::create_sample_kernel(ssao_sample_kernel_, KERNEL_SIZE);
@@ -118,6 +123,7 @@ void GamePostEffect::create() {
     blur_power_ = 0.0f;
     threshold_ = 1.0f;
     impact_power_ = 0.0f;
+    avoid_blur_strength_ = 0.0f;
 }
 
 void GamePostEffect::release() {
@@ -147,6 +153,7 @@ void GamePostEffect::release() {
     gsDeleteRenderTarget(Rt_FXAA);
     gsDeleteRenderTarget(Rt_Dissolve);
     gsDeleteRenderTarget(Rt_Impact);
+    gsDeleteRenderTarget(Rt_AvoidBlur);
 }
 
 void GamePostEffect::draw(GSuint source) const {
@@ -196,14 +203,19 @@ GSuint GamePostEffect::apply(const GSmatrix4& projection) const {
         current = PostEffect::Bloom::combine(current, BLOOM_INTENSITY, blur1, blur2, blur3, blur4);
     }
 
-    // アンチエイリアシング
-    if (setting_.is_draw_fxaa()) {
-        current = PostEffect::FXAA::fxaa(current, screen_size);
+    // 回避演出用ブラー
+    if (avoid_blur_strength_ > 0.0f) {
+        current = PostEffect::AvoidBlur::apply(current, avoid_blur_strength_);
     }
 
     // インパクトエフェクト
     if (is_impact) {
         current = PostEffect::Impact::apply(current, Rt_Base, impact_power_, screen_size.x / screen_size.y, GSvector2{ impact_position_.x / screen_size.x, 1.0f - impact_position_.y / screen_size.y });
+    }
+
+    // アンチエイリアシング
+    if (setting_.is_draw_fxaa()) {
+        current = PostEffect::FXAA::fxaa(current, screen_size);
     }
 
     // シーンをぼかす
@@ -309,6 +321,10 @@ float& GamePostEffect::impact_power() {
 
 GSvector2& GamePostEffect::impact_position() {
     return impact_position_;
+}
+
+float& GamePostEffect::avoid_blur_strength() {
+    return avoid_blur_strength_;
 }
 
 GSvector2 GamePostEffect::get_screen_size() const {
