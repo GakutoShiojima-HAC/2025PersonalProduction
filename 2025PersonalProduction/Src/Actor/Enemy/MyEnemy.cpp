@@ -77,21 +77,8 @@ void MyEnemy::debug_update(float delta_time) {
         std::string text = "target: " + (target_ == nullptr ? "none" : target_->name());
         ImGui::Text(text.c_str());
     }
-    // 攻撃ステート
-    {
-        std::string text = is_attack_soon() ? "攻撃動作中" : "通常動作中";
-        ImGui::Text(ToUTF8(text).c_str());
-    }
 }
 #endif
-
-bool MyEnemy::is_attack_soon() const {
-    auto it = my_info_.attack_data.find(motion_);
-    if (it == my_info_.attack_data.end()) return false;
-
-    // アラート開始から攻撃判定生成までを真とする
-    return mesh_.current_motion_time() >= it->second.start_time && mesh_.current_motion_time() < it->second.attack_time;
-}
 
 GSmatrix4 MyEnemy::critical_position() const {
     return mesh_.bone_matrices(my_info_.critical_bone_num);

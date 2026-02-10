@@ -45,12 +45,6 @@ public:
 	virtual bool is_dead_state() const;
 
     /// <summary>
-    /// 攻撃動作に入っているかどうか
-    /// </summary>
-    /// <returns>入っていたら真を返却</returns>
-    virtual bool is_attack_soon() const { return false; }
-
-    /// <summary>
     /// 急所のワールド座標を取得
     /// </summary>
     /// <returns>急所のワールド座標</returns>
@@ -153,9 +147,6 @@ protected:
     int max_hp_{ 1 };
 	// 無敵時間タイマー(秒)
 	float invincible_timer_{ 0.0f };
-
-    // 攻撃動作に入っているか
-    bool is_attack_soon_{ false };
 
     // モーションを止めるかどうか
     bool is_motion_freeze_{ false };
