@@ -169,6 +169,7 @@
     <ClCompile Include="Src\Actor\Magic\FireBall\FireBall.cpp" />
     <ClCompile Include="Src\Actor\NPC\NPC.cpp" />
     <ClCompile Include="Src\Actor\NPC\NPCGenerator.cpp" />
+    <ClCompile Include="Src\Actor\Player\PlayerAvoidCollider.cpp" />
     <ClCompile Include="Src\Actor\Player\PlayerGenerator.cpp" />
     <ClCompile Include="Src\Actor\Player\PlayerRespawner.cpp" />
     <ClCompile Include="Src\Actor\StageTeleporter\StageTeleporter.cpp" />
@@ -366,6 +367,7 @@
     <ClInclude Include="Src\Actor\Magic\FireBall\FireBall.h" />
     <ClInclude Include="Src\Actor\NPC\NPC.h" />
     <ClInclude Include="Src\Actor\NPC\NPCGenerator.h" />
+    <ClInclude Include="Src\Actor\Player\PlayerAvoidCollider.h" />
     <ClInclude Include="Src\Actor\Player\PlayerRespawner.h" />
     <ClInclude Include="Src\Engine\Core\Actor\Pawn\PawnParameter.h" />
     <ClInclude Include="Src\Actor\ActorTag.h" />
