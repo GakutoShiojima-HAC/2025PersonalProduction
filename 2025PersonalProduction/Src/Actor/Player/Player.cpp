@@ -10,6 +10,7 @@
 #include "Engine/Utils/Calc.h"
 #include "Engine/Utils/MyRandom.h"
 #include "Engine/Sound/SE.h"
+#include "Engine/Graphics/Shader/GamePostEffect.h"
 #include "GUI/PlayerUI.h"
 #include "GUI/InteractUI.h"
 #include "Score/ActionScore.h"
@@ -641,8 +642,12 @@ void Player::on_avoid() {
     avoid_effect_handle_ = world_->camera_effect_play_foward((GSuint)EffectID::Avoid, 0.25f);
     const GScolor color{ 1.0f, 1.0f, 1.0f, 0.15f };
     gsSetEffectColor(avoid_effect_handle_, &color);
+    // 回避サウンドを再生
     SE::play_random((GSuint)SEID::Avoid, 0.25f);
-
+    // 回避演出を適用
+    Tween::cancel("PlayerAvoidBlur");
+    Tween::value(0.5f, 0.0f, 5.0f, [](float x) {GamePostEffect::get_instance().avoid_blur_strength() = x; }).ease(EaseType::EaseOutCubic).name("PlayerAvoidBlur");
+    
     // 回避ターゲットをリセット
     avoid_target_ = nullptr;
     // 回避判定を有効化
@@ -708,11 +713,15 @@ void Player::avoid_effect_start(Pawn* target) {
 
     if (world_->is_avoid_effect()) return;
 
-    // 回避演出開始
+    // 回避エフェクトの開始
     world_->start_avoid_effect(AVOID_EFFECT_TIME, 0.25f);
     SE::play((GSuint)SEID::AvoidEffectStart);
     gsSetEffectSpeed(avoid_effect_handle_, 1.0f / 0.25f); // タイムスケールを受けないようにする
     enable_timescale_ = false;
+
+    // 回避演出を適用
+    Tween::cancel("PlayerAvoidBlur");
+    Tween::value(1.0f, 0.0f, 7.0f, [](float x) {GamePostEffect::get_instance().avoid_blur_strength() = x; }).ease(EaseType::EaseOutCubic).name("PlayerAvoidBlur");
 
     // ボーナス
     world_->action_score().add_score(250, mesh_.motion_end_time() * 5.0f, 2.0f);
