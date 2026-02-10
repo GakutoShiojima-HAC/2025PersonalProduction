@@ -141,6 +141,12 @@ public:
     /// <returns>参照</returns>
     GSvector2& impact_position();
 
+    /// <summary>
+    /// 回避演出用ブラーの強さを指定
+    /// </summary>
+    /// <returns>参照</returns>
+    float& avoid_blur_strength();
+
 private:
     /// <summary>
     /// スクリーンサイズの取得
@@ -175,6 +181,9 @@ private:
     float impact_power_{ 0.0f };
     // インパクトの位置
     GSvector2 impact_position_{ 0.0f, 0.0f };
+
+    // 回避演出用ブラー
+    float avoid_blur_strength_{ 0.0f };
 
 public:
     // コピー禁止

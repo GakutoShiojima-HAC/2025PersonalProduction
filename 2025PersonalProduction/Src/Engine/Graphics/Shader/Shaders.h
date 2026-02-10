@@ -32,6 +32,7 @@ enum {
     Rt_Dissolve,            // ディゾルブ
 
     Rt_Impact,              // インパクトエフェクト
+    Rt_AvoidBlur,           // 回避ブラー
 };
 
 // シェーダー
@@ -53,6 +54,7 @@ enum {
 
     Shader_Dissolve,        // ディゾルブ
     Shader_Impact,          // インパクトエフェクト
+    Shader_AvoidBlur,       // 回避ブラー
 };
 
 #endif
