@@ -58,7 +58,16 @@ uniform vec4 gs_FogColor;
 
 // 円周率
 const float PI = 3.1415926;
-
+// 影を作る境界線
+const float TOON_THRESHOLD = 0.5;
+// 影の境界のボケ具合
+const float TOON_SMOOTH = 0.035;
+// トゥーン調の強さ
+const float TOON_BLEND = 0.6;
+// リムライトの強さ
+const float RIM_POWER = 0.3;
+// 影色に乗算する青み成分
+const vec3  SHADOW_TINT = vec3(0.6, 0.6, 0.8);
 // ラフネスの最小値
 const float MIN_PERCEPTUAL_ROUGHNESS = 0.045;
 const float MIN_ROUGHNESS            = 0.002025;
@@ -217,6 +226,21 @@ void main() {
     float attenuation = LightAttenuation(v_WorldPosition.xyz, gs_LightPosition.xyz);
     // スポットライトの減衰値を求める
     attenuation *= SpotLightAttenuation(L);
+
+    // 拡散反射の階調化
+    float ramp = smoothstep(TOON_THRESHOLD - TOON_SMOOTH, TOON_THRESHOLD + TOON_SMOOTH, NoL);
+    // 法線を復活
+    float finalDiffuseFactor = mix(NoL, ramp, TOON_BLEND);
+    // 裏面が出ないようにする
+    finalDiffuseFactor = max(0.0, finalDiffuseFactor);
+    // 影色のスタイライズ
+    vec3 litColor = gs_LightDiffuse.rgb * attenuation;
+    vec3 shadowedColor = gs_LightAmbient.rgb * SHADOW_TINT;
+    // ブレンド
+    vec3 toonDiffuseLight = mix(shadowedColor, litColor, finalDiffuseFactor);
+    // 最終的な拡散反射
+    vec3 finalDiffuse = diffuseColor * toonDiffuseLight;
+
     // 放射照度の計算
     vec3 irradiance = NoL * gs_LightDiffuse.rgb * PI * attenuation;
     // 双方向反射率分布関数(BRDF)の計算
@@ -226,9 +250,20 @@ void main() {
     // イメージベースドライティング
     vec3 IBL = ImageBasedLighting(N, R, NoV, diffuseColor, specularColor, perceptualRoughness);
 
+    // 鏡面反射の階調化
+    vec3 finalSpecular = SpecularBRDF(specularColor, NoH, NoV, max(0.0, NoL), LoH, roughness);
+    finalSpecular *= irradiance * 1.2;
+
+    // リムライト
+    float fresnel = pow(max(0.0, 1.0 - NoV), 4.0);
+    // 光が当たっている面だけ
+    float rimIntensity = fresnel * step(0.1, NoL);
+    // 最終的なリムライト
+    vec3 finalRim = gs_RimLightColor.rgb * rimIntensity * RIM_POWER;
 
     // 最終的なカラーの計算
-    vec3 finalColor = (BRDF + IBL) * ao + emissonColor.rgb;
+    vec3 finalColor = (finalDiffuse + finalSpecular + IBL) * ao + emissonColor.rgb + finalRim;
+    //vec3 finalColor = (BRDF + IBL) * ao + emissonColor.rgb;
     // カラー調整
     finalColor.rgb = finalColor.rgb * gs_Color.rgb + gs_SecondaryColor.rgb;
     // フォグの計算
