@@ -33,7 +33,6 @@ private:
 
     // 解除したかどうか
     bool is_avoid_disable_{ true };
-
     // 表示タイマー
     float timer_{ 0.0f };
 };

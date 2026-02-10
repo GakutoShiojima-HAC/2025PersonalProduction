@@ -18,26 +18,29 @@ void TutorialFacilitatorAvoidInputState::enter() {
 
 void TutorialFacilitatorAvoidInputState::update(float delta_time) {
     // 攻撃態勢になったときテロップを表示する
-    if (!is_show_ && owner_.is_attack_soon()) {
-        is_show_ = true;
+    if (!is_show_) {
+        const bool is_attack = owner_.currnent_motion_time() >= owner_.my_info().attack_data.find(TutorialFacilitatorMotion::Attack)->second.start_time;
+        if (is_attack) {
+            is_show_ = true;
 
-        // 拘束
-        Input& input = Input::get_instance();
-        input.disable_action(InputAction::GAME_Camera) = true;
-        input.disable_action(InputAction::GAME_Jump) = true;
-        input.disable_action(InputAction::GAME_Skill) = true;
-        input.disable_action(InputAction::GAME_Lockon) = true;
-        input.disable_action(InputAction::GAME_Move) = true;
-        input.disable_action(InputAction::GAME_Attack) = true;
+            // 拘束
+            Input& input = Input::get_instance();
+            input.disable_action(InputAction::GAME_Camera) = true;
+            input.disable_action(InputAction::GAME_Jump) = true;
+            input.disable_action(InputAction::GAME_Skill) = true;
+            input.disable_action(InputAction::GAME_Lockon) = true;
+            input.disable_action(InputAction::GAME_Move) = true;
+            input.disable_action(InputAction::GAME_Attack) = true;
 
-        input.disable_action(InputAction::GAME_Avoid) = true;
-        is_avoid_disable_ = true;
+            input.disable_action(InputAction::GAME_Avoid) = true;
+            is_avoid_disable_ = true;
 
-        // 動かなくなる
-        owner_.freeze_motion() = true;
-        owner_.target()->freeze_motion() = true;
+            // 動かなくなる
+            owner_.freeze_motion() = true;
+            owner_.target()->freeze_motion() = true;
 
-        owner_.enable_draw_game_info_gui() = false;
+            owner_.enable_draw_game_info_gui() = false;
+        }
     }
 
     // タイマー
@@ -52,7 +55,7 @@ void TutorialFacilitatorAvoidInputState::update(float delta_time) {
         input.disable_action(InputAction::GAME_Avoid) = false;
     }
 
-    // 回避を押したら
+    // 回避空間に入ったら
     if (Input::get_instance().action(InputAction::GAME_Avoid)) {
         // 次のテロップステートへ
         owner_.change_state((GSuint)TutorialFacilitatorStateType::AvoidAttackInput);
