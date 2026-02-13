@@ -30,6 +30,7 @@
     X(GimmickElevator) \
     X(WeaponSword1) \
     X(WeaponSword2) \
+    X(WeaponSword3) \
     X(TreasureChest) \
     X(Item) \
     X(Tereporter) \
@@ -81,6 +82,10 @@
     X(HPBossGauge) \
     X(HPBossGaugeEmpty) \
     X(StatusGauge) \
+    X(WeaponData) \
+    X(WeaponSword1) \
+    X(WeaponSword2) \
+    X(WeaponSword3) \
     X(MAX_SIZE) // 要素数
 
 // オクツリー
