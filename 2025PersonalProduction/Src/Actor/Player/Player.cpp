@@ -218,6 +218,12 @@ void Player::draw_gui() const {
     // ƒŒƒxƒ‹‚Ì•`‰æ
     PlayerUI::draw_level(world_->game_save_data().get().player_level);
 
+    // •Ší‚Ì•`‰æ
+    if (!inventory_.weapon().is_empty()) {
+        const WeaponData::Data& data = inventory_.weapon();
+        PlayerUI::draw_weapon_data(data.texture, data.name, data.damage);
+    }
+
 	// state_.draw_gui();
 }
 
@@ -919,7 +925,7 @@ void Player::update_inventory() {
         inventory_.change_weapon();
         // •Ší‚ª•Ï‚í‚Á‚½
         if (prev_id != inventory_.weapon().id) {
-
+            SE::play((GSuint)SEID::ButtonSelect);
         }
         // •Ï‚í‚Á‚Ä‚¢‚È‚¢
         else {

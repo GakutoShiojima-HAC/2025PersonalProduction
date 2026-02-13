@@ -10,7 +10,7 @@ VikingMoveState::VikingMoveState(Viking& owner) :
 
 void VikingMoveState::enter() {
     owner_.start_move();
-    move_timer_ = 0.0f;
+    move_timer_ = MyRandom::random_float(0.0f, 7.0f);   // ‚ ‚¦‚Ä‚Í‚İo‚µ‚Ä“Áê‚ğˆø‚­
 }
 
 void VikingMoveState::update(float delta_time) {

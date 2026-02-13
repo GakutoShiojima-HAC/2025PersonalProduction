@@ -11,6 +11,7 @@
 #ifndef PLAYER_UI_H_
 #define PLAYER_UI_H_
 
+#include <string>
 
 namespace PlayerUI {
     /// <summary>
@@ -26,6 +27,11 @@ namespace PlayerUI {
     /// </summary>
     /// <param name="level">= 現在のレベル</param>
     void draw_level(int level);
+
+    /// <summary>
+    /// 武器と武器データを描画
+    /// </summary>
+    void draw_weapon_data(GSuint texture, const std::string& name, int damage);
 
 }
 

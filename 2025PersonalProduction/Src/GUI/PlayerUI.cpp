@@ -4,6 +4,7 @@
 #include "Engine/Graphics/Canvas/Canvas.h"
 #include "Assets.h"
 #include "GameConfig.h"
+#include "Engine/Utils/MyString.h"
 
 void PlayerUI::draw_hp(int current, float display, int max) {
     const float max_hp = (float)max;
@@ -95,4 +96,53 @@ void PlayerUI::draw_level(int level) {
         Anchor::TopLeft,
         Anchor::Center
     );
+}
+
+void PlayerUI::draw_weapon_data(GSuint texture, const std::string& name, int damage) {
+    // îwåiÇÃï`âÊ
+    {
+        const GSvector2 position{ 349.0, 942.0 };
+        const GSrect pic_rect{ 0.0f, 0.0f, 230.0f, 84.0f };
+
+        Canvas::draw_texture(
+            (GSuint)TextureID::WeaponData,
+            position,
+            pic_rect
+        );
+    }
+    // ïêäÌÇÃï`âÊ
+    {
+        const GSvector2 position{ 220.0, 906.0 };
+        const GSrect pic_rect{ 0.0f, 0.0f, 120.0f, 120.0f };
+        Canvas::draw_texture(
+            texture,
+            position,
+            pic_rect
+        );
+    }
+    // ñºëOÇÃï`âÊ
+    {
+        const GSvector2 position{ 363.0f, 954.0f };
+        Canvas::draw_sprite_text(
+            MyString::utf8_to_shiftjis(name),
+            position,
+            26,
+            cFONT,
+            GS_FONT_NORMAL,
+            GScolor{ 0.980f, 0.980f, 0.980f, 1.0f }
+        );
+    }
+    // çUåÇóÕÇÃï`âÊ
+    {
+        const GSvector2 position{ 363.0f, 987.0f };
+        const std::string hp_str = "çUåÇóÕ: " + to_string(damage);
+        Canvas::draw_sprite_text(
+            hp_str,
+            position,
+            26,
+            cFONT,
+            GS_FONT_NORMAL,
+            GScolor{ 0.980f, 0.980f, 0.980f, 1.0f }
+        );
+    }
 }

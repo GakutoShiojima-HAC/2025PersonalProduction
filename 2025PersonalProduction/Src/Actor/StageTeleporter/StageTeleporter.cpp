@@ -29,7 +29,7 @@ void StageTereporter::late_update(float delta_time) {
     if (is_touch_) {
         timer_ += delta_time / cFPS;
 
-        if (timer_ > 0.5f && !is_tp_) {
+        if (timer_ > 0.25f && !is_tp_) {
             std::any data = stage_id_;
             SceneManager::get_instance().send_message(SceneTag::Game, "RequestTereport", data);
             is_tp_ = true;
