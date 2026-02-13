@@ -40,7 +40,7 @@ struct MyEnemyInfo {
     int critical_bone_num{ 0 };         // 急所(演出用)ボーン番号
     std::unordered_map<GSuint, MyEnemyAttackData> attack_data; // 攻撃データ(motion, data)
 
-    float falter_rate{ 1.0f };          // 攻撃を受けた時に怯む確率(0.0~1.0)
+    int falter_count{ 1 };              // 攻撃を受けたとき怯む回数(0になると怯まない、-1で怯み続ける)
     float ui_height{ 1.0f };            // 頭の上に出すUI表示の高さ
 };
 
@@ -174,6 +174,11 @@ public:
     /// <returns>攻撃モーションなら真を返却</returns>
     bool is_attack_motion(GSuint motion) const;
 
+    /// <summary>
+    /// 怯む回数をリセット
+    /// </summary>
+    void reset_falter_count();
+
 protected:
     /// <summary>
     /// モーションによる攻撃アニメーションイベントを生成
@@ -242,6 +247,9 @@ protected:
 
     int alert_effect_handle_{ -1 };
     int alert_effect_bone_num_{ 0 };
+
+    // 怯める回数
+    int falter_counter_{ 0 };
 };        
 
 #endif

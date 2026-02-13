@@ -7,6 +7,7 @@
 #include "Engine/Sound/SE.h"
 
 #include "State/LeapEnemy/LeapEnemyState.h"
+#include "State/Actor/MyEnemy/MyEnemyAttackState.h"
 #include "State/Actor/Character/CharacterMotionEndToAnyState.h"
 #include "State/Actor/Character/CharacterMotionEndToDieState.h"
 #include "State/Actor/MyEnemy/MyEnemyLeapAttackState.h"
@@ -36,8 +37,15 @@ void LeapEnemy::take_damage(Actor& other, const int damage) {
     )) return;
     if (invincible_timer() > 0.0f) return;
 
+    // ダメージを受ける
     hp_ = CLAMP(hp_ - damage, 0, INT_MAX);
     invincible_timer_ = INVINCIBLE_TIME;
+
+    // 攻撃対象をターゲットにする
+    Character* target = dynamic_cast<Character*>(&other);
+    if (target != nullptr && !target->is_dead_state()) {
+        target_ = target;
+    }
 
     // ステート番号を保存
     if (!MyLib::is_in(state_.get_current_state(),
@@ -45,23 +53,22 @@ void LeapEnemy::take_damage(Actor& other, const int damage) {
         (GSuint)LeapEnemyStateType::Attack
     )) save_current_state();
 
+    // 死亡
     if (hp_ <= 0) {
         change_state_and_motion((GSuint)LeapEnemyStateType::Dead);
     }
+    // 生きている
     else {
-        // 怯む確率
-        const bool falter = world_->is_avoid_effect() ? true : MyRandom::random_float(0.0f, 1.0f) <= my_info_.falter_rate;
-        if (target_ == nullptr || falter) {
+        // 怯むか？
+        if (falter_counter_ > 0 || falter_counter_ < 0) {
             // 一度Idleにしてモーションをリセット
             mesh_.change_motion(info_.motion_idle, true);
             change_state_and_motion((GSuint)LeapEnemyStateType::Hurt);
+            falter_counter_--;  // 減らす
+            return;
         }
-    }
-
-    // 攻撃対象をターゲットにする
-    Character* target = dynamic_cast<Character*>(&other);
-    if (target != nullptr && !target->is_dead_state()) {
-        target_ = target;
+        // 怯まない
+        return;
     }
 }
 
@@ -91,7 +98,7 @@ void LeapEnemy::add_state() {
     state_.add_state((GSuint)LeapEnemyStateType::Move, make_shared<LeapEnemyMoveState>(*this));
     state_.add_state((GSuint)LeapEnemyStateType::Hurt, make_shared<CharacterMotionEndToAnyState>(*this, (GSuint)LeapEnemyStateType::Idle, info_.motion_idle, true));
     state_.add_state((GSuint)LeapEnemyStateType::Dead, make_shared<CharacterMotionEndToDieState>(*this));
-    state_.add_state((GSuint)LeapEnemyStateType::Attack, make_shared<CharacterMotionEndToAnyState>(*this, (GSuint)LeapEnemyStateType::Idle, info_.motion_idle, true));
+    state_.add_state((GSuint)LeapEnemyStateType::Attack, make_shared<MyEnemyAttackState>(*this, (GSuint)LeapEnemyStateType::Idle, info_.motion_idle, true));
     state_.add_state((GSuint)LeapEnemyStateType::LeapStart, make_shared<MyEnemyLeapAttackState>(*this, (GSuint)LeapEnemyStateType::Leaping, info_.motion_leaping, true, info_.leap_power));
     state_.add_state((GSuint)LeapEnemyStateType::Leaping, make_shared<CharacterLandingToAnyState>(*this, (GSuint)LeapEnemyStateType::LeapEnd, info_.motion_leapend, false));
     state_.add_state((GSuint)LeapEnemyStateType::LeapEnd, make_shared<CharacterMotionEndToAnyState>(*this, (GSuint)LeapEnemyStateType::Move, info_.motion_move, true));

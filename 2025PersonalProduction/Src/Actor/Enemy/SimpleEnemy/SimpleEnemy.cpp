@@ -6,8 +6,9 @@
 #include "Engine/Utils/MyRandom.h"
 #include "Engine/Sound/SE.h"
 
-#include "State/SimpleEnemy/SimpleEnemyAttackState.h"
-#include "State/SimpleEnemy/SimpleEnemyDeadState.h"
+#include "State/Actor/MyEnemy/MyEnemyAttackState.h"
+#include "State/Actor/Character/CharacterMotionEndToAnyState.h"
+#include "State/Actor/Character/CharacterMotionEndToDieState.h"
 #include "State/SimpleEnemy/SimpleEnemyFindState.h"
 #include "State/SimpleEnemy/SimpleEnemyHurtState.h"
 #include "State/SimpleEnemy/SimpleEnemyIdleState.h"
@@ -39,8 +40,15 @@ void SimpleEnemy::take_damage(Actor& other, const int damage) {
     )) return;
     if (invincible_timer() > 0.0f) return;
 
+    // ダメージを受ける
     hp_ = CLAMP(hp_ - damage, 0, INT_MAX);
     invincible_timer_ = INVINCIBLE_TIME;
+
+    // 攻撃対象をターゲットにする
+    Character* target = dynamic_cast<Character*>(&other);
+    if (target != nullptr && !target->is_dead_state()) {
+        target_ = target;
+    }
 
     // ステート番号を保存
     if (!MyLib::is_in(state_.get_current_state(),
@@ -48,23 +56,23 @@ void SimpleEnemy::take_damage(Actor& other, const int damage) {
         (GSuint)SimpleEnemyStateType::Attack
     )) save_current_state();
 
+    // 死亡
     if (hp_ <= 0) {
         change_state_and_motion((GSuint)SimpleEnemyStateType::Dead);
+        return;
     }
+    // 生きている
     else {
-        // 怯む確率
-        const bool falter = world_->is_avoid_effect() ? true : MyRandom::random_float(0.0f, 1.0f) <= my_info_.falter_rate;
-        if (target_ == nullptr || falter) {
+        // 怯むか？
+        if (falter_counter_ > 0 || falter_counter_ < 0) {
             // 一度Idleにしてモーションをリセット
             mesh_.change_motion(info_.motion_idle, true);
             change_state_and_motion((GSuint)SimpleEnemyStateType::Hurt);
+            falter_counter_--;  // 減らす
+            return;
         }
-    }
-
-    // 攻撃対象をターゲットにする
-    Character* target = dynamic_cast<Character*>(&other);
-    if (target != nullptr && !target->is_dead_state()) {
-        target_ = target;
+        // 怯まない
+        return;
     }
 }
 
@@ -91,8 +99,8 @@ void SimpleEnemy::change_state_and_motion(const GSuint state_num) {
 }
 
 void SimpleEnemy::add_state() {
-    state_.add_state((GSuint)SimpleEnemyStateType::Attack, make_shared<SimpleEnemyAttackState>(*this));
-    state_.add_state((GSuint)SimpleEnemyStateType::Dead, make_shared<SimpleEnemyDeadState>(*this));
+    state_.add_state((GSuint)SimpleEnemyStateType::Attack, make_shared<MyEnemyAttackState>(*this, (GSuint)SimpleEnemyStateType::Move, info_.motion_move, true));
+    state_.add_state((GSuint)SimpleEnemyStateType::Dead, make_shared<CharacterMotionEndToDieState>(*this));
     state_.add_state((GSuint)SimpleEnemyStateType::Find, make_shared<SimpleEnemyFindState>(*this));
     state_.add_state((GSuint)SimpleEnemyStateType::Hurt, make_shared<SimpleEnemyHurtState>(*this));
     state_.add_state((GSuint)SimpleEnemyStateType::Idle, make_shared<SimpleEnemyIdleState>(*this));

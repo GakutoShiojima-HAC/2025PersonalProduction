@@ -43,26 +43,30 @@ void Elemental::take_damage(Actor& other, const int damage) {
     )) return;
     if (invincible_timer() > 0.0f) return;
 
+    // ダメージを受ける// ダメージを受ける
     hp_ = CLAMP(hp_ - damage, 0, INT_MAX);
     invincible_timer_ = INVINCIBLE_TIME;
-
-    if (hp_ <= 0) {
-        change_state_and_motion((GSuint)ElementalStateType::Dead);
-    }
-    else {
-        // 怯む確率
-        const bool falter = world_->is_avoid_effect() ? true : MyRandom::random_float(0.0f, 1.0f) <= my_info_.falter_rate;
-        if (target_ == nullptr || falter) {
-            // 一度Idleにしてモーションをリセット
-            mesh_.change_motion(info_.motion_idle, true);
-            change_state_and_motion((GSuint)ElementalStateType::Hurt);
-        }
-    }
 
     // 攻撃対象をターゲットにする
     Character* target = dynamic_cast<Character*>(&other);
     if (target != nullptr && !target->is_dead_state()) {
         target_ = target;
+    }
+
+    // 死亡
+    if (hp_ <= 0) {
+        change_state_and_motion((GSuint)ElementalStateType::Dead);
+    }
+    else {
+        // スロー空間なら怯む
+        if (world_->is_avoid_effect()) {
+            // 一度Idleにしてモーションをリセット
+            mesh_.change_motion(info_.motion_idle, true);
+            change_state_and_motion((GSuint)ElementalStateType::Hurt);
+            return;
+        }
+        // 怯まない
+        return;
     }
 }
 
