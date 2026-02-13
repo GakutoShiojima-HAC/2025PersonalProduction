@@ -23,7 +23,7 @@ namespace GetMyEnemyInfo {
         info.search_fov = MyJson::get_float(param, "SearchFov");
         info.search_length = MyJson::get_float(param, "SearchLength");
         info.critical_bone_num = MyJson::get_int(param, "CriticalBone", 0);
-        info.falter_rate = MyJson::get_float(param, "FalterRate", 1.0f);
+        info.falter_count = MyJson::get_int(param, "FalterCount", -1);
         info.ui_height = MyJson::get_float(param, "UIHeight", 0.0f);
 
         // ‘S‚Ä‚ÌUŒ‚ƒ‚[ƒVƒ‡ƒ“

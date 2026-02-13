@@ -270,6 +270,7 @@
     <ClCompile Include="Src\Stage\StageFile.cpp" />
     <ClCompile Include="Src\State\Actor\Character\CharacterIdleState.cpp" />
     <ClCompile Include="Src\State\Actor\Character\CharacterLandingToAnyState.cpp" />
+    <ClCompile Include="Src\State\Actor\MyEnemy\MyEnemyAttackState.cpp" />
     <ClCompile Include="Src\State\Actor\MyEnemy\MyEnemyLeapAttackState.cpp" />
     <ClCompile Include="Src\State\Actor\MyEnemy\MyEnemyRetreatState.cpp" />
     <ClCompile Include="Src\State\DummyEnemy\DummyEnemyAttackState.cpp" />
@@ -412,6 +413,7 @@
     <ClInclude Include="Src\Engine\Graphics\Shader\PostEffects\ImpactEffect.h" />
     <ClInclude Include="Src\State\Actor\Character\CharacterIdleState.h" />
     <ClInclude Include="Src\State\Actor\Character\CharacterLandingToAnyState.h" />
+    <ClInclude Include="Src\State\Actor\MyEnemy\MyEnemyAttackState.h" />
     <ClInclude Include="Src\State\Actor\MyEnemy\MyEnemyLeapAttackState.h" />
     <ClInclude Include="Src\State\Actor\Character\CharacterMotionEndToDieState.h" />
     <ClInclude Include="Src\State\Actor\MyEnemy\MyEnemyRetreatState.h" />

@@ -16,6 +16,7 @@ MyEnemy::MyEnemy(IWorld* world, const GSvector3& position, const GSvector3& rota
     hp_ = info.hp;
     display_hp_ = (float)info.hp;
     max_hp_ = info.hp;
+    falter_counter_ = info.falter_count;
 
     init_parameter(PawnParameter::get_type(info.pawn_type));
     mesh_ = { info.skinmesh, info.skinmesh, info.skinmesh };
@@ -281,6 +282,10 @@ bool MyEnemy::is_attack_motion(GSuint motion) const {
     auto it = my_info_.attack_data.find(motion);
     if (it == my_info_.attack_data.end()) return false;
     return true;
+}
+
+void MyEnemy::reset_falter_count() {
+    falter_counter_ = my_info_.falter_count;
 }
 
 void MyEnemy::set_motion_attack_event(GSuint motion, const MyEnemyAttackData& data) {
