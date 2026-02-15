@@ -129,10 +129,10 @@ private:
         // エフェクトの終了
         gsFinishEffect();
 
-#ifndef _DEBUG
-        // アンケートフォームを開く
-        MyLib::open_browser_by_url("https://forms.gle/RvXri1WB3r3DGJQm7");
-#endif
+//#ifndef _DEBUG
+//        // アンケートフォームを開く
+//        MyLib::open_browser_by_url("https://forms.gle/RvXri1WB3r3DGJQm7");
+//#endif
     }
 
     /// <summary>
