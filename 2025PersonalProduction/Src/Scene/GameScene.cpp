@@ -99,13 +99,13 @@ void GameScene::reception_message(const std::string& message, std::any& param) {
 }
 
 void GameScene::add_state() {
-    state_.add_state((GSuint)SceneStateType::Start, make_shared<SceneStartState>(*this));
-    state_.add_state((GSuint)SceneStateType::End, make_shared<SceneEndState>(*this));
-    state_.add_state((GSuint)SceneStateType::Original, make_shared<SceneOriginalState>(*this));
-    state_.add_state((GSuint)SceneStateType::GamePause, make_shared<SceneGamePauseState>(*this));
-    state_.add_state((GSuint)SceneStateType::Setting, make_shared<SceneSettingState>(*this, SceneStateType::GamePause));
-    state_.add_state((GSuint)SceneStateType::Guide, make_shared<SceneGuideState>(*this, SceneStateType::GamePause));
-    state_.add_state((GSuint)SceneStateType::GameResult, make_shared<SceneGameResultState>(*this, &world_));
+    state_.add_state((GSuint)SceneStateType::Start, std::make_shared<SceneStartState>(*this));
+    state_.add_state((GSuint)SceneStateType::End, std::make_shared<SceneEndState>(*this));
+    state_.add_state((GSuint)SceneStateType::Original, std::make_shared<SceneOriginalState>(*this));
+    state_.add_state((GSuint)SceneStateType::GamePause, std::make_shared<SceneGamePauseState>(*this));
+    state_.add_state((GSuint)SceneStateType::Setting, std::make_shared<SceneSettingState>(*this, SceneStateType::GamePause));
+    state_.add_state((GSuint)SceneStateType::Guide, std::make_shared<SceneGuideState>(*this, SceneStateType::GamePause));
+    state_.add_state((GSuint)SceneStateType::GameResult, std::make_shared<SceneGameResultState>(*this, &world_));
 }
 
 void GameScene::original_update(float delta_time) {

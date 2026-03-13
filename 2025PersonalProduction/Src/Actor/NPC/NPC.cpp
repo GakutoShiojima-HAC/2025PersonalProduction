@@ -72,6 +72,6 @@ const NPCData& NPC::data() const {
 }
 
 void NPC::add_state() {
-    state_.add_state((GSuint)NPCStateType::Idle, make_shared<CharacterIdleState>());
-    state_.add_state((GSuint)NPCStateType::Action, make_shared<NPCActionState>(*this));
+    state_.add_state((GSuint)NPCStateType::Idle, std::make_shared<CharacterIdleState>());
+    state_.add_state((GSuint)NPCStateType::Action, std::make_shared<NPCActionState>(*this));
 }

@@ -108,23 +108,23 @@ void Viking::change_state_and_motion(const GSuint state_num) {
 }
 
 void Viking::add_state() {
-    state_.add_state((GSuint)VikingStateType::Idle, make_shared<VikingIdleState>(*this));
-    state_.add_state((GSuint)VikingStateType::Angry, make_shared<CharacterMotionEndToAnyState>(*this, (GSuint)VikingStateType::Move, Motion::MoveF, true));
-    state_.add_state((GSuint)VikingStateType::Move, make_shared<VikingMoveState>(*this));
-    state_.add_state((GSuint)VikingStateType::Hurt, make_shared<CharacterMotionEndToAnyState>(*this, (GSuint)VikingStateType::Idle, Motion::Idle, true));
-    state_.add_state((GSuint)VikingStateType::Dead, make_shared<CharacterMotionEndToDieState>(*this));
-    state_.add_state((GSuint)VikingStateType::Block, make_shared<VikingBlockState>(*this));
-    state_.add_state((GSuint)VikingStateType::BlockHit, make_shared<CharacterMotionEndToAnyState>(*this, (GSuint)VikingStateType::Attack, Motion::Attack, false));
-    state_.add_state((GSuint)VikingStateType::Attack, make_shared<CharacterMotionEndToAnyState>(*this, (GSuint)VikingStateType::Retreat, Motion::MoveB, true));
-    state_.add_state((GSuint)VikingStateType::JumpStart, make_shared<MyEnemyLeapAttackState>(*this, (GSuint)VikingStateType::Jumping, Motion::Jumping, true, info_.leap_power));
-    state_.add_state((GSuint)VikingStateType::Jumping, make_shared<CharacterLandingToAnyState>(*this, (GSuint)VikingStateType::JumpEnd, Motion::JumpEnd, false));
-    state_.add_state((GSuint)VikingStateType::JumpEnd, make_shared<CharacterMotionEndToAnyState>(*this, (GSuint)VikingStateType::Idle, Motion::Idle, true));
-    state_.add_state((GSuint)VikingStateType::RushCharge, make_shared<CharacterMotionEndToAnyState>(*this, (GSuint)VikingStateType::RushStart, Motion::RushStart, false));
-    state_.add_state((GSuint)VikingStateType::RushStart, make_shared<CharacterMotionEndToAnyState>(*this, (GSuint)VikingStateType::RushMove, Motion::Rushing, true));
-    state_.add_state((GSuint)VikingStateType::RushMove, make_shared<VikingRushState>(*this));
-    state_.add_state((GSuint)VikingStateType::RushEnd, make_shared<CharacterMotionEndToAnyState>(*this, (GSuint)VikingStateType::Block, Motion::Block, true));
+    state_.add_state((GSuint)VikingStateType::Idle, std::make_shared<VikingIdleState>(*this));
+    state_.add_state((GSuint)VikingStateType::Angry, std::make_shared<CharacterMotionEndToAnyState>(*this, (GSuint)VikingStateType::Move, Motion::MoveF, true));
+    state_.add_state((GSuint)VikingStateType::Move, std::make_shared<VikingMoveState>(*this));
+    state_.add_state((GSuint)VikingStateType::Hurt, std::make_shared<CharacterMotionEndToAnyState>(*this, (GSuint)VikingStateType::Idle, Motion::Idle, true));
+    state_.add_state((GSuint)VikingStateType::Dead, std::make_shared<CharacterMotionEndToDieState>(*this));
+    state_.add_state((GSuint)VikingStateType::Block, std::make_shared<VikingBlockState>(*this));
+    state_.add_state((GSuint)VikingStateType::BlockHit, std::make_shared<CharacterMotionEndToAnyState>(*this, (GSuint)VikingStateType::Attack, Motion::Attack, false));
+    state_.add_state((GSuint)VikingStateType::Attack, std::make_shared<CharacterMotionEndToAnyState>(*this, (GSuint)VikingStateType::Retreat, Motion::MoveB, true));
+    state_.add_state((GSuint)VikingStateType::JumpStart, std::make_shared<MyEnemyLeapAttackState>(*this, (GSuint)VikingStateType::Jumping, Motion::Jumping, true, info_.leap_power));
+    state_.add_state((GSuint)VikingStateType::Jumping, std::make_shared<CharacterLandingToAnyState>(*this, (GSuint)VikingStateType::JumpEnd, Motion::JumpEnd, false));
+    state_.add_state((GSuint)VikingStateType::JumpEnd, std::make_shared<CharacterMotionEndToAnyState>(*this, (GSuint)VikingStateType::Idle, Motion::Idle, true));
+    state_.add_state((GSuint)VikingStateType::RushCharge, std::make_shared<CharacterMotionEndToAnyState>(*this, (GSuint)VikingStateType::RushStart, Motion::RushStart, false));
+    state_.add_state((GSuint)VikingStateType::RushStart, std::make_shared<CharacterMotionEndToAnyState>(*this, (GSuint)VikingStateType::RushMove, Motion::Rushing, true));
+    state_.add_state((GSuint)VikingStateType::RushMove, std::make_shared<VikingRushState>(*this));
+    state_.add_state((GSuint)VikingStateType::RushEnd, std::make_shared<CharacterMotionEndToAnyState>(*this, (GSuint)VikingStateType::Block, Motion::Block, true));
     const float d = my_info_.attack_data.find(VikingMotion::Attack)->second.detection_radius;
-    state_.add_state((GSuint)VikingStateType::Retreat, make_shared<MyEnemyRetreatState>(*this, (GSuint)VikingStateType::Idle, Motion::Idle, true, d));
+    state_.add_state((GSuint)VikingStateType::Retreat, std::make_shared<MyEnemyRetreatState>(*this, (GSuint)VikingStateType::Idle, Motion::Idle, true, d));
 }
 
 bool Viking::is_root_motion_state() const {

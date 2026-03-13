@@ -30,7 +30,7 @@ void SendMessageTimelineParameter::update(float delta_time) {
         return;
     }
 
-    auto send_message = [=](const string& target, const string& message) {
+    auto send_message = [=](const std::string& target, const std::string& message) {
         Actor* actor = world_->find_actor(target);
         // もしアクターに登録されていなければフィールドアクターも検索をかける
         if (actor == nullptr) actor = world_->get_field()->find(target);
@@ -105,7 +105,7 @@ void SendMessageTimelineParameter::play(SendMessageTimelineData* data) {
 
 SendMessageTimelineParameter::SendMessageTimelineData* SendMessageTimelineParameter::create_data(const json& j) {
     // タイムラインデータ
-    vector<SendMessageTimelineKeyFrame*> data;
+    std::vector<SendMessageTimelineKeyFrame*> data;
     if (j.contains("timeline") && j["timeline"].is_array()) {
         // キーフレームを全て取得する
         for (const auto& item : j["timeline"]) {
@@ -120,7 +120,7 @@ SendMessageTimelineParameter::SendMessageTimelineData* SendMessageTimelineParame
     return new SendMessageTimelineData{ data };
 }
 
-void SendMessageTimelineParameter::add(const string& name, SendMessageTimelineData* data) {
+void SendMessageTimelineParameter::add(const std::string& name, SendMessageTimelineData* data) {
     if (data == nullptr) return;
 
     // 既に存在するかどうか

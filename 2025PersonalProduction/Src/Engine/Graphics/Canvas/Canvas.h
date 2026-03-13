@@ -15,8 +15,6 @@
 #include <string>
 #include <gslib.h>
 
-using namespace std;
-
 struct ScreenData;
 
 // 基点
@@ -68,7 +66,7 @@ public:
 	/// <param name="font_size">= フォントサイズ</param>
 	/// <param name="anchor">= 基点</param>
 	static void draw_text(
-		const string& text,
+		const std::string& text,
 		const GSvector2& position,
 		const GSuint font_size = 20,
 		const Anchor anchor = Anchor::TopLeft
@@ -85,10 +83,10 @@ public:
 	/// <param name="anchor">= 基点</param>
 	/// <param name="text_anchor">= テキストの基点</param>
 	static void draw_sprite_text(
-		const string& text,
+		const std::string& text,
 		const GSvector2& position,
 		const GSuint font_size = 20,
-		const string& font_name = "ＭＳ ゴシック",
+		const std::string& font_name = "ＭＳ ゴシック",
         const GSuint font_code = GS_FONT_NORMAL,
 		const GScolor& color = GScolor{ 1.0f, 1.0f, 1.0f, 1.0f },
 		const Anchor anchor = Anchor::TopLeft,

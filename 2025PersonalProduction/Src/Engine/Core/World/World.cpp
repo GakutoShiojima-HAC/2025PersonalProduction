@@ -271,11 +271,11 @@ std::vector<Actor*> World::get_all_actor() const {
 	return actor_.get_all();
 }
 
-Actor* World::find_actor(const string& name) const {
+Actor* World::find_actor(const std::string& name) const {
 	return actor_.find(name);
 }
 
-vector<Actor*> World::find_actor_with_tag(const ActorTag tag) const {
+std::vector<Actor*> World::find_actor_with_tag(const ActorTag tag) const {
 	return actor_.find_with_tag(tag);
 }
 
@@ -287,19 +287,19 @@ int World::count_actor_with_tag(const ActorTag tag) const {
 	return actor_.count_with_tag(tag);
 }
 
-Pawn* World::find_pawn(const string& name) const {
+Pawn* World::find_pawn(const std::string& name) const {
 	return pawn_.find(name);
 }
 
-vector<Pawn*> World::find_pawn_with_tag(const ActorTag tag) const {
+std::vector<Pawn*> World::find_pawn_with_tag(const ActorTag tag) const {
 	return pawn_.find_with_tag(tag);
 }
 
-Character* World::find_character(const string& name) const {
+Character* World::find_character(const std::string& name) const {
 	return character_.find(name);
 }
 
-vector<Character*> World::find_character_with_tag(const ActorTag tag) const {
+std::vector<Character*> World::find_character_with_tag(const ActorTag tag) const {
 	return character_.find_with_tag(tag);
 }
 

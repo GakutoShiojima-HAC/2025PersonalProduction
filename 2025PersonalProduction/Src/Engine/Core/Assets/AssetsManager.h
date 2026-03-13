@@ -21,25 +21,25 @@ typedef	unsigned int GSuint;
 // 読み込むアセット
 struct LoadAssets {
 	std::string name{ "" };	// 識別名
-	vector<pair<GSuint, std::string>> mesh;
-	vector<pair<GSuint, std::string>> skinmesh;
-	vector<pair<GSuint, std::string>> texture;
-	vector<pair<GSuint, std::string>> octree;
-	vector<pair<GSuint, std::string>> bgm;
-	vector<pair<GSuint, std::string>> se;
-	vector<pair<GSuint, std::string>> effect;
+	std::vector<std::pair<GSuint, std::string>> mesh;
+	std::vector<std::pair<GSuint, std::string>> skinmesh;
+	std::vector<std::pair<GSuint, std::string>> texture;
+	std::vector<std::pair<GSuint, std::string>> octree;
+	std::vector<std::pair<GSuint, std::string>> bgm;
+	std::vector<std::pair<GSuint, std::string>> se;
+	std::vector<std::pair<GSuint, std::string>> effect;
 };
 
 // 読み込んだアセット
 struct LoadedAssets {
 	std::string name{ "" };	// 識別名
-	vector<GSuint> mesh;
-	vector<GSuint> skinmesh;
-	vector<GSuint> texture;
-	vector<GSuint> octree;
-	vector<GSuint> bgm;
-	vector<GSuint> se;
-	vector<GSuint> effect;
+	std::vector<GSuint> mesh;
+	std::vector<GSuint> skinmesh;
+	std::vector<GSuint> texture;
+	std::vector<GSuint> octree;
+	std::vector<GSuint> bgm;
+	std::vector<GSuint> se;
+	std::vector<GSuint> effect;
 };
 
 class AssetsManager {
@@ -110,11 +110,11 @@ private:
 	/// <param name="id">= 確認したいID</param>
 	/// <param name="other">= 同種リソース</param>
 	/// <returns>使用していたら真</returns>
-	bool is_same_id_for_other_asset(const GSuint id, const vector<GSuint>& other) const;
+	bool is_same_id_for_other_asset(const GSuint id, const std::vector<GSuint>& other) const;
 
 private:
 	// 読み込んだアセット
-	list<LoadedAssets*> assets_;
+    std::list<LoadedAssets*> assets_;
 
 public:
 	// コピー禁止

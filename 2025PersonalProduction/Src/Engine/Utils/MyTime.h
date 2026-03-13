@@ -16,8 +16,6 @@
 #include <sstream>  // std::ostringstream
 #include <ctime>    // std::time_t, std::tm, std::localtime
 
-using namespace std;
-
 namespace MyLib {
 #pragma region [Time]
     /// <summary>
@@ -34,29 +32,29 @@ namespace MyLib {
         /// <summary>
         /// "YYYY/MM/DD HH:MM::SS" の形式で日時情報を文字列に変換したものを返却
         /// </summary>
-        string time_info_to_string() const {
-            ostringstream oss;
-            oss << setfill('0')  // 0埋めする
-                << setw(4) << year << "/"
-                << setw(2) << month << "/"
-                << setw(2) << day << " "
-                << setw(2) << hour << ":"
-                << setw(2) << minute << ":"
-                << setw(2) << second;
+        std::string time_info_to_string() const {
+            std::ostringstream oss;
+            oss << std::setfill('0')  // 0埋めする
+                << std::setw(4) << year << "/"
+                << std::setw(2) << month << "/"
+                << std::setw(2) << day << " "
+                << std::setw(2) << hour << ":"
+                << std::setw(2) << minute << ":"
+                << std::setw(2) << second;
             return oss.str();
         }
 
         /// <summary>
         /// "YYYY_MM_DD_HHMM" の形式で日時情報を文字列に変換したものを返却
         /// </summary>
-        string time_info_to_filename_string() const {
-            ostringstream oss;
-            oss << setfill('0')  // 0埋め
-                << setw(4) << year << "_"
-                << setw(2) << month << "_"
-                << setw(2) << day << "_"
-                << setw(2) << hour
-                << setw(2) << minute;
+        std::string time_info_to_filename_string() const {
+            std::ostringstream oss;
+            oss << std::setfill('0')  // 0埋め
+                << std::setw(4) << year << "_"
+                << std::setw(2) << month << "_"
+                << std::setw(2) << day << "_"
+                << std::setw(2) << hour
+                << std::setw(2) << minute;
             return oss.str();
         }
     };

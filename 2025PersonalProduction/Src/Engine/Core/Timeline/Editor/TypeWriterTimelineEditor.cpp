@@ -22,7 +22,7 @@ void TypeWriterTimelineEditor::clear() {
 
 void TypeWriterTimelineEditor::update_select_keyframe() {
     if (data_ == nullptr) return;
-    vector<TypeWriterTimelineKeyFrame*>& timeline = data_->get();
+    std::vector<TypeWriterTimelineKeyFrame*>& timeline = data_->get();
     if (timeline.empty()) return;
     TypeWriterTimelineKeyFrame* key_frame = timeline[edit_keyframe_index_];
     if (key_frame == nullptr) return;
@@ -31,8 +31,8 @@ void TypeWriterTimelineEditor::update_select_keyframe() {
     ImGui::PushItemWidth(80);
     if (ImGui::InputFloat(ToUTF8("キーフレームの時間").c_str(), &key_frame->time)) {
         sort_timeline();
-        auto it = find(timeline.begin(), timeline.end(), key_frame);
-        if (it != timeline.end()) edit_keyframe_index_ = distance(timeline.begin(), it);
+        auto it = std::find(timeline.begin(), timeline.end(), key_frame);
+        if (it != timeline.end()) edit_keyframe_index_ = std::distance(timeline.begin(), it);
     }
     ImGui::PopItemWidth();
 
@@ -92,10 +92,10 @@ float& TypeWriterTimelineEditor::get_keyframe_time(unsigned int index) {
 
 void TypeWriterTimelineEditor::sort_timeline() {
     if (data_ == nullptr) return;
-    vector<TypeWriterTimelineKeyFrame*>& timeline = data_->get();
+    std::vector<TypeWriterTimelineKeyFrame*>& timeline = data_->get();
     if (timeline.empty()) return;
 
-    sort(timeline.begin(), timeline.end(), [](const TypeWriterTimelineKeyFrame* a, const TypeWriterTimelineKeyFrame* b) {
+    std::sort(timeline.begin(), timeline.end(), [](const TypeWriterTimelineKeyFrame* a, const TypeWriterTimelineKeyFrame* b) {
         return a->time < b->time;  // 昇順にソート
     });
 }
@@ -110,14 +110,14 @@ void TypeWriterTimelineEditor::add_keyframe(float time) {
         data_ = new TypeWriterTimelineParameter::TypeWriterTimelineData(timeline);
     }
 
-    vector<TypeWriterTimelineKeyFrame*>& timeline = data_->get();
+    std::vector<TypeWriterTimelineKeyFrame*>& timeline = data_->get();
     if (timeline.empty()) {
         timeline.push_back(keyframe);
         edit_keyframe_index_ = 0;
         return;
     }
 
-    auto it = lower_bound(
+    auto it = std::lower_bound(
         timeline.begin(),
         timeline.end(),
         keyframe,
@@ -132,7 +132,7 @@ void TypeWriterTimelineEditor::add_keyframe(float time) {
 
 void TypeWriterTimelineEditor::remove_keyframe(unsigned int index) {
     if (data_ == nullptr) return;
-    vector<TypeWriterTimelineKeyFrame*>& timeline = data_->get();
+    std::vector<TypeWriterTimelineKeyFrame*>& timeline = data_->get();
 
     if (index < timeline.size()) {
         delete timeline[index];

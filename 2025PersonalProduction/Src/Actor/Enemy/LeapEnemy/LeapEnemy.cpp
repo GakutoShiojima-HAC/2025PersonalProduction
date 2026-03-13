@@ -94,14 +94,14 @@ void LeapEnemy::change_state_and_motion(const GSuint state_num) {
 }
 
 void LeapEnemy::add_state() {
-    state_.add_state((GSuint)LeapEnemyStateType::Idle, make_shared<LeapEnemyIdleState>(*this));
-    state_.add_state((GSuint)LeapEnemyStateType::Move, make_shared<LeapEnemyMoveState>(*this));
-    state_.add_state((GSuint)LeapEnemyStateType::Hurt, make_shared<CharacterMotionEndToAnyState>(*this, (GSuint)LeapEnemyStateType::Idle, info_.motion_idle, true));
-    state_.add_state((GSuint)LeapEnemyStateType::Dead, make_shared<CharacterMotionEndToDieState>(*this));
-    state_.add_state((GSuint)LeapEnemyStateType::Attack, make_shared<MyEnemyAttackState>(*this, (GSuint)LeapEnemyStateType::Idle, info_.motion_idle, true));
-    state_.add_state((GSuint)LeapEnemyStateType::LeapStart, make_shared<MyEnemyLeapAttackState>(*this, (GSuint)LeapEnemyStateType::Leaping, info_.motion_leaping, true, info_.leap_power));
-    state_.add_state((GSuint)LeapEnemyStateType::Leaping, make_shared<CharacterLandingToAnyState>(*this, (GSuint)LeapEnemyStateType::LeapEnd, info_.motion_leapend, false));
-    state_.add_state((GSuint)LeapEnemyStateType::LeapEnd, make_shared<CharacterMotionEndToAnyState>(*this, (GSuint)LeapEnemyStateType::Move, info_.motion_move, true));
+    state_.add_state((GSuint)LeapEnemyStateType::Idle, std::make_shared<LeapEnemyIdleState>(*this));
+    state_.add_state((GSuint)LeapEnemyStateType::Move, std::make_shared<LeapEnemyMoveState>(*this));
+    state_.add_state((GSuint)LeapEnemyStateType::Hurt, std::make_shared<CharacterMotionEndToAnyState>(*this, (GSuint)LeapEnemyStateType::Idle, info_.motion_idle, true));
+    state_.add_state((GSuint)LeapEnemyStateType::Dead, std::make_shared<CharacterMotionEndToDieState>(*this));
+    state_.add_state((GSuint)LeapEnemyStateType::Attack, std::make_shared<MyEnemyAttackState>(*this, (GSuint)LeapEnemyStateType::Idle, info_.motion_idle, true));
+    state_.add_state((GSuint)LeapEnemyStateType::LeapStart, std::make_shared<MyEnemyLeapAttackState>(*this, (GSuint)LeapEnemyStateType::Leaping, info_.motion_leaping, true, info_.leap_power));
+    state_.add_state((GSuint)LeapEnemyStateType::Leaping, std::make_shared<CharacterLandingToAnyState>(*this, (GSuint)LeapEnemyStateType::LeapEnd, info_.motion_leapend, false));
+    state_.add_state((GSuint)LeapEnemyStateType::LeapEnd, std::make_shared<CharacterMotionEndToAnyState>(*this, (GSuint)LeapEnemyStateType::Move, info_.motion_move, true));
 }
 
 bool LeapEnemy::is_root_motion_state() const {

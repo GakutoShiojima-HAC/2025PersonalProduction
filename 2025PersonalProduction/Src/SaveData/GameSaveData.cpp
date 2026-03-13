@@ -57,7 +57,7 @@ const SaveData& GameSaveData::get() const {
     return save_data_;
 }
 
-std::vector<string> GameSaveData::get_all_save_file() const {
+std::vector<std::string> GameSaveData::get_all_save_file() const {
     return MyLib::get_all_file_path(SAVE_FOLDER_PATH, "json");
 }
 

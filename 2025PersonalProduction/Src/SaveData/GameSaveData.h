@@ -52,7 +52,7 @@ public:
     /// 全てのセーブデータファイルを取得
     /// </summary>
     /// <returns>全てのセーブデータファイル</returns>
-    std::vector<string> get_all_save_file() const;
+    std::vector<std::string> get_all_save_file() const;
 
     /// <summary>
     /// ステージ番号から、そのステージの最大スコアを取得

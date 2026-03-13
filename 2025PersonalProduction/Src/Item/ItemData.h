@@ -46,7 +46,7 @@ namespace ItemData {
     /// 文字列をアイテムの種類に変換
     /// </summary>
     inline ItemType to_type(const std::string& name) {
-        static const unordered_map<std::string, ItemType> map = {
+        static const std::unordered_map<std::string, ItemType> map = {
     #define X(name) { #name, ItemType::name },
             ITEM_TYPE_LIST
     #undef X

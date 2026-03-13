@@ -44,7 +44,7 @@ private:
     Input& input_ = Input::get_instance();
 
     // 管理しているボタン
-    vector<Button*> buttons_;
+    std::vector<Button*> buttons_;
     // ゲームパッドの選択順番号
     unsigned int select_index_{ 0 };
 

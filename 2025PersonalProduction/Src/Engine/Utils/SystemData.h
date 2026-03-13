@@ -16,16 +16,14 @@
 #include <windows.h>	// CPU, WINOS
 #include <psapi.h>		// MEMORY
 
-using namespace std;
-
 namespace MyLib {
 #pragma region [GPU]
     /// <summary>
     /// GPU情報構造体
     /// </summary>
     struct GPUInfo {
-        string name;
-        string version;
+        std::string name;
+        std::string version;
     };
 
     /// <summary>
@@ -46,8 +44,8 @@ namespace MyLib {
     /// CPU情報構造体
     /// </summary>
     struct CPUInfo {
-        string name;
-        string info;
+        std::string name;
+        std::string info;
     };
 
     /// <summary>
@@ -66,18 +64,18 @@ namespace MyLib {
             HKEY h_key;
             const char* path = "HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\0";
             if (RegOpenKeyExA(HKEY_LOCAL_MACHINE, path, 0, KEY_READ, &h_key) != ERROR_SUCCESS)
-                return string{ "Unknown CPU" };
+                return std::string{ "Unknown CPU" };
 
 
             // "ProcessorNameString" という値をレジストリから取得
             if (RegQueryValueExA(h_key, "ProcessorNameString", nullptr, &type, reinterpret_cast<LPBYTE>(cpu_name), &size) != ERROR_SUCCESS) {
                 RegCloseKey(h_key);
-                return  string{ "Unknown CPU" };
+                return  std::string{ "Unknown CPU" };
             }
 
             // レジストリキーを閉じる
             RegCloseKey(h_key);
-            return string(cpu_name);
+            return std::string(cpu_name);
             };
 
         // CPUの情報を取得するラムダ式
@@ -86,7 +84,7 @@ namespace MyLib {
             GetSystemInfo(&sys_info);
 
             // CPU アーキテクチャの確認
-            string arch;
+            std::string arch;
             switch (sys_info.wProcessorArchitecture) {
             case PROCESSOR_ARCHITECTURE_AMD64: arch = "x64"; break;
             case PROCESSOR_ARCHITECTURE_INTEL: arch = "x86"; break;
@@ -159,10 +157,10 @@ namespace MyLib {
     /// PCのOS情報構造体
     /// </summary>
     struct WINOSInfo {
-        string info;
-        string name;
-        string build_id;
-        string edition;
+        std::string info;
+        std::string name;
+        std::string build_id;
+        std::string edition;
     };
 
     /// <summary>
@@ -178,13 +176,13 @@ namespace MyLib {
             return result;
         }
 
-        auto query_string_value = [&](const char* valueName) -> string {
+        auto query_string_value = [&](const char* valueName) -> std::string {
             char buffer[256];
             DWORD size = sizeof(buffer);
             DWORD type = 0;
             if (RegQueryValueExA(h_key, valueName, nullptr, &type, reinterpret_cast<LPBYTE>(buffer), &size) == ERROR_SUCCESS) {
                 if (type == REG_SZ || type == REG_EXPAND_SZ) {
-                    return string(buffer, size - 1); // sizeはバイト数。-1で終端文字削除
+                    return std::string(buffer, size - 1); // sizeはバイト数。-1で終端文字削除
                 }
             }
             return "";
@@ -211,12 +209,12 @@ namespace MyLib {
         }
 
         // エディション名変換
-        string edition = result.edition;
+        std::string edition = result.edition;
         if (edition == "Core") edition = "Home";
         else if (edition == "Professional") edition = "Pro";
 
         // ビルド番号から簡易的なマーケティング版の表記（23H2など）を生成
-        string marketing_version = "";
+        std::string marketing_version = "";
         try {
             int build = stoi(result.build_id);
             if (build >= 22631) marketing_version = "23H2";

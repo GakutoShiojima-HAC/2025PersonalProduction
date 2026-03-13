@@ -13,8 +13,6 @@
 
 #include <gslib.h>
 
-using namespace std;
-
 namespace MyLib {
 	/// <summary>
 	/// ‹…‚ð•`‰æ‚·‚é

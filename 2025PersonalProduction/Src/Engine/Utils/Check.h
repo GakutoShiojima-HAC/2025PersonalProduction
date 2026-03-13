@@ -14,8 +14,6 @@
 #include <string>
 #include <vector>
 
-using namespace std;
-
 namespace MyLib {
 	/// <summary>
 	/// valueがargsに当てはまっていたら真を返却
@@ -36,7 +34,7 @@ namespace MyLib {
 	/// <param name="value">= 存在していた場合index位置にある要素</param>
 	/// <returns>存在していたら真</returns>
 	template <typename T>
-	inline bool is_valid_index(const vector<T*>& vec, unsigned int index, T** value = nullptr) {
+	inline bool is_valid_index(const std::vector<T*>& vec, unsigned int index, T** value = nullptr) {
 		if (vec.empty()) return false;
 		if (index >= 0 && (size_t)index < vec.size()) {
 			*value = vec[index];
@@ -54,7 +52,7 @@ namespace MyLib {
 	/// <param name="value">= 存在していた場合index位置にある要素</param>
 	/// <returns>存在していたら真</returns>
 	template <typename T>
-	inline bool is_valid_index(const vector<T>& vec, unsigned int index, T* value) {
+	inline bool is_valid_index(const std::vector<T>& vec, unsigned int index, T* value) {
 		if (vec.empty()) return false;
 		if (index >= 0 && (size_t)index < vec.size()) {
 			*value = vec[index];

@@ -25,7 +25,7 @@ void Canvas::draw_texture(
 }
 
 void Canvas::draw_text(
-	const string& text, 
+	const std::string& text,
 	const GSvector2& position, 
 	const GSuint font_size,
 	const Anchor anchor
@@ -44,10 +44,10 @@ void Canvas::draw_text(
 }
 
 void Canvas::draw_sprite_text(
-	const string& text,
+	const std::string& text,
 	const GSvector2& position,
 	const GSuint font_size,
-	const string& font_name,
+	const std::string& font_name,
     const GSuint font_code,
 	const GScolor& color,
 	const Anchor anchor,

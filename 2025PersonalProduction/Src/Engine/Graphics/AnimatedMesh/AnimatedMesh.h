@@ -18,8 +18,6 @@
 #include <functional>
 #include <memory>
 
-using namespace std;
-
 class GStransform;
 
 struct AnimationEvent {
@@ -148,7 +146,7 @@ public:
 	/// <param name="motion">= イベントを発火する対象のモーション番号</param>
 	/// <param name="time">= イベントを発火する時間</param>
 	/// <param name="callback">= イベント処理</param>
-	void add_animation_event(GSuint motion, GSfloat time, function<void()> callback);
+	void add_animation_event(GSuint motion, GSfloat time, std::function<void()> callback);
 
 	/// <summary>
 	/// アニメーションイベントを追加（レイヤー指定あり）
@@ -157,7 +155,7 @@ public:
 	/// <param name="motion">= イベントを発火する対象のモーション番号</param>
 	/// <param name="time">= イベントを発火する時間</param>
 	/// <param name="callback">= イベント処理</param>
-	void add_animation_event(GSuint layer, GSuint motion, GSfloat time, function<void()> callback);
+	void add_animation_event(GSuint layer, GSuint motion, GSfloat time, std::function<void()> callback);
 
 private:
 	class Animation {
@@ -236,7 +234,7 @@ private:
 		/// <param name="motion">= イベントを発火する対象のモーション番号</param>
 		/// <param name="time">= イベントを発火する時間</param>
 		/// <param name="callback">= イベント処理</param>
-		void add_event(GSuint motion, GSfloat time, function<void()> callback);
+		void add_event(GSuint motion, GSfloat time, std::function<void()> callback);
 
 	private:
 		// アニメーション
@@ -256,7 +254,7 @@ private:
 		// 補間アニメーションタイマー
 		GSfloat lerp_timer_{ 0.0f };
 		// 複数のアニメーションイベントを格納するためのvector
-		vector<shared_ptr<AnimationEvent>> events_;
+        std::vector<std::shared_ptr<AnimationEvent>> events_;
 	};
 
 private:
@@ -272,7 +270,7 @@ private:
 	/// <param name="layer">= レイヤー番号</param>
 	/// <param name="layers">= 同じモーションを再生しているレイヤー番号</param>
 	/// <returns>再生していたら真</returns>
-	bool is_multiple_layers_playing_same_motion(GSuint check_layer, vector<GSuint>& layers) const;
+	bool is_multiple_layers_playing_same_motion(GSuint check_layer, std::vector<GSuint>& layers) const;
 
 private:
 	// メッシュ
@@ -280,13 +278,13 @@ private:
 	// スケルトン
 	GSuint skeleton_;
 	// アニメーションレイヤー
-	vector<Animation> animation_layers_;
+    std::vector<Animation> animation_layers_;
 	// アニメーションレイヤーインデックス
-	vector<GSuint> animation_layer_indices_;
+    std::vector<GSuint> animation_layer_indices_;
 	// ボーンのローカル変換行列
-	vector<GSmatrix4> local_bone_matrices_;
+    std::vector<GSmatrix4> local_bone_matrices_;
 	// ボーンの変換行列
-	vector<GSmatrix4> bone_matrices_;
+	std::vector<GSmatrix4> bone_matrices_;
 	// 座標変換行列
 	GSmatrix4 transform_;
 

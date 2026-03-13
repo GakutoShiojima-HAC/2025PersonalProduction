@@ -111,18 +111,18 @@ void AnimatedMesh::apply_root_motion(GStransform& transform) {
     }
 }
 
-void AnimatedMesh::add_animation_event(GSuint motion, GSfloat time, function<void()> callback) {
+void AnimatedMesh::add_animation_event(GSuint motion, GSfloat time, std::function<void()> callback) {
     // レイヤーなし状態で必ず再生される0番に登録
     animation_layers_[0].add_event(motion, time, callback);
 }
 
-void AnimatedMesh::add_animation_event(GSuint layer, GSuint motion, GSfloat time, function<void()> callback) {
+void AnimatedMesh::add_animation_event(GSuint layer, GSuint motion, GSfloat time, std::function<void()> callback) {
     animation_layers_[layer].add_event(motion, time, callback);
 }
 
 void AnimatedMesh::sync_layers_playing_same_motion(GSuint check_layer) {
     // 他のレイヤーが同じモーションを再生しているか判定
-    vector<GSuint> layers;
+    std::vector<GSuint> layers;
     if (is_multiple_layers_playing_same_motion(check_layer, layers)) {
         // 他のレイヤーのモーション再生時間を同期させる
         const float time = animation_layers_[check_layer].current_motion_time();
@@ -132,7 +132,7 @@ void AnimatedMesh::sync_layers_playing_same_motion(GSuint check_layer) {
     }
 }
 
-bool AnimatedMesh::is_multiple_layers_playing_same_motion(GSuint check_layer, vector<GSuint>& layers) const {
+bool AnimatedMesh::is_multiple_layers_playing_same_motion(GSuint check_layer, std::vector<GSuint>& layers) const {
     const GSuint current = animation_layers_[check_layer].motion_num();
     
     for (GSuint i = 0; i < (GSuint)animation_layers_.size(); ++i) {
@@ -166,10 +166,10 @@ void AnimatedMesh::Animation::update(float delta_time) {
     }
     else {
         // モーションタイマをクランプする
-        motion_timer_ = min(motion_timer_, motion_end_time() - 1.0f);
+        motion_timer_ = std::min(motion_timer_, motion_end_time() - 1.0f);
     }
     // 補間中タイマの更新
-    lerp_timer_ = min(lerp_timer_ + delta_time, cLerpTime);
+    lerp_timer_ = std::min(lerp_timer_ + delta_time, cLerpTime);
 
     // モーションがループしたかどうか。
     // 現在の時間が1フレーム前の時間より小さい場合は、ループしたと判断できる。
@@ -277,6 +277,6 @@ void AnimatedMesh::Animation::root_motion(GStransform& transform) {
     transform.translate(GSvector3::scale(velocity, scale));
 }
 
-void AnimatedMesh::Animation::add_event(GSuint motion, GSfloat time, function<void()> callback) {    
+void AnimatedMesh::Animation::add_event(GSuint motion, GSfloat time, std::function<void()> callback) {
     events_.push_back(std::make_shared<AnimationEvent>(motion, time, callback));
 }

@@ -159,7 +159,7 @@ std::vector<Actor*> ActorManager::get_all() const {
     return std::vector<Actor*>(actors_.begin(), actors_.end());
 }
 
-Actor* ActorManager::find(const string& name) const {
+Actor* ActorManager::find(const std::string& name) const {
 	for (const auto& actor : actors_) {
 		if (actor->name() == name) {
 			return actor;
