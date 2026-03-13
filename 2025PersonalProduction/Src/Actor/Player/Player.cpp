@@ -356,17 +356,17 @@ void Player::react(Actor& other) {
 }
 
 void Player::add_state() {
-	state_.add_state((GSuint)PlayerStateType::Attack, make_shared<PlayerAttackState>(*this));
-	state_.add_state((GSuint)PlayerStateType::Avoid, make_shared<PlayerAvoidState>(*this));
-	state_.add_state((GSuint)PlayerStateType::Dead, make_shared<PlayerDeadState>(*this));
-	state_.add_state((GSuint)PlayerStateType::Fall, make_shared<PlayerFallState>(*this));
-	state_.add_state((GSuint)PlayerStateType::Hurt, make_shared<PlayerHurtState>(*this));
-	state_.add_state((GSuint)PlayerStateType::Idle, make_shared<PlayerIdleState>(*this));
-	state_.add_state((GSuint)PlayerStateType::Interact, make_shared<PlayerInteractState>(*this));
-	state_.add_state((GSuint)PlayerStateType::Jump, make_shared<PlayerJumpState>(*this));
-	state_.add_state((GSuint)PlayerStateType::Land, make_shared<PlayerLandState>(*this));
-	state_.add_state((GSuint)PlayerStateType::Move, make_shared<PlayerMoveState>(*this));
-	state_.add_state((GSuint)PlayerStateType::Skill, make_shared<PlayerSkillState>(*this));
+	state_.add_state((GSuint)PlayerStateType::Attack, std::make_shared<PlayerAttackState>(*this));
+	state_.add_state((GSuint)PlayerStateType::Avoid, std::make_shared<PlayerAvoidState>(*this));
+	state_.add_state((GSuint)PlayerStateType::Dead, std::make_shared<PlayerDeadState>(*this));
+	state_.add_state((GSuint)PlayerStateType::Fall, std::make_shared<PlayerFallState>(*this));
+	state_.add_state((GSuint)PlayerStateType::Hurt, std::make_shared<PlayerHurtState>(*this));
+	state_.add_state((GSuint)PlayerStateType::Idle, std::make_shared<PlayerIdleState>(*this));
+	state_.add_state((GSuint)PlayerStateType::Interact, std::make_shared<PlayerInteractState>(*this));
+	state_.add_state((GSuint)PlayerStateType::Jump, std::make_shared<PlayerJumpState>(*this));
+	state_.add_state((GSuint)PlayerStateType::Land, std::make_shared<PlayerLandState>(*this));
+	state_.add_state((GSuint)PlayerStateType::Move, std::make_shared<PlayerMoveState>(*this));
+	state_.add_state((GSuint)PlayerStateType::Skill, std::make_shared<PlayerSkillState>(*this));
 }
 
 void Player::update_move(float delta_time) {

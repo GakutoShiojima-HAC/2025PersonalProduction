@@ -24,7 +24,7 @@ void PawnManager::clear() {
     pawns_.clear();
 }
 
-Pawn* PawnManager::find(const string& name) const {
+Pawn* PawnManager::find(const std::string& name) const {
     for (const auto& pawn : pawns_) {
         if (pawn->name() == name) {
             return pawn;
@@ -33,8 +33,8 @@ Pawn* PawnManager::find(const string& name) const {
     return nullptr;
 }
 
-vector<Pawn*> PawnManager::find_with_tag(const ActorTag tag) const {
-    vector<Pawn*> result;
+std::vector<Pawn*> PawnManager::find_with_tag(const ActorTag tag) const {
+    std::vector<Pawn*> result;
     for (const auto& pawn : pawns_) {
         if (pawn->tag() == tag) {
             result.push_back(pawn);

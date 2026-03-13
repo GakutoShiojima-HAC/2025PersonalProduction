@@ -15,8 +15,6 @@
 #include "Engine/Utils/ObjectPool.h"
 #include <list>
 
-using namespace std;
-
 class World;
 class AttackCollider;
 
@@ -50,7 +48,7 @@ private:
 	// コライダープール
 	ObjectPool<AttackCollider> colliders_;
 	// アクティブなコライダーリスト
-	list<AttackCollider*> active_colliders_;
+    std::list<AttackCollider*> active_colliders_;
 
 public:
 	// コピー禁止

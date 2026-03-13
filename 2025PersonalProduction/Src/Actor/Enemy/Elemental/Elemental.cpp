@@ -94,14 +94,14 @@ void Elemental::change_state_and_motion(const GSuint state_num) {
 }
 
 void Elemental::add_state() {
-    state_.add_state((GSuint)ElementalStateType::Idle, make_shared<ElementalIdleState>(*this));
-    state_.add_state((GSuint)ElementalStateType::Angry, make_shared<CharacterMotionEndToAnyState>(*this, (GSuint)ElementalStateType::MoveF, info_.motion_move, true));
-    state_.add_state((GSuint)ElementalStateType::MoveF, make_shared<ElementalMoveState>(*this));
-    state_.add_state((GSuint)ElementalStateType::Hurt, make_shared<CharacterMotionEndToAnyState>(*this, (GSuint)ElementalStateType::Idle, info_.motion_idle, true));
-    state_.add_state((GSuint)ElementalStateType::Dead, make_shared<CharacterMotionEndToDieState>(*this));
-    state_.add_state((GSuint)ElementalStateType::Attack1, make_shared<ElementalAttack1State>(*this));
-    state_.add_state((GSuint)ElementalStateType::Attack2, make_shared<CharacterMotionEndToAnyState>(*this, (GSuint)ElementalStateType::Idle, info_.motion_idle, true));
-    state_.add_state((GSuint)ElementalStateType::Spell, make_shared<CharacterMotionEndToAnyState>(*this, (GSuint)ElementalStateType::Idle, info_.motion_idle, true));
+    state_.add_state((GSuint)ElementalStateType::Idle, std::make_shared<ElementalIdleState>(*this));
+    state_.add_state((GSuint)ElementalStateType::Angry, std::make_shared<CharacterMotionEndToAnyState>(*this, (GSuint)ElementalStateType::MoveF, info_.motion_move, true));
+    state_.add_state((GSuint)ElementalStateType::MoveF, std::make_shared<ElementalMoveState>(*this));
+    state_.add_state((GSuint)ElementalStateType::Hurt, std::make_shared<CharacterMotionEndToAnyState>(*this, (GSuint)ElementalStateType::Idle, info_.motion_idle, true));
+    state_.add_state((GSuint)ElementalStateType::Dead, std::make_shared<CharacterMotionEndToDieState>(*this));
+    state_.add_state((GSuint)ElementalStateType::Attack1, std::make_shared<ElementalAttack1State>(*this));
+    state_.add_state((GSuint)ElementalStateType::Attack2, std::make_shared<CharacterMotionEndToAnyState>(*this, (GSuint)ElementalStateType::Idle, info_.motion_idle, true));
+    state_.add_state((GSuint)ElementalStateType::Spell, std::make_shared<CharacterMotionEndToAnyState>(*this, (GSuint)ElementalStateType::Idle, info_.motion_idle, true));
 }
 
 bool Elemental::is_root_motion_state() const {

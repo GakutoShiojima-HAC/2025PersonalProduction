@@ -17,8 +17,6 @@
 
 typedef	unsigned int GSuint;
 
-using namespace std;
-
 class StateMachine {
 public:
 	StateMachine();
@@ -40,7 +38,7 @@ public:
 	/// </summary>
 	/// <param name="state_num">= 状態番号</param>
 	/// <param name="state">= 状態</param>
-	void add_state(const GSuint state_num, shared_ptr<IState> state);
+	void add_state(const GSuint state_num, std::shared_ptr<IState> state);
 	
 	/// <summary>
 	/// 状態を変更
@@ -73,14 +71,14 @@ private:
 	/// 指定した状態を検索
 	/// </summary>
 	/// <returns>見つかれば状態を、見つからなければnullptr</returns>
-	shared_ptr<IState> find(const GSuint state_num) const;
+    std::shared_ptr<IState> find(const GSuint state_num) const;
 
 private:
 	// 状態
-	unordered_map<GSuint, shared_ptr<IState>> state_list_;
+    std::unordered_map<GSuint, std::shared_ptr<IState>> state_list_;
 
 	// 現在の状態
-	shared_ptr<IState> current_state_;
+    std::shared_ptr<IState> current_state_;
 
 	// 現在の状態番号
 	GSuint current_state_num_{ 999999 };

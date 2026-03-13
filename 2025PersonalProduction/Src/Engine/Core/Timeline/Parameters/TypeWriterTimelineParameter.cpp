@@ -96,7 +96,7 @@ void TypeWriterTimelineParameter::play(TypeWriterTimelineData* data) {
 
 TypeWriterTimelineParameter::TypeWriterTimelineData* TypeWriterTimelineParameter::create_data(const json& j) {
     // タイムラインデータ
-    vector<TypeWriterTimelineKeyFrame*> data;
+    std::vector<TypeWriterTimelineKeyFrame*> data;
     if (j.contains("timeline") && j["timeline"].is_array()) {
         // キーフレームを全て取得する
         for (const auto& item : j["timeline"]) {
@@ -113,7 +113,7 @@ TypeWriterTimelineParameter::TypeWriterTimelineData* TypeWriterTimelineParameter
     return new TypeWriterTimelineData{ data };
 }
 
-void TypeWriterTimelineParameter::add(const string& name, TypeWriterTimelineData* data) {
+void TypeWriterTimelineParameter::add(const std::string& name, TypeWriterTimelineData* data) {
     if (data == nullptr) return;
 
     // 既に存在するかどうか

@@ -59,7 +59,7 @@ void SceneManager::change(SceneTag tag) {
 	}
 }
 
-vector<IScene*> SceneManager::get_scenes() const {
+std::vector<IScene*> SceneManager::get_scenes() const {
 	return scenes_;
 }
 

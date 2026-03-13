@@ -79,7 +79,7 @@ LoadedAssets* AssetsManager::load_asset(LoadAssets* data) {
 	return result;
 }
 
-bool AssetsManager::delete_asset(const string& assets_name) {
+bool AssetsManager::delete_asset(const std::string& assets_name) {
 	return delete_asset(find(assets_name));
 }
 
@@ -90,7 +90,7 @@ bool AssetsManager::delete_asset(LoadedAssets* data) {
 	return true;
 }
 
-LoadedAssets* AssetsManager::find(const string& assets_name) {
+LoadedAssets* AssetsManager::find(const std::string& assets_name) {
 	for (const auto& asset : assets_) {
 		if (asset->name == assets_name) {
 			return  asset;
@@ -189,7 +189,7 @@ void AssetsManager::remove(LoadedAssets* data) {
     }
 }
 
-bool AssetsManager::is_same_id_for_other_asset(const GSuint id, const vector<GSuint>& other) const {
+bool AssetsManager::is_same_id_for_other_asset(const GSuint id, const std::vector<GSuint>& other) const {
 	for (const auto& other_id : other) {
 		if (id == other_id) return true;
 	}

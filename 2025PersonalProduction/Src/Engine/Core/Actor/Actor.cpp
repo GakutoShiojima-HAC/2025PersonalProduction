@@ -70,7 +70,7 @@ bool Actor::is_collide(const Actor& other) const {
 	return collider().intersects(other.collider());
 }
 
-string& Actor::name() {
+std::string& Actor::name() {
 	return name_;
 }
 

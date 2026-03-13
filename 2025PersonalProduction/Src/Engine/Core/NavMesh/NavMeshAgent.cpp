@@ -44,7 +44,7 @@ void NavMeshAgent::update_move(float delta_time, float move_speed, float rotate_
 
             // Œo˜H’Tõ‚É¬Œ÷‚µ‚½‚ç(‚æ‚è—Ç‚¢“¹‚ğŒ©‚Â‚¯‚½‚ç)
             if (navmesh_ != nullptr) {
-                vector<GSvector3> path;
+                std::vector<GSvector3> path;
                 navmesh_->find(target_->transform().position(), goal, path, offset_ratio_);
                 if (!path.empty()) {
                     // XV
@@ -150,7 +150,7 @@ bool NavMeshAgent::is_end_move() const {
 	return path_index_ >= path_.size();
 }
 
-const vector<GSvector3>& NavMeshAgent::path() {
+const std::vector<GSvector3>& NavMeshAgent::path() {
 	return path_;
 }
 

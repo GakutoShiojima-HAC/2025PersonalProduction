@@ -13,8 +13,6 @@
 
 #include "Engine/Core/Actor/ActorManager.h"
 
-using namespace std;
-
 class FieldActor;
 class Ray;
 class Line;

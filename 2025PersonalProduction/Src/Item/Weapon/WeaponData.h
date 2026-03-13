@@ -65,7 +65,7 @@ namespace WeaponData {
     /// 文字列を武器番号に変換
     /// </summary>
     inline GSuint to_id(const std::string& name) {
-        static const unordered_map<std::string, WeaponType> map = {
+        static const std::unordered_map<std::string, WeaponType> map = {
     #define X(name) { #name, WeaponType::name },
             WEAPON_TYPE_LIST
     #undef X

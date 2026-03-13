@@ -1,7 +1,7 @@
 #include "Engine/Core/StateMachine/StateMachine.h"
 #include "Engine/Core/StateMachine/NullState.h"
 
-static shared_ptr<NullState> null_state_ = make_shared<NullState>();
+static std::shared_ptr<NullState> null_state_ = std::make_shared<NullState>();
 
 StateMachine::StateMachine() :
 	current_state_{ null_state_ } {
@@ -26,7 +26,7 @@ void StateMachine::draw_gui() const {
 	current_state_->draw_gui();
 }
 
-void StateMachine::add_state(const GSuint state_num, shared_ptr<IState> state) {
+void StateMachine::add_state(const GSuint state_num, std::shared_ptr<IState> state) {
 	state_list_[state_num] = state;
 }
 
@@ -35,7 +35,7 @@ void StateMachine::change_state(const GSuint state_num) {
 	if (current_state_num_ == state_num) return;
 
 	// ó‘Ô‚ğŒŸõ
-	shared_ptr<IState> state = find(state_num);
+    std::shared_ptr<IState> state = find(state_num);
 	if (state == nullptr) return;
 
 	current_state_->exit();			// Œ³‚Ìó‘Ô‚ğI—¹
@@ -53,13 +53,13 @@ GSuint StateMachine::get_current_state() const {
 }
 
 IState* StateMachine::get_state(const GSuint state_num) const {
-	shared_ptr<IState> state = find(state_num);
+    std::shared_ptr<IState> state = find(state_num);
 	if (state == nullptr) return nullptr;
 	
 	return state.get();
 }
 
-shared_ptr<IState> StateMachine::find(const GSuint state_num) const {
+std::shared_ptr<IState> StateMachine::find(const GSuint state_num) const {
 	// ó‘Ô‚ğŒŸõ
 	auto it = state_list_.find(state_num);
 	// ó‘Ô‚ª‘¶İ‚µ‚Ä‚¢‚½‚ç

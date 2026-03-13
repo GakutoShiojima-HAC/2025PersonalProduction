@@ -139,7 +139,7 @@ CameraTimelineParameter::CameraTimelineData* CameraTimelineParameter::create_dat
     // 元のカメラに遷移するまでの時間
     const float end = MyJson::get_float(j, "end");
     // タイムラインデータ
-    vector<CameraTimelineKeyFrame*> data;
+    std::vector<CameraTimelineKeyFrame*> data;
     if (j.contains("timeline") && j["timeline"].is_array()) {
         // キーフレームを全て取得する
         for (const auto& item : j["timeline"]) {
@@ -156,7 +156,7 @@ CameraTimelineParameter::CameraTimelineData* CameraTimelineParameter::create_dat
     return new CameraTimelineData{ data, start, end };
 }
 
-void CameraTimelineParameter::add(const string& name, CameraTimelineParameter::CameraTimelineData* data) {
+void CameraTimelineParameter::add(const std::string& name, CameraTimelineParameter::CameraTimelineData* data) {
     if (data == nullptr) return;
 
     // 既に存在するかどうか
@@ -203,7 +203,7 @@ void CameraTimelineParameter::CameraTimelineData::clear() {
     timeline_.clear();
 }
 
-vector<CameraTimelineKeyFrame*>& CameraTimelineParameter::CameraTimelineData::get() {
+std::vector<CameraTimelineKeyFrame*>& CameraTimelineParameter::CameraTimelineData::get() {
     return timeline_;
 }
 

@@ -82,7 +82,7 @@ public:
     /// </summary>
     /// <param name="name">= 名前</param>
     /// <returns>見つかればアクターを、見つからなければnullptr</returns>
-    Actor* find(const string& name) const;
+    Actor* find(const std::string& name) const;
 
     /// <summary>
     /// 指定したタグを持つアクターを全て検索

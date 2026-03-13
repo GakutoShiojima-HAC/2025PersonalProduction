@@ -132,12 +132,12 @@ void MenuScene::reception_message(const std::string& message, std::any& param) {
 }
 
 void MenuScene::add_state() {
-    state_.add_state((GSuint)SceneStateType::Original, make_shared<SceneOriginalState>(*this));
-    state_.add_state((GSuint)SceneStateType::Start, make_shared<SceneStartState>(*this));
-    state_.add_state((GSuint)SceneStateType::End, make_shared<SceneEndState>(*this));
-    state_.add_state((GSuint)SceneStateType::Setting, make_shared<SceneSettingState>(*this, SceneStateType::MenuScene));
-    state_.add_state((GSuint)SceneStateType::MenuScene, make_shared<SceneMenuState>(*this));
-    state_.add_state((GSuint)SceneStateType::MenuSaveDataSelect, make_shared<SceneSelectSaveDataState>(*this));
+    state_.add_state((GSuint)SceneStateType::Original, std::make_shared<SceneOriginalState>(*this));
+    state_.add_state((GSuint)SceneStateType::Start, std::make_shared<SceneStartState>(*this));
+    state_.add_state((GSuint)SceneStateType::End, std::make_shared<SceneEndState>(*this));
+    state_.add_state((GSuint)SceneStateType::Setting, std::make_shared<SceneSettingState>(*this, SceneStateType::MenuScene));
+    state_.add_state((GSuint)SceneStateType::MenuScene, std::make_shared<SceneMenuState>(*this));
+    state_.add_state((GSuint)SceneStateType::MenuSaveDataSelect, std::make_shared<SceneSelectSaveDataState>(*this));
 }
 
 void MenuScene::original_update(float delta_time) {

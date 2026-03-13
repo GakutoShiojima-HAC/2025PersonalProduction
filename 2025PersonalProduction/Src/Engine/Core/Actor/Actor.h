@@ -18,8 +18,6 @@
 #include "Engine/Core/Collision/BoundingSphere.h"
 #include "GameConfig.h"
 
-using namespace std;
-
 class IWorld;
 
 class Actor {
@@ -107,7 +105,7 @@ public:
 	/// <summary>
 	/// アクターの名前を返却
 	/// </summary>
-	string& name();
+    std::string& name();
 
 	/// <summary>
 	/// アクターのタグを返却
@@ -308,7 +306,7 @@ protected:
 	bool is_clear_{ true };	
 
 	// 名前
-	string name_{ "Actor" };
+    std::string name_{ "Actor" };
 	// タグ
 	ActorTag tag_{ ActorTag::None };
 

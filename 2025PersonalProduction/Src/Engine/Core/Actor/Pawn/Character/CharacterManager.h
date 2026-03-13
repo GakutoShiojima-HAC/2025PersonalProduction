@@ -16,8 +16,6 @@
 #include <string>
 #include "Actor/ActorTag.h"
 
-using namespace std;
-
 class Character;
 
 class CharacterManager {
@@ -49,14 +47,14 @@ public:
     /// </summary>
     /// <param name="name">= 名前</param>
     /// <returns>見つかればキャラクターを、見つからなければnullptr</returns>
-    Character* find(const string& name) const;
+    Character* find(const std::string& name) const;
 
     /// <summary>
     /// 指定したタグを持つキャラクターを全て検索
     /// </summary>
     /// <param name="tag">= タグ</param>
     /// <returns>キャラクター</returns>
-    vector<Character*> find_with_tag(const ActorTag tag) const;
+    std::vector<Character*> find_with_tag(const ActorTag tag) const;
 
     /// <summary>
     /// 管理しているキャラクターの数
@@ -72,7 +70,7 @@ public:
     int count_with_tag(const ActorTag tag) const;
 
 private:
-    list<Character*> characters_;
+    std::list<Character*> characters_;
 
 public:
     // コピー禁止

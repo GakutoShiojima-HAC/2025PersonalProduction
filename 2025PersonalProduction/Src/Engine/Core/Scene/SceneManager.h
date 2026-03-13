@@ -79,7 +79,7 @@ public:
     /// 管理中のシーンを全て返却
     /// </summary>
     /// <returns>全てのシーン</returns>
-    vector<IScene*> get_scenes() const;
+    std::vector<IScene*> get_scenes() const;
 
     /// <summary>
     /// 管理中のシーンの数を返却
@@ -143,7 +143,7 @@ public:
 
 private:
     // 登録済みのシーン
-    vector<IScene*> scenes_;
+    std::vector<IScene*> scenes_;
     // 現在のシーン
     IScene* current_scene_{ nullptr };
 

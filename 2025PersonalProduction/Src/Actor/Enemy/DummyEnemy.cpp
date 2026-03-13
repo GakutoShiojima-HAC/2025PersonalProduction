@@ -134,10 +134,10 @@ void DummyEnemy::react(Actor& other) {
 }
 
 void DummyEnemy::add_state() {
-	state_.add_state((GSuint)DummyEnemyStateType::Attack, make_shared<DummyEnemyAttackState>(*this));
-	state_.add_state((GSuint)DummyEnemyStateType::Move, make_shared<DummyEnemyMoveState>(*this));
-	state_.add_state((GSuint)DummyEnemyStateType::Dead, make_shared<DummyEnemyDeadState>(*this));
-	state_.add_state((GSuint)DummyEnemyStateType::Idle, make_shared<DummyEnemyIdleState>(*this));
+	state_.add_state((GSuint)DummyEnemyStateType::Attack, std::make_shared<DummyEnemyAttackState>(*this));
+	state_.add_state((GSuint)DummyEnemyStateType::Move, std::make_shared<DummyEnemyMoveState>(*this));
+	state_.add_state((GSuint)DummyEnemyStateType::Dead, std::make_shared<DummyEnemyDeadState>(*this));
+	state_.add_state((GSuint)DummyEnemyStateType::Idle, std::make_shared<DummyEnemyIdleState>(*this));
 }
 
 bool DummyEnemy::is_move_end() const {

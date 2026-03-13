@@ -27,8 +27,6 @@
 #include <experimental/filesystem>  // ファイル検索用
 namespace fs = std::experimental::filesystem;
 
-
-using namespace std;
 using json = nlohmann::json;
 using ordered_json = nlohmann::ordered_json;
 
@@ -37,12 +35,12 @@ namespace MyLib {
     /// フォルダを作成
     /// </summary>
     /// <param name="path">= フォルダまでのパスを指定 親フォルダが無ければ親も作成する</param>
-    inline bool create_folder(const string& path) {
+    inline bool create_folder(const std::string& path) {
         size_t pos = 0;
-        string current_path;
+        std::string current_path;
 
         // ルートから順にパスを作成
-        while ((pos = path.find_first_of("/\\", pos)) != string::npos) {
+        while ((pos = path.find_first_of("/\\", pos)) != std::string::npos) {
             current_path = path.substr(0, pos);
             ++pos; // 次の位置へ
 
@@ -79,8 +77,8 @@ namespace MyLib {
     /// </summary>
     /// <param name="path">= ファイルへのフルパス 拡張子まで必要</param>
     /// <param name="content">= 書き込む内容</param>
-    inline bool write_to_file(const string& path, const string& content) {
-        ofstream f(path, ios::out);   // 上書きはios::out
+    inline bool write_to_file(const std::string& path, const std::string& content) {
+        std::ofstream f(path, std::ios::out);   // 上書きはios::out
         if (!f) return false;
 
         f << content;
@@ -93,8 +91,8 @@ namespace MyLib {
     /// </summary>
     /// <param name="j">= jsonファイルへのフルパス 拡張子まで必要</param>
     /// <param name="content">= 書き込む内容</param>
-    inline bool write_to_file(const string& path, const ordered_json& j) {
-        ofstream f(path, ios::out);   // 上書きはios::out
+    inline bool write_to_file(const std::string& path, const ordered_json& j) {
+        std::ofstream f(path, std::ios::out);   // 上書きはios::out
         if (!f) return false;
 
         f << j.dump(4);  // インデント
@@ -107,8 +105,8 @@ namespace MyLib {
     /// </summary>
     /// <param name="j">= jsonファイルへのフルパス 拡張子まで必要</param>
     /// <param name="content">= 書き込む内容</param>
-    inline bool write_to_file(const string& path, const json& j) {
-        ofstream f(path, ios::out);   // 上書きはios::out
+    inline bool write_to_file(const std::string& path, const json& j) {
+        std::ofstream f(path, std::ios::out);   // 上書きはios::out
         if (!f) return false;
 
         f << j.dump(4);  // インデント
@@ -121,8 +119,8 @@ namespace MyLib {
     /// </summary>
     /// <param name="path">= ファイルへのフルパス 拡張子まで必要</param>
     /// <param name="content">= 書き込む内容</param>
-    inline bool append_to_file(const string& path, const string& content) {
-        ofstream f(path, ios::app);   // 追記はios::app
+    inline bool append_to_file(const std::string& path, const std::string& content) {
+        std::ofstream f(path, std::ios::app);   // 追記はios::app
         if (!f) return false;
 
         f << content;
@@ -135,8 +133,8 @@ namespace MyLib {
     /// </summary>
     /// <param name="j">= jsonファイルへのフルパス 拡張子まで必要</param>
     /// <param name="content">= 書き込む内容</param>
-    inline bool append_to_file(const string& path, const json& j) {
-        ofstream f(path, ios::app);   // 追記はios::app
+    inline bool append_to_file(const std::string& path, const json& j) {
+        std::ofstream f(path, std::ios::app);   // 追記はios::app
         if (!f) return false;
 
         f << j.dump(4);  // インデント
@@ -149,8 +147,8 @@ namespace MyLib {
     /// </summary>
     /// <param name="j">= jsonファイルへのフルパス 拡張子まで必要</param>
     /// <param name="content">= 書き込む内容</param>
-    inline bool append_to_file(const string& path, const ordered_json& j) {
-        ofstream f(path, ios::app);   // 追記はios::app
+    inline bool append_to_file(const std::string& path, const ordered_json& j) {
+        std::ofstream f(path, std::ios::app);   // 追記はios::app
         if (!f) return false;
 
         f << j.dump(4);  // インデント
@@ -164,7 +162,7 @@ namespace MyLib {
     /// <param name="folder_path">= 検索をかけるファイルパス</param>
     /// <param name="extension">= 対象ファイルの拡張子</param>
     /// <returns>見つかったファイル全てのパス</returns>
-    inline std::vector<string> get_all_file_path(const std::string& folder_path, const std::string& extension) {
+    inline std::vector<std::string> get_all_file_path(const std::string& folder_path, const std::string& extension) {
         std::vector<std::string> paths;
 
         for (const auto& entry : fs::recursive_directory_iterator(folder_path)) {

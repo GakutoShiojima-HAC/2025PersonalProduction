@@ -105,7 +105,7 @@ private:
     /// </summary>
     /// <param name="name">= 再生時の名前</param>
     /// <param name="data">= データ</param>
-    void add(const string& name, SendMessageTimelineData* data);
+    void add(const std::string& name, SendMessageTimelineData* data);
 
     /// <summary>
     /// タイムラインデータを検索

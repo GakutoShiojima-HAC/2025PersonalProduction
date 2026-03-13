@@ -14,8 +14,6 @@
 #include <vector>
 #include <gslib.h>
 
-using namespace std;
-
 class NavMeshSurface;
 class Actor;
 
@@ -69,7 +67,7 @@ public:
 	/// 経路
 	/// </summary>
 	/// <returns>経路</returns>
-	const vector<GSvector3>& path();
+	const std::vector<GSvector3>& path();
 
     /// <summary>
     /// 経路探索結果を破棄して終了する
@@ -88,7 +86,7 @@ private:
     // 移動対象のアクター
     Actor* target_{ nullptr };
 	// 経路
-	vector<GSvector3> path_;
+    std::vector<GSvector3> path_;
 	// どこまで進んだか
 	GSuint path_index_{ 0 };
     // ゴール地点

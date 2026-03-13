@@ -123,18 +123,18 @@ void TutorialFacilitator::resume_avoid_effect() {
 }
 
 void TutorialFacilitator::add_state() {
-	state_.add_state((GSuint)TutorialFacilitatorStateType::Idle, make_shared<TutorialFacilitatorIdleState>(*this));
-    state_.add_state((GSuint)TutorialFacilitatorStateType::Dead, make_shared<CharacterMotionEndToDieState>(*this));
-    state_.add_state((GSuint)TutorialFacilitatorStateType::Hurt, make_shared<CharacterMotionEndToAnyState>(*this, (GSuint)TutorialFacilitatorStateType::Move, Motion::Move, true));
+	state_.add_state((GSuint)TutorialFacilitatorStateType::Idle, std::make_shared<TutorialFacilitatorIdleState>(*this));
+    state_.add_state((GSuint)TutorialFacilitatorStateType::Dead, std::make_shared<CharacterMotionEndToDieState>(*this));
+    state_.add_state((GSuint)TutorialFacilitatorStateType::Hurt, std::make_shared<CharacterMotionEndToAnyState>(*this, (GSuint)TutorialFacilitatorStateType::Move, Motion::Move, true));
 
-    state_.add_state((GSuint)TutorialFacilitatorStateType::AttackInput, make_shared<TutorialFacilitatorAttackInputState>(*this));
-    state_.add_state((GSuint)TutorialFacilitatorStateType::Chase, make_shared<TutorialFacilitatorChaseState>(*this));
-    state_.add_state((GSuint)TutorialFacilitatorStateType::AttackInputHurt, make_shared<CharacterMotionEndToAnyState>(*this, (GSuint)TutorialFacilitatorStateType::Chase, Motion::Move, true));
+    state_.add_state((GSuint)TutorialFacilitatorStateType::AttackInput, std::make_shared<TutorialFacilitatorAttackInputState>(*this));
+    state_.add_state((GSuint)TutorialFacilitatorStateType::Chase, std::make_shared<TutorialFacilitatorChaseState>(*this));
+    state_.add_state((GSuint)TutorialFacilitatorStateType::AttackInputHurt, std::make_shared<CharacterMotionEndToAnyState>(*this, (GSuint)TutorialFacilitatorStateType::Chase, Motion::Move, true));
 
-    state_.add_state((GSuint)TutorialFacilitatorStateType::AvoidInputChase, make_shared<TutorialFacilitatorAvoidInputChaseState>(*this));
-    state_.add_state((GSuint)TutorialFacilitatorStateType::AvoidInput, make_shared<TutorialFacilitatorAvoidInputState>(*this));
-    state_.add_state((GSuint)TutorialFacilitatorStateType::AvoidAttackInput, make_shared<TutorialFacilitatorAvoidAttackInputState>(*this));
+    state_.add_state((GSuint)TutorialFacilitatorStateType::AvoidInputChase, std::make_shared<TutorialFacilitatorAvoidInputChaseState>(*this));
+    state_.add_state((GSuint)TutorialFacilitatorStateType::AvoidInput, std::make_shared<TutorialFacilitatorAvoidInputState>(*this));
+    state_.add_state((GSuint)TutorialFacilitatorStateType::AvoidAttackInput, std::make_shared<TutorialFacilitatorAvoidAttackInputState>(*this));
 
-    state_.add_state((GSuint)TutorialFacilitatorStateType::Attack, make_shared<CharacterMotionEndToAnyState>(*this, (GSuint)TutorialFacilitatorStateType::Move, Motion::Move, true));
-    state_.add_state((GSuint)TutorialFacilitatorStateType::Move, make_shared<TutorialFacilitatorMoveState>(*this));
+    state_.add_state((GSuint)TutorialFacilitatorStateType::Attack, std::make_shared<CharacterMotionEndToAnyState>(*this, (GSuint)TutorialFacilitatorStateType::Move, Motion::Move, true));
+    state_.add_state((GSuint)TutorialFacilitatorStateType::Move, std::make_shared<TutorialFacilitatorMoveState>(*this));
 }

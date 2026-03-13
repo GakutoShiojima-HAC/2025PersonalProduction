@@ -14,8 +14,6 @@
 #include <stack>
 #include <memory>
 
-using namespace std;
-
 template <typename T>
 class ObjectPool {
 public:
@@ -56,7 +54,7 @@ public:
     }
 
 private:
-	stack<T*> pool_;
+    std::stack<T*> pool_;
 
 };
 

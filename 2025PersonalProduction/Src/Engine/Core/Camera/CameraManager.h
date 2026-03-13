@@ -141,7 +141,7 @@ private:
 
 private:
     // カメラマップ
-    unordered_map<GSuint, Camera*> cameras_;
+    std::unordered_map<GSuint, Camera*> cameras_;
     // 現在使用しているカメラ
     Camera* current_{ nullptr };
     // トランジション用の以前に使っていたカメラ
@@ -168,7 +168,7 @@ private:
     };
 
     // カメラ演出エフェクト
-    unordered_map<GSuint, CameraEffect> camera_effect_;
+    std::unordered_map<GSuint, CameraEffect> camera_effect_;
 
 public:
 	// コピー禁止

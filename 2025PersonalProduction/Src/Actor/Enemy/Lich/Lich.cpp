@@ -93,11 +93,11 @@ void Lich::change_state_and_motion(const GSuint state_num) {
 }
 
 void Lich::add_state() {
-    state_.add_state((GSuint)LichStateType::Idle, make_shared<LichIdleState>(*this));
-    state_.add_state((GSuint)LichStateType::Hurt, make_shared<LichHurtState>(*this));
-    state_.add_state((GSuint)LichStateType::Dead, make_shared<LichDeadState>(*this));
-    state_.add_state((GSuint)LichStateType::Attack, make_shared<LichAttackState>(*this));
-    state_.add_state((GSuint)LichStateType::Spell, make_shared<LichSpellState>(*this));
+    state_.add_state((GSuint)LichStateType::Idle, std::make_shared<LichIdleState>(*this));
+    state_.add_state((GSuint)LichStateType::Hurt, std::make_shared<LichHurtState>(*this));
+    state_.add_state((GSuint)LichStateType::Dead, std::make_shared<LichDeadState>(*this));
+    state_.add_state((GSuint)LichStateType::Attack, std::make_shared<LichAttackState>(*this));
+    state_.add_state((GSuint)LichStateType::Spell, std::make_shared<LichSpellState>(*this));
 }
 
 const LichInfo& Lich::info() const {

@@ -51,7 +51,7 @@ void PlayerUI::draw_hp(int current, float display, int max) {
     // Œ»İ‘Ì—Í‚Ì•`‰æ
     {
         const GSvector2 position{ 6.0f, 972.0f };
-        const std::string hp_str = to_string(current) + " /";
+        const std::string hp_str = std::to_string(current) + " /";
         Canvas::draw_sprite_text(
             hp_str,
             position,
@@ -67,7 +67,7 @@ void PlayerUI::draw_hp(int current, float display, int max) {
     // Å‘å‘Ì—Í‚Ì•`‰æ
     {
         const GSvector2 position{ 6.0f, 972.0f };
-        const std::string hp_str = " " + to_string(max);
+        const std::string hp_str = " " + std::to_string(max);
         Canvas::draw_sprite_text(
             hp_str,
             position,
@@ -85,7 +85,7 @@ void PlayerUI::draw_hp(int current, float display, int max) {
 
 void PlayerUI::draw_level(int level) {
     const GSvector2 position{ 705.0f, 985.0f };
-    const std::string level_str = to_string(level);
+    const std::string level_str = std::to_string(level);
     Canvas::draw_sprite_text(
         level_str,
         position,
@@ -135,7 +135,7 @@ void PlayerUI::draw_weapon_data(GSuint texture, const std::string& name, int dam
     // UŒ‚—Í‚Ì•`‰æ
     {
         const GSvector2 position{ 363.0f, 987.0f };
-        const std::string hp_str = "UŒ‚—Í: " + to_string(damage);
+        const std::string hp_str = "UŒ‚—Í: " + std::to_string(damage);
         Canvas::draw_sprite_text(
             hp_str,
             position,

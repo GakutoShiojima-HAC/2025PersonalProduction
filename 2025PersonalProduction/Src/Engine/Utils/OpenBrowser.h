@@ -14,8 +14,6 @@
 
 #include <string>
 
-using namespace std;
-
 namespace MyLib {
 	/// <summary>
 	/// URLからブラウザを開く

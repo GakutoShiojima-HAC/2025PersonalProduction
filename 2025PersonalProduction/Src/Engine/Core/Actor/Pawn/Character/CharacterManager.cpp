@@ -24,7 +24,7 @@ void CharacterManager::clear() {
     characters_.clear();
 }
 
-Character* CharacterManager::find(const string& name) const {
+Character* CharacterManager::find(const std::string& name) const {
     for (const auto& character : characters_) {
         if (character->name() == name) {
             return character;
@@ -33,8 +33,8 @@ Character* CharacterManager::find(const string& name) const {
     return nullptr;
 }
 
-vector<Character*> CharacterManager::find_with_tag(const ActorTag tag) const {
-    vector<Character*> result;
+std::vector<Character*> CharacterManager::find_with_tag(const ActorTag tag) const {
+    std::vector<Character*> result;
     for (const auto& character : characters_) {
         if (character->tag() == tag) {
             result.push_back(character);

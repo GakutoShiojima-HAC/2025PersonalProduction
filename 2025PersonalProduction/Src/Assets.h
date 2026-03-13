@@ -146,7 +146,6 @@
 #include <unordered_map>
 
 typedef	unsigned int GSuint;
-using namespace std;
 
 #pragma region [列挙体を生成]
 #define X(name) name,
@@ -163,8 +162,8 @@ namespace Assets {
     /// <summary>
     /// 文字列をメッシュ番号に変換
     /// </summary>
-    inline GSuint to_mesh_id(const string& name) {
-        static const unordered_map<string, MeshID> map = {
+    inline GSuint to_mesh_id(const std::string& name) {
+        static const std::unordered_map<std::string, MeshID> map = {
     #define X(name) { #name, MeshID::name },
             MESH_ID_LIST
     #undef X
@@ -176,8 +175,8 @@ namespace Assets {
     /// <summary>
     /// 文字列をテクスチャ番号に変換
     /// </summary>
-    inline GSuint to_texture_id(const string& name) {
-        static const unordered_map<string, TextureID> map = {
+    inline GSuint to_texture_id(const std::string& name) {
+        static const std::unordered_map<std::string, TextureID> map = {
     #define X(name) { #name, TextureID::name },
             TEXTURE_ID_LIST
     #undef X
@@ -189,8 +188,8 @@ namespace Assets {
     /// <summary>
     /// 文字列を地形データ番号に変換
     /// </summary>
-    inline GSuint to_octree_id(const string& name) {
-        static const unordered_map<string, OctreeID> map = {
+    inline GSuint to_octree_id(const std::string& name) {
+        static const std::unordered_map<std::string, OctreeID> map = {
     #define X(name) { #name, OctreeID::name },
             OCTREE_ID_LIST
     #undef X
@@ -202,8 +201,8 @@ namespace Assets {
     /// <summary>
     /// 文字列をBGM番号に変換
     /// </summary>
-    inline GSuint to_bgm_id(const string& name) {
-        static const unordered_map<string, BGMID> map = {
+    inline GSuint to_bgm_id(const std::string& name) {
+        static const std::unordered_map<std::string, BGMID> map = {
     #define X(name) { #name, BGMID::name },
             BGM_ID_LIST
     #undef X
@@ -215,8 +214,8 @@ namespace Assets {
     /// <summary>
     /// 文字列をSE番号に変換
     /// </summary>
-    inline GSuint to_se_id(const string& name) {
-        static const unordered_map<string, SEID> map = {
+    inline GSuint to_se_id(const std::string& name) {
+        static const std::unordered_map<std::string, SEID> map = {
     #define X(name) { #name, SEID::name },
             SE_ID_LIST
     #undef X
@@ -228,8 +227,8 @@ namespace Assets {
     /// <summary>
     /// 文字列をエフェクト番号に変換
     /// </summary>
-    inline GSuint to_effect_id(const string& name) {
-        static const unordered_map<string, EffectID> map = {
+    inline GSuint to_effect_id(const std::string& name) {
+        static const std::unordered_map<std::string, EffectID> map = {
     #define X(name) { #name, EffectID::name },
             EFFECT_ID_LIST
     #undef X

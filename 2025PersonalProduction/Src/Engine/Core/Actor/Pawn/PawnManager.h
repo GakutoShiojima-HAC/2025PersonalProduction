@@ -16,8 +16,6 @@
 #include <string>
 #include "Actor/ActorTag.h"
 
-using namespace std;
-
 class Pawn;
 
 class PawnManager {
@@ -49,14 +47,14 @@ public:
     /// </summary>
     /// <param name="name">= 名前</param>
     /// <returns>見つかればポーンを、見つからなければnullptr</returns>
-    Pawn* find(const string& name) const;
+    Pawn* find(const std::string& name) const;
 
     /// <summary>
     /// 指定したタグを持つポーンを全て検索
     /// </summary>
     /// <param name="tag">= タグ</param>
     /// <returns>ポーン</returns>
-    vector<Pawn*> find_with_tag(const ActorTag tag) const;
+    std::vector<Pawn*> find_with_tag(const ActorTag tag) const;
 
     /// <summary>
     /// 管理しているポーンの数
@@ -72,7 +70,7 @@ public:
     int count_with_tag(const ActorTag tag) const;
 
 private:
-    list<Pawn*> pawns_;
+    std::list<Pawn*> pawns_;
 
 public:
 	// コピー禁止

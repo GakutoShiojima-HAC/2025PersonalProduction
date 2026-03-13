@@ -99,13 +99,13 @@ void SimpleEnemy::change_state_and_motion(const GSuint state_num) {
 }
 
 void SimpleEnemy::add_state() {
-    state_.add_state((GSuint)SimpleEnemyStateType::Attack, make_shared<MyEnemyAttackState>(*this, (GSuint)SimpleEnemyStateType::Move, info_.motion_move, true));
-    state_.add_state((GSuint)SimpleEnemyStateType::Dead, make_shared<CharacterMotionEndToDieState>(*this));
-    state_.add_state((GSuint)SimpleEnemyStateType::Find, make_shared<SimpleEnemyFindState>(*this));
-    state_.add_state((GSuint)SimpleEnemyStateType::Hurt, make_shared<SimpleEnemyHurtState>(*this));
-    state_.add_state((GSuint)SimpleEnemyStateType::Idle, make_shared<SimpleEnemyIdleState>(*this));
-    state_.add_state((GSuint)SimpleEnemyStateType::Move, make_shared<SimpleEnemyMoveState>(*this));
-    state_.add_state((GSuint)SimpleEnemyStateType::Search, make_shared<SimpleEnemySearchState>(*this));
+    state_.add_state((GSuint)SimpleEnemyStateType::Attack, std::make_shared<MyEnemyAttackState>(*this, (GSuint)SimpleEnemyStateType::Move, info_.motion_move, true));
+    state_.add_state((GSuint)SimpleEnemyStateType::Dead, std::make_shared<CharacterMotionEndToDieState>(*this));
+    state_.add_state((GSuint)SimpleEnemyStateType::Find, std::make_shared<SimpleEnemyFindState>(*this));
+    state_.add_state((GSuint)SimpleEnemyStateType::Hurt, std::make_shared<SimpleEnemyHurtState>(*this));
+    state_.add_state((GSuint)SimpleEnemyStateType::Idle, std::make_shared<SimpleEnemyIdleState>(*this));
+    state_.add_state((GSuint)SimpleEnemyStateType::Move, std::make_shared<SimpleEnemyMoveState>(*this));
+    state_.add_state((GSuint)SimpleEnemyStateType::Search, std::make_shared<SimpleEnemySearchState>(*this));
 }
 
 const SimpleEnemyInfo& SimpleEnemy::info() const {

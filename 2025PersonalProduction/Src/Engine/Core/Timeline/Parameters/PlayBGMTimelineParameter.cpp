@@ -99,7 +99,7 @@ void PlayBGMTimelineParameter::play(PlayBGMTimelineData* data) {
 
 PlayBGMTimelineParameter::PlayBGMTimelineData* PlayBGMTimelineParameter::create_data(const json& j) {
     // タイムラインデータ
-    vector<PlayBGMTimelineKeyFrame*> data;
+    std::vector<PlayBGMTimelineKeyFrame*> data;
     if (j.contains("timeline") && j["timeline"].is_array()) {
         // キーフレームを全て取得する
         for (const auto& item : j["timeline"]) {
@@ -114,7 +114,7 @@ PlayBGMTimelineParameter::PlayBGMTimelineData* PlayBGMTimelineParameter::create_
     return new PlayBGMTimelineData{ data };
 }
 
-void PlayBGMTimelineParameter::add(const string& name, PlayBGMTimelineData* data) {
+void PlayBGMTimelineParameter::add(const std::string& name, PlayBGMTimelineData* data) {
     if (data == nullptr) return;
 
     // 既に存在するかどうか
