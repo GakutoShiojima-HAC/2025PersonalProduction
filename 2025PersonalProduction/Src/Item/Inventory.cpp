@@ -192,8 +192,10 @@ void Inventory::change_weapon() {
 }
 
 bool Inventory::is_in_id(ItemType type, int id) const {
+    ItemDataManager& item_data = ItemDataManager::get_instance();
+
     switch (type) {
-    case ItemType::Weapon: return id > (int)WeaponType::NONE && id < (int)WeaponType::MAX_SIZE;
+    case ItemType::Weapon: return !item_data.get_weapon(id).is_empty();
     default: return false;
     }
     return false;
